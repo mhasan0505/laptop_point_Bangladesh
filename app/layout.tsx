@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 
 import Header from "@/components/application/Header";
 import "./globals.css";
+import Footer from "@/components/application/Footer";
 const poppins = Poppins({
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
@@ -26,6 +27,7 @@ export default function RootLayout({
         <Header />
         {children}
         <SpeedInsights />
+        <Footer/>
       </body>
     </html>
   );
