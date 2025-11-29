@@ -42,6 +42,13 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --stockColor: #78a962;
+
+  /* Container configuration for Tailwind v4 */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
 }
 
 :root {
@@ -125,8 +132,48 @@
     line-height: 1.43;
   }
 }
+
+/* Container utility for Tailwind v4 */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: var(--container-sm, 640px);
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: var(--container-md, 768px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: var(--container-lg, 1024px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: var(--container-xl, 1280px);
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: var(--container-2xl, 1536px);
+  }
+}
+
 /* Smooth transitions for all interactive elements */
-button, input, a {
+button,
+input,
+a {
   transition: all 0.2s ease;
 }
 
