@@ -41,6 +41,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --stockColor: #78a962;
 }
 
 :root {
@@ -49,6 +50,7 @@
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
+  --stockColor: #78a962;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
@@ -121,6 +123,14 @@
     font-family: var(--font-poppins);
     font-size: 14px;
     line-height: 1.43;
-
   }
+}
+/* Smooth transitions for all interactive elements */
+button, input, a {
+  transition: all 0.2s ease;
+}
+
+/* Better focus states */
+*:focus-visible {
+  @apply ring-2 ring-primary/50 outline-none;
 }
