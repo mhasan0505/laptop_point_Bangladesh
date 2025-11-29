@@ -113,7 +113,10 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               height={40}
               className="object-contain"
             />
-            <button onClick={onClose} className="p-1">
+            <button
+              onClick={onClose}
+              className="hover:opacity-70 transition-opacity"
+            >
               <X className="w-6 h-6" />
             </button>
           </div>

@@ -255,7 +255,7 @@ const Header = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="rounded-full h-10 w-10 hover:bg-gray-50"
+                      className="rounded-full h-10 w-10 hover:bg-transparent"
                       onClick={() => setIsSearchExpanded(true)}
                       aria-label="Open search"
                     >
@@ -274,7 +274,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full relative h-10 w-10 hover:bg-gray-50"
+                  className="rounded-full relative h-10 w-10 hover:bg-transparent"
                   aria-label="Shopping cart"
                 >
                   <ShoppingCart className="h-5 w-5" />
@@ -293,7 +293,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-full hover:bg-gray-50"
+                  className="h-10 w-10 rounded-full hover:bg-transparent"
                   aria-label="User account"
                 >
                   <User className="h-5 w-5" />
@@ -309,7 +309,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-full hover:bg-gray-50"
+                  className="h-10 w-10 rounded-full hover:bg-transparent"
                   onClick={() => setIsMobileMenuOpen(true)}
                   aria-label="Open menu"
                 >

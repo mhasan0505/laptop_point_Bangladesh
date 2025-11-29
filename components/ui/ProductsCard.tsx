@@ -11,7 +11,7 @@ const ProductsCard = () => {
 
   return (
     <div
-      className="group relative w-[280px] h-[460px] flex flex-col bg-white dark:bg-card rounded-xl border border-border/30 overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/20"
+      className="group relative w-[280px] h-[460px] flex flex-col bg-white dark:bg-card rounded-xl border border-border/30 overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-primary/40"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -36,10 +36,10 @@ const ProductsCard = () => {
             e.stopPropagation();
             setIsWishlisted(!isWishlisted);
           }}
-          className={`p-2.5 rounded-full backdrop-blur-lg transition-all duration-300 hover:scale-110 ${
+          className={`p-2.5 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110 ${
             isWishlisted
               ? "bg-linear-to-br from-red-500 to-pink-600 text-white shadow-lg shadow-red-500/30"
-              : "bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-200 hover:bg-red-50 dark:hover:bg-red-900/30"
+              : "bg-white/10 dark:bg-black/10 text-gray-700 dark:text-gray-200 hover:bg-red-500/90 hover:text-white shadow-md"
           }`}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
@@ -50,7 +50,7 @@ const ProductsCard = () => {
           />
         </button>
         <button
-          className="p-2.5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-full text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white transition-all duration-300 hover:scale-110"
+          className="p-2.5 bg-white/10 dark:bg-black/10 backdrop-blur-md rounded-full text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white transition-all duration-300 hover:scale-110 shadow-md"
           aria-label="Quick view"
           onClick={(e) => e.stopPropagation()}
         >
@@ -160,13 +160,6 @@ const ProductsCard = () => {
           </div>
         </div>
       </div>
-
-      {/* Hover overlay effect */}
-      <div
-        className={`absolute inset-0 border-2 border-primary/0 ${
-          isHovered ? "border-primary/20" : ""
-        } rounded-2xl transition-all duration-300 pointer-events-none`}
-      ></div>
 
       {/* Status ribbon */}
       {/* <div className="absolute -right-8 top-4 w-32 bg-primary text-white text-xs font-semibold text-center py-1 transform rotate-45 shadow-md">

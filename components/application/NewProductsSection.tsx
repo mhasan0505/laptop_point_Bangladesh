@@ -16,7 +16,7 @@ const NewProductsSection = () => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
           <div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-gray-900 dark:text-white">
               New Arrivals
             </h2>
             <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
