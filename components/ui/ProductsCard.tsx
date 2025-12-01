@@ -91,7 +91,7 @@ const ProductsCard = () => {
         ></div>
 
         {/* Product Image */}
-        <div className="relative w-full h-full flex items-center justify-center p-4">
+        <div className="relative w-full h-full flex items-center justify-center p-8">
           <Image
             src="/products/hp/HP_Elitebook_840_G3/front.png"
             alt="HP Elitebook 840 G3"
