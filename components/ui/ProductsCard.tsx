@@ -114,7 +114,7 @@ const ProductsCard = () => {
 
         {/* Add to Cart Button */}
         <button
-          className={`absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-gradient-to-r from-primary to-primary/90 text-white px-6 py-2.5 rounded-full font-medium text-sm shadow-lg transition-all duration-300 ${
+          className={`absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-gradient-to-r from-primary to-primary/90 text-white px-6 py-2.5 rounded-full font-medium text-sm shadow-lg transition-all duration-300 whitespace-nowrap ${
             isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           } hover:shadow-xl hover:shadow-primary/20 hover:scale-105`}
           onClick={(e) => {
