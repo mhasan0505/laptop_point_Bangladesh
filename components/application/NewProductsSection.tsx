@@ -21,7 +21,7 @@ const NewProductsSection = () => {
             </h2>
             <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-1">
               Discover our latest products
-            </p>
+            </p>jh
           </div>
 
           {/* Navigation Buttons - Hidden on mobile, visible on tablet+ */}
