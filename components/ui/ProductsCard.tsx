@@ -40,7 +40,7 @@ const ProductsCard = () => {
     >
       {/* Stock & Discount Badge */}
       <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
-        <div className="flex items-center gap-1.5 bg-linear-to-r from-emerald-500 to-emerald-600 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm">
+        <div className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-lg backdrop-blur-sm">
           <span>In Stock</span>
         </div>
         {/* <div className="text-white bg-red-500 text-xs font-bold px-2.5 py-1.5 rounded-full shadow-lg">
@@ -61,7 +61,7 @@ const ProductsCard = () => {
           }}
           className={`p-2.5 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110 ${
             isWishlisted
-              ? "bg-linear-to-br from-red-500 to-pink-600 text-white shadow-lg shadow-red-500/30"
+              ? "bg-gradient-to-br from-red-500 to-pink-600 text-white shadow-lg shadow-red-500/30"
               : "bg-white/10 dark:bg-black/10 text-gray-700 dark:text-gray-200 hover:bg-red-500/90 hover:text-white shadow-md"
           }`}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
@@ -82,10 +82,10 @@ const ProductsCard = () => {
       </div>
 
       {/* Product Image Container */}
-      <div className="relative h-[220px] flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 overflow-hidden group">
+      <div className="relative h-[220px] flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 overflow-hidden group">
         {/* Animated linear overlay */}
         <div
-          className={`absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-accent/5 transition-opacity duration-700 ${
+          className={`absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 transition-opacity duration-700 ${
             isHovered ? "opacity-100" : "opacity-0"
           }`}
         ></div>

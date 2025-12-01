@@ -73,7 +73,7 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       {/* Top Bar */}
-      <div className="bg-linear-to-r from-gray-900 to-gray-800 text-white text-xs">
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white text-xs">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between py-2">
             <div className="flex items-center space-x-6">
