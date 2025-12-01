@@ -2,6 +2,7 @@
 import MobileMenu from "@/components/application/MobileMenu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCart } from "@/contexts/CartContext";
 import { motion } from "framer-motion";
 import {
   ChevronDown,
@@ -23,10 +24,13 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const Header = () => {
+  const { getCartCount } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  const cartCount = getCartCount();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -266,23 +270,27 @@ const Header = () => {
               </div>
 
               {/* Cart Button */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={isSearchExpanded ? "hidden md:block" : ""}
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full relative h-10 w-10 hover:bg-transparent"
-                  aria-label="Shopping cart"
+              <Link href="/cart">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={isSearchExpanded ? "hidden md:block" : ""}
                 >
-                  <ShoppingCart className="h-5 w-5" />
-                  <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                    3
-                  </span>
-                </Button>
-              </motion.div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full relative h-10 w-10 hover:bg-transparent"
+                    aria-label="Shopping cart"
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                        {cartCount}
+                      </span>
+                    )}
+                  </Button>
+                </motion.div>
+              </Link>
 
               {/* User Button */}
               <motion.div
