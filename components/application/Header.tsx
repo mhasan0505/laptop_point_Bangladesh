@@ -73,25 +73,25 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       {/* Top Bar */}
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white text-xs">
+      <div className="bg-linear-to-r from-gray-900 to-gray-800 text-white text-xs">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between py-2">
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-1">
-                <Clock className="w-3.5 h-3.5 text-primary" />
+                <Clock className="w-3.5 h-3.5 text-yellow-400" />
                 <span>Mon-Sat: 10:00 AM - 8:30 PM</span>
               </div>
               <div className="hidden md:flex items-center space-x-1">
-                <MapPin className="w-3.5 h-3.5 text-primary" />
+                <MapPin className="w-3.5 h-3.5 text-yellow-400" />
                 <span>Madbar Mansion, Shop-08, Mirpur-10, Dhaka-1216</span>
               </div>
             </div>
             <div className="flex items-center space-x-4 mt-2 md:mt-0">
               <div className="flex items-center space-x-1">
-                <Phone className="w-3.5 h-3.5 text-primary" />
+                <Phone className="w-3.5 h-3.5 text-yellow-400" />
                 <a
                   href="tel:+8801717171717"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-yellow-400 transition-colors"
                 >
                   +880 1717-171717
                 </a>
@@ -99,28 +99,28 @@ const Header = () => {
               <div className="hidden md:flex items-center space-x-3 border-l border-gray-700 pl-4 ml-2">
                 <a
                   href="#"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-yellow-400 transition-colors"
                   aria-label="Facebook"
                 >
                   <Facebook className="w-4 h-4" />
                 </a>
                 <a
                   href="#"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-yellow-400 transition-colors"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-4 h-4" />
                 </a>
                 <a
                   href="#"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-yellow-400 transition-colors"
                   aria-label="Twitter"
                 >
                   <Twitter className="w-4 h-4" />
                 </a>
                 <a
                   href="mailto:info@laptoppointbd.com"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-yellow-400 transition-colors"
                   aria-label="Email"
                 >
                   <Mail className="w-4 h-4" />
@@ -259,11 +259,11 @@ const Header = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="rounded-full h-10 w-10 hover:bg-transparent"
+                      className="rounded-full h-10 w-10 hover:bg-gray-100 transition-colors"
                       onClick={() => setIsSearchExpanded(true)}
                       aria-label="Open search"
                     >
-                      <Search className="h-[18px] w-[18px] text-gray-500" />
+                      <Search className="h-[18px] w-[18px] text-gray-700" />
                     </Button>
                   </motion.div>
                 )}
@@ -279,10 +279,10 @@ const Header = () => {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="rounded-full relative h-10 w-10 hover:bg-transparent"
+                    className="rounded-full relative h-10 w-10 hover:bg-gray-100 transition-colors"
                     aria-label="Shopping cart"
                   >
-                    <ShoppingCart className="h-5 w-5" />
+                    <ShoppingCart className="h-5 w-5 text-gray-700" />
                     {cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
                         {cartCount}
@@ -301,10 +301,10 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-full hover:bg-transparent"
+                  className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
                   aria-label="User account"
                 >
-                  <User className="h-5 w-5" />
+                  <User className="h-5 w-5 text-gray-700" />
                 </Button>
               </motion.div>
 
@@ -317,11 +317,11 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 rounded-full hover:bg-transparent"
+                  className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors"
                   onClick={() => setIsMobileMenuOpen(true)}
                   aria-label="Open menu"
                 >
-                  <Menu className="h-6 w-6" />
+                  <Menu className="h-6 w-6 text-gray-700" />
                 </Button>
               </motion.div>
             </div>
