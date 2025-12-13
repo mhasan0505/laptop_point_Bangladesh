@@ -131,17 +131,17 @@ const HpLaptopSection = () => {
         </div>
 
         {/* Carousel & Controls */}
-        <div className="relative group">
+        <div className="relative group/carousel">
           {/* Navigation Buttons */}
           <div className="hidden lg:flex absolute top-1/2 -translate-y-1/2 -left-12 -right-12 justify-between pointer-events-none z-20">
             <button
-              className="hp-prev pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg hover:bg-yellow-400 hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0"
+              className="hp-prev pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg hover:bg-yellow-400 hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0"
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
-              className="hp-next pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg hover:bg-yellow-400 hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
+              className="hp-next pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg hover:bg-yellow-400 hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0"
               aria-label="Next slide"
             >
               <ChevronRight className="w-6 h-6" />
@@ -159,6 +159,7 @@ const HpLaptopSection = () => {
               modules={[Navigation, Pagination, Autoplay]}
               spaceBetween={20}
               slidesPerView={1}
+              centeredSlides={true}
               navigation={{
                 nextEl: ".hp-next",
                 prevEl: ".hp-prev",

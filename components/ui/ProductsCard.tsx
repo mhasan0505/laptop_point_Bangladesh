@@ -75,7 +75,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
         </div>
 
         {/* Floating Action Buttons (Top Right) */}
-        <div className="absolute top-3 right-3 z-10 flex flex-col gap-2 translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300 ease-out">
+        <div className="absolute top-3 right-3 z-10 flex flex-col gap-2 opacity-100 translate-x-0 lg:translate-x-10 lg:opacity-0 lg:group-hover:translate-x-0 lg:group-hover:opacity-100 transition-all duration-300 ease-out">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -125,7 +125,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
             e.stopPropagation();
             handleAddToCart();
           }}
-          className={`absolute bottom-3 right-3 p-3 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95 ${
+          className={`absolute bottom-3 right-3 p-3 rounded-full shadow-lg opacity-100 translate-y-0 lg:translate-y-4 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95 ${
             addedToCart
               ? "bg-emerald-500 text-white"
               : "bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200"
@@ -146,7 +146,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
             toggleComparison();
           }}
           disabled={!canAddMore() && !isCompared}
-          className={`absolute bottom-3 left-3 px-3 py-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 text-xs font-semibold flex items-center gap-1 ${
+          className={`absolute bottom-3 left-3 px-3 py-2 rounded-full shadow-lg opacity-100 translate-y-0 lg:translate-y-4 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-300 text-xs font-semibold flex items-center gap-1 ${
             isCompared
               ? "bg-yellow-500 text-white"
               : !canAddMore()

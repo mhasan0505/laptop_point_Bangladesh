@@ -1,7 +1,6 @@
 "use client";
 
 import { laptopData } from "@/app/data/data";
-import ProductBundle from "@/components/product/ProductBundle";
 import RecentlyViewed from "@/components/product/RecentlyViewed";
 import FilterSidebar from "@/components/shop/FilterSidebar";
 import { Button } from "@/components/ui/button";
@@ -18,11 +17,6 @@ export default function ShopPage() {
     <div className="container mx-auto px-4 py-8 space-y-12">
       {/* Trust Badges - Top for reassurance */}
       <TrustBadges variant="row" />
-
-      {/* Featured Bundle */}
-      <section>
-        <ProductBundle />
-      </section>
 
       <div className="flex flex-col lg:flex-row gap-8 relative">
         {/* Mobile Filter Toggle */}
@@ -73,7 +67,7 @@ export default function ShopPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
             {products.map((product) => (
               <ProductsCard key={product.id} product={product} />
             ))}
