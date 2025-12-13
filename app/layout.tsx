@@ -7,6 +7,9 @@ import Footer from "@/components/application/Footer";
 import Header from "@/components/application/Header";
 import StickyMobileBar from "@/components/application/StickyMobileBar";
 import { CartProvider } from "@/contexts/CartContext";
+import { ComparisonProvider } from "@/contexts/ComparisonContext";
+import { WishlistProvider } from "@/contexts/WishlistContext";
+import ComparisonBar from "@/components/product/ComparisonBar";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -29,12 +32,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.variable} antialiased`}>
         <CartProvider>
-          <Header />
-          <Breadcrumb />
-          {children}
-          <SpeedInsights />
-          <Footer />
-          <StickyMobileBar />
+          <WishlistProvider>
+            <ComparisonProvider>
+              <Header />
+              <Breadcrumb />
+              {children}
+              <SpeedInsights />
+              <Footer />
+              <ComparisonBar />
+              <StickyMobileBar />
+            </ComparisonProvider>
+          </WishlistProvider>
         </CartProvider>
       </body>
     </html>

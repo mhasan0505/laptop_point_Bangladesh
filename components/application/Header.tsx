@@ -1,19 +1,21 @@
 "use client";
 import MobileMenu from "@/components/application/MobileMenu";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { motion } from "framer-motion";
 import {
   ChevronDown,
   Clock,
   Facebook,
+  Heart,
   Instagram,
   Mail,
   MapPin,
   Menu,
   Phone,
-  Scale,
   Search,
   ShoppingCart,
   Twitter,
@@ -23,15 +25,19 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import MegaMenu from "../navigation/MegaMenu";
 
 const Header = () => {
   const { getCartCount } = useCart();
+  const { getWishlistCount } = useWishlist();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const cartCount = getCartCount();
+  const wishlistCount = getWishlistCount();
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -71,6 +77,7 @@ const Header = () => {
         { name: "Cooling Pads", href: "/accessories/cooling" },
       ],
     },
+    { name: "Compare", href: "/compare" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -167,7 +174,7 @@ const Header = () => {
       {/* Main Header */}
       <div className="bg-white container mx-auto">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-24">
             {/* Logo */}
             <Link href="/" className="shrink-0">
               <div className="relative w-40 h-12">
@@ -182,9 +189,13 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-0">
               {navLinks.map((link) => (
-                <NavItem key={link.name} link={link} />
+                <NavItem
+                  key={link.name}
+                  link={link}
+                  onMegaMenuToggle={setIsMegaMenuOpen}
+                />
               ))}
             </nav>
 
@@ -276,8 +287,8 @@ const Header = () => {
                 )}
               </div>
 
-              {/* Compare Button */}
-              <Link href="/compare">
+              {/* Wishlist Button */}
+              <Link href="/wishlist">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -287,9 +298,14 @@ const Header = () => {
                     variant="ghost"
                     size="icon"
                     className="rounded-full relative h-10 w-10 hover:bg-gray-100 transition-colors"
-                    aria-label="Compare products"
+                    aria-label="Wishlist"
                   >
-                    <Scale className="h-5 w-5 text-gray-700" />
+                    <Heart className="h-5 w-5 text-gray-700" />
+                    {wishlistCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                        {wishlistCount}
+                      </span>
+                    )}
                   </Button>
                 </motion.div>
               </Link>
@@ -359,6 +375,12 @@ const Header = () => {
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
+
+      {/* MegaMenu for Categories */}
+      <MegaMenu
+        isOpen={isMegaMenuOpen}
+        onClose={() => setIsMegaMenuOpen(false)}
+      />
     </header>
   );
 };
@@ -371,14 +393,33 @@ interface NavLink {
   badge?: string;
 }
 
-const NavItem = ({ link }: { link: NavLink }) => {
+const NavItem = ({
+  link,
+  onMegaMenuToggle,
+}: {
+  link: NavLink;
+  onMegaMenuToggle?: (isOpen: boolean) => void;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    // Open MegaMenu for Categories link
+    if (link.name === "Categories" && onMegaMenuToggle) {
+      onMegaMenuToggle(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    // Don't close MegaMenu here, let MegaMenu handle it
+  };
 
   return (
     <div
       className="relative group px-1"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <Link
         href={link.href}
@@ -401,8 +442,8 @@ const NavItem = ({ link }: { link: NavLink }) => {
         )}
       </Link>
 
-      {/* Submenu */}
-      {link.hasDropdown && link.submenu && (
+      {/* Submenu - only show for non-Categories links */}
+      {link.hasDropdown && link.submenu && link.name !== "Categories" && (
         <motion.div
           initial={{ opacity: 0, y: 10, scale: 0.95 }}
           animate={

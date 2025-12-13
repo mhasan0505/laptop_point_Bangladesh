@@ -1,28 +1,13 @@
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
+import { CartItem as CartItemType } from "@/types/cart";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
 interface CartItemProps {
-  item: {
-    id: string;
-    name: string;
-    brand: string;
-    price: number;
-    originalPrice: number;
-    image: string | { src: string };
-    quantity: number;
-    condition?: string;
-    color?: string;
-    specs?: {
-      processor?: string;
-      ram?: string;
-      storage?: string;
-      display?: string;
-    };
-  };
+  item: CartItemType;
 }
 
 export default function CartItem({ item }: CartItemProps) {
@@ -40,10 +25,12 @@ export default function CartItem({ item }: CartItemProps) {
     setShowRemoveConfirm(false);
   };
 
-  const imageUrl = typeof item.image === "string" ? item.image : item.image.src;
-  const discount = Math.round(
-    ((item.originalPrice - item.price) / item.originalPrice) * 100
-  );
+  const imageUrl = item.image;
+  const originalPrice = item.originalPrice || 0;
+  const discount =
+    originalPrice > item.price
+      ? Math.round(((originalPrice - item.price) / originalPrice) * 100)
+      : 0;
 
   return (
     <div className="relative bg-white dark:bg-card rounded-xl border border-border/30 p-4 sm:p-6 transition-all duration-300 hover:shadow-lg">
@@ -180,7 +167,7 @@ export default function CartItem({ item }: CartItemProps) {
 
             {/* Price */}
             <div className="flex flex-col items-end">
-              {item.originalPrice > item.price && (
+              {item.originalPrice && item.originalPrice > item.price && (
                 <span className="text-sm text-muted-foreground line-through">
                   ৳{item.originalPrice.toLocaleString()}
                 </span>
