@@ -62,7 +62,7 @@ export default function CartItem({ item }: CartItemProps) {
 
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Product Image */}
-        <div className="relative w-full sm:w-32 h-32 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg overflow-hidden flex-shrink-0">
+        <div className="relative w-full sm:w-32 h-32 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg overflow-hidden shrink-0">
           <Image
             src={imageUrl}
             alt={item.name}
@@ -151,7 +151,7 @@ export default function CartItem({ item }: CartItemProps) {
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="px-4 py-2 min-w-[3rem] text-center font-medium">
+                <span className="px-4 py-2 min-w-12 text-center font-medium">
                   {item.quantity}
                 </span>
                 <button

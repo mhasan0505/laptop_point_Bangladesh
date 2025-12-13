@@ -38,7 +38,7 @@ const ComparisonBar = () => {
                 {comparisonItems.map((product) => (
                   <div
                     key={product.id}
-                    className="relative flex-shrink-0 w-20 h-20 bg-gray-50 rounded-lg p-2 border border-gray-200"
+                    className="relative shrink-0 w-20 h-20 bg-gray-50 rounded-lg p-2 border border-gray-200"
                   >
                     <button
                       onClick={() => removeFromComparison(product.id)}
