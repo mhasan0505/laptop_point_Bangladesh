@@ -2,8 +2,10 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 
+import Breadcrumb from "@/components/application/Breadcrumb";
 import Footer from "@/components/application/Footer";
 import Header from "@/components/application/Header";
+import StickyMobileBar from "@/components/application/StickyMobileBar";
 import { CartProvider } from "@/contexts/CartContext";
 import "./globals.css";
 
@@ -28,9 +30,11 @@ export default function RootLayout({
       <body className={`${poppins.variable} antialiased`}>
         <CartProvider>
           <Header />
+          <Breadcrumb />
           {children}
           <SpeedInsights />
           <Footer />
+          <StickyMobileBar />
         </CartProvider>
       </body>
     </html>

@@ -1,34 +1,41 @@
-import Hp_probook_440_g3_front from "../../products/hp/HP_Probook_440_G3/Front.png";
-import Hp_probook_440_g3 from "../../products/hp/HP_Probook_440_G3/main.png";
-import Hp_probook_440_g3_port from "../../products/hp/HP_Probook_440_G3/Port.png";
-import Hp_probook_440_g3_side1 from "../../products/hp/HP_Probook_440_G3/Side01.png";
-import Hp_probook_440_g3_side2 from "../../products/hp/HP_Probook_440_G3/Side02.png";
+// Image paths are relative to the public directory
+const Hp_probook_440_g3_front = "/products/hp/HP_Probook_440_G3/front.png";
+const Hp_probook_440_g3 = "/products/hp/HP_Probook_440_G3/main.png";
+const Hp_probook_440_g3_port = "/products/hp/HP_Probook_440_G3/port.png";
+const Hp_probook_440_g3_side1 = "/products/hp/HP_Probook_440_G3/side01.png"; // Assuming standard naming if file missing
+const Hp_probook_440_g3_side2 = "/products/hp/HP_Probook_440_G3/side02.png";
+const Hp_probook_440_g3_keyboard =
+  "/products/hp/HP_Probook_440_G3/keyboard.png"; // Fallback if missing
 
-import Hp_elitebook_840_g3 from "../../products/hp/HP_Elitebook_840_G3/main.png";
-import Hp_elitebook_840_g3_front from "../../products/hp/HP_Elitebook_840_G3/Front.png";
-import Hp_elitebook_840_g3_port from "../../products/hp/HP_Elitebook_840_G3/Port.png";
-import Hp_elitebook_840_g3_side1 from "../../products/hp/HP_Elitebook_840_G3/Side01.png";
-import Hp_elitebook_840_g3_side2 from "../../products/hp/HP_Elitebook_840_G3/Side02.png";
-import Hp_elitebook_840_g3_keyboard from "../../products/hp/HP_Elitebook_840_G3/keyboard.png";
+const Hp_elitebook_840_g3 = "/products/hp/HP_Elitebook_840_G3/main.png";
+const Hp_elitebook_840_g3_front = "/products/hp/HP_Elitebook_840_G3/front.png";
+const Hp_elitebook_840_g3_port = "/products/hp/HP_Elitebook_840_G3/port.png";
+const Hp_elitebook_840_g3_side1 = "/products/hp/HP_Elitebook_840_G3/side01.png";
+const Hp_elitebook_840_g3_side2 = "/products/hp/HP_Elitebook_840_G3/side02.png";
+const Hp_elitebook_840_g3_keyboard =
+  "/products/hp/HP_Elitebook_840_G3/keyboard.png";
 
+// Assuming similar casing for others, updating to lowercase as seen in explorer
+const Hp_elitebook_840_g6 = "/products/hp/HP_Elitebook_840_G6/main.png";
+const Hp_elitebook_840_g6_front = "/products/hp/HP_Elitebook_840_G6/front.png";
+const Hp_elitebook_840_g6_port = "/products/hp/HP_Elitebook_840_G6/port.png";
+const Hp_elitebook_840_g6_side1 = "/products/hp/HP_Elitebook_840_G6/side01.png";
+const Hp_elitebook_840_g6_side2 = "/products/hp/HP_Elitebook_840_G6/side02.png";
+const Hp_elitebook_840_g6_keyboard =
+  "/products/hp/HP_Elitebook_840_G6/keyboard.png";
 
-import Hp_elitebook_840_g6 from "../../products/hp/HP_Elitebook_840_G6/main.png";
-import Hp_elitebook_840_g6_front from "../../products/hp/HP_Elitebook_840_G6/Front.png";
-import Hp_elitebook_840_g6_port from "../../products/hp/HP_Elitebook_840_G6/Port.png";
-import Hp_elitebook_840_g6_side1 from "../../products/hp/HP_Elitebook_840_G6/Side01.png";
-import Hp_elitebook_840_g6_side2 from "../../products/hp/HP_Elitebook_840_G6/Side02.png";
+const Hp_elitebook_840_g7 = "/products/hp/HP_Elitebook_840_G7/main.png";
+const Hp_elitebook_840_g7_front = "/products/hp/HP_Elitebook_840_G7/front.png";
+const Hp_elitebook_840_g7_port = "/products/hp/HP_Elitebook_840_G7/port.png";
+const Hp_elitebook_840_g7_side1 = "/products/hp/HP_Elitebook_840_G7/side01.png";
+const Hp_elitebook_840_g7_side2 = "/products/hp/HP_Elitebook_840_G7/side02.png";
 
-import Hp_elitebook_840_g7 from "../../products/hp/HP_Elitebook_840_G7/main.png";
-import Hp_elitebook_840_g7_front from "../../products/hp/HP_Elitebook_840_G7/Front.png";
-import Hp_elitebook_840_g7_port from "../../products/hp/HP_Elitebook_840_G7/Port.png";
-import Hp_elitebook_840_g7_side1 from "../../products/hp/HP_Elitebook_840_G7/Side01.png";
-import Hp_elitebook_840_g7_side2 from "../../products/hp/HP_Elitebook_840_G7/Side02.png";
-
-import Hp_zbook_14u_g6 from "../../products/hp/HP_ZBook_14u_G6/main.png";
-import Hp_zbook_14u_g6_front from "../../products/hp/HP_ZBook_14u_G6/Front.png";
-import Hp_zbook_14u_g6_port from "../../products/hp/HP_ZBook_14u_G6/Port.png";
-import Hp_zbook_14u_g6_side1 from "../../products/hp/HP_ZBook_14u_G6/Side01.png";
-import Hp_zbook_14u_g6_side2 from "../../products/hp/HP_ZBook_14u_G6/Side02.png";
+// Placeholder for missing Zbook images if directory empty
+const Hp_zbook_14u_g6 = "/products/hp/HP_Zbook_14U_G6/main.png";
+const Hp_zbook_14u_g6_front = "/products/hp/HP_Zbook_14U_G6/front.png";
+const Hp_zbook_14u_g6_port = "/products/hp/HP_Zbook_14U_G6/port.png";
+const Hp_zbook_14u_g6_side1 = "/products/hp/HP_Zbook_14U_G6/side01.png";
+const Hp_zbook_14u_g6_side2 = "/products/hp/HP_Zbook_14U_G6/side02.png";
 
 export const laptopData = {
   laptops: [
@@ -44,7 +51,7 @@ export const laptopData = {
       inStock: true,
       condition: ["New", "Used"],
       color: ["Black", "Silver", "Gold"],
-      image: Hp_probook_440_g3, // Primary image for backward compatibility
+      image: Hp_probook_440_g3,
       images: [
         Hp_probook_440_g3,
         Hp_probook_440_g3_side1,
@@ -73,44 +80,6 @@ export const laptopData = {
     {
       id: "LP002",
       name: 'HP EliteBook 840 G3 14" Anti-Glare FHD Full HD',
-      brand: "HP",
-      price: 21700,
-      originalPrice: 28000,
-      discount: 7,
-      rating: 4.7,
-      reviews: 285,
-      inStock: true,
-      condition: ["New", "Used"],
-      color: ["Black", "Silver"],
-      image: Hp_elitebook_840_g3,
-      images: [
-        Hp_elitebook_840_g3,
-        Hp_elitebook_840_g3_side1,
-        Hp_elitebook_840_g3_side2,
-        Hp_elitebook_840_g3_front,
-        Hp_elitebook_840_g3_port,
-        Hp_elitebook_840_g3_keyboard,
-      ],
-      specs: {
-        processor: "Intel Core i5 (6th Gen)",
-        cpu_speed: "2.4GHz",
-        ram: "8GB",
-        storage: "256GB SSD",
-        display: '14" FHD LED',
-        graphics: "Intel HD Graphics 520",
-        battery: "Up to 10 hours",
-      },
-      features: [
-        "Business-grade durability",
-        "Enhanced security features",
-        "Long battery life",
-        "Premium design",
-      ],
-      category: "Business",
-    },
-      {
-      id: "LP002",
-      name: 'HP EliteBook 840 G3 Core i5 6TH Gen 8/256 14" Anti-Glare FHD Full HD',
       brand: "HP",
       price: 21700,
       originalPrice: 28000,
@@ -196,7 +165,7 @@ export const laptopData = {
       inStock: true,
       condition: ["New"],
       color: ["Black"],
-      image: Hp_zbook_14u_g6,
+      image: Hp_zbook_14u_g6, // Ensure this exists or fallback
       images: [
         Hp_zbook_14u_g6,
         Hp_zbook_14u_g6,
@@ -257,7 +226,7 @@ export const laptopData = {
       category: "Business",
     },
     {
-      id: 2,
+      id: "LP006",
       name: "Dell XPS 15 9530",
       brand: "Dell",
       price: 1899.0,
@@ -267,7 +236,8 @@ export const laptopData = {
       reviews: 528,
       inStock: true,
       condition: ["New", "Used"],
-      image: "dell-xps-15.jpg",
+      image: Hp_elitebook_840_g7, // Placeholder using existing import
+      images: [Hp_elitebook_840_g7],
       specs: {
         processor: "Intel Core i7-13700H",
         ram: "16GB",
@@ -286,7 +256,7 @@ export const laptopData = {
       category: "Professional",
     },
     {
-      id: 3,
+      id: "LP007",
       name: "ASUS ROG Strix G16",
       brand: "ASUS",
       price: 1649.0,
@@ -295,7 +265,8 @@ export const laptopData = {
       rating: 4.7,
       reviews: 412,
       inStock: true,
-      image: "asus-rog-strix.jpg",
+      image: Hp_elitebook_840_g7, // Placeholder
+      images: [Hp_elitebook_840_g7],
       specs: {
         processor: "Intel Core i9-13980HX",
         ram: "16GB",
@@ -314,7 +285,7 @@ export const laptopData = {
       category: "Gaming",
     },
     {
-      id: 4,
+      id: "LP008",
       name: "Lenovo ThinkPad X1 Carbon Gen 11",
       brand: "Lenovo",
       price: 1599.0,
@@ -324,7 +295,8 @@ export const laptopData = {
       reviews: 635,
       inStock: true,
       condition: ["New", "Used"],
-      image: "lenovo-thinkpad-x1.jpg",
+      image: Hp_elitebook_840_g7, // Placeholder
+      images: [Hp_elitebook_840_g7],
       specs: {
         processor: "Intel Core i7-1355U",
         ram: "16GB",
@@ -343,7 +315,7 @@ export const laptopData = {
       category: "Business",
     },
     {
-      id: 5,
+      id: "LP009",
       name: "HP Pavilion 15",
       brand: "HP",
       price: 679.0,
@@ -353,7 +325,8 @@ export const laptopData = {
       reviews: 892,
       inStock: true,
       condition: ["New", "Used"],
-      image: "hp-pavilion-15.jpg",
+      image: Hp_probook_440_g3, // Reusing existing image
+      images: [Hp_probook_440_g3],
       specs: {
         processor: "AMD Ryzen 5 7530U",
         ram: "8GB",
@@ -367,7 +340,7 @@ export const laptopData = {
       category: "Budget",
     },
     {
-      id: 6,
+      id: "LP010",
       name: "Acer Aspire 5",
       brand: "Acer",
       price: 549.0,
@@ -377,7 +350,8 @@ export const laptopData = {
       reviews: 1024,
       inStock: true,
       condition: ["New", "Used"],
-      image: "acer-aspire-5.jpg",
+      image: Hp_elitebook_840_g7, // Placeholder
+      images: [Hp_elitebook_840_g7],
       specs: {
         processor: "Intel Core i5-1235U",
         ram: "8GB",
@@ -389,396 +363,6 @@ export const laptopData = {
       },
       features: ["Backlit Keyboard", "HD Webcam", "USB-C", "Wi-Fi 6"],
       category: "Budget",
-    },
-    {
-      id: 7,
-      name: "MSI Raider GE78 HX",
-      brand: "MSI",
-      price: 2799.0,
-      originalPrice: 3299.0,
-      discount: 15,
-      rating: 4.8,
-      reviews: 187,
-      inStock: true,
-      condition: ["New", "Used"],
-      image: "msi-raider-ge78.jpg",
-      specs: {
-        processor: "Intel Core i9-13980HX",
-        ram: "32GB",
-        storage: "1TB SSD",
-        display: '17" QHD 240Hz',
-        graphics: "NVIDIA RTX 4070",
-        battery: "Up to 6 hours",
-        weight: "6.83 lbs",
-      },
-      features: [
-        "Per-Key RGB",
-        "Hi-Res Audio",
-        "Cooler Boost 5",
-        "Mystic Light",
-      ],
-      category: "Gaming",
-    },
-    {
-      id: 8,
-      name: "Microsoft Surface Laptop 5",
-      brand: "Microsoft",
-      price: 1299.0,
-      originalPrice: 1499.0,
-      discount: 13,
-      rating: 4.5,
-      reviews: 456,
-      inStock: true,
-      condition: ["New", "Used"],
-      image: "surface-laptop-5.jpg",
-      specs: {
-        processor: "Intel Core i5-1235U",
-        ram: "8GB",
-        storage: "256GB SSD",
-        display: '13.5" PixelSense Touchscreen',
-        graphics: "Intel Iris Xe",
-        battery: "Up to 17 hours",
-        weight: "2.8 lbs",
-      },
-      features: [
-        "Touchscreen",
-        "Windows Hello",
-        "Dolby Atmos",
-        "Thunderbolt 4",
-      ],
-      category: "Ultrabook",
-    },
-    {
-      id: 9,
-      name: "Razer Blade 15",
-      brand: "Razer",
-      price: 2199.0,
-      originalPrice: 2499.0,
-      discount: 12,
-      rating: 4.6,
-      reviews: 298,
-      inStock: false,
-      image: "razer-blade-15.jpg",
-      specs: {
-        processor: "Intel Core i7-13800H",
-        ram: "16GB",
-        storage: "1TB SSD",
-        display: '15.6" QHD 240Hz',
-        graphics: "NVIDIA RTX 4060",
-        battery: "Up to 8 hours",
-        weight: "4.4 lbs",
-      },
-      features: [
-        "Per-Key RGB",
-        "Vapor Chamber Cooling",
-        "THX Spatial Audio",
-        "CNC Aluminum",
-      ],
-      category: "Gaming",
-    },
-    {
-      id: 10,
-      name: "LG Gram 17",
-      brand: "LG",
-      price: 1599.0,
-      originalPrice: 1899.0,
-      discount: 16,
-      rating: 4.6,
-      reviews: 341,
-      inStock: true,
-      condition: ["New", "Used"],
-      image: "lg-gram-17.jpg",
-      specs: {
-        processor: "Intel Core i7-1360P",
-        ram: "16GB",
-        storage: "512GB SSD",
-        display: '17" WQXGA IPS',
-        graphics: "Intel Iris Xe",
-        battery: "Up to 19 hours",
-        weight: "2.98 lbs",
-      },
-      features: [
-        "MIL-STD-810G",
-        "Fingerprint Reader",
-        "Backlit Keyboard",
-        "Thunderbolt 4",
-      ],
-      category: "Ultrabook",
-    },
-    {
-      id: 11,
-      name: "ASUS ZenBook 14 OLED",
-      brand: "ASUS",
-      price: 899.0,
-      originalPrice: 1099.0,
-      discount: 18,
-      rating: 4.5,
-      reviews: 567,
-      inStock: true,
-      image: "asus-zenbook-14.jpg",
-      specs: {
-        processor: "AMD Ryzen 7 7730U",
-        ram: "16GB",
-        storage: "512GB SSD",
-        display: '14" FHD OLED',
-        graphics: "AMD Radeon",
-        battery: "Up to 12 hours",
-        weight: "3.09 lbs",
-      },
-      features: [
-        "OLED Display",
-        "NumberPad 2.0",
-        "Harman Kardon Audio",
-        "ErgoLift Hinge",
-      ],
-      category: "Ultrabook",
-    },
-    {
-      id: 12,
-      name: "Alienware m18 R1",
-      brand: "Dell",
-      price: 3299.0,
-      originalPrice: 3799.0,
-      discount: 13,
-      rating: 4.7,
-      reviews: 156,
-      inStock: true,
-      image: "alienware-m18.jpg",
-      specs: {
-        processor: "Intel Core i9-13980HX",
-        ram: "32GB",
-        storage: "2TB SSD",
-        display: '18" QHD+ 165Hz',
-        graphics: "NVIDIA RTX 4080",
-        battery: "Up to 6 hours",
-        weight: "8.9 lbs",
-      },
-      features: [
-        "AlienFX RGB",
-        "Cherry MX Keyboard",
-        "Dolby Atmos",
-        "Advanced Cooling",
-      ],
-      category: "Gaming",
-    },
-    {
-      id: 13,
-      name: "Samsung Galaxy Book3 Pro",
-      brand: "Samsung",
-      price: 1349.0,
-      originalPrice: 1549.0,
-      discount: 13,
-      rating: 4.4,
-      reviews: 423,
-      inStock: true,
-      image: "samsung-galaxy-book3.jpg",
-      specs: {
-        processor: "Intel Core i7-1360P",
-        ram: "16GB",
-        storage: "512GB SSD",
-        display: '14" AMOLED Touchscreen',
-        graphics: "Intel Iris Xe",
-        battery: "Up to 21 hours",
-        weight: "2.58 lbs",
-      },
-      features: [
-        "AMOLED Display",
-        "S Pen Compatible",
-        "AKG Speakers",
-        "Fingerprint Reader",
-      ],
-      category: "Ultrabook",
-    },
-    {
-      id: 14,
-      name: "HP Envy x360 15",
-      brand: "HP",
-      price: 949.0,
-      originalPrice: 1199.0,
-      discount: 21,
-      rating: 4.4,
-      reviews: 689,
-      inStock: true,
-      image: "hp-envy-x360.jpg",
-      specs: {
-        processor: "AMD Ryzen 7 7730U",
-        ram: "16GB",
-        storage: "512GB SSD",
-        display: '15.6" FHD Touchscreen',
-        graphics: "AMD Radeon",
-        battery: "Up to 11 hours",
-        weight: "4.11 lbs",
-      },
-      features: [
-        "2-in-1 Convertible",
-        "Pen Support",
-        "Bang & Olufsen Audio",
-        "Privacy Camera",
-      ],
-      category: "Convertible",
-    },
-    {
-      id: 15,
-      name: "Lenovo IdeaPad Gaming 3",
-      brand: "Lenovo",
-      price: 899.0,
-      originalPrice: 1099.0,
-      discount: 18,
-      rating: 4.3,
-      reviews: 745,
-      inStock: true,
-      image: "lenovo-ideapad-gaming.jpg",
-      specs: {
-        processor: "AMD Ryzen 5 7535HS",
-        ram: "8GB",
-        storage: "512GB SSD",
-        display: '15.6" FHD 120Hz',
-        graphics: "NVIDIA RTX 3050",
-        battery: "Up to 7 hours",
-        weight: "4.96 lbs",
-      },
-      features: [
-        "120Hz Display",
-        "RGB Keyboard",
-        "Nahimic Audio",
-        "Rapid Charge",
-      ],
-      category: "Gaming",
-    },
-    {
-      id: 16,
-      name: 'MacBook Air 15" M3',
-      brand: "Apple",
-      price: 1299.0,
-      originalPrice: 1499.0,
-      discount: 13,
-      rating: 4.9,
-      reviews: 812,
-      inStock: true,
-      image: "macbook-air-15.jpg",
-      specs: {
-        processor: "Apple M3",
-        ram: "8GB",
-        storage: "256GB SSD",
-        display: '15.3" Liquid Retina',
-        graphics: "Integrated GPU",
-        battery: "Up to 18 hours",
-        weight: "3.3 lbs",
-      },
-      features: [
-        "Touch ID",
-        "MagSafe Charging",
-        "1080p Camera",
-        "Spatial Audio",
-      ],
-      category: "Ultrabook",
-    },
-    {
-      id: 17,
-      name: "Acer Predator Helios 16",
-      brand: "Acer",
-      price: 1799.0,
-      originalPrice: 2099.0,
-      discount: 14,
-      rating: 4.6,
-      reviews: 334,
-      inStock: true,
-      image: "acer-predator-helios.jpg",
-      specs: {
-        processor: "Intel Core i7-13700HX",
-        ram: "16GB",
-        storage: "1TB SSD",
-        display: '16" WQXGA 165Hz',
-        graphics: "NVIDIA RTX 4060",
-        battery: "Up to 6 hours",
-        weight: "5.73 lbs",
-      },
-      features: [
-        "RGB Keyboard",
-        "5th Gen AeroBlade",
-        "DTS:X Ultra Audio",
-        "Killer Wi-Fi 6E",
-      ],
-      category: "Gaming",
-    },
-    {
-      id: 18,
-      name: "Google Pixelbook Go",
-      brand: "Google",
-      price: 649.0,
-      originalPrice: 849.0,
-      discount: 24,
-      rating: 4.4,
-      reviews: 523,
-      inStock: true,
-      image: "google-pixelbook-go.jpg",
-      specs: {
-        processor: "Intel Core i5-8200Y",
-        ram: "8GB",
-        storage: "128GB SSD",
-        display: '13.3" FHD Touchscreen',
-        graphics: "Intel UHD 615",
-        battery: "Up to 12 hours",
-        weight: "2.33 lbs",
-      },
-      features: ["Chrome OS", "Touchscreen", "Hush Keys", "Titan C Security"],
-      category: "Chromebook",
-    },
-    {
-      id: 19,
-      name: "ASUS TUF Gaming A15",
-      brand: "ASUS",
-      price: 1099.0,
-      originalPrice: 1299.0,
-      discount: 15,
-      rating: 4.5,
-      reviews: 612,
-      inStock: true,
-      image: "asus-tuf-a15.jpg",
-      specs: {
-        processor: "AMD Ryzen 7 7735HS",
-        ram: "16GB",
-        storage: "512GB SSD",
-        display: '15.6" FHD 144Hz',
-        graphics: "NVIDIA RTX 4050",
-        battery: "Up to 9 hours",
-        weight: "4.85 lbs",
-      },
-      features: [
-        "MIL-STD-810H",
-        "RGB Keyboard",
-        "Self-Cleaning Cooling",
-        "DTS:X Ultra",
-      ],
-      category: "Gaming",
-    },
-    {
-      id: 20,
-      name: "Framework Laptop 13",
-      brand: "Framework",
-      price: 1049.0,
-      originalPrice: 1249.0,
-      discount: 16,
-      rating: 4.7,
-      reviews: 289,
-      inStock: true,
-      image: "framework-laptop-13.jpg",
-      specs: {
-        processor: "Intel Core i5-1340P",
-        ram: "16GB",
-        storage: "512GB SSD",
-        display: '13.5" 2256x1504 IPS',
-        graphics: "Intel Iris Xe",
-        battery: "Up to 11 hours",
-        weight: "2.87 lbs",
-      },
-      features: [
-        "Modular Design",
-        "User Repairable",
-        "Customizable Ports",
-        "Open Source",
-      ],
-      category: "Business",
     },
   ],
 };

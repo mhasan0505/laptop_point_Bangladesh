@@ -1,5 +1,6 @@
 "use client";
 
+import { laptopData } from "@/app/data/data";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "swiper/css";
 import "swiper/css/autoplay";
@@ -10,6 +11,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ProductsCard from "../ui/ProductsCard";
 
 const NewProductsSection = () => {
+  // Use first 8 products as "New" for now, or filter by a 'new' flag if it existed
+  const newProducts = laptopData.laptops.slice(0, 8);
+
   return (
     <div className="w-full bg-linear-to-b from-gray-50/50 to-white dark:from-gray-900/50 dark:to-gray-950 py-8 md:py-12 lg:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,10 +107,10 @@ const NewProductsSection = () => {
             }}
             className="pb-12! md:pb-14!"
           >
-            {[...Array(8)].map((_, index) => (
-              <SwiperSlide key={index} className="h-auto! py-2">
+            {newProducts.map((product) => (
+              <SwiperSlide key={product.id} className="h-auto! py-2">
                 <div className="flex justify-center">
-                  <ProductsCard />
+                  <ProductsCard product={product} />
                 </div>
               </SwiperSlide>
             ))}

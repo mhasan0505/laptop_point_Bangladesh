@@ -13,6 +13,7 @@ import {
   MapPin,
   Menu,
   Phone,
+  Scale,
   Search,
   ShoppingCart,
   Twitter,
@@ -34,10 +35,42 @@ const Header = () => {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Shop", href: "/shop", hasDropdown: true },
-    { name: "Categories", href: "/categories", hasDropdown: true },
+    {
+      name: "Shop",
+      href: "/shop",
+      hasDropdown: true,
+      submenu: [
+        { name: "All Products", href: "/shop" },
+        { name: "New Arrivals", href: "/shop?sort=new" },
+        { name: "Best Sellers", href: "/shop?sort=best-selling" },
+        { name: "Discounts", href: "/shop?sort=discount" },
+      ],
+    },
+    {
+      name: "Categories",
+      href: "/categories",
+      hasDropdown: true,
+      submenu: [
+        { name: "Business Laptops", href: "/categories/business" },
+        { name: "Gaming Laptops", href: "/categories/gaming" },
+        { name: "Professional", href: "/categories/professional" },
+        { name: "Budget Friendly", href: "/categories/budget" },
+      ],
+    },
     { name: "Deals", href: "/deals", badge: "HOT" },
-    { name: "About", href: "/about" },
+    {
+      name: "Accessories",
+      href: "/accessories",
+      hasDropdown: true,
+      submenu: [
+        { name: "Mouse & Keyboards", href: "/accessories/mouse-keyboards" },
+        { name: "Headphones & Audio", href: "/accessories/audio" },
+        { name: "Laptop Bags & Sleeves", href: "/accessories/bags" },
+        { name: "Chargers & Adapters", href: "/accessories/chargers" },
+        { name: "RAM & SSD Upgrades", href: "/accessories/components" },
+        { name: "Cooling Pads", href: "/accessories/cooling" },
+      ],
+    },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -149,35 +182,9 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-1">
+            <nav className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
-                <div key={link.name} className="relative group">
-                  <Link
-                    href={link.href}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors flex items-center"
-                  >
-                    {link.name}
-                    {link.hasDropdown && (
-                      <ChevronDown className="ml-1 w-4 h-4" />
-                    )}
-                    {link.badge && (
-                      <span className="ml-2 px-1.5 py-0.5 text-xs rounded-full bg-red-500 text-white">
-                        {link.badge}
-                      </span>
-                    )}
-                  </Link>
-                  {link.hasDropdown && (
-                    <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Submenu Item
-                      </a>
-                      {/* Add more dropdown items */}
-                    </div>
-                  )}
-                </div>
+                <NavItem key={link.name} link={link} />
               ))}
             </nav>
 
@@ -269,6 +276,24 @@ const Header = () => {
                 )}
               </div>
 
+              {/* Compare Button */}
+              <Link href="/compare">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={isSearchExpanded ? "hidden md:block" : ""}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full relative h-10 w-10 hover:bg-gray-100 transition-colors"
+                    aria-label="Compare products"
+                  >
+                    <Scale className="h-5 w-5 text-gray-700" />
+                  </Button>
+                </motion.div>
+              </Link>
+
               {/* Cart Button */}
               <Link href="/cart">
                 <motion.div
@@ -335,6 +360,75 @@ const Header = () => {
         onClose={() => setIsMobileMenuOpen(false)}
       />
     </header>
+  );
+};
+
+interface NavLink {
+  name: string;
+  href: string;
+  hasDropdown?: boolean;
+  submenu?: { name: string; href: string }[];
+  badge?: string;
+}
+
+const NavItem = ({ link }: { link: NavLink }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      className="relative group px-1"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Link
+        href={link.href}
+        className={`px-4 py-2 text-sm font-medium transition-colors flex items-center rounded-full hover:bg-gray-50 ${
+          isHovered ? "text-yellow-600" : "text-gray-700"
+        }`}
+      >
+        {link.name}
+        {link.hasDropdown && (
+          <ChevronDown
+            className={`ml-1 w-4 h-4 transition-transform duration-200 ${
+              isHovered ? "rotate-180 text-yellow-500" : ""
+            }`}
+          />
+        )}
+        {link.badge && (
+          <span className="ml-2 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-red-500 text-white leading-none">
+            {link.badge}
+          </span>
+        )}
+      </Link>
+
+      {/* Submenu */}
+      {link.hasDropdown && link.submenu && (
+        <motion.div
+          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          animate={
+            isHovered
+              ? { opacity: 1, y: 0, scale: 1 }
+              : { opacity: 0, y: 10, scale: 0.95 }
+          }
+          transition={{ duration: 0.2 }}
+          className={`absolute left-0 top-full mt-1 w-56 p-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 origin-top-left ${
+            isHovered ? "pointer-events-auto" : "pointer-events-none"
+          }`}
+        >
+          <div className="flex flex-col gap-1">
+            {link.submenu.map((subItem) => (
+              <Link
+                key={subItem.name}
+                href={subItem.href}
+                className="block px-4 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-yellow-50 hover:text-yellow-700 transition-colors font-medium"
+              >
+                {subItem.name}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+      )}
+    </div>
   );
 };
 
