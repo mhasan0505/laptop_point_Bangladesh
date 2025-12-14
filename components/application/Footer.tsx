@@ -55,7 +55,7 @@ export default function Footer() {
             {/* Newsletter (Optional Placeholder) */}
             <div className="w-full md:w-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-100 max-w-md">
               <h4 className="font-semibold text-gray-900 mb-2">
-                tSubscribe to our Newsletter
+                Subscribe to our Newsletter
               </h4>
               <p className="text-gray-500 text-sm mb-4">
                 Get the latest updates dealing with new products and trends.

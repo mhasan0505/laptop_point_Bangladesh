@@ -10,9 +10,13 @@ import { useState } from "react";
 const MegaMenu = ({
   isOpen,
   onClose,
+  onMouseEnter,
+  onMouseLeave,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }) => {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
@@ -49,7 +53,8 @@ const MegaMenu = ({
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.2 }}
         className="absolute left-0 right-0 top-full mt-1 bg-white shadow-2xl border-t border-gray-100 z-50"
-        onMouseLeave={onClose}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-12 gap-8">

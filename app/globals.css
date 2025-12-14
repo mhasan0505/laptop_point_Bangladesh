@@ -125,11 +125,16 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    font-size: 14px; /* Scaling down base size from 16px to 14px (approx 87.5%) */
+  }
+
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-geist-sans), var(--font-poppins), system-ui, -apple-system, sans-serif;
-    font-size: 14px;
-    line-height: 1.43;
+    font-family: var(--font-geist-sans), var(--font-poppins), system-ui,
+      -apple-system, sans-serif;
+    font-size: 1rem; /* Now relative to the new 14px root */
+    line-height: 1.5;
   }
 
   /* Smooth transitions for all interactive elements */

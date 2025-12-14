@@ -110,6 +110,23 @@ const Header = () => {
     };
   }, [isSearchExpanded]);
 
+  // Timer ref for closing delay
+  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMegaMenuOpen = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setIsMegaMenuOpen(true);
+  };
+
+  const handleMegaMenuClose = () => {
+    closeTimerRef.current = setTimeout(() => {
+      setIsMegaMenuOpen(false);
+    }, 200);
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       {/* Top Bar */}
@@ -194,7 +211,8 @@ const Header = () => {
                 <NavItem
                   key={link.name}
                   link={link}
-                  onMegaMenuToggle={setIsMegaMenuOpen}
+                  onMegaMenuOpen={handleMegaMenuOpen}
+                  onMegaMenuClose={handleMegaMenuClose}
                 />
               ))}
             </nav>
@@ -380,6 +398,8 @@ const Header = () => {
       <MegaMenu
         isOpen={isMegaMenuOpen}
         onClose={() => setIsMegaMenuOpen(false)}
+        onMouseEnter={handleMegaMenuOpen}
+        onMouseLeave={handleMegaMenuClose}
       />
     </header>
   );
@@ -395,24 +415,30 @@ interface NavLink {
 
 const NavItem = ({
   link,
-  onMegaMenuToggle,
+  onMegaMenuOpen,
+  onMegaMenuClose,
 }: {
   link: NavLink;
-  onMegaMenuToggle?: (isOpen: boolean) => void;
+  onMegaMenuOpen?: () => void;
+  onMegaMenuClose?: () => void;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
     // Open MegaMenu for Categories link
-    if (link.name === "Categories" && onMegaMenuToggle) {
-      onMegaMenuToggle(true);
+    if (link.name === "Categories" && onMegaMenuOpen) {
+      onMegaMenuOpen();
     }
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    // Don't close MegaMenu here, let MegaMenu handle it
+
+    // For Categories, set a timer to close
+    if (link.name === "Categories" && onMegaMenuClose) {
+      onMegaMenuClose();
+    }
   };
 
   return (
