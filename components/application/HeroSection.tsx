@@ -35,7 +35,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="container mx-auto h-[328px] bg-black relative overflow-hidden group">
+    <div className="container mx-auto h-48 sm:h-64 md:h-[328px] lg:h-[400px] bg-black relative overflow-hidden group">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div

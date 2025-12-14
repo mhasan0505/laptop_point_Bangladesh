@@ -109,7 +109,7 @@ export default function ContactPage() {
 
               <div className="space-y-8">
                 <div className="flex items-start group">
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  <div className="shrink-0 w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div className="ml-4">
@@ -124,7 +124,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex items-start group">
-                  <div className="flex-shrink-0 w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
+                  <div className="shrink-0 w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
                     <Phone className="w-6 h-6" />
                   </div>
                   <div className="ml-4">
@@ -139,7 +139,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex items-start group">
-                  <div className="flex-shrink-0 w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                  <div className="shrink-0 w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
                     <Mail className="w-6 h-6" />
                   </div>
                   <div className="ml-4">
@@ -156,7 +156,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex items-start group">
-                  <div className="flex-shrink-0 w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition-colors duration-300">
+                  <div className="shrink-0 w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center group-hover:bg-orange-600 group-hover:text-white transition-colors duration-300">
                     <Clock className="w-6 h-6" />
                   </div>
                   <div className="ml-4">

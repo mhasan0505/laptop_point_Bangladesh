@@ -78,7 +78,7 @@ export default function Footer() {
       {/* Main Links Section - Dark Background */}
       <div className="bg-gray-900 text-white pt-16 pb-8">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
             {/* Quick Links */}
             <div>
               <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-yellow-400 after:rounded-full">
