@@ -4,6 +4,7 @@ import { laptopData } from "@/app/data/data";
 import RecentlyViewed from "@/components/product/RecentlyViewed";
 import FilterSidebar from "@/components/shop/FilterSidebar";
 import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import ProductsCard from "@/components/ui/ProductsCard";
 import TrustBadges from "@/components/ui/TrustBadges";
 import { SlidersHorizontal } from "lucide-react";
@@ -115,7 +116,7 @@ export default function ShopPage() {
       <Suspense
         fallback={
           <div className="min-h-[400px] flex items-center justify-center">
-            Loading products...
+            <LoadingSpinner size="lg" />
           </div>
         }
       >
