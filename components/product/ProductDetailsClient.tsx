@@ -104,6 +104,7 @@ export default function ProductDetailsClient({
           <button
             onClick={() => router.back()}
             className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Go back"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -139,6 +140,7 @@ export default function ProductDetailsClient({
                   fill
                   className="object-contain hover:scale-105 transition-transform duration-500"
                   priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                 />
               </div>
 
@@ -160,6 +162,7 @@ export default function ProductDetailsClient({
                         alt={`View ${idx + 1}`}
                         fill
                         className="object-contain"
+                        sizes="(max-width: 768px) 20vw, 10vw"
                       />
                     </button>
                   ))}
@@ -266,6 +269,7 @@ export default function ProductDetailsClient({
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-700 shadow-sm hover:shadow-md transition-all disabled:opacity-50"
                     disabled={quantity <= 1}
+                    aria-label="Decrease quantity"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
@@ -273,6 +277,7 @@ export default function ProductDetailsClient({
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-700 shadow-sm hover:shadow-md transition-all"
+                    aria-label="Increase quantity"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -281,6 +286,7 @@ export default function ProductDetailsClient({
                 <Button
                   className="flex-1 h-14 rounded-full text-base font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all gap-2"
                   onClick={handleAddToCart}
+                  aria-label="Add to cart"
                 >
                   <ShoppingBag className="w-5 h-5" />
                   Add to Cart
@@ -298,6 +304,9 @@ export default function ProductDetailsClient({
                       isWishlisted
                         ? removeFromWishlist(product.id)
                         : addToWishlist(product)
+                    }
+                    aria-label={
+                      isWishlisted ? "Remove from wishlist" : "Add to wishlist"
                     }
                   >
                     <Heart
@@ -319,6 +328,11 @@ export default function ProductDetailsClient({
                         : canAddMore() && addToComparison(product)
                     }
                     disabled={!isCompared && !canAddMore()}
+                    aria-label={
+                      isCompared
+                        ? "Remove from comparison"
+                        : "Add to comparison"
+                    }
                   >
                     <Share2 className="w-5 h-5" />{" "}
                     {/* Using Share2 as placeholder for compare icon if standard isn't available, or rotate icon */}

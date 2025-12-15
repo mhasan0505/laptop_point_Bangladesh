@@ -116,6 +116,7 @@ const QuickViewContent = ({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-white/80 hover:bg-white text-gray-500 hover:text-gray-900 transition-all shadow-sm hover:shadow-md backdrop-blur-sm"
+          aria-label="Close modal"
         >
           <X className="w-5 h-5" />
         </button>
@@ -144,6 +145,7 @@ const QuickViewContent = ({
               fill
               className="object-contain drop-shadow-xl"
               priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
             />
           </motion.div>
         </div>
@@ -260,6 +262,7 @@ const QuickViewContent = ({
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-gray-600 shadow-sm hover:shadow-md transition-all disabled:opacity-50"
                     disabled={quantity <= 1}
+                    aria-label="Decrease quantity"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
@@ -269,6 +272,7 @@ const QuickViewContent = ({
                   <button
                     onClick={() => setQuantity(quantity + 1)}
                     className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-gray-900 shadow-sm hover:shadow-md transition-all"
+                    aria-label="Increase quantity"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -278,6 +282,7 @@ const QuickViewContent = ({
                 <Button
                   className="flex-1 h-12 rounded-full text-base font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all gap-2"
                   onClick={handleAddToCart}
+                  aria-label="Add to cart"
                 >
                   <ShoppingBag className="w-5 h-5" />
                   Add to Cart
@@ -292,6 +297,9 @@ const QuickViewContent = ({
                       : "bg-white text-gray-400"
                   }`}
                   onClick={handleWishlistToggle}
+                  aria-label={
+                    isWishlisted ? "Remove from wishlist" : "Add to wishlist"
+                  }
                 >
                   <Heart
                     className={`w-6 h-6 ${isWishlisted ? "fill-current" : ""}`}

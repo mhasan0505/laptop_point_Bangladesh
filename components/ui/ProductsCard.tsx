@@ -89,7 +89,10 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                   ? "bg-red-500 text-white"
                   : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
               }`}
-              title="Add to Wishlist"
+              title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+              aria-label={
+                isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"
+              }
             >
               <Heart
                 className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`}
@@ -98,6 +101,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
             <button
               className="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-md hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-200"
               title="Quick View"
+              aria-label="Quick View"
               onClick={(e) => {
                 e.preventDefault(); // Prevent navigation
                 e.stopPropagation();
@@ -120,6 +124,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               }`}
               onLoad={() => setImageLoaded(true)}
               priority
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </div>
 
@@ -136,6 +141,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                 : "bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200"
             }`}
             title="Add to Cart"
+            aria-label="Add to Cart"
           >
             {addedToCart ? (
               <ShoppingBag className="w-4 h-4" />
