@@ -23,4 +23,10 @@ export interface Product {
   };
   category?: string;
   features?: string[];
+  condition?: string[];
+  sku?: string;
+  description?: {
+    short: string;
+    full: string;
+  };
 }

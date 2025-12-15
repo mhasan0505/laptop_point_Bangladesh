@@ -49,6 +49,10 @@ const HpLaptopSection = () => {
     Gaming: Gamepad2,
     Budget: Wallet,
     General: Laptop,
+    Ultrabook: Briefcase,
+    Workstation: Building2,
+    Convertible: Laptop,
+    "Convertible 2-in-1": Laptop,
   };
 
   return (

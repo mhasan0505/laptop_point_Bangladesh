@@ -1,0 +1,968 @@
+[
+  {
+    "id": 1,
+    "sku": "HP-440G3-001",
+    "name": "HP ProBook 440 G3 Business Laptop",
+    "brand": "HP",
+    "model": "ProBook 440 G3",
+    "category": "Laptop",
+    "condition": "Used",
+    "grade": "A",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 19990,
+      "market_price": 24500,
+      "discount_percentage": 18,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
+    },
+    "specs": {
+      "processor": "Intel Core i5-6200U (6th Gen)",
+      "ram": "8GB DDR3L",
+      "storage": "256GB SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1366 x 768 (HD)",
+        "type": "Anti-Glare LED",
+        "touchscreen": false
+      },
+      "graphics": "Intel HD Graphics 520",
+      "ports": ["HDMI", "VGA", "2x USB 3.0", "1x USB 2.0", "RJ-45"],
+      "weight": "1.68 kg",
+      "os": "Windows 10 Pro"
+    },
+    "description": {
+      "short": "Reliable 14-inch business laptop with legacy ports and durable build.",
+      "full": "The HP ProBook 440 G3 is a workhorse designed for productivity. Featuring a durable chassis that has passed extensive testing, it offers a comprehensive set of ports including VGA and HDMI, making it perfect for connecting to older projectors and monitors without dongles. Ideally suited for students and office administration tasks."
+    },
+    "features": ["Durable Chassis", "Spill-resistant Keyboard", "Legacy VGA Port"],
+    "images": ["/images/hp-440-g3-front.jpg"]
+  },
+  {
+    "id": 2,
+    "sku": "HP-840G3-002",
+    "name": "HP EliteBook 840 G3 Ultrabook",
+    "brand": "HP",
+    "model": "EliteBook 840 G3",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A+",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 21700,
+      "market_price": 26000,
+      "discount_percentage": 16,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 8
+    },
+    "specs": {
+      "processor": "Intel Core i5-6300U (6th Gen)",
+      "ram": "8GB DDR4",
+      "storage": "256GB SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "TN/IPS",
+        "touchscreen": false
+      },
+      "graphics": "Intel HD Graphics 520",
+      "ports": ["USB-C", "DisplayPort", "USB 3.0", "VGA", "Docking Connector"],
+      "weight": "1.48 kg",
+      "os": "Windows 10 Pro"
+    },
+    "description": {
+      "short": "Slim enterprise ultrabook with enterprise-grade security and connectivity.",
+      "full": "Step up to the EliteBook series with the 840 G3. This ultrabook is significantly thinner and lighter than the ProBook series, featuring a magnesium alloy chassis. It introduces USB-C connectivity while maintaining backward compatibility with VGA and DisplayPort. A favorite for corporate environments."
+    },
+    "features": ["Slim Aluminum Body", "Backlit Keyboard", "Enterprise Security"],
+    "images": ["/images/hp-840-g3-front.jpg"]
+  },
+  {
+    "id": 3,
+    "sku": "HP-840G6-003",
+    "name": "HP EliteBook 840 G6 Premium Ultrabook",
+    "brand": "HP",
+    "model": "EliteBook 840 G6",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A+",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 28700,
+      "market_price": 35000,
+      "discount_percentage": 18,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 12
+    },
+    "specs": {
+      "processor": "Intel Core i5-8365U (8th Gen)",
+      "ram": "8GB DDR4",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": ["Thunderbolt 3", "HDMI 1.4b", "2x USB 3.1", "RJ-45"],
+      "weight": "1.48 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "8th Gen Quad-core power in a precision-crafted aluminum design.",
+      "full": "The EliteBook 840 G6 marks a significant jump in performance with its Quad-Core 8th Gen processor, fully capable of running Windows 11. The all-aluminum 'unibody' design is sleek, modern, and features Thunderbolt 3 for high-speed docking and data transfer. Excellent speakers and a privacy shutter webcam make it ideal for modern remote work."
+    },
+    "features": ["Quad-Core CPU", "Thunderbolt 3", "Windows 11 Ready", "Bang & Olufsen Audio"],
+    "images": ["/images/hp-840-g6-front.jpg"]
+  },
+  {
+    "id": 4,
+    "sku": "HP-Z14UG6-004",
+    "name": "HP ZBook 14u G6 Mobile Workstation",
+    "brand": "HP",
+    "model": "ZBook 14u G6",
+    "category": "Workstation",
+    "condition": "Used",
+    "grade": "A",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 30500,
+      "market_price": 38000,
+      "discount_percentage": 20,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "Limited Stock",
+      "quantity": 3
+    },
+    "specs": {
+      "processor": "Intel Core i5-8365U (8th Gen)",
+      "ram": "8GB DDR4",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS",
+        "touchscreen": false
+      },
+      "graphics": "AMD Radeon Pro WX 3200 (Dedicated)",
+      "ports": ["Thunderbolt 3", "HDMI", "USB 3.1", "Smart Card"],
+      "weight": "1.48 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Portable workstation power with dedicated Radeon Pro graphics.",
+      "full": "The ZBook 14u G6 is HP's thinnest mobile workstation. It shares the sleek chassis of the EliteBook 840 but packs a punch with dedicated AMD Radeon Pro graphics, making it suitable for light CAD work, photo editing, and technical applications that require ISV certification."
+    },
+    "features": ["Dedicated Graphics", "Workstation Class", "ISV Certified"],
+    "images": ["/images/hp-zbook-14u-g6.jpg"]
+  },
+  {
+    "id": 5,
+    "sku": "HP-840G7-005",
+    "name": "HP EliteBook 840 G7 Premium",
+    "brand": "HP",
+    "model": "EliteBook 840 G7",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 36500,
+      "market_price": 44000,
+      "discount_percentage": 17,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 6
+    },
+    "specs": {
+      "processor": "Intel Core i5-10310U (10th Gen)",
+      "ram": "16GB DDR4",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Narrow Bezel",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics",
+      "ports": ["2x Thunderbolt 3", "2x USB 3.1", "HDMI 1.4", "Audio Combo"],
+      "weight": "1.33 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Redesigned 10th Gen lightweight ultrabook with narrow bezels.",
+      "full": "The G7 represents a major design overhaul with a lighter chassis (1.33kg) and significantly thinner screen bezels for a smaller footprint. With 16GB of RAM standard, it handles heavy multitasking with ease. The keyboard is quieter and more comfortable, and the battery life is improved for all-day usage."
+    },
+    "features": ["Lightweight (1.33kg)", "Narrow Bezels", "16GB RAM Standard", "Quiet Keyboard"],
+    "images": ["/images/hp-840-g7.jpg"]
+  },
+  {
+    "id": 6,
+    "sku": "HP-840G8-I5-006",
+    "name": "HP EliteBook 840 G8 (i5)",
+    "brand": "HP",
+    "model": "EliteBook 840 G8",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 40500,
+      "market_price": 48000,
+      "discount_percentage": 16,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
+    },
+    "specs": {
+      "processor": "Intel Core i5-1135G7 (11th Gen)",
+      "ram": "16GB DDR4 (3200MHz)",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS High Brightness",
+        "touchscreen": false
+      },
+      "graphics": "Intel Iris Xe Graphics",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0b", "Audio Combo"],
+      "weight": "1.32 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Current-gen performance with 11th Gen i5 and Iris Xe Graphics.",
+      "full": "The G8 is a powerhouse featuring Intel's 11th Gen Tiger Lake processor and the formidable Iris Xe graphics, capable of light gaming and heavy graphical workloads. It features Thunderbolt 4 connectivity and AI-based noise cancellation for crystal clear video calls."
+    },
+    "features": ["Intel Iris Xe Graphics", "Thunderbolt 4", "AI Noise Cancellation", "WiFi 6"],
+    "images": ["/images/hp-840-g8.jpg"]
+  },
+  {
+    "id": 7,
+    "sku": "HP-840G8-I7-007",
+    "name": "HP EliteBook 840 G8 (i7 Edition)",
+    "brand": "HP",
+    "model": "EliteBook 840 G8",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 46000,
+      "market_price": 55000,
+      "discount_percentage": 16,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
+    },
+    "specs": {
+      "processor": "Intel Core i7-1165G7 (11th Gen)",
+      "ram": "16GB DDR4 (3200MHz)",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS 400 nits",
+        "touchscreen": false
+      },
+      "graphics": "Intel Iris Xe Graphics",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0b"],
+      "weight": "1.32 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Top-tier 11th Gen i7 performance for demanding professionals.",
+      "full": "Identical in build to the i5 model but supercharged with the Core i7-1165G7 processor. This machine offers higher clock speeds and larger cache, making it ideal for developers, data analysts, or power users who need that extra headroom for heavy applications."
+    },
+    "features": ["Core i7 Performance", "High Brightness Display", "Thunderbolt 4"],
+    "images": ["/images/hp-840-g8-i7.jpg"]
+  },
+  {
+    "id": 8,
+    "sku": "HP-1040G8-008",
+    "name": "HP EliteBook x360 1040 G8",
+    "brand": "HP",
+    "model": "EliteBook x360 1040 G8",
+    "category": "Convertible 2-in-1",
+    "condition": "Used",
+    "grade": "Premium",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 69000,
+      "market_price": 85000,
+      "discount_percentage": 19,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "Limited Stock",
+      "quantity": 1
+    },
+    "specs": {
+      "processor": "Intel Core i7-1165G7 (11th Gen)",
+      "ram": "16GB LPDDR4x (Soldered)",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "Touchscreen IPS 360-Hinge",
+        "touchscreen": true
+      },
+      "graphics": "Intel Iris Xe Graphics",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0"],
+      "weight": "1.32 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Premium 2-in-1 convertible with tablet mode and touch.",
+      "full": "The x360 1040 G8 is HP's flagship business convertible. Use it as a powerful laptop or flip the screen 360 degrees to use as a tablet. Crafted from CNC aluminum, it feels incredibly premium and features a long battery life, making it the ultimate device for executives and creatives."
+    },
+    "features": ["360 Degree Hinge", "Touchscreen", "CNC Aluminum Body", "Premium Audio"],
+    "images": ["/images/hp-1040-g8.jpg"]
+  },
+  {
+    "id": 9,
+    "sku": "HP-845G7-009",
+    "name": "HP EliteBook 845 G7 (Ryzen)",
+    "brand": "HP",
+    "model": "EliteBook 845 G7",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A+",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 34000,
+      "market_price": 40000,
+      "discount_percentage": 15,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
+    },
+    "specs": {
+      "processor": "AMD Ryzen 5 PRO 4650U",
+      "ram": "16GB DDR4",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS",
+        "touchscreen": false
+      },
+      "graphics": "AMD Radeon Graphics",
+      "ports": ["2x USB-C", "2x USB-A", "HDMI 2.0"],
+      "weight": "1.35 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Ryzen Pro power offering superior multi-core performance.",
+      "full": "The EliteBook 845 G7 utilizes the AMD Ryzen 5 Pro architecture, which often outperforms Intel equivalents in multi-core tasks. This laptop stays cooler and runs quieter while delivering exceptional battery efficiency. A fantastic choice for heavy multitasking."
+    },
+    "features": ["AMD Ryzen Pro CPU", "High Efficiency", "HDMI 2.0"],
+    "images": ["/images/hp-845-g7.jpg"]
+  },
+  {
+    "id": 10,
+    "sku": "HP-845G8-010",
+    "name": "HP EliteBook 845 G8 (Ryzen)",
+    "brand": "HP",
+    "model": "EliteBook 845 G8",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 37500,
+      "market_price": 45000,
+      "discount_percentage": 17,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
+    },
+    "specs": {
+      "processor": "AMD Ryzen 5 PRO 5650U",
+      "ram": "16GB DDR4",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS",
+        "touchscreen": false
+      },
+      "graphics": "AMD Radeon Graphics",
+      "ports": ["2x USB-C", "2x USB-A", "HDMI 2.0"],
+      "weight": "1.37 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Updated Ryzen 5000 series performance in a premium chassis.",
+      "full": "Building on the success of the G7, the 845 G8 updates the processor to the Ryzen 5000 series 'Zen 3' architecture. This results in blazing fast speeds and some of the best integrated graphics performance available in a business laptop."
+    },
+    "features": ["Ryzen 5000 Series", "Zen 3 Architecture", "Premium Build"],
+    "images": ["/images/hp-845-g8.jpg"]
+  },
+  {
+    "id": 11,
+    "sku": "DELL-3190-011",
+    "name": "Dell Latitude 3190 2-in-1 Education",
+    "brand": "Dell",
+    "model": "Latitude 3190 2-in-1",
+    "category": "Convertible",
+    "condition": "Used",
+    "grade": "B+",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 17000,
+      "market_price": 20000,
+      "discount_percentage": 15,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 10
+    },
+    "specs": {
+      "processor": "Intel Pentium Silver N5030",
+      "ram": "8GB LPDDR4 (Soldered)",
+      "storage": "128GB M.2 SSD",
+      "display": {
+        "size": "11.6 inch",
+        "resolution": "1366 x 768 (HD)",
+        "type": "Touchscreen IPS",
+        "touchscreen": true
+      },
+      "graphics": "Intel UHD Graphics 605",
+      "ports": ["2x USB 3.1", "HDMI", "Audio Combo"],
+      "weight": "1.45 kg",
+      "os": "Windows 10 Pro"
+    },
+    "description": {
+      "short": "Rugged 11-inch convertible designed for students and travel.",
+      "full": "The Latitude 3190 2-in-1 is built tough with rubberized edges to withstand drops and spills. Its 360-degree hinge allows it to function as a tablet, making it perfect for media consumption, kids' online classes, or fieldwork where durability matters more than raw speed."
+    },
+    "features": ["Rugged Design", "360 Hinge", "Touchscreen", "Long Battery Life"],
+    "images": ["/images/dell-3190.jpg"]
+  },
+  {
+    "id": 12,
+    "sku": "DELL-3310-012",
+    "name": "Dell Latitude 3310 Business",
+    "brand": "Dell",
+    "model": "Latitude 3310",
+    "category": "Laptop",
+    "condition": "Used",
+    "grade": "A",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 22900,
+      "market_price": 27000,
+      "discount_percentage": 15,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 6
+    },
+    "specs": {
+      "processor": "Intel Core i5-8265U (8th Gen)",
+      "ram": "8GB DDR4",
+      "storage": "256GB SSD",
+      "display": {
+        "size": "13.3 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": ["USB-C", "2x USB 3.1", "HDMI", "RJ-45"],
+      "weight": "1.56 kg",
+      "os": "Windows 10 Pro"
+    },
+    "description": {
+      "short": "Compact 13-inch laptop balancing durability and performance.",
+      "full": "The Latitude 3310 offers the power of an 8th Gen Core i5 in a compact 13.3-inch form factor. It is tested against military standards for durability, making it a reliable choice for daily commutes and business travel."
+    },
+    "features": ["Compact 13.3\"", "Durable Build", "Full Ports"],
+    "images": ["/images/dell-3310.jpg"]
+  },
+  {
+    "id": 13,
+    "sku": "DELL-7490-013",
+    "name": "Dell Latitude 7490 Premium",
+    "brand": "Dell",
+    "model": "Latitude 7490",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A+",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 25900,
+      "market_price": 32000,
+      "discount_percentage": 19,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 15
+    },
+    "specs": {
+      "processor": "Intel Core i5-8350U (8th Gen)",
+      "ram": "8GB DDR4",
+      "storage": "256GB SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": ["USB-C (DisplayPort)", "3x USB 3.1", "HDMI", "RJ-45"],
+      "weight": "1.4 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Fan-favorite business ultrabook with exceptional keyboard.",
+      "full": "The Latitude 7490 is widely regarded as one of the best business laptops of its era. It features a soft-touch carbon fiber finish (on select models), a world-class keyboard, and robust performance. It's a perfect all-rounder for coding, writing, and business work."
+    },
+    "features": ["Premium Build", "Excellent Keyboard", "Business Favorite"],
+    "images": ["/images/dell-7490.jpg"]
+  },
+  {
+    "id": 14,
+    "sku": "DELL-3410-014",
+    "name": "Dell Latitude 3410",
+    "brand": "Dell",
+    "model": "Latitude 3410",
+    "category": "Laptop",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 30900,
+      "market_price": 36000,
+      "discount_percentage": 14,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
+    },
+    "specs": {
+      "processor": "Intel Core i5-10210U (10th Gen)",
+      "ram": "16GB DDR4",
+      "storage": "512GB SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics",
+      "ports": ["USB-C", "USB 3.2", "HDMI 1.4", "RJ-45"],
+      "weight": "1.6 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Modern 10th Gen essential business laptop.",
+      "full": "The Latitude 3410 offers a modern, thinner design compared to its predecessors. Equipped with a 10th Gen processor and ample 16GB RAM, it provides a cost-effective solution for users needing modern performance without the premium price tag of the 7000 series."
+    },
+    "features": ["Modern Design", "10th Gen CPU", "16GB RAM"],
+    "images": ["/images/dell-3410.jpg"]
+  },
+  {
+    "id": 15,
+    "sku": "DELL-7400-015",
+    "name": "Dell Latitude 7400 Metal",
+    "brand": "Dell",
+    "model": "Latitude 7400",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Premium",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 29500,
+      "market_price": 36000,
+      "discount_percentage": 18,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 7
+    },
+    "specs": {
+      "processor": "Intel Core i5-8365U (8th Gen)",
+      "ram": "16GB DDR4",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Narrow Bezel",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": ["Thunderbolt 3", "2x USB 3.1", "HDMI 1.4"],
+      "weight": "1.36 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Premium aluminum body with compact narrow-bezel design.",
+      "full": "The Latitude 7400 features a stunning machined aluminum finish. It is significantly more compact than the 7490 thanks to its narrow screen bezels. With 16GB RAM and Thunderbolt 3, it combines aesthetics with serious business utility."
+    },
+    "features": ["Metal Body", "Narrow Bezels", "Compact Footprint", "Thunderbolt 3"],
+    "images": ["/images/dell-7400-metal.jpg"]
+  },
+  {
+    "id": 16,
+    "sku": "DELL-7420-2IN1-016",
+    "name": "Dell Latitude 7420 2-in-1",
+    "brand": "Dell",
+    "model": "Latitude 7420 2-in-1",
+    "category": "Convertible 2-in-1",
+    "condition": "Used",
+    "grade": "Premium",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 52000,
+      "market_price": 65000,
+      "discount_percentage": 20,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "Limited Stock",
+      "quantity": 2
+    },
+    "specs": {
+      "processor": "Intel Core i5-1145G7 (11th Gen)",
+      "ram": "16GB LPDDR4x (Soldered)",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "Touchscreen IPS",
+        "touchscreen": true
+      },
+      "graphics": "Intel Iris Xe Graphics",
+      "ports": ["2x Thunderbolt 4", "1x USB-A", "HDMI 2.0", "MicroSD"],
+      "weight": "1.3 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "High-end 11th Gen convertible with carbon fiber/aluminum build.",
+      "full": "The Latitude 7420 2-in-1 is a top-tier business machine. It features the Evo-certified 11th Gen platform for instant wake and long battery life. The screen offers vibrant colors and touch capability, packaged in a lightweight, premium chassis."
+    },
+    "features": ["Evo Certified", "2-in-1 Convertible", "Thunderbolt 4", "Premium Materials"],
+    "images": ["/images/dell-7420-2in1.jpg"]
+  },
+  {
+    "id": 17,
+    "sku": "LEN-T490-017",
+    "name": "Lenovo ThinkPad T490",
+    "brand": "Lenovo",
+    "model": "ThinkPad T490",
+    "category": "Laptop",
+    "condition": "Used",
+    "grade": "A",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 25999,
+      "market_price": 32000,
+      "discount_percentage": 19,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 8
+    },
+    "specs": {
+      "processor": "Intel Core i5-8365U (8th Gen)",
+      "ram": "8GB DDR4 (Soldered + 1 Slot)",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": ["Thunderbolt 3", "USB-C", "2x USB 3.1", "HDMI", "Ethernet"],
+      "weight": "1.46 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "The classic business standard for typing and durability.",
+      "full": "The ThinkPad T490 continues the legacy of the T-series with its legendary keyboard and Mil-Spec durability. It features a great FHD IPS screen and comprehensive connectivity options. It is the gold standard for writers, coders, and business professionals."
+    },
+    "features": ["Legendary Keyboard", "Mil-Spec Durability", "Great Port Selection"],
+    "images": ["/images/thinkpad-t490.jpg"]
+  },
+  {
+    "id": 18,
+    "sku": "LEN-T14G2-018",
+    "name": "Lenovo ThinkPad T14 Gen 2",
+    "brand": "Lenovo",
+    "model": "ThinkPad T14 Gen 2",
+    "category": "Laptop",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 40500,
+      "market_price": 50000,
+      "discount_percentage": 19,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
+    },
+    "specs": {
+      "processor": "Intel Core i5-1135G7 (11th Gen)",
+      "ram": "16GB DDR4",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS High Brightness",
+        "touchscreen": false
+      },
+      "graphics": "Intel Iris Xe Graphics",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0", "Ethernet"],
+      "weight": "1.47 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Modern successor to the T490 with 11th Gen speed.",
+      "full": "The T14 Gen 2 takes everything good about the T490 and upgrades the engine. With 11th Gen Intel processors and faster Wi-Fi 6 connectivity, it's future-proofed for modern workflows. It maintains the classic black aesthetic and rugged build quality."
+    },
+    "features": ["11th Gen Intel", "WiFi 6", "Thunderbolt 4", "Rugged Design"],
+    "images": ["/images/thinkpad-t14-gen2.jpg"]
+  },
+  {
+    "id": 19,
+    "sku": "LEN-X1C-10TH-019",
+    "name": "Lenovo ThinkPad X1 Carbon (Gen 8) i5",
+    "brand": "Lenovo",
+    "model": "ThinkPad X1 Carbon Gen 8",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Premium",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 45500,
+      "market_price": 55000,
+      "discount_percentage": 17,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
+    },
+    "specs": {
+      "processor": "Intel Core i5-10310U (10th Gen)",
+      "ram": "16GB LPDDR3",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "Touchscreen IPS",
+        "touchscreen": true
+      },
+      "graphics": "Intel UHD Graphics",
+      "ports": ["2x Thunderbolt 3", "2x USB-A", "HDMI 1.4"],
+      "weight": "1.09 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Featherlight 1kg ultrabook with carbon fiber chassis.",
+      "full": "The X1 Carbon is the jewel in the ThinkPad crown. Weighing just over 1kg, it is incredibly portable yet astonishingly durable. This 10th Gen model features a premium touchscreen display and the best keyboard in the ultra-portable class."
+    },
+    "features": ["Ultra-Light (1.09kg)", "Carbon Fiber", "Premium Touchscreen"],
+    "images": ["/images/thinkpad-x1-carbon.jpg"]
+  },
+  {
+    "id": 20,
+    "sku": "LEN-X1C-11TH-020",
+    "name": "Lenovo ThinkPad X1 Carbon (Gen 9) i7",
+    "brand": "Lenovo",
+    "model": "ThinkPad X1 Carbon Gen 9",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Premium",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 61000,
+      "market_price": 75000,
+      "discount_percentage": 19,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "Limited Stock",
+      "quantity": 2
+    },
+    "specs": {
+      "processor": "Intel Core i7-1165G7 (11th Gen)",
+      "ram": "16GB LPDDR4x",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1200 (16:10)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel Iris Xe Graphics",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0"],
+      "weight": "1.13 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Redesigned Gen 9 flagship with 16:10 display and i7 power.",
+      "full": "The Gen 9 X1 Carbon introduces a new 16:10 aspect ratio screen for more vertical productivity space. Powered by the i7-1165G7 and Iris Xe graphics, it offers desktop-class performance in a chassis that is impossibly thin and light."
+    },
+    "features": ["16:10 Aspect Ratio", "Core i7 Power", "Thunderbolt 4", "Flagship Model"],
+    "images": ["/images/thinkpad-x1-carbon-gen9.jpg"]
+  },
+  {
+    "id": 21,
+    "sku": "MS-SL3-I5-021",
+    "name": "Microsoft Surface Laptop 3 (i5)",
+    "brand": "Microsoft",
+    "model": "Surface Laptop 3",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A+",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 40500,
+      "market_price": 48000,
+      "discount_percentage": 16,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 6
+    },
+    "specs": {
+      "processor": "Intel Core i5-1035G7 (10th Gen)",
+      "ram": "8GB LPDDR4x",
+      "storage": "256GB SSD",
+      "display": {
+        "size": "13.5 inch",
+        "resolution": "2256 x 1504 (2K)",
+        "type": "PixelSense Touch",
+        "touchscreen": true
+      },
+      "graphics": "Intel Iris Plus Graphics",
+      "ports": ["1x USB-C", "1x USB-A", "Surface Connect", "Headphone Jack"],
+      "weight": "1.25 kg",
+      "os": "Windows 11 Home/Pro"
+    },
+    "description": {
+      "short": "Sleek, minimalist design with a stunning 2K touchscreen.",
+      "full": "The Surface Laptop 3 is all about style and screen. The 3:2 aspect ratio PixelSense display is incredibly sharp and tall, perfect for documents and web browsing. With a premium metal finish and excellent trackpad, it rivals the MacBook Air in build quality."
+    },
+    "features": ["2K PixelSense Display", "3:2 Aspect Ratio", "Premium Aluminum", "Touchscreen"],
+    "images": ["/images/surface-laptop-3.jpg"]
+  },
+  {
+    "id": 22,
+    "sku": "MS-SL3-I7-022",
+    "name": "Microsoft Surface Laptop 3 (i7)",
+    "brand": "Microsoft",
+    "model": "Surface Laptop 3",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A+",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 51999,
+      "market_price": 62000,
+      "discount_percentage": 16,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
+    },
+    "specs": {
+      "processor": "Intel Core i7-1065G7 (10th Gen)",
+      "ram": "16GB LPDDR4x",
+      "storage": "512GB SSD",
+      "display": {
+        "size": "13.5 inch",
+        "resolution": "2256 x 1504 (2K)",
+        "type": "PixelSense Touch",
+        "touchscreen": true
+      },
+      "graphics": "Intel Iris Plus Graphics",
+      "ports": ["1x USB-C", "1x USB-A", "Surface Connect"],
+      "weight": "1.25 kg",
+      "os": "Windows 11 Home/Pro"
+    },
+    "description": {
+      "short": "High-spec Surface Laptop with i7 and 16GB RAM.",
+      "full": "This configuration of the Surface Laptop 3 brings the power of the Core i7 and 16GB of RAM to the sleek 13.5-inch chassis. It handles heavier multitasking and creative apps better than the base model while retaining the beautiful screen and premium build."
+    },
+    "features": ["Core i7", "16GB RAM", "High Res Display", "Premium Build"],
+    "images": ["/images/surface-laptop-3-i7.jpg"]
+  },
+  {
+    "id": 23,
+    "sku": "MS-SL4-I5-023",
+    "name": "Microsoft Surface Laptop 4",
+    "brand": "Microsoft",
+    "model": "Surface Laptop 4",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 47900,
+      "market_price": 58000,
+      "discount_percentage": 17,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
+    },
+    "specs": {
+      "processor": "Intel Core i5-1135G7 (11th Gen)",
+      "ram": "8GB LPDDR4x",
+      "storage": "512GB SSD",
+      "display": {
+        "size": "13.5 inch",
+        "resolution": "2256 x 1504 (2K)",
+        "type": "PixelSense Touch",
+        "touchscreen": true
+      },
+      "graphics": "Intel Iris Xe Graphics",
+      "ports": ["1x USB-C", "1x USB-A", "Surface Connect"],
+      "weight": "1.27 kg",
+      "os": "Windows 11 Home/Pro"
+    },
+    "description": {
+      "short": "Improved battery life and performance in the classic Surface design.",
+      "full": "The Surface Laptop 4 refines the formula with 11th Gen processors that offer significantly better battery life and performance than the Laptop 3. It retains the beloved keyboard and screen but runs cooler and longer, making it an excellent daily driver."
+    },
+    "features": ["11th Gen Intel", "Improved Battery", "2K Touchscreen", "Iris Xe Graphics"],
+    "images": ["/images/surface-laptop-4.jpg"]
+  }
+]
