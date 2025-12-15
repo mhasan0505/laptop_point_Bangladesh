@@ -64,7 +64,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
   return (
     <div className="group relative w-full max-w-[280px] bg-white dark:bg-gray-900 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50 dark:hover:shadow-black/50">
-      <Link href={`/product/${product.id}`} className="block h-full">
+      <Link href={`/product/${product.slug}`} className="block h-full">
         {/* Image Container with Hover Actions */}
         <div className="relative aspect-4/5 bg-gray-50 dark:bg-gray-800/50 p-6 overflow-hidden">
           {/* Badges */}

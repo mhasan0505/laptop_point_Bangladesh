@@ -29,4 +29,5 @@ export interface Product {
     short: string;
     full: string;
   };
+  slug: string;
 }

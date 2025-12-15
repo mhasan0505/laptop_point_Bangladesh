@@ -1,11 +1,11 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
-import ProductsCard from "@/components/ui/ProductsCard";
 import { Button } from "@/components/ui/button";
+import ProductsCard from "@/components/ui/ProductsCard";
 import { useCart } from "@/contexts/CartContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { Product } from "@/types/product";
 import {
   ArrowLeft,
   Check,
@@ -20,48 +20,27 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function ProductDetailsPage() {
-  const params = useParams();
+interface ProductDetailsClientProps {
+  product: Product;
+  relatedProducts: Product[];
+}
+
+export default function ProductDetailsClient({
+  product,
+  relatedProducts,
+}: ProductDetailsClientProps) {
   const router = useRouter();
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToComparison, removeFromComparison, isInComparison, canAddMore } =
     useComparison();
 
-  // Find product by ID
-  const product = laptopData.laptops.find((p) => p.id.toString() === params.id);
-
   const [mainImage, setMainImage] = useState(product?.image);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
-
-  if (!product) {
-    return (
-      <div className="container mx-auto px-4 py-32 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Product Not Found
-        </h2>
-        <p className="text-gray-600 mb-8">
-          The product you are looking for does not exist or has been removed.
-        </p>
-        <Link href="/shop">
-          <Button>Back to Shop</Button>
-        </Link>
-      </div>
-    );
-  }
-
-  // Related products (same brand or category)
-  const relatedProducts = laptopData.laptops
-    .filter(
-      (p) =>
-        p.id !== product.id &&
-        (p.brand === product.brand || p.category === product.category)
-    )
-    .slice(0, 4);
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
@@ -73,11 +52,11 @@ export default function ProductDetailsPage() {
         name: product.name,
         brand: product.brand || "",
         price: product.price,
-        originalPrice: product.originalPrice,
+        originalPrice: product.originalPrice || 0,
         image:
           typeof product.image === "string"
             ? product.image
-            : (product.image as any).src || "",
+            : product.image.src || "",
       },
       quantity
     );
@@ -89,8 +68,36 @@ export default function ProductDetailsPage() {
       )
     : 0;
 
+  // JSON-LD Structured Data
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image:
+      typeof product.image === "string" ? product.image : product.image.src,
+    description: product.description?.short,
+    brand: {
+      "@type": "Brand",
+      name: product.brand,
+    },
+    offers: {
+      "@type": "Offer",
+      url: `https://laptop-point-bangladesh.vercel.app/product/${product.slug}`,
+      priceCurrency: "BDT",
+      price: product.price,
+      itemCondition: "https://schema.org/UsedCondition",
+      availability: product.inStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    },
+  };
+
   return (
     <div className="bg-gray-50 dark:bg-gray-950 min-h-screen py-8 md:py-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb & Back */}
         <div className="flex items-center justify-between mb-8">
@@ -152,7 +159,7 @@ export default function ProductDetailsPage() {
                     <button
                       key={idx}
                       onClick={() => setMainImage(img)}
-                      className={`relative w-20 h-20 rounded-xl bg-white p-2 border-2 transition-all flex-shrink-0 ${
+                      className={`relative w-20 h-20 rounded-xl bg-white p-2 border-2 transition-all shrink-0 ${
                         (mainImage || product.image) === img
                           ? "border-primary shadow-md scale-105"
                           : "border-gray-200 hover:border-gray-300"
@@ -229,8 +236,7 @@ export default function ProductDetailsPage() {
 
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-8 border-b border-gray-100 pb-8">
                 {/* Find description from data or use placeholder text */}
-                {(product as any).description?.short ||
-                  "No description available."}
+                {product.description?.short || "No description available."}
               </p>
 
               {/* Features List (Short) */}
@@ -369,10 +375,10 @@ export default function ProductDetailsPage() {
               {activeTab === "description" && (
                 <div className="max-w-4xl mx-auto space-y-6 text-gray-600 leading-relaxed">
                   <p className="text-lg font-medium text-gray-900">
-                    {(product as any).description?.short}
+                    {product.description?.short}
                   </p>
                   <p>
-                    {(product as any).description?.full ||
+                    {product.description?.full ||
                       "Full description coming soon..."}
                   </p>
                 </div>
@@ -391,7 +397,7 @@ export default function ProductDetailsPage() {
                             {key}
                           </span>
                           <span className="font-medium text-gray-900">
-                            {value}
+                            {value as string}
                           </span>
                         </div>
                       ))}
@@ -400,7 +406,7 @@ export default function ProductDetailsPage() {
                         Stock ID
                       </span>
                       <span className="font-medium text-gray-900">
-                        {(product as any).sku || "N/A"}
+                        {product.sku || "N/A"}
                       </span>
                     </div>
                   </div>
