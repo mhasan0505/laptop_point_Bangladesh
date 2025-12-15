@@ -32,8 +32,9 @@ const Breadcrumb = () => {
     const decodedSegment = decodeURIComponent(segment);
     const name =
       segmentNameMap[segment] ||
-      decodedSegment.charAt(0).toUpperCase() +
-        decodedSegment.slice(1).replace(/-/g, " ");
+      decodedSegment
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase());
 
     return { name, href };
   });
@@ -66,7 +67,7 @@ const Breadcrumb = () => {
                 <li>
                   {isLast ? (
                     <span
-                      className="font-medium text-gray-900"
+                      className="font-medium text-gray-900 capitalize"
                       aria-current="page"
                     >
                       {crumb.name}
@@ -74,7 +75,7 @@ const Breadcrumb = () => {
                   ) : (
                     <Link
                       href={crumb.href}
-                      className="hover:text-primary transition-colors"
+                      className="hover:text-primary transition-colors capitalize"
                     >
                       {crumb.name}
                     </Link>
