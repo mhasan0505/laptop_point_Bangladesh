@@ -191,9 +191,9 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               </span>
             </div>
 
-            <div className="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
-              <Star className="w-3.5 h-3.5 fill-current" />
-              <span>{product.rating}</span>
+            <div className="flex items-center gap-1 text-orange-500 font-bold">
+              <Star className="w-3.5 h-3.5 fill-orange-500" />
+              <span>{product.rating?.toFixed(1)}</span>
             </div>
           </div>
         </div>

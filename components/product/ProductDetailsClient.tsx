@@ -16,10 +16,10 @@ import {
   ShieldCheck,
   ShoppingBag,
   Star,
+  StarHalf,
   Truck,
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -100,7 +100,7 @@ export default function ProductDetailsClient({
       />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb & Back */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center mb-8">
           <button
             onClick={() => router.back()}
             className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
@@ -108,16 +108,6 @@ export default function ProductDetailsClient({
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
-          <div className="text-sm text-gray-500">
-            <Link href="/" className="hover:text-primary">
-              Home
-            </Link>{" "}
-            /{" "}
-            <Link href="/shop" className="hover:text-primary">
-              Shop
-            </Link>{" "}
-            / <span className="text-gray-900 font-medium">{product.name}</span>
-          </div>
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-sm overflow-hidden mb-12">
@@ -195,16 +185,31 @@ export default function ProductDetailsClient({
               {/* Rating & Stock */}
               <div className="flex items-center gap-6 mb-8 text-sm">
                 <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`w-4 h-4 ${
-                        star <= (product.rating || 5)
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "fill-gray-200 text-gray-200"
-                      }`}
-                    />
-                  ))}
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const rating = product.rating || 0;
+                    if (rating >= star) {
+                      return (
+                        <Star
+                          key={star}
+                          className="w-4 h-4 fill-orange-500 text-orange-500"
+                        />
+                      );
+                    }
+                    if (rating >= star - 0.5) {
+                      return (
+                        <StarHalf
+                          key={star}
+                          className="w-4 h-4 fill-orange-500 text-orange-500"
+                        />
+                      );
+                    }
+                    return (
+                      <Star
+                        key={star}
+                        className="w-4 h-4 fill-gray-200 text-gray-200"
+                      />
+                    );
+                  })}
                   <span className="ml-2 font-medium text-gray-600">
                     ({product.reviews || 0} Reviews)
                   </span>

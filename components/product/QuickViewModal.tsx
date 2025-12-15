@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   ShoppingBag,
   Star,
+  StarHalf,
   Truck,
   X,
 } from "lucide-react";
@@ -73,7 +74,7 @@ const QuickViewContent = ({
         image:
           typeof product.image === "string"
             ? product.image
-            : (product.image as any).src || "",
+            : product.image.src || "",
       },
       quantity
     );
@@ -168,16 +169,31 @@ const QuickViewContent = ({
             {/* Rating & Reviews */}
             <div className="flex items-center gap-4 mb-6">
               <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`w-4 h-4 ${
-                      star <= (product.rating || 5)
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "fill-gray-100 text-gray-200"
-                    }`}
-                  />
-                ))}
+                {[1, 2, 3, 4, 5].map((star) => {
+                  const rating = product.rating || 0;
+                  if (rating >= star) {
+                    return (
+                      <Star
+                        key={star}
+                        className="w-4 h-4 fill-orange-500 text-orange-500"
+                      />
+                    );
+                  }
+                  if (rating >= star - 0.5) {
+                    return (
+                      <StarHalf
+                        key={star}
+                        className="w-4 h-4 fill-orange-500 text-orange-500"
+                      />
+                    );
+                  }
+                  return (
+                    <Star
+                      key={star}
+                      className="w-4 h-4 fill-gray-100 text-gray-200"
+                    />
+                  );
+                })}
               </div>
               <span className="text-sm font-medium text-gray-500">
                 {product.reviews || 0} Reviews
