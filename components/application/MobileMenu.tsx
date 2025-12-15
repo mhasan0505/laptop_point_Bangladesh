@@ -1,6 +1,8 @@
 "use client";
 
+import { laptopData } from "@/app/data/data";
 import { navigationLinks } from "@/app/data/navigation";
+import { Product } from "@/types/product";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import {
   ChevronDown,
@@ -8,13 +10,16 @@ import {
   Flame,
   Instagram,
   Mail,
+  Search,
   Twitter,
   X,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -22,7 +27,10 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
+  const router = useRouter();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
 
   // Lock body scroll when menu is open
   useEffect(() => {
@@ -38,6 +46,32 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
 
   const toggleSubmenu = (label: string) => {
     setOpenSubmenu(openSubmenu === label ? null : label);
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      const filtered = laptopData.laptops
+        .filter(
+          (product) =>
+            product.name.toLowerCase().includes(query.toLowerCase()) ||
+            (product.brand &&
+              product.brand.toLowerCase().includes(query.toLowerCase())) ||
+            (product.category &&
+              product.category.toLowerCase().includes(query.toLowerCase()))
+        )
+        .slice(0, 5);
+      setSearchResults(filtered);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      onClose();
+      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
   };
 
   const sidebarVariants: Variants = {
@@ -108,6 +142,74 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               >
                 <X className="w-5 h-5" />
               </motion.button>
+            </div>
+
+            {/* Mobile Search */}
+            <div className="p-4 border-b border-gray-100">
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-50 border-gray-200 focus:bg-white transition-colors"
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              </div>
+
+              {/* Search Results Dropdown */}
+              <AnimatePresence>
+                {searchQuery && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, height: 0 }}
+                    animate={{ opacity: 1, y: 0, height: "auto" }}
+                    exit={{ opacity: 0, y: -10, height: 0 }}
+                    className="mt-2 overflow-hidden bg-white rounded-lg border border-gray-100 shadow-lg"
+                  >
+                    {searchResults.length > 0 ? (
+                      <div className="max-h-[200px] overflow-y-auto">
+                        {searchResults.map((product) => (
+                          <Link
+                            key={product.id}
+                            href={`/product/${product.id}`}
+                            onClick={onClose}
+                            className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+                          >
+                            <div className="relative w-10 h-10 shrink-0 bg-gray-100 rounded-md overflow-hidden">
+                              <Image
+                                src={product.image}
+                                alt={product.name}
+                                fill
+                                className="object-contain p-1"
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {product.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                ৳{product.price.toLocaleString()}
+                              </p>
+                            </div>
+                          </Link>
+                        ))}
+                        <Link
+                          href={`/shop?search=${searchQuery}`}
+                          onClick={onClose}
+                          className="block text-center py-2 text-xs font-semibold text-primary hover:bg-gray-50 transition-colors"
+                        >
+                          View all results
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="p-3 text-center text-sm text-gray-500">
+                        No products found
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Navigation Links */}

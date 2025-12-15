@@ -1,11 +1,13 @@
 "use client";
 import MobileMenu from "@/components/application/MobileMenu";
 
+import { laptopData } from "@/app/data/data";
 import { navigationLinks } from "@/app/data/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { Product } from "@/types/product";
 import { motion } from "framer-motion";
 import {
   ChevronDown,
@@ -25,10 +27,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import MegaMenu from "../navigation/MegaMenu";
 
 const Header = () => {
+  const router = useRouter();
   const { getCartCount } = useCart();
   const { getWishlistCount } = useWishlist();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -36,6 +40,34 @@ const Header = () => {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      const filtered = laptopData.laptops
+        .filter(
+          (product) =>
+            product.name.toLowerCase().includes(query.toLowerCase()) ||
+            (product.brand &&
+              product.brand.toLowerCase().includes(query.toLowerCase())) ||
+            (product.category &&
+              product.category.toLowerCase().includes(query.toLowerCase()))
+        )
+        .slice(0, 5);
+      setSearchResults(filtered);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      setIsSearchExpanded(false);
+      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   const cartCount = getCartCount();
   const wishlistCount = getWishlistCount();
@@ -203,6 +235,9 @@ const Header = () => {
                         placeholder="Search products..."
                         className="w-full pl-12 pr-10 py-3.5 text-base rounded-xl border border-gray-200 focus:border-primary/70 focus:ring-1 focus:ring-primary/20 focus:outline-none shadow-sm bg-white/90"
                         autoFocus
+                        value={searchQuery}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        onKeyDown={handleKeyDown}
                       />
                       <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <motion.button
@@ -210,6 +245,7 @@ const Header = () => {
                         whileTap={{ scale: 0.95 }}
                         onClick={() => {
                           setIsSearchExpanded(false);
+                          setSearchQuery("");
                           if (searchInputRef.current) {
                             searchInputRef.current.value = "";
                           }
@@ -227,25 +263,76 @@ const Header = () => {
                       transition={{ delay: 0.1 }}
                       className="mt-3 bg-white rounded-xl border border-gray-100 shadow-sm p-3 max-h-[60vh] overflow-y-auto"
                     >
-                      <p className="text-sm font-medium text-gray-500 mb-2 px-2">
-                        Recent searches
-                      </p>
-                      <div className="space-y-1">
-                        {[
-                          "Laptop",
-                          "Gaming PC",
-                          "Wireless Mouse",
-                          "Mechanical Keyboard",
-                        ].map((item) => (
-                          <button
-                            key={item}
-                            className="w-full text-left p-2.5 hover:bg-gray-50 rounded-lg text-sm text-gray-700 transition-colors flex items-center group"
-                          >
-                            <Search className="h-3.5 w-3.5 text-gray-400 mr-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <span>{item}</span>
-                          </button>
-                        ))}
-                      </div>
+                      {searchQuery ? (
+                        <>
+                          <p className="text-sm font-medium text-gray-500 mb-2 px-2">
+                            Search Results
+                          </p>
+                          {searchResults.length > 0 ? (
+                            <div className="space-y-1">
+                              {searchResults.map((product) => (
+                                <Link
+                                  key={product.id}
+                                  href={`/product/${product.id}`}
+                                  onClick={() => setIsSearchExpanded(false)}
+                                  className="w-full text-left p-2.5 hover:bg-gray-50 rounded-lg text-sm text-gray-700 transition-colors flex items-center group gap-3"
+                                >
+                                  <div className="relative w-10 h-10 shrink-0 bg-gray-50 rounded-md overflow-hidden">
+                                    <Image
+                                      src={product.image}
+                                      alt={product.name}
+                                      fill
+                                      className="object-contain p-1"
+                                    />
+                                  </div>
+                                  <div>
+                                    <p className="font-medium text-gray-900 line-clamp-1">
+                                      {product.name}
+                                    </p>
+                                    <p className="text-xs text-gray-500">
+                                      ৳{product.price.toLocaleString()}
+                                    </p>
+                                  </div>
+                                </Link>
+                              ))}
+                              <Link
+                                href={`/shop?search=${searchQuery}`}
+                                onClick={() => setIsSearchExpanded(false)}
+                                className="block w-full text-center py-2 text-sm text-primary hover:text-primary/80 font-medium border-t border-gray-100 mt-2"
+                              >
+                                View all results
+                              </Link>
+                            </div>
+                          ) : (
+                            <div className="text-center py-8 text-gray-500">
+                              No products found for &quot;{searchQuery}&quot;
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-sm font-medium text-gray-500 mb-2 px-2">
+                            Recent searches
+                          </p>
+                          <div className="space-y-1">
+                            {[
+                              "HP Elitebook",
+                              "Dell Latitude",
+                              "ThinkPad",
+                              "Surface Laptop",
+                            ].map((item) => (
+                              <button
+                                key={item}
+                                onClick={() => handleSearch(item)}
+                                className="w-full text-left p-2.5 hover:bg-gray-50 rounded-lg text-sm text-gray-700 transition-colors flex items-center group"
+                              >
+                                <Search className="h-3.5 w-3.5 text-gray-400 mr-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <span>{item}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </motion.div>
                   </motion.div>
                 ) : (
