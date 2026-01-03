@@ -259,7 +259,6 @@ const BrandProductSection = ({
               modules={[Navigation, Pagination, Autoplay]}
               spaceBetween={20}
               slidesPerView={1}
-              centeredSlides={true}
               navigation={{
                 nextEl: `.${brand}-next`,
                 prevEl: `.${brand}-prev`,
