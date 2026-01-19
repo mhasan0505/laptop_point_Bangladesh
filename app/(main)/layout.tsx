@@ -1,6 +1,8 @@
 import Breadcrumb from "@/components/application/Breadcrumb";
+import CookieConsent from "@/components/application/CookieConsent";
 import Footer from "@/components/application/Footer";
 import Header from "@/components/application/Header";
+import NewsletterPopup from "@/components/application/NewsletterPopup";
 import StickyMobileBar from "@/components/application/StickyMobileBar";
 import ComparisonBar from "@/components/product/ComparisonBar";
 import { CartProvider } from "@/contexts/CartContext";
@@ -21,6 +23,8 @@ export default function MainLayout({
           {children}
           <Footer />
           <ComparisonBar />
+          <CookieConsent />
+          <NewsletterPopup />
           <StickyMobileBar />
         </ComparisonProvider>
       </WishlistProvider>

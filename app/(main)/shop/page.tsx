@@ -65,7 +65,7 @@ const ShopContent = () => {
                 `}
           onClick={(e) => e.stopPropagation()}
         >
-          <FilterSidebar />
+          <FilterSidebar onFilterChange={(filters) => console.log(filters)} />
         </div>
       </aside>
 

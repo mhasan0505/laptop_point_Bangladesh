@@ -2,6 +2,7 @@ import BentoGridSection from "@/components/application/BentoGridSection";
 import BrandProductSection from "@/components/application/BrandProductSection";
 import HeroSection from "@/components/application/HeroSection";
 import NewProductsSection from "@/components/application/NewProductsSection";
+import TestimonialsSection from "@/components/application/TestimonialsSection";
 
 const HomePage = () => {
   return (
@@ -45,6 +46,7 @@ const HomePage = () => {
         badgeText="Creative Studio"
         theme="microsoft"
       />
+      <TestimonialsSection />
     </>
   );
 };
