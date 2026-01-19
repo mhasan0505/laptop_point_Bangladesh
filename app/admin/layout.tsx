@@ -92,6 +92,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         {/* Desktop Sidebar */}
         <aside className="w-64 bg-white shadow-sm hidden md:block border-r min-h-[calc(100vh-64px)]">
           <div className="p-4 sticky top-16">
+            <div className="flex items-center space-x-2 mb-6 px-3">
+              <div className="relative w-8 h-8">
+                <Image
+                  src="/Logo.webp"
+                  alt="Laptop Point Admin"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-lg font-bold text-black">Laptop Point</span>
+            </div>
             <AdminSidebar />
           </div>
         </aside>

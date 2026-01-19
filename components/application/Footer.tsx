@@ -3,7 +3,13 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -30,18 +36,33 @@ export default function Footer() {
               </p>
               <div className="flex space-x-3 pt-2">
                 {[
-                  { Icon: FaFacebook, href: "#", color: "hover:text-blue-600" },
+                  {
+                    Icon: FaFacebook,
+                    href: "https://www.facebook.com/laptoppointbd",
+                    color: "hover:text-blue-600",
+                  },
                   { Icon: FaTwitter, href: "#", color: "hover:text-sky-500" },
                   {
                     Icon: FaInstagram,
-                    href: "#",
+                    href: "https://www.instagram.com/laptop_point.bd/",
                     color: "hover:text-pink-600",
                   },
-                  { Icon: FaLinkedin, href: "#", color: "hover:text-blue-700" },
+                  {
+                    Icon: FaLinkedin,
+                    href: "https://www.linkedin.com/company/laptop-point-bangladesh/",
+                    color: "hover:text-blue-700",
+                  },
+                  {
+                    Icon: FaYoutube,
+                    href: "https://www.youtube.com/@LaptopPointBD",
+                    color: "hover:text-red-600",
+                  },
                 ].map(({ Icon, href, color }, index) => (
                   <motion.a
                     key={index}
                     href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     className={`p-2 rounded-full bg-white shadow-sm text-gray-600 transition-colors ${color}`}
