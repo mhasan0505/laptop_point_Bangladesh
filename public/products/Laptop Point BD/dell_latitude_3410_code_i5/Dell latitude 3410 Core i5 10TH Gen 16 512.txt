@@ -1,0 +1,11 @@
+
+Brand : Dell
+Model Name : 8MT3J
+Screen Size : 14 Inches
+Color : Black
+Hard Disk Size : 256 GB
+CPU Model : Intel Core i7
+Ram Memory Installed Size : 8 GB
+Operating System : Windows 10 Pro
+Special Feature : TrackPoint
+Graphics Card Description : Integrated

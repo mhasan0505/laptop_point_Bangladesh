@@ -1,0 +1,11 @@
+
+Brand :	HP
+Model Name :HP EliteBook 840 G7
+Screen Size :14 Inches
+Color :	Silver
+Hard Disk Size : 512 GB
+CPU Model : Core i5-10310U
+Ram Memory Installed Size : 16 GB
+Operating System : Windows 11 Pro
+Special Feature : Backlit Keyboard
+Graphics Card Description : Integrated

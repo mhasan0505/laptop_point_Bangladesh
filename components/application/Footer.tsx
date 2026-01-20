@@ -26,7 +26,7 @@ export default function Footer() {
                   src="/Logo.webp"
                   alt="Laptop Point BD"
                   fill
-                  className="object-contain"
+                  className="object-contain mix-blend-multiply"
                 />
               </Link>
               <p className="text-gray-600 text-sm leading-relaxed">

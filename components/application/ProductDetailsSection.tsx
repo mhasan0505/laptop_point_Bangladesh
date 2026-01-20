@@ -72,43 +72,103 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showAllSpecs, setShowAllSpecs] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({});
+  const [isZoomed, setIsZoomed] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isZoomed) return;
+    const { left, top, width, height } =
+      e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+
+    setZoomStyle({
+      transformOrigin: `${x}% ${y}%`,
+      transform: "scale(2)",
+    });
+  };
+
+  const toggleZoom = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isZoomed) {
+      // Zoom out
+      setIsZoomed(false);
+      setZoomStyle({
+        transformOrigin: "center center",
+        transform: "scale(1)",
+      });
+    } else {
+      // Zoom in
+      setIsZoomed(true);
+      const { left, top, width, height } =
+        e.currentTarget.getBoundingClientRect();
+      const x = ((e.clientX - left) / width) * 100;
+      const y = ((e.clientY - top) / height) * 100;
+
+      setZoomStyle({
+        transformOrigin: `${x}% ${y}%`,
+        transform: "scale(2)",
+      });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (isZoomed) {
+      setIsZoomed(false);
+      setZoomStyle({
+        transformOrigin: "center center",
+        transform: "scale(1)",
+      });
+    }
+  };
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((prev) => Math.max(1, prev + delta));
   };
 
   return (
-    <div className="w-full bg-gradient-to-b from-gray-50/50 to-white dark:from-gray-900/50 dark:to-gray-950 py-8 md:py-12 lg:py-16">
+    <div className="w-full bg-linear-to-b from-gray-50/50 to-white dark:from-gray-900/50 dark:to-gray-950 py-8 md:py-12 lg:py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Image Gallery Section */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="relative aspect-square w-full bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl overflow-hidden border border-border/30 shadow-lg">
+            <div className="relative aspect-square w-full bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl overflow-hidden border border-border/30 shadow-lg group">
               {/* Discount Badge */}
               {discountPercentage > 0 && (
-                <div className="absolute top-4 left-4 z-10 bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                <div className="absolute top-4 left-4 z-10 bg-linear-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
                   -{discountPercentage}% OFF
                 </div>
               )}
 
               {/* Main Product Image */}
-              <div className="relative w-full h-full flex items-center justify-center p-8">
-                <Image
-                  src={productData.images[selectedImage]}
-                  alt={productData.name}
-                  width={500}
-                  height={500}
-                  className={`object-contain transition-all duration-500 hover:scale-110 ${
-                    imageLoaded ? "opacity-100" : "opacity-0"
-                  }`}
-                  onLoad={() => setImageLoaded(true)}
-                  priority
-                />
+              <div
+                className={`relative w-full h-full flex items-center justify-center p-8 overflow-hidden ${
+                  isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"
+                }`}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                onClick={toggleZoom}
+              >
+                <div
+                  className="relative w-full h-full transition-transform duration-200 ease-out"
+                  style={zoomStyle}
+                >
+                  <Image
+                    src={productData.images[selectedImage]}
+                    alt={productData.name}
+                    width={500}
+                    height={500}
+                    className={`w-full h-full object-contain mix-blend-multiply ${
+                      imageLoaded ? "opacity-100" : "opacity-0"
+                    }`}
+                    onLoad={() => setImageLoaded(true)}
+                    priority
+                  />
+                </div>
 
                 {/* Loading skeleton */}
                 {!imageLoaded && (
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div className="w-64 h-64 bg-gray-200/80 dark:bg-gray-700/80 rounded-2xl animate-pulse"></div>
                   </div>
                 )}
@@ -135,7 +195,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                     alt={`${productData.name} - Image ${index + 1}`}
                     width={100}
                     height={100}
-                    className="object-contain p-2 bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900"
+                    className="object-contain mix-blend-multiply p-2 bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900"
                   />
                 </button>
               ))}
@@ -166,8 +226,8 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                       star <= Math.floor(productData.rating)
                         ? "text-yellow-500 fill-yellow-500"
                         : star - 0.5 <= productData.rating
-                        ? "text-yellow-500 fill-yellow-500/50"
-                        : "text-gray-300 dark:text-gray-600"
+                          ? "text-yellow-500 fill-yellow-500/50"
+                          : "text-gray-300 dark:text-gray-600"
                     }`}
                   />
                 ))}
@@ -179,7 +239,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             </div>
 
             {/* Price Section */}
-            <div className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 rounded-2xl p-6 border border-primary/20">
+            <div className="bg-linear-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 rounded-2xl p-6 border border-primary/20">
               <div className="space-y-2">
                 {productData.originalPrice && (
                   <div className="flex items-center gap-3">
@@ -254,7 +314,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 disabled={!productData.inStock}
-                className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="flex-1 flex items-center justify-center gap-2 bg-linear-to-r from-primary to-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart
@@ -264,7 +324,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                 onClick={() => setIsWishlisted(!isWishlisted)}
                 className={`p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
                   isWishlisted
-                    ? "bg-gradient-to-br from-red-500 to-pink-600 text-white border-transparent shadow-lg shadow-red-500/30"
+                    ? "bg-linear-to-br from-red-500 to-pink-600 text-white border-transparent shadow-lg shadow-red-500/30"
                     : "border-border hover:border-red-500/50 hover:bg-red-50 dark:hover:bg-red-950/20"
                 }`}
                 aria-label={

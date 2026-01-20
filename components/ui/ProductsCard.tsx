@@ -119,7 +119,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               alt={product.name}
               width={220}
               height={220}
-              className={`object-contain transition-opacity duration-300 ${
+              className={`object-contain mix-blend-multiply transition-opacity duration-300 ${
                 imageLoaded ? "opacity-100" : "opacity-0"
               }`}
               onLoad={() => setImageLoaded(true)}
@@ -162,8 +162,8 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               isCompared
                 ? "bg-yellow-500 text-white"
                 : !canAddMore()
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-white text-gray-700 hover:bg-gray-100"
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
             }`}
             title="Add to Compare"
           >

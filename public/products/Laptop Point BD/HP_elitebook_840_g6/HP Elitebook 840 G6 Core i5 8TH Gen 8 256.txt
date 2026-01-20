@@ -1,0 +1,11 @@
+
+Brand :	HP
+Model Name : HP EliteBook
+Screen Size : 14 Inches
+Color :	Gray
+CPU Model : 8032
+Ram Memory Installed Size : 8 GB
+Operating System : Windows 10 Pro
+Special Feature : Speakers
+Graphics Card Description : Integrated
+Graphics Coprocessor : Intel UHD Graphics 620

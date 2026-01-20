@@ -1,0 +1,10 @@
+Brand: HP
+Model Name: Hp EliteBook-cr
+Screen Size: 14 Inches
+Colour: Silver
+Hard Disk Size: 256 GB
+CPU Model: Intel Core i5
+RAM Memory Installed Size: 8 GB
+Operating System: Windows 11
+Special Feature: Lightweight, Thin, Webcam
+Graphics Card Description: Integrated

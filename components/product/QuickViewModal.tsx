@@ -76,7 +76,7 @@ const QuickViewContent = ({
             ? product.image
             : product.image.src || "",
       },
-      quantity
+      quantity,
     );
     onClose();
   };
@@ -91,7 +91,7 @@ const QuickViewContent = ({
 
   const discountPercentage = product.originalPrice
     ? Math.round(
-        ((product.originalPrice - product.price) / product.originalPrice) * 100
+        ((product.originalPrice - product.price) / product.originalPrice) * 100,
       )
     : 0;
 
@@ -143,7 +143,7 @@ const QuickViewContent = ({
               src={product.image}
               alt={product.name}
               fill
-              className="object-contain drop-shadow-xl"
+              className="object-contain mix-blend-multiply drop-shadow-xl"
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
             />
@@ -349,7 +349,7 @@ const QuickViewModal = ({ product, isOpen, onClose }: QuickViewModalProps) => {
         />
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 };
 
