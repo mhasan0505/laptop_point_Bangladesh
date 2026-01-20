@@ -18,10 +18,14 @@ const getImageFolder = (model: string): string | null => {
     return "/products/hp/HP_Elitebook_X360_1040_G8";
 
   // Dell
-  if (m.includes("3190")) return "/products/dell/Dell_Latitude_3190";
-  if (m.includes("3310")) return "/products/dell/Dell_Latitude_3310";
-  if (m.includes("7490")) return "/products/dell/Dell_Latitude_7490";
-  if (m.includes("3410")) return "/products/dell/Dell_Latitude_3410";
+  if (m.includes("3190"))
+    return "/products/Laptop Point BD/Dell_latitude_3190_2-1 Pentium";
+  if (m.includes("3310"))
+    return "/products/Laptop Point BD/dell_latitude_3310_code_i5";
+  if (m.includes("3410"))
+    return "/products/Laptop Point BD/dell_latitude_3410_code_i5";
+  if (m.includes("7490"))
+    return "/products/Laptop Point BD/dell_latitude_7490_cide_i5";
   if (m.includes("7400")) return "/products/dell/Dell_Latitude_7400";
   if (m.includes("7420")) return "/products/dell/Dell_Latitude_7420";
 
@@ -32,8 +36,10 @@ const getImageFolder = (model: string): string | null => {
     return "/products/lenovo/Lenovo_Thinkpad_X1";
 
   // Microsoft
-  if (m.includes("surface laptop 3"))
-    return "/products/microsoft/Microsoft_Surface_laptop_3";
+  if (m.includes("surface laptop 3") && m.includes("i5"))
+    return "/products/microsoft/Microsoft_Surface_laptop_3_code_i5";
+  if (m.includes("surface laptop 3") && m.includes("i7"))
+    return "/products/microsoft/Microsoft_Surface_laptop_3_code_i7";
   if (m.includes("surface laptop 4"))
     return "/products/microsoft/Microsoft_Surface_laptop_4";
   if (m.includes("surface book")) return "/products/microsoft/Surface_Book";
@@ -56,7 +62,7 @@ const slugify = (text: string) => {
 const getDescription = (
   model: string,
   brand: string,
-  specs: RawProduct["specs"]
+  specs: RawProduct["specs"],
 ) => {
   const m = model.toLowerCase();
   let short = "";
@@ -150,24 +156,61 @@ interface RawProduct {
 
 // Map each product
 const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
-  const folder = getImageFolder(p.model || p.name);
+  // Use p.name preferably as it contains more detail (e.g. i5 vs i7 for Surface)
+  const folder = getImageFolder(p.name || p.model);
   const description = getDescription(p.model || p.name, p.brand, p.specs);
 
-  // Construct images array if folder exists
-  const mappedImages = folder
-    ? [
+  let mappedImages: string[] = p.images || [];
+  let mainImage = mappedImages[0] || "/placeholder.png";
+
+  if (folder) {
+    // Check if it's one of the new Laptop Point BD folders which use .jpg
+    const isNewStructure = folder.includes("Laptop Point BD");
+    const isMicrosoft = folder.includes("products/microsoft");
+
+    if (isNewStructure) {
+      mappedImages = [
+        `${folder}/main.jpg`,
+        `${folder}/front.jpg`,
+        `${folder}/back.jpg`,
+        `${folder}/side.jpg`,
+        // Include keyborad.jpg if exists, handling typo or standard
+        `${folder}/keyborad.jpg`,
+      ];
+      mainImage = `${folder}/main.jpg`;
+    } else if (isMicrosoft) {
+      if (folder.includes("Microsoft_Surface_laptop_4")) {
+        mappedImages = [
+          `${folder}/main.png`,
+          `${folder}/front.png`,
+          `${folder}/front2.png`,
+          `${folder}/side.png`,
+          `${folder}/side2.png`,
+          `${folder}/back.png`,
+        ];
+      } else {
+        mappedImages = [
+          `${folder}/main.png`,
+          `${folder}/front.png`,
+          `${folder}/side.png`,
+          `${folder}/port.png`,
+          `${folder}/back.png`,
+          `${folder}/keyborad.png`, // Note: typo in filename on disk
+        ];
+      }
+      mainImage = `${folder}/main.png`;
+    } else {
+      mappedImages = [
         `${folder}/main.png`,
         `${folder}/front.png`,
         `${folder}/port.png`,
         `${folder}/side01.png`,
         `${folder}/side02.png`,
         `${folder}/keyboard.png`,
-      ]
-    : p.images || [];
-
-  const mainImage = folder
-    ? `${folder}/main.png`
-    : mappedImages[0] || "/placeholder.png";
+      ];
+      mainImage = `${folder}/main.png`;
+    }
+  }
 
   return {
     id: p.id,

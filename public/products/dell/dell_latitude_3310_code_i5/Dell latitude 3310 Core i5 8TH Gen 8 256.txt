@@ -1,0 +1,10 @@
+Brand : Dell
+Model Name : Dell Latitude
+Screen Size : 13.1 Inches
+Color : Black
+Hard Disk Size : 256 GB
+CPU Model : Core i5
+Ram Memory Installed Size : 16 GB
+Operating System : Windows 11 Pro
+Graphics Card Description : Integrated
+Graphics Coprocessor : Intel Integrated Graphics

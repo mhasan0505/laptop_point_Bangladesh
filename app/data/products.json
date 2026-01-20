@@ -38,7 +38,11 @@
       "short": "Reliable 14-inch business laptop with legacy ports and durable build.",
       "full": "The HP ProBook 440 G3 is a workhorse designed for productivity. Featuring a durable chassis that has passed extensive testing, it offers a comprehensive set of ports including VGA and HDMI, making it perfect for connecting to older projectors and monitors without dongles. Ideally suited for students and office administration tasks."
     },
-    "features": ["Durable Chassis", "Spill-resistant Keyboard", "Legacy VGA Port"],
+    "features": [
+      "Durable Chassis",
+      "Spill-resistant Keyboard",
+      "Legacy VGA Port"
+    ],
     "images": ["/images/hp-440-g3-front.jpg"]
   },
   {
@@ -80,7 +84,11 @@
       "short": "Slim enterprise ultrabook with enterprise-grade security and connectivity.",
       "full": "Step up to the EliteBook series with the 840 G3. This ultrabook is significantly thinner and lighter than the ProBook series, featuring a magnesium alloy chassis. It introduces USB-C connectivity while maintaining backward compatibility with VGA and DisplayPort. A favorite for corporate environments."
     },
-    "features": ["Slim Aluminum Body", "Backlit Keyboard", "Enterprise Security"],
+    "features": [
+      "Slim Aluminum Body",
+      "Backlit Keyboard",
+      "Enterprise Security"
+    ],
     "images": ["/images/hp-840-g3-front.jpg"]
   },
   {
@@ -122,7 +130,12 @@
       "short": "8th Gen Quad-core power in a precision-crafted aluminum design.",
       "full": "The EliteBook 840 G6 marks a significant jump in performance with its Quad-Core 8th Gen processor, fully capable of running Windows 11. The all-aluminum 'unibody' design is sleek, modern, and features Thunderbolt 3 for high-speed docking and data transfer. Excellent speakers and a privacy shutter webcam make it ideal for modern remote work."
     },
-    "features": ["Quad-Core CPU", "Thunderbolt 3", "Windows 11 Ready", "Bang & Olufsen Audio"],
+    "features": [
+      "Quad-Core CPU",
+      "Thunderbolt 3",
+      "Windows 11 Ready",
+      "Bang & Olufsen Audio"
+    ],
     "images": ["/images/hp-840-g6-front.jpg"]
   },
   {
@@ -206,7 +219,12 @@
       "short": "Redesigned 10th Gen lightweight ultrabook with narrow bezels.",
       "full": "The G7 represents a major design overhaul with a lighter chassis (1.33kg) and significantly thinner screen bezels for a smaller footprint. With 16GB of RAM standard, it handles heavy multitasking with ease. The keyboard is quieter and more comfortable, and the battery life is improved for all-day usage."
     },
-    "features": ["Lightweight (1.33kg)", "Narrow Bezels", "16GB RAM Standard", "Quiet Keyboard"],
+    "features": [
+      "Lightweight (1.33kg)",
+      "Narrow Bezels",
+      "16GB RAM Standard",
+      "Quiet Keyboard"
+    ],
     "images": ["/images/hp-840-g7.jpg"]
   },
   {
@@ -248,7 +266,12 @@
       "short": "Current-gen performance with 11th Gen i5 and Iris Xe Graphics.",
       "full": "The G8 is a powerhouse featuring Intel's 11th Gen Tiger Lake processor and the formidable Iris Xe graphics, capable of light gaming and heavy graphical workloads. It features Thunderbolt 4 connectivity and AI-based noise cancellation for crystal clear video calls."
     },
-    "features": ["Intel Iris Xe Graphics", "Thunderbolt 4", "AI Noise Cancellation", "WiFi 6"],
+    "features": [
+      "Intel Iris Xe Graphics",
+      "Thunderbolt 4",
+      "AI Noise Cancellation",
+      "WiFi 6"
+    ],
     "images": ["/images/hp-840-g8.jpg"]
   },
   {
@@ -290,7 +313,11 @@
       "short": "Top-tier 11th Gen i7 performance for demanding professionals.",
       "full": "Identical in build to the i5 model but supercharged with the Core i7-1165G7 processor. This machine offers higher clock speeds and larger cache, making it ideal for developers, data analysts, or power users who need that extra headroom for heavy applications."
     },
-    "features": ["Core i7 Performance", "High Brightness Display", "Thunderbolt 4"],
+    "features": [
+      "Core i7 Performance",
+      "High Brightness Display",
+      "Thunderbolt 4"
+    ],
     "images": ["/images/hp-840-g8-i7.jpg"]
   },
   {
@@ -332,7 +359,12 @@
       "short": "Premium 2-in-1 convertible with tablet mode and touch.",
       "full": "The x360 1040 G8 is HP's flagship business convertible. Use it as a powerful laptop or flip the screen 360 degrees to use as a tablet. Crafted from CNC aluminum, it feels incredibly premium and features a long battery life, making it the ultimate device for executives and creatives."
     },
-    "features": ["360 Degree Hinge", "Touchscreen", "CNC Aluminum Body", "Premium Audio"],
+    "features": [
+      "360 Degree Hinge",
+      "Touchscreen",
+      "CNC Aluminum Body",
+      "Premium Audio"
+    ],
     "images": ["/images/hp-1040-g8.jpg"]
   },
   {
@@ -458,7 +490,12 @@
       "short": "Rugged 11-inch convertible designed for students and travel.",
       "full": "The Latitude 3190 2-in-1 is built tough with rubberized edges to withstand drops and spills. Its 360-degree hinge allows it to function as a tablet, making it perfect for media consumption, kids' online classes, or fieldwork where durability matters more than raw speed."
     },
-    "features": ["Rugged Design", "360 Hinge", "Touchscreen", "Long Battery Life"],
+    "features": [
+      "Rugged Design",
+      "360 Hinge",
+      "Touchscreen",
+      "Long Battery Life"
+    ],
     "images": ["/images/dell-3190.jpg"]
   },
   {
@@ -626,7 +663,12 @@
       "short": "Premium aluminum body with compact narrow-bezel design.",
       "full": "The Latitude 7400 features a stunning machined aluminum finish. It is significantly more compact than the 7490 thanks to its narrow screen bezels. With 16GB RAM and Thunderbolt 3, it combines aesthetics with serious business utility."
     },
-    "features": ["Metal Body", "Narrow Bezels", "Compact Footprint", "Thunderbolt 3"],
+    "features": [
+      "Metal Body",
+      "Narrow Bezels",
+      "Compact Footprint",
+      "Thunderbolt 3"
+    ],
     "images": ["/images/dell-7400-metal.jpg"]
   },
   {
@@ -668,7 +710,12 @@
       "short": "High-end 11th Gen convertible with carbon fiber/aluminum build.",
       "full": "The Latitude 7420 2-in-1 is a top-tier business machine. It features the Evo-certified 11th Gen platform for instant wake and long battery life. The screen offers vibrant colors and touch capability, packaged in a lightweight, premium chassis."
     },
-    "features": ["Evo Certified", "2-in-1 Convertible", "Thunderbolt 4", "Premium Materials"],
+    "features": [
+      "Evo Certified",
+      "2-in-1 Convertible",
+      "Thunderbolt 4",
+      "Premium Materials"
+    ],
     "images": ["/images/dell-7420-2in1.jpg"]
   },
   {
@@ -710,7 +757,11 @@
       "short": "The classic business standard for typing and durability.",
       "full": "The ThinkPad T490 continues the legacy of the T-series with its legendary keyboard and Mil-Spec durability. It features a great FHD IPS screen and comprehensive connectivity options. It is the gold standard for writers, coders, and business professionals."
     },
-    "features": ["Legendary Keyboard", "Mil-Spec Durability", "Great Port Selection"],
+    "features": [
+      "Legendary Keyboard",
+      "Mil-Spec Durability",
+      "Great Port Selection"
+    ],
     "images": ["/images/thinkpad-t490.jpg"]
   },
   {
@@ -836,7 +887,12 @@
       "short": "Redesigned Gen 9 flagship with 16:10 display and i7 power.",
       "full": "The Gen 9 X1 Carbon introduces a new 16:10 aspect ratio screen for more vertical productivity space. Powered by the i7-1165G7 and Iris Xe graphics, it offers desktop-class performance in a chassis that is impossibly thin and light."
     },
-    "features": ["16:10 Aspect Ratio", "Core i7 Power", "Thunderbolt 4", "Flagship Model"],
+    "features": [
+      "16:10 Aspect Ratio",
+      "Core i7 Power",
+      "Thunderbolt 4",
+      "Flagship Model"
+    ],
     "images": ["/images/thinkpad-x1-carbon-gen9.jpg"]
   },
   {
@@ -878,7 +934,12 @@
       "short": "Sleek, minimalist design with a stunning 2K touchscreen.",
       "full": "The Surface Laptop 3 is all about style and screen. The 3:2 aspect ratio PixelSense display is incredibly sharp and tall, perfect for documents and web browsing. With a premium metal finish and excellent trackpad, it rivals the MacBook Air in build quality."
     },
-    "features": ["2K PixelSense Display", "3:2 Aspect Ratio", "Premium Aluminum", "Touchscreen"],
+    "features": [
+      "2K PixelSense Display",
+      "3:2 Aspect Ratio",
+      "Premium Aluminum",
+      "Touchscreen"
+    ],
     "images": ["/images/surface-laptop-3.jpg"]
   },
   {
@@ -892,7 +953,7 @@
     "grade": "A+",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 51999,
+      "sale_price": 54500,
       "market_price": 62000,
       "discount_percentage": 16,
       "tax_included": true
@@ -926,7 +987,7 @@
   {
     "id": 23,
     "sku": "MS-SL4-I5-023",
-    "name": "Microsoft Surface Laptop 4",
+    "name": "Microsoft Surface Laptop 4 (i5)",
     "brand": "Microsoft",
     "model": "Surface Laptop 4",
     "category": "Ultrabook",
@@ -934,7 +995,7 @@
     "grade": "Like New",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 47900,
+      "sale_price": 48900,
       "market_price": 58000,
       "discount_percentage": 17,
       "tax_included": true
@@ -962,7 +1023,12 @@
       "short": "Improved battery life and performance in the classic Surface design.",
       "full": "The Surface Laptop 4 refines the formula with 11th Gen processors that offer significantly better battery life and performance than the Laptop 3. It retains the beloved keyboard and screen but runs cooler and longer, making it an excellent daily driver."
     },
-    "features": ["11th Gen Intel", "Improved Battery", "2K Touchscreen", "Iris Xe Graphics"],
+    "features": [
+      "11th Gen Intel",
+      "Improved Battery",
+      "2K Touchscreen",
+      "Iris Xe Graphics"
+    ],
     "images": ["/images/surface-laptop-4.jpg"]
   }
 ]
