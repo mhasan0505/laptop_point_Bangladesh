@@ -140,10 +140,10 @@ const Header = () => {
               <div className="flex items-center space-x-1">
                 <Phone className="w-3.5 h-3.5 text-yellow-400" />
                 <a
-                  href="tel:+8801717171717"
+                  href="tel:+8801612182408"
                   className="hover:text-yellow-400 transition-colors"
                 >
-                  +880 1717-171717
+                  +880 1612-182408
                 </a>
               </div>
               <div className="hidden md:flex items-center space-x-3 border-l border-gray-700 pl-4 ml-2">

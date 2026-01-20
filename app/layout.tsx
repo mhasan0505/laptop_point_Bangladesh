@@ -1,3 +1,4 @@
+import WhatsAppButton from "@/components/application/WhatsAppButton";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
@@ -118,6 +119,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         {children}
+        <WhatsAppButton />
         <SpeedInsights />
       </body>
     </html>
