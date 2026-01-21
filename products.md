@@ -10,7 +10,7 @@ Used Laptop Offer Price list 2025
 8. 6. HP Elitebook X360 1040 G8 Core I7 11TH Gen 16/512 Price = 67,000Tk
 HP Zbook Firefly 14 G9 Core i7 12TH Gen 16/512 Price = 69k
 9. HP Elitebook 845 G7 Ryzen 5 Pro 16/512 Price = 36,500Tk
-10. HP Elitebook 845 G8 Ryzen 5 pro 16/512 Price = 39,00)TK
+10. HP Elitebook 845 G8 Ryzen 5 pro 16/512 Price = 39,00TK
 
 
 11. Dell latitude 3190 2-1 Pentium Silver 8/128 Price = 16,900Tk

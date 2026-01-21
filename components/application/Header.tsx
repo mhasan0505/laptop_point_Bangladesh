@@ -24,6 +24,7 @@ import {
   Twitter,
   User,
   X,
+  Youtube,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -53,7 +54,7 @@ const Header = () => {
             (product.brand &&
               product.brand.toLowerCase().includes(query.toLowerCase())) ||
             (product.category &&
-              product.category.toLowerCase().includes(query.toLowerCase()))
+              product.category.toLowerCase().includes(query.toLowerCase())),
         )
         .slice(0, 5);
       setSearchResults(filtered);
@@ -148,28 +149,32 @@ const Header = () => {
               </div>
               <div className="hidden md:flex items-center space-x-3 border-l border-gray-700 pl-4 ml-2">
                 <a
-                  href="#"
+                  href="https://www.facebook.com/laptoppointbd"
+                  target="_blank"
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Facebook"
                 >
                   <Facebook className="w-4 h-4" />
                 </a>
                 <a
-                  href="#"
+                  href="https://www.instagram.com/laptop_point.bd"
+                  target="_blank"
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Instagram"
                 >
                   <Instagram className="w-4 h-4" />
                 </a>
                 <a
-                  href="#"
+                  href="https://www.youtube.com/@LaptopPointBD"
+                  target="_blank"
                   className="hover:text-yellow-400 transition-colors"
-                  aria-label="Twitter"
+                  aria-label="Youtube"
                 >
-                  <Twitter className="w-4 h-4" />
+                  <Youtube className="w-4 h-4" />
                 </a>
                 <a
                   href="mailto:info@laptoppointbd.com"
+                  target="_blank"
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Email"
                 >
