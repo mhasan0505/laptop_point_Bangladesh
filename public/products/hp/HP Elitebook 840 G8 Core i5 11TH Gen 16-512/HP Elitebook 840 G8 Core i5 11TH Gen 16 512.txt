@@ -1,0 +1,11 @@
+
+Brand : HP
+Operating System : Windows 10 Pro
+CPU Model : Core i5
+CPU Speed : 2.6 GHz
+Graphics Card Description : Integrated
+Graphics Coprocessor : Intel Iris Xe Graphics
+Memory Storage Capacity : 1 TB
+Screen Size : 14 Inches
+Ram Memory Installed Size : 16 GB
+Model Name : EliteBook 840 G8

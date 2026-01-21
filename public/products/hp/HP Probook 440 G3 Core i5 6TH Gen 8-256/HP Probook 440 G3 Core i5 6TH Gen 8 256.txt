@@ -1,0 +1,10 @@
+Brand :	HP
+Model Name : HP Refurbished PROBOOK 440 G3
+Screen Size : 14 Inches
+CPU Model : Intel Core i5
+RAM Memory Installed Size : 16 GB
+Operating System : Windows 10 Pro
+Special Feature : Webcam
+Graphics Card Description : Integrated
+CPU Speed : 2.3 GHz
+Hard Disk Description : HDD

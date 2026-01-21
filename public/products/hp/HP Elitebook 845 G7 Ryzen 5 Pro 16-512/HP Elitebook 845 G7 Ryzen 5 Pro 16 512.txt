@@ -1,0 +1,11 @@
+
+Brand : HP
+Model Name : HP EliteBook 845 G7
+Screen Size : 14 Inches
+Hard Disk Size : 512 GB
+CPU Model : AMD R Series
+Ram Memory Installed Size : 16 GB
+Operating System : Windows 11 Pro
+Special Feature : HD Audio, Portable, Wifi
+Graphics Card Description : Integrated
+Hard Disk Description : SSD

@@ -1,0 +1,11 @@
+
+Brand : HP
+Model Name : 1040 G8
+Screen Size : 14 Inches
+Color : Silver
+Hard Disk Size : 512 GB
+CPU Model : Core i7
+Ram Memory Installed Size : 16 GB
+Operating System : Windows 11 Pro
+Special Feature	: HD Audio
+Graphics Card Description : Integrated

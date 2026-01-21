@@ -1,0 +1,11 @@
+
+Brand :	HP
+Model Name : 7KJ24UT#ABA
+Screen Size : 14 Inches
+Color :	Black
+CPU Model : 8032
+Ram Memory Installed Size : 8 GB
+Operating System : Windows 10 Pro 64
+Special Feature	: HD Graphics, Support Stylus, Fingerprint Reader, Backlit Keyboard
+Graphics Card Description : Integrated
+Graphics Coprocessor : Intel HD Graphics 520

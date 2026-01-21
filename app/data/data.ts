@@ -6,16 +6,24 @@ const getImageFolder = (model: string): string | null => {
   const m = model.toLowerCase();
 
   // HP
-  if (m.includes("440 g3")) return "/products/hp/HP_Probook_440_G3";
-  if (m.includes("840 g3")) return "/products/hp/HP_Elitebook_840_G3";
-  if (m.includes("840 g6")) return "/products/hp/HP_Elitebook_840_G6";
-  if (m.includes("zbook 14u g6")) return "/products/hp/HP_Zbook_14U_G6";
-  if (m.includes("840 g7")) return "/products/hp/HP_Elitebook_840_G7";
-  if (m.includes("840 g8")) return "/products/hp/HP_Elitebook_840_G8";
-  if (m.includes("845 g7")) return "/products/hp/HP_Elitebook_845_G7";
-  if (m.includes("845 g8")) return "/products/hp/HP_Elitebook_845_G8";
+  if (m.includes("440 g3"))
+    return "/products/hp/HP Probook 440 G3 Core i5 6TH Gen 8-256";
+  if (m.includes("840 g3"))
+    return "/products/hp/HP Elitebook 840 G3 Core i5 6TH Gen 8-256";
+  if (m.includes("840 g6"))
+    return "/products/hp/HP Elitebook 840 G6 Core i5 8TH Gen 8-256";
+  if (m.includes("zbook 14u g6"))
+    return "/products/hp/HP Zbook 14U G6 Core i5 8TH Gen 8-256";
+  if (m.includes("840 g7"))
+    return "/products/hp/HP Elitebook 840 G7 Core i5 10TH Gen 16-512";
+  if (m.includes("840 g8"))
+    return "/products/hp/HP Elitebook 840 G8 Core i5 11TH Gen 16-512";
+  if (m.includes("845 g7"))
+    return "/products/hp/HP Elitebook 845 G7 Ryzen 5 Pro 16-512";
+  if (m.includes("845 g8"))
+    return "/products/hp/HP Elitebook 845 G8 Ryzen 5 pro 16-512";
   if (m.includes("1040 g8") || m.includes("x360 1040"))
-    return "/products/hp/HP_Elitebook_X360_1040_G8";
+    return "/products/hp/HP Elitebook X360 1040 G8 Core I7 11TH Gen 16-512";
   if (m.includes("firefly 14 g9")) return null; // Uses placeholder or generic
 
   // Dell
@@ -187,6 +195,7 @@ const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
   if (folder) {
     // Check if it's one of the new Laptop Point BD folders which use .jpg
     const isNewStructure = folder.includes("Laptop Point BD");
+    const isHP = folder.includes("products/hp");
     const isMicrosoft = folder.includes("products/microsoft");
     const isDell = folder.includes("products/dell");
     const isLenovo = folder.includes("products/lenovo");
@@ -201,6 +210,97 @@ const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
         `${folder}/keyboard.jpg`,
       ];
       mainImage = `${folder}/main.jpg`;
+    } else if (isHP) {
+      // HP products use .jpg format with varying image files
+      mainImage = `${folder}/main.jpg`;
+
+      // HP product mappings based on actual folder contents
+      if (folder.includes("440 G3")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/keyborad.jpg`,
+        ];
+      } else if (folder.includes("840 G3")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/side1.jpg`,
+          `${folder}/back.jpg`,
+        ];
+      } else if (folder.includes("840 G6")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/side1.jpg`,
+          `${folder}/port.jpg`,
+          `${folder}/port2.jpg`,
+        ];
+      } else if (folder.includes("840 G7")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/side1.jpg`,
+        ];
+      } else if (folder.includes("840 G8") && folder.includes("I7")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+        ];
+      } else if (folder.includes("840 G8")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+        ];
+      } else if (folder.includes("845 G7")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+        ];
+      } else if (folder.includes("845 G8")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+        ];
+      } else if (folder.includes("X360 1040")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front1.jpg`,
+          `${folder}/front2.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/side1.jpg`,
+          `${folder}/port.jpg`,
+        ];
+      } else if (folder.includes("14U G6")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/port.jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/side1.jpg`,
+        ];
+      } else {
+        // Fallback for other HP products
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+        ];
+      }
     } else if (isDell || isLenovo) {
       // Dell and Lenovo products use .jpg format, but each has different files
       // Map product-specific images based on actual folder contents

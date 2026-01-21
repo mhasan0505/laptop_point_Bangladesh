@@ -1,0 +1,12 @@
+
+Brand : HP
+Model Name : Elitebook 840G8
+Screen Size : 14 Inches
+Hard Disk Size : 512 GB
+CPU Model : Intel Core i7 1185G7
+Ram Memory Installed Size : 16 GB
+Operating System : Windows 11 Pro
+Special Feature : Fingerprint Reader, Spill Resistant
+Graphics Card Description : Integrated
+CPU Speed : 3 GHz
+

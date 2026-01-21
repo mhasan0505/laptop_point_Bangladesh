@@ -378,7 +378,7 @@
     "grade": "A+",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 34000,
+      "sale_price": 36000,
       "market_price": 40000,
       "discount_percentage": 15,
       "tax_included": true
@@ -420,7 +420,7 @@
     "grade": "Like New",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 37500,
+      "sale_price": 38900,
       "market_price": 45000,
       "discount_percentage": 17,
       "tax_included": true
