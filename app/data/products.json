@@ -1030,5 +1030,52 @@
       "Iris Xe Graphics"
     ],
     "images": ["/images/surface-laptop-4.jpg"]
+  },
+  {
+    "id": 24,
+    "sku": "HP-ZFIREFLY14G9-024",
+    "name": "HP ZBook Firefly 14 G9",
+    "brand": "HP",
+    "model": "ZBook Firefly 14 G9",
+    "category": "Workstation",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 69000,
+      "market_price": 85000,
+      "discount_percentage": 18,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 2
+    },
+    "specs": {
+      "processor": "Intel Core i7-1265U (12th Gen)",
+      "ram": "16GB DDR5",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1200 (16:10)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel Iris Xe Graphics",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0"],
+      "weight": "1.47 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "12th Gen portable workstation for pro-level performance.",
+      "full": "The HP ZBook Firefly 14 G9 offers true mobility for people who push the typical business PC past its breaking point. With a 12th Gen Intel Core i7 processor and professional-grade performance, it's designed to keep you productive anywhere."
+    },
+    "features": [
+      "12th Gen Intel",
+      "Workstation Class",
+      "16:10 Display",
+      "DDR5 RAM"
+    ],
+    "images": []
   }
 ]

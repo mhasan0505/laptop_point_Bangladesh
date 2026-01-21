@@ -16,6 +16,7 @@ const getImageFolder = (model: string): string | null => {
   if (m.includes("845 g8")) return "/products/hp/HP_Elitebook_845_G8";
   if (m.includes("1040 g8") || m.includes("x360 1040"))
     return "/products/hp/HP_Elitebook_X360_1040_G8";
+  if (m.includes("firefly 14 g9")) return null; // Uses placeholder or generic
 
   // Dell
   if (m.includes("3190"))
@@ -81,6 +82,10 @@ const getDescription = (
       short = "Convertible business 2-in-1 with stunning display.";
       full =
         "The HP EliteBook x360 1040 G8 adapts to your work style with its 360-degree hinge. Enjoy ease of use as a tablet or laptop, backed by powerful processing for demanding tasks.";
+    } else if (m.includes("firefly")) {
+      short = "Professional mobile workstation for power users.";
+      full =
+        "The HP ZBook Firefly 14 G9 is a true mobile powerhouse. With pro-level performance and a color-accurate display, it's perfect for designers, architects, and power users who need workstation capabilities on the go.";
     } else {
       short = `Professional-grade ${brand} laptop for business and study.`;
       full = `This ${brand} ${model} offers a perfect balance of performance and portability. Equipped with a ${specs.processor} processor and fast SSD storage, it handles multitasking with ease.`;

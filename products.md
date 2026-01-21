@@ -22,6 +22,7 @@ HP Zbook Firefly 14 G9 Core i7 12TH Gen 16/512 Price = 69k
 
 
 17. Lenovo Thinkpad T490 Core i5 8TH Gen 8/256 Price = 26,500Tk
+
 18. Lenovo thinkpad T14 Gen 2 Core i5 11TH gen 16/512 Price 39,000T
 19. Lenovo Thinkpad X1 Carbon i5 10TH Gen 16/512 Touchscreen price = 45,500TK
 20. Lenovo Thinkpad X1 Carbon i7 11TH Gen 16/512 Price = 61,000Tk
