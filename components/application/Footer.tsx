@@ -7,7 +7,7 @@ import {
   FaFacebook,
   FaInstagram,
   FaLinkedin,
-  FaTwitter,
+  FaTiktok,
   FaYoutube,
 } from "react-icons/fa";
 
@@ -41,10 +41,10 @@ export default function Footer() {
                     href: "https://www.facebook.com/laptoppointbd",
                     color: "hover:text-blue-600",
                   },
-                  { Icon: FaTwitter, href: "#", color: "hover:text-sky-500" },
+                  { Icon: FaTiktok, href: "#", color: "hover:text-sky-500" },
                   {
                     Icon: FaInstagram,
-                    href: "https://www.instagram.com/laptop_point.bd/",
+                    href: "https://www.tiktok.com/@laptop.point.bd",
                     color: "hover:text-pink-600",
                   },
                   {
@@ -305,7 +305,7 @@ export default function Footer() {
                     href="tel:+8801717171717"
                     className="text-sm hover:text-yellow-400 transition-colors"
                   >
-                    +880 1717-171717
+                    +880 1612-182408
                   </a>
                 </div>
               </address>

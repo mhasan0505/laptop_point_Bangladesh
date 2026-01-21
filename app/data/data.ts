@@ -1,6 +1,15 @@
 import { Product } from "@/types/product";
 import productsRaw from "./products.json";
 
+// Helper to encode image paths with proper URL encoding
+// Converts spaces and special characters to URL-safe format
+const encodeImagePath = (path: string): string => {
+  return path
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+};
+
 // Helper to map product ID/SKU/Model to image folder path
 const getImageFolder = (model: string): string | null => {
   const m = model.toLowerCase();
@@ -465,8 +474,8 @@ const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
     inStock: p.stock.quantity > 0,
     condition: p.condition ? [p.condition] : [],
     color: ["Silver", "Black"], // Default colors
-    image: mainImage,
-    images: mappedImages,
+    image: encodeImagePath(mainImage),
+    images: mappedImages.map(encodeImagePath),
     specs: {
       processor: p.specs.processor,
       ram: p.specs.ram,

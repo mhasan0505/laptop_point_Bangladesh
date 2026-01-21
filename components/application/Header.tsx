@@ -25,7 +25,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { FaFacebook, FaInstagram, FaYoutube, FaMailBulk } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
 import MegaMenu from "../navigation/MegaMenu";
@@ -146,30 +146,30 @@ const Header = () => {
                 </a>
               </div>
               <div className="hidden md:flex items-center space-x-3 border-l border-gray-700 pl-4 ml-2">
-                <a
+                <Link
                   href="https://www.facebook.com/laptoppointbd"
                   target="_blank"
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Facebook"
                 >
                   <FaFacebook className="w-4 h-4" />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://www.instagram.com/laptop_point.bd"
                   target="_blank"
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Instagram"
                 >
                   <FaInstagram className="w-4 h-4" />
-                </a>
-                <a
+                </Link>
+                <Link
                   href="https://www.youtube.com/@LaptopPointBD"
                   target="_blank"
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Youtube"
                 >
                   <FaYoutube className="w-4 h-4" />
-                </a>
+                </Link>
                 <a
                   href="mailto:info@laptoppointbd.com"
                   target="_blank"
