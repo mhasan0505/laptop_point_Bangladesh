@@ -1,0 +1,10 @@
+Brand : ist computers
+Model Name :Thinpad X1 Carbon
+Screen Size : 14 Inches
+Color : Black
+Hard Disk Size : 1 TB
+CPU Model : Core i7
+Ram Memory Installed Size : 32 GB
+Operating System : Windows 11 Pro
+Special Feature : Anti Glare Coating, Backlit Keyboard, Fingerprint Reader, HD Audio, Spill Resistant
+Graphics Card Description : Integrated

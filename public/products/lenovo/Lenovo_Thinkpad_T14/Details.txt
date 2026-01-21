@@ -1,0 +1,10 @@
+Brand : Lenovo
+Model Name : i5
+Screen Size : 14 Inches
+Color  : Black
+Hard Disk Size : 512 GB
+CPU Model : Core i5
+Ram Memory Installed Size : 16 GB
+Operating System : Windows 11 Pro
+Special Feature : HD Audio
+Graphics Card Description : Integrated

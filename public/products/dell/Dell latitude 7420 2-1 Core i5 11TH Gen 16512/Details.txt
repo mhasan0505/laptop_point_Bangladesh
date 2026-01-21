@@ -1,0 +1,10 @@
+Brand : Dell
+Model Name : Latitude 7420 2-in-1
+Screen Size : 14 Inches
+Color : Aluminum
+Hard Disk Size : 512 GB
+CPU Model : Core i5
+Ram Memory Installed Size : 16 GB
+Operating System : Windowsdows 11 Pro
+Graphics Card Description : Integrated
+Graphics Coprocessor : Intel Integrated Graphics

@@ -12,24 +12,22 @@ import { motion } from "framer-motion";
 import {
   ChevronDown,
   Clock,
-  Facebook,
   Heart,
-  Instagram,
-  Mail,
   MapPin,
   Menu,
   Phone,
   Search,
   ShoppingCart,
-  Twitter,
   User,
   X,
-  Youtube,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { FaFacebook, FaInstagram, FaYoutube, FaMailBulk } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+
 import MegaMenu from "../navigation/MegaMenu";
 
 const Header = () => {
@@ -154,7 +152,7 @@ const Header = () => {
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Facebook"
                 >
-                  <Facebook className="w-4 h-4" />
+                  <FaFacebook className="w-4 h-4" />
                 </a>
                 <a
                   href="https://www.instagram.com/laptop_point.bd"
@@ -162,7 +160,7 @@ const Header = () => {
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Instagram"
                 >
-                  <Instagram className="w-4 h-4" />
+                  <FaInstagram className="w-4 h-4" />
                 </a>
                 <a
                   href="https://www.youtube.com/@LaptopPointBD"
@@ -170,7 +168,7 @@ const Header = () => {
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Youtube"
                 >
-                  <Youtube className="w-4 h-4" />
+                  <FaYoutube className="w-4 h-4" />
                 </a>
                 <a
                   href="mailto:info@laptoppointbd.com"
@@ -178,7 +176,7 @@ const Header = () => {
                   className="hover:text-yellow-400 transition-colors"
                   aria-label="Email"
                 >
-                  <Mail className="w-4 h-4" />
+                  <MdEmail className="w-4 h-4" />
                 </a>
               </div>
             </div>

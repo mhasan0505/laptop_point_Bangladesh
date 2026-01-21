@@ -20,21 +20,37 @@ const getImageFolder = (model: string): string | null => {
 
   // Dell
   if (m.includes("3190"))
-    return "/products/Laptop Point BD/Dell_latitude_3190_2-1 Pentium";
+    return "/products/dell/Dell_latitude 3190 2-1 Pentium Silver 8-128";
   if (m.includes("3310"))
-    return "/products/Laptop Point BD/dell_latitude_3310_code_i5";
+    return "/products/dell/Dell latitude 3310 Core i5 8TH Gen 8-256";
   if (m.includes("3410"))
-    return "/products/Laptop Point BD/dell_latitude_3410_code_i5";
+    return "/products/dell/Dell latitude 3410 Core i5 10TH Gen 16-512";
   if (m.includes("7490"))
-    return "/products/Laptop Point BD/dell_latitude_7490_cide_i5";
-  if (m.includes("7400")) return "/products/dell/Dell_Latitude_7400";
-  if (m.includes("7420")) return "/products/dell/Dell_Latitude_7420";
+    return "/products/dell/Dell latitude 7490 Core i5 8TH Gen 8-256";
+  if (m.includes("7400"))
+    return "/products/dell/Dell latitude 7400 Core i5 8TH gen 16256 Metal body";
+  if (m.includes("7420"))
+    return "/products/dell/Dell latitude 7420 2-1 Core i5 11TH Gen 16512";
 
   // Lenovo
-  if (m.includes("t490")) return "/products/lenovo/Lenovo_Thinkpad_T490";
-  if (m.includes("t14")) return "/products/lenovo/Lenovo_Thinkpad_T14";
+  if (m.includes("t490"))
+    return "/products/lenovo/Lenovo_Thinkpad_T490_code_i5";
+  if (m.includes("t14") && !m.includes("t490"))
+    return "/products/lenovo/Lenovo_Thinkpad_T14";
+  // X1 Carbon - distinguish between Gen 8 (i5/10th) and Gen 9 (i7/11th)
+  if (
+    m.includes("x1 carbon gen 8") ||
+    (m.includes("x1 carbon") && m.includes("i5"))
+  )
+    return "/products/lenovo/19. Lenovo Thinkpad X1 Carbon i5 10TH Gen 16512 Touchscreen";
+  if (
+    m.includes("x1 carbon gen 9") ||
+    (m.includes("x1 carbon") && m.includes("i7"))
+  )
+    return "/products/lenovo/Lenovo_Thinkpad_X1_core_i7";
+  // Fallback for generic X1 Carbon
   if (m.includes("x1 carbon") || m.includes("x1c"))
-    return "/products/lenovo/Lenovo_Thinkpad_X1";
+    return "/products/lenovo/Lenovo_Thinkpad_X1_core_i7";
 
   // Microsoft
   if (m.includes("surface laptop 3") && m.includes("i5"))
@@ -172,6 +188,8 @@ const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
     // Check if it's one of the new Laptop Point BD folders which use .jpg
     const isNewStructure = folder.includes("Laptop Point BD");
     const isMicrosoft = folder.includes("products/microsoft");
+    const isDell = folder.includes("products/dell");
+    const isLenovo = folder.includes("products/lenovo");
 
     if (isNewStructure) {
       mappedImages = [
@@ -180,9 +198,126 @@ const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
         `${folder}/back.jpg`,
         `${folder}/side.jpg`,
         // Include keyborad.jpg if exists, handling typo or standard
-        `${folder}/keyborad.jpg`,
+        `${folder}/keyboard.jpg`,
       ];
       mainImage = `${folder}/main.jpg`;
+    } else if (isDell || isLenovo) {
+      // Dell and Lenovo products use .jpg format, but each has different files
+      // Map product-specific images based on actual folder contents
+      mainImage = `${folder}/main.jpg`;
+
+      // Dell product mappings
+      if (folder.includes("Dell_latitude 3190")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/image.jpg`,
+          `${folder}/image2.jpg`,
+          `${folder}/image3.jpg`,
+        ];
+      } else if (folder.includes("Dell latitude 3310")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/back2.jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/flip.jpg`,
+          `${folder}/flip2.jpg`,
+        ];
+      } else if (folder.includes("Dell latitude 3410")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/fullSize.jpg`,
+          `${folder}/dual.jpg`,
+          `${folder}/rotate.jpg`,
+        ];
+      } else if (folder.includes("Dell latitude 7490")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/port.jpg`,
+          `${folder}/cables.jpg`,
+        ];
+      } else if (folder.includes("Dell latitude 7400")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/back2.jpg`,
+          `${folder}/port.jpg`,
+          `${folder}/side (1).jpg`,
+          `${folder}/side (2).jpg`,
+          `${folder}/side3.jpg`,
+        ];
+      } else if (folder.includes("Dell latitude 7420")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/port.jpg`,
+          `${folder}/side (1).jpg`,
+          `${folder}/side (2).jpg`,
+          `${folder}/side (3).jpg`,
+          `${folder}/side (4).jpg`,
+          `${folder}/side (5).jpg`,
+        ];
+      }
+      // Lenovo product mappings
+      else if (folder.includes("Lenovo_Thinkpad_T490_code_i5")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/fullSize.jpg`,
+          `${folder}/side1.jpg`,
+          `${folder}/side2.jpg`,
+          `${folder}/port.jpg`,
+          `${folder}/port2.jpg`,
+          `${folder}/port3.jpg`,
+        ];
+      } else if (folder.includes("Lenovo_Thinkpad_T14")) {
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/fullSize.jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/side1.jpg`,
+          `${folder}/side2.jpg`,
+        ];
+      } else if (folder.includes("19. Lenovo Thinkpad X1 Carbon")) {
+        // X1 Carbon Gen 8 (i5)
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/close.jpg`,
+          `${folder}/image.jpg`,
+          `${folder}/image1.jpg`,
+          `${folder}/imageg.jpg`,
+          `${folder}/keyborad.jpg`,
+          `${folder}/keyborad1.jpg`,
+        ];
+      } else if (folder.includes("Lenovo_Thinkpad_X1_core_i7")) {
+        // X1 Carbon Gen 9 (i7) - same files as Gen 8
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/close.jpg`,
+          `${folder}/image.jpg`,
+          `${folder}/image1.jpg`,
+          `${folder}/imageg.jpg`,
+          `${folder}/keyborad.jpg`,
+          `${folder}/keyborad1.jpg`,
+        ];
+      } else {
+        // Fallback for any other Dell/Lenovo products
+        mappedImages = [
+          `${folder}/main.jpg`,
+          `${folder}/front.jpg`,
+          `${folder}/back.jpg`,
+          `${folder}/side.jpg`,
+        ];
+      }
     } else if (isMicrosoft) {
       if (folder.includes("Microsoft_Surface_laptop_4")) {
         mappedImages = [

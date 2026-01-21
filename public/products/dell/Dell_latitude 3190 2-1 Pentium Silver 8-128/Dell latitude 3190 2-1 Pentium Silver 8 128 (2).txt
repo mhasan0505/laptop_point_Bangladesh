@@ -1,0 +1,10 @@
+Brand : Dell
+Model Name : Latitude 3190
+Screen Size : 11.6
+Hard Disk Size : 128 GB
+CPU Model : Celeron
+Ram Memory Installed Size : 8 GB
+Operating System : Windows 11 Pro
+Graphics Card Description : Integrated
+CPU Speed : 1.1 GHz
+Hard Disk Description : SSD
