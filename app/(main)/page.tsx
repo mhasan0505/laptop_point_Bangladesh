@@ -3,10 +3,40 @@ import BrandProductSection from "@/components/application/BrandProductSection";
 import HeroSection from "@/components/application/HeroSection";
 import NewProductsSection from "@/components/application/NewProductsSection";
 import TestimonialsSection from "@/components/application/TestimonialsSection";
+import { eCommerceSchema } from "@/lib/seo-schemas";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Laptop Point Bangladesh | Premium Used & Refurbished Laptops",
+  description:
+    "Shop the best selection of used and refurbished laptops from HP, Dell, Lenovo, and Microsoft in Bangladesh. Official warranty, free delivery, and best prices guaranteed.",
+  keywords: [
+    "used laptop Bangladesh",
+    "refurbished laptop Dhaka",
+    "HP laptop price",
+    "Dell laptop Bangladesh",
+    "Lenovo ThinkPad",
+    "Microsoft Surface used",
+    "laptop with warranty",
+  ],
+  openGraph: {
+    title: "Laptop Point Bangladesh | Premium Used & Refurbished Laptops",
+    description:
+      "Shop the best selection of used and refurbished laptops from HP, Dell, Lenovo, and Microsoft in Bangladesh.",
+    url: "https://laptop-point-bangladesh.vercel.app",
+    type: "website",
+  },
+};
 
 const HomePage = () => {
   return (
     <>
+      {/* Schema Markup for E-Commerce */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eCommerceSchema) }}
+      />
+
       <HeroSection />
       <NewProductsSection />
       <BentoGridSection />

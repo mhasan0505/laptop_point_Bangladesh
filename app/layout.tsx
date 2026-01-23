@@ -17,49 +17,47 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://laptop-point-bangladesh.vercel.app"), // Placeholder URL
+  metadataBase: new URL("https://laptop-point-bangladesh.vercel.app"),
   title: {
-    default: "Laptop Point Bangladesh | Premium Used & Refurbished Laptops",
+    default: SEO_CONFIG.metaTags.defaultTitle,
     template: "%s | Laptop Point Bangladesh",
   },
-  description:
-    "Best source for premium used and refurbished laptops in Bangladesh. HP, Dell, Lenovo, Microsoft Surface at unbeatable prices. Official warranty & free delivery.",
-  keywords: [
-    "Used Laptop Bangladesh",
-    "Refurbished Laptop",
-    "Second Hand Laptop BD",
-    "HP Elitebook Price list",
-    "Dell Latitude Price",
-    "Lenovo Thinkpad Bangladesh",
-    "Microsoft Surface used",
-    "Laptop Point",
-  ],
+  description: SEO_CONFIG.metaTags.defaultDescription,
+  keywords: SEO_CONFIG.keywords.primary.concat(SEO_CONFIG.keywords.secondary),
   authors: [{ name: "Laptop Point Bangladesh" }],
   creator: "Laptop Point Bangladesh",
   publisher: "Laptop Point Bangladesh",
+  alternates: {
+    canonical: "https://laptop-point-bangladesh.vercel.app",
+    languages: {
+      en: "https://laptop-point-bangladesh.vercel.app",
+      bn: "https://laptop-point-bangladesh.vercel.app/bn",
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
+    alternateLocale: "bn_BD",
     url: "https://laptop-point-bangladesh.vercel.app",
     siteName: "Laptop Point Bangladesh",
-    title: "Laptop Point Bangladesh | Premium Used & Refurbished Laptops",
-    description:
-      "Find your perfect laptop at Laptop Point. Wide range of premium used HP, Dell, Lenovo, and Microsoft laptops with warranty.",
+    title: SEO_CONFIG.metaTags.defaultTitle,
+    description: SEO_CONFIG.metaTags.defaultDescription,
     images: [
       {
-        url: "/og-image.jpg", // We need to ensure this exists or use a product image
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Laptop Point Bangladesh Store",
+        alt: "Laptop Point Bangladesh - Premium Used & Refurbished Laptops",
+        type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Laptop Point Bangladesh | Premium Used Laptops",
-    description: "Best deals on used and refurbished laptops in Bangladesh.",
+    title: SEO_CONFIG.metaTags.defaultTitle,
+    description: SEO_CONFIG.metaTags.defaultDescription,
+    creator: SEO_CONFIG.metaTags.twitterHandle,
     images: ["/og-image.jpg"],
-    creator: "@laptoppointbd", // Placeholder
   },
   robots: {
     index: true,
@@ -70,6 +68,16 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
+    },
+    bingbot: {
+      index: true,
+      follow: true,
+    },
+  },
+  verification: {
+    google: "add-your-google-verification-code",
+    other: {
+      "msvalidate.01": "add-your-bing-verification-code",
     },
   },
   icons: {
@@ -88,28 +96,13 @@ export const metadata: Metadata = {
         type: "image/png",
       },
     ],
-    apple: [{ url: "/apple-touch-icon.png" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Laptop Point Bangladesh",
-  url: "https://laptop-point-bangladesh.vercel.app",
-  logo: "https://laptop-point-bangladesh.vercel.app/logo.png",
-  sameAs: [
-    "https://www.facebook.com/laptoppointbd", // Placeholder
-    "https://www.instagram.com/laptoppointbd",
-  ],
-  contactPoint: {
-    "@type": "ContactPoint",
-    telephone: "+880-1234-567890", // Placeholder
-    contactType: "customer service",
-    areaServed: "BD",
-    availableLanguage: "en",
-  },
-};
+const jsonLd = organizationSchema;
+
+const localBusinessJsonLd = localBusinessSchema;
 
 export default function RootLayout({
   children,
@@ -122,13 +115,61 @@ export default function RootLayout({
         {/* Preconnect to critical origins */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.facebook.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        {/* JSON-LD Schema */}
+        {/* Alternate Language Links for Bangladesh */}
+        <link
+          rel="alternate"
+          hrefLang="en-BD"
+          href="https://laptop-point-bangladesh.vercel.app"
+        />
+        <link
+          rel="alternate"
+          hrefLang="bn-BD"
+          href="https://laptop-point-bangladesh.vercel.app/bn"
+        />
+        <link
+          rel="alternate"
+          hrefLang="x-default"
+          href="https://laptop-point-bangladesh.vercel.app"
+        />
+
+        {/* Canonical URL */}
+        <link
+          rel="canonical"
+          href="https://laptop-point-bangladesh.vercel.app"
+        />
+
+        {/* Multiple JSON-LD Schemas for Rich Results */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          key="org-schema"
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessJsonLd),
+          }}
+          key="local-schema"
+        />
+
+        {/* Google Site Verification */}
+        <meta
+          name="google-site-verification"
+          content="add-your-google-verification-code"
+        />
+        <meta name="msvalidate.01" content="add-your-bing-verification-code" />
+
+        {/* Bangladesh-specific Meta Tags */}
+        <meta name="geo.country" content="BD" />
+        <meta name="geo.region" content="BD-30" />
+        <meta name="geo.placename" content="Dhaka" />
+
+        {/* Additional Meta Tags for SEO */}
+        <meta httpEquiv="content-language" content="en-BD" />
+        <meta name="format-detection" content="telephone=+8801612182408" />
 
         {/* Google Analytics - Deferred */}
         <Script
@@ -140,7 +181,11 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-Y7GRYG9473');
+            gtag('config', 'G-Y7GRYG9473', {
+              'allow_google_signals': true,
+              'allow_ad_personalization_signals': true,
+              'geo_restrictions': ['BD']
+            });
           `}
         </Script>
 
