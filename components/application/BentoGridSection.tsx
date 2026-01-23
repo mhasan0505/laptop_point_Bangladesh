@@ -49,9 +49,11 @@ const items = [
     header: (
       <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP_Elitebook_840_G6/main.png"
+          src="/products/hp/HP Elitebook 840 G6 Core i5 8TH Gen 8-256/main.jpg"
           alt="HP Elitebook 840 G6"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority
           className="object-contain hover:scale-105 transition-transform duration-500"
         />
       </div>
@@ -62,11 +64,12 @@ const items = [
     title: "Compact Powerhouse",
     description: "HP Probook 440 G3 for portability.",
     header: (
-      <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative bg-muted/30">
+      <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP_Probook_440_G3/front.png"
+          src="/products/hp/HP Probook 440 G3 Core i5 6TH Gen 8-256/main.jpg"
           alt="HP Probook 440 G3"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-contain p-4 hover:scale-105 transition-transform duration-500"
         />
       </div>
@@ -77,11 +80,12 @@ const items = [
     title: "Side View Elegance",
     description: "Slim profile of the Elitebook G6.",
     header: (
-      <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative bg-muted/30">
+      <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP_Elitebook_840_G6/side01.png"
+          src="/products/hp/HP Elitebook 840 G6 Core i5 8TH Gen 8-256/side.jpg"
           alt="HP Elitebook Side"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-contain p-4 hover:scale-105 transition-transform duration-500"
         />
       </div>
@@ -92,11 +96,12 @@ const items = [
     title: "Connectivity Hub",
     description: "Versatile ports for all your devices.",
     header: (
-      <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative bg-muted/30">
+      <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP_Elitebook_840_G6/port.png"
+          src="/products/hp/HP Elitebook 840 G6 Core i5 8TH Gen 8-256/port.jpg"
           alt="Connectivity Ports"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-contain p-4 hover:scale-105 transition-transform duration-500"
         />
       </div>
@@ -107,11 +112,12 @@ const items = [
     title: "Classic Design",
     description: "Reliable HP Elitebook 840 G3.",
     header: (
-      <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative bg-muted/30">
+      <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP_Elitebook_840_G3/main.png"
+          src="/products/hp/HP Elitebook 840 G3 Core i5 6TH Gen 8-256/main.jpg"
           alt="HP Elitebook 840 G3"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-contain p-4 hover:scale-105 transition-transform duration-500"
         />
       </div>
