@@ -58,13 +58,13 @@ export default function ProductDetailsClient({
             ? product.image
             : product.image.src || "",
       },
-      quantity
+      quantity,
     );
   };
 
   const discountPercentage = product.originalPrice
     ? Math.round(
-        ((product.originalPrice - product.price) / product.originalPrice) * 100
+        ((product.originalPrice - product.price) / product.originalPrice) * 100,
       )
     : 0;
 
@@ -348,10 +348,10 @@ export default function ProductDetailsClient({
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-gray-900 uppercase">
-                      Official Warranty
+                      Service Warranty
                     </span>
                     <span className="text-[10px] text-gray-500">
-                      2 Years Guarantee
+                      6 Months Service Warranty
                     </span>
                   </div>
                 </div>
