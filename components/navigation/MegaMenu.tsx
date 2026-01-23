@@ -126,7 +126,7 @@ const MegaMenu = ({
                     {getFeaturedProducts(hoveredCategory).map((product) => (
                       <Link
                         key={product.id}
-                        href={`/product/${product.id}`}
+                        href={`/product/${product.slug}`}
                         className="group bg-white border border-gray-100 rounded-xl p-4 hover:shadow-lg hover:border-yellow-200 transition-all"
                       >
                         <div className="aspect-square relative mb-3 bg-gray-50 rounded-lg overflow-hidden">

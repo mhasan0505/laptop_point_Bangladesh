@@ -58,7 +58,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             (product.brand &&
               product.brand.toLowerCase().includes(query.toLowerCase())) ||
             (product.category &&
-              product.category.toLowerCase().includes(query.toLowerCase()))
+              product.category.toLowerCase().includes(query.toLowerCase())),
         )
         .slice(0, 5);
       setSearchResults(filtered);
@@ -172,7 +172,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                         {searchResults.map((product) => (
                           <Link
                             key={product.id}
-                            href={`/product/${product.id}`}
+                            href={`/product/${product.slug}`}
                             onClick={onClose}
                             className="flex items-center gap-3 p-2 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
                           >

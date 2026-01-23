@@ -278,7 +278,7 @@ const Header = () => {
                               {searchResults.map((product) => (
                                 <Link
                                   key={product.id}
-                                  href={`/product/${product.id}`}
+                                  href={`/product/${product.slug}`}
                                   onClick={() => setIsSearchExpanded(false)}
                                   className="w-full text-left p-2.5 hover:bg-gray-50 rounded-lg text-sm text-gray-700 transition-colors flex items-center group gap-3"
                                 >
