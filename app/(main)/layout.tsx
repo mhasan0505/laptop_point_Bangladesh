@@ -20,7 +20,7 @@ export default function MainLayout({
         <ComparisonProvider>
           <Header />
           <Breadcrumb />
-          {children}
+          <main className="pb-20 lg:pb-0">{children}</main>
           <Footer />
           <ComparisonBar />
           <CookieConsent />

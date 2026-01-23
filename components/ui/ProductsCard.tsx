@@ -196,7 +196,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
           </div>
 
           <h3
-            className="text-sm font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 min-h-[40px]"
+            className="text-sm font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 min-h-10"
             title={product.name}
           >
             {product.name}
