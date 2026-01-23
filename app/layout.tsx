@@ -1,4 +1,6 @@
 import WhatsAppButton from "@/components/application/WhatsAppButton";
+import { SEO_CONFIG } from "@/lib/seo-config";
+import { localBusinessSchema, organizationSchema } from "@/lib/seo-schemas";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
