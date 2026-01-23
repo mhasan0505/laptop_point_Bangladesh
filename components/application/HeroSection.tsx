@@ -8,9 +8,10 @@ const HeroSection = () => {
 
   // Using the same image multiple times for now
   const slides = [
-    { id: 1, image: "/Hero_Image.png", alt: "Hero Image 1" },
-    { id: 2, image: "/Hero_Image.png", alt: "Hero Image 2" },
-    { id: 3, image: "/Hero_Image.png", alt: "Hero Image 3" },
+    { id: 1, image: "/Hero/HP.png", alt: "Hero Image 1" },
+    { id: 2, image: "/Hero/dell.png", alt: "Hero Image 2" },
+    { id: 3, image: "/Hero/lenovo.png", alt: "Hero Image 3" },
+     { id: 4, image: "/Hero/Microsoft.png", alt: "Hero Image 4" },
   ];
 
   // Auto-play functionality
@@ -35,7 +36,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="container mx-auto h-48 sm:h-64 md:h-[328px] lg:h-[400px] bg-black relative overflow-hidden group">
+    <div className="w-screen h-56 px-4 sm:px-8 md:px-12 lg:px-20 sm:h-72 md:h-96 lg:h-[500px] bg-white relative overflow-hidden group -mx-[calc(50vw-50%)]">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div
