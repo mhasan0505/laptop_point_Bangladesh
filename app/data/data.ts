@@ -503,6 +503,13 @@ const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
   };
 });
 
+// Debug: Check that slugs are created
+if (laptops.length > 0) {
+  console.log("✓ First product slug:", laptops[0].slug);
+  console.log("✓ First product name:", laptops[0].name);
+  console.log("✓ First product id:", laptops[0].id);
+}
+
 export const laptopData = {
   laptops,
 };
