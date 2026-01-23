@@ -34,24 +34,33 @@ export default function Footer() {
                     Icon: Facebook,
                     href: "https://www.facebook.com/laptoppointbd",
                     color: "hover:text-blue-600",
+                    label: "Visit us on Facebook",
                   },
-                  { Icon: Music, href: "#", color: "hover:text-sky-500" },
+                  {
+                    Icon: Music,
+                    href: "#",
+                    color: "hover:text-sky-500",
+                    label: "Visit us on TikTok",
+                  },
                   {
                     Icon: Instagram,
                     href: "https://www.tiktok.com/@laptop.point.bd",
                     color: "hover:text-pink-600",
+                    label: "Visit us on TikTok",
                   },
                   {
                     Icon: Linkedin,
                     href: "https://www.linkedin.com/company/laptop-point-bangladesh/",
                     color: "hover:text-blue-700",
+                    label: "Visit us on LinkedIn",
                   },
                   {
                     Icon: Youtube,
                     href: "https://www.youtube.com/@LaptopPointBD",
                     color: "hover:text-red-600",
+                    label: "Visit us on YouTube",
                   },
-                ].map(({ Icon, href, color }, index) => (
+                ].map(({ Icon, href, color, label }, index) => (
                   <motion.a
                     key={index}
                     href={href}
@@ -60,6 +69,7 @@ export default function Footer() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     className={`p-2 rounded-full bg-white shadow-sm text-gray-600 transition-colors ${color}`}
+                    aria-label={label}
                   >
                     <Icon size={20} />
                   </motion.a>
@@ -308,7 +318,7 @@ export default function Footer() {
 
           <div className="border-t border-gray-800 pt-8 mt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-300 text-sm">
                 © {currentYear} Laptop Point BD. All rights reserved.
               </p>
               <div className="flex flex-wrap justify-center gap-4">

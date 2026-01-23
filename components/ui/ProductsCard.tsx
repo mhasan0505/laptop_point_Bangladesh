@@ -166,13 +166,14 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                   : "bg-white text-gray-700 hover:bg-gray-100"
             }`}
             title="Add to Compare"
+            aria-label={`${isCompared ? "Remove from" : "Add to"} comparison: ${product.name}`}
           >
             <input
-            
               type="checkbox"
               checked={isCompared}
               onChange={() => {}}
               className="w-3 h-3 pointer-events-none"
+              aria-label={`Compare ${product.name}`}
             />
             Compare
           </button>
@@ -198,8 +199,8 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               </span>
             </div>
 
-            <div className="flex items-center gap-1 text-orange-500 font-bold">
-              <Star className="w-3.5 h-3.5 fill-orange-500" />
+            <div className="flex items-center gap-1 text-amber-600 font-bold">
+              <Star className="w-3.5 h-3.5 fill-amber-600" />
               <span>{product.rating?.toFixed(1)}</span>
             </div>
           </div>

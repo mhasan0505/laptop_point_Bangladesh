@@ -3,7 +3,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import Image from "next/image";
 import Script from "next/script";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -123,8 +122,13 @@ export default function RootLayout({
         {/* Preconnect to critical origins */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.facebook.com" />
-        <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+        {/* JSON-LD Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
 
         {/* Google Analytics - Deferred */}
         <Script
@@ -161,12 +165,12 @@ export default function RootLayout({
               strategy="lazyOnload"
             />
             <noscript>
-              <Image
-                height={1}
-                width={1}
+              <img
+                height="1"
+                width="1"
                 className="hidden"
                 src={`https://www.facebook.com/tr?id=${process.env.NEXT_PUBLIC_FB_PIXEL_ID}&ev=PageView&noscript=1`}
-                alt=""
+                alt="Facebook Pixel"
               />
             </noscript>
           </>
@@ -174,10 +178,6 @@ export default function RootLayout({
       </head>
       <body className={`${poppins.variable} antialiased`}>
         <Providers>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-          />
           {children}
           <WhatsAppButton />
         </Providers>
