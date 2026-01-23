@@ -61,21 +61,6 @@ export const metadata: Metadata = {
     creator: SEO_CONFIG.metaTags.twitterHandle,
     images: ["/og-image.jpg"],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-    bingbot: {
-      index: true,
-      follow: true,
-    },
-  },
   verification: {
     google: "add-your-google-verification-code",
     other: {

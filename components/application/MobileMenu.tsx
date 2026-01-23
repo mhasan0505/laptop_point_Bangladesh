@@ -321,7 +321,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               </Button>
 
               <div className="flex items-center justify-center gap-4 text-gray-400">
-                <a href="#" className="hover:text-blue-600 transition-colors">
+                <a href="" className="hover:text-blue-600 transition-colors">
                   <Facebook className="w-5 h-5" />
                 </a>
                 <a href="#" className="hover:text-pink-600 transition-colors">
