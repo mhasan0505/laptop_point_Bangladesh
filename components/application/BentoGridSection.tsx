@@ -54,6 +54,7 @@ const items = [
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
+          loading="eager"
           className="object-contain hover:scale-105 transition-transform duration-500"
         />
       </div>
@@ -70,6 +71,7 @@ const items = [
           alt="HP Probook 440 G3"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          loading="lazy"
           className="object-contain p-4 hover:scale-105 transition-transform duration-500"
         />
       </div>
@@ -86,6 +88,7 @@ const items = [
           alt="HP Elitebook Side"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          loading="lazy"
           className="object-contain p-4 hover:scale-105 transition-transform duration-500"
         />
       </div>
@@ -102,6 +105,7 @@ const items = [
           alt="Connectivity Ports"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          loading="lazy"
           className="object-contain p-4 hover:scale-105 transition-transform duration-500"
         />
       </div>
@@ -118,6 +122,7 @@ const items = [
           alt="HP Elitebook 840 G3"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          loading="lazy"
           className="object-contain p-4 hover:scale-105 transition-transform duration-500"
         />
       </div>

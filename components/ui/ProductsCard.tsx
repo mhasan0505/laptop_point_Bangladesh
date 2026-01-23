@@ -8,7 +8,7 @@ import { Product } from "@/types/product";
 import { Eye, Heart, Plus, ShoppingBag, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ProductsCardProps {
   product: Product;
@@ -22,6 +22,15 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile on component mount
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 1024);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
@@ -123,7 +132,8 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                 imageLoaded ? "opacity-100" : "opacity-0"
               }`}
               onLoad={() => setImageLoaded(true)}
-              priority
+              priority={!isMobile}
+              loading={isMobile ? "lazy" : "eager"}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </div>
