@@ -1,12 +1,7 @@
+import { Calendar, Facebook, Linkedin, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  FaCalendarAlt,
-  FaFacebook,
-  FaLinkedin,
-  FaTwitter,
-} from "react-icons/fa";
 
 // Mock Data (duplicated for now, ideally moved to a separate data file)
 const posts = [
@@ -107,7 +102,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 <span className="font-semibold">{post.author.name}</span>
               </div>
               <div className="flex items-center gap-2 text-gray-200">
-                <FaCalendarAlt />
+                <Calendar size={16} />
                 {new Date(post.date).toLocaleDateString("en-US", {
                   month: "long",
                   day: "numeric",
@@ -133,14 +128,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               Share this post:
             </h4>
             <div className="flex gap-4">
-              <button className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
-                <FaFacebook />
+              <button title="Share on Facebook" className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
+                <Facebook size={20} />
               </button>
-              <button className="p-3 bg-sky-500 text-white rounded-full hover:bg-sky-600 transition-colors">
-                <FaTwitter />
+              <button title="Share on Twitter" className="p-3 bg-sky-500 text-white rounded-full hover:bg-sky-600 transition-colors">
+                <Twitter size={20} />
               </button>
-              <button className="p-3 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors">
-                <FaLinkedin />
+              <button title="Share on LinkedIn" className="p-3 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors">
+                <Linkedin size={20} />
               </button>
             </div>
           </div>

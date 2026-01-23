@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Clock } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaClock } from "react-icons/fa";
 
 interface FlashSaleBannerProps {
   targetDate: string; // ISO string format
@@ -60,7 +60,7 @@ export default function FlashSaleBanner({ targetDate }: FlashSaleBannerProps) {
       <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
         <div className="text-center md:text-left space-y-4">
           <div className="inline-flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full text-sm font-semibold text-yellow-300">
-            <FaClock className="animate-pulse" />
+            <Clock className="animate-pulse" size={18} />
             <span>Limited Time Offer</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold leading-tight">

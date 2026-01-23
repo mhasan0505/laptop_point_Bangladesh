@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { Mail, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { FaEnvelope, FaTimes } from "react-icons/fa";
 
 export default function NewsletterPopup() {
   const [isVisible, setIsVisible] = useState(false);
@@ -42,10 +42,12 @@ export default function NewsletterPopup() {
             className="bg-white rounded-2xl shadow-xl max-w-lg w-full overflow-hidden relative"
           >
             <button
+              type="button"
+              aria-label="Close"
               onClick={handleClose}
               className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 transition-colors z-10"
             >
-              <FaTimes size={20} />
+              <X size={20} />
             </button>
 
             <div className="flex flex-col md:flex-row">
@@ -53,7 +55,7 @@ export default function NewsletterPopup() {
               <div className="hidden md:block w-1/3 bg-gray-100 relative">
                 {/* You could put an image here */}
                 <div className="absolute inset-0 flex items-center justify-center text-primary/20">
-                  <FaEnvelope size={64} />
+                  <Mail size={64} />
                 </div>
               </div>
 
@@ -61,7 +63,7 @@ export default function NewsletterPopup() {
               <div className="w-full md:w-2/3 p-8">
                 <div className="text-center md:text-left">
                   <div className="md:hidden flex justify-center text-primary mb-4">
-                    <FaEnvelope size={40} />
+                    <Mail size={40} />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     Join Our Newsletter

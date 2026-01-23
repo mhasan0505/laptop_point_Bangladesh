@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Calendar, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaCalendarAlt, FaUser } from "react-icons/fa";
 
 interface BlogPost {
   title: string;
@@ -43,7 +43,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
       <div className="p-6">
         <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
           <span className="flex items-center gap-1">
-            <FaCalendarAlt />
+            <Calendar size={14} />
             {new Date(post.date).toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
@@ -51,7 +51,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
             })}
           </span>
           <span className="flex items-center gap-1">
-            <FaUser />
+            <User size={14} />
             {post.author.name}
           </span>
         </div>

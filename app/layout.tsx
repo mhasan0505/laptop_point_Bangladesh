@@ -6,12 +6,15 @@ import { Poppins } from "next/font/google";
 import Image from "next/image";
 import Script from "next/script";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const poppins = Poppins({
   variable: "--font-poppins",
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
+  preload: true,
+  fallback: ["system-ui", "arial"],
 });
 
 export const metadata: Metadata = {
@@ -117,25 +120,30 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Google Analytics */}
+        {/* Preconnect to critical origins */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.facebook.com" />
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+        {/* Google Analytics - Deferred */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-Y7GRYG9473"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-Y7GRYG9473');
           `}
         </Script>
 
-        {/* Facebook Pixel */}
+        {/* Facebook Pixel - Deferred */}
         {process.env.NEXT_PUBLIC_FB_PIXEL_ID && (
           <>
-            <script
+            <Script
               dangerouslySetInnerHTML={{
                 __html: `
                   !function(f,b,e,v,n,t,s)
@@ -150,6 +158,7 @@ export default function RootLayout({
                   fbq('track', 'PageView');
                 `,
               }}
+              strategy="lazyOnload"
             />
             <noscript>
               <Image
@@ -164,12 +173,14 @@ export default function RootLayout({
         )}
       </head>
       <body className={`${poppins.variable} antialiased`}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        {children}
-        <WhatsAppButton />
+        <Providers>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          {children}
+          <WhatsAppButton />
+        </Providers>
         <SpeedInsights />
         <Analytics />
       </body>

@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Quote, Star } from "lucide-react";
 import Image from "next/image";
-import { FaQuoteLeft, FaStar } from "react-icons/fa";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -114,7 +114,7 @@ export default function TestimonialsSection() {
                 className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col relative"
               >
                 <div className="absolute top-8 right-8 text-primary/10">
-                  <FaQuoteLeft size={40} />
+                  <Quote size={40} />
                 </div>
 
                 <div className="flex items-center gap-4 mb-6 relative z-10">
@@ -138,11 +138,12 @@ export default function TestimonialsSection() {
 
                 <div className="flex mb-4 text-yellow-400 text-sm">
                   {[...Array(5)].map((_, i) => (
-                    <FaStar
+                    <Star
                       key={i}
+                      size={16}
                       className={
                         i < testimonial.rating
-                          ? "text-yellow-400"
+                          ? "text-yellow-400 fill-yellow-400"
                           : "text-gray-200"
                       }
                     />

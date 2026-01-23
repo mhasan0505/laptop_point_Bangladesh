@@ -33,7 +33,8 @@ const getImageFolder = (model: string): string | null => {
     return "/products/hp/HP Elitebook 845 G8 Ryzen 5 pro 16-512";
   if (m.includes("1040 g8") || m.includes("x360 1040"))
     return "/products/hp/HP Elitebook X360 1040 G8 Core I7 11TH Gen 16-512";
-  if (m.includes("firefly 14 g9")) return null; // Uses placeholder or generic
+  if (m.includes("firefly 14 g9"))
+    return "/products/hp/HP Zbook Firefly 14 G9 Core i7 12TH Gen 16/512";
 
   // Dell
   if (m.includes("3190"))
@@ -300,6 +301,16 @@ const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
           `${folder}/port.jpg`,
           `${folder}/side.jpg`,
           `${folder}/side1.jpg`,
+        ];
+      } else if (folder.includes("Firefly 14 G9")) {
+        mappedImages = [
+          `${folder}/main.png`,
+          `${folder}/front.png`,
+          `${folder}/front1.png`,
+          `${folder}/side.png`,
+          `${folder}/port.png`,
+          `${folder}/port2.png`,
+          `${folder}/keyboard.png`,
         ];
       } else {
         // Fallback for other HP products

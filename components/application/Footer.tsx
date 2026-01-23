@@ -1,15 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Facebook, Instagram, Linkedin, Music, Youtube } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaLinkedin,
-  FaTiktok,
-  FaYoutube,
-} from "react-icons/fa";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -37,23 +31,23 @@ export default function Footer() {
               <div className="flex space-x-3 pt-2">
                 {[
                   {
-                    Icon: FaFacebook,
+                    Icon: Facebook,
                     href: "https://www.facebook.com/laptoppointbd",
                     color: "hover:text-blue-600",
                   },
-                  { Icon: FaTiktok, href: "#", color: "hover:text-sky-500" },
+                  { Icon: Music, href: "#", color: "hover:text-sky-500" },
                   {
-                    Icon: FaInstagram,
+                    Icon: Instagram,
                     href: "https://www.tiktok.com/@laptop.point.bd",
                     color: "hover:text-pink-600",
                   },
                   {
-                    Icon: FaLinkedin,
+                    Icon: Linkedin,
                     href: "https://www.linkedin.com/company/laptop-point-bangladesh/",
                     color: "hover:text-blue-700",
                   },
                   {
-                    Icon: FaYoutube,
+                    Icon: Youtube,
                     href: "https://www.youtube.com/@LaptopPointBD",
                     color: "hover:text-red-600",
                   },

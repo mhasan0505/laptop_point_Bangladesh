@@ -1,7 +1,7 @@
 "use client";
 
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 interface FilterSidebarProps {
   onFilterChange: (filters: Record<string, unknown>) => void;
@@ -29,9 +29,9 @@ export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
         >
           <span>Price Range</span>
           {openSections.price ? (
-            <FaChevronUp className="text-sm" />
+            <ChevronUp className="text-sm" />
           ) : (
-            <FaChevronDown className="text-sm" />
+            <ChevronDown className="text-sm" />
           )}
         </button>
         {openSections.price && (
@@ -62,9 +62,9 @@ export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
         >
           <span>Brand</span>
           {openSections.brand ? (
-            <FaChevronUp className="text-sm" />
+            <ChevronUp className="text-sm" />
           ) : (
-            <FaChevronDown className="text-sm" />
+            <ChevronDown className="text-sm" />
           )}
         </button>
         {openSections.brand && (
@@ -83,7 +83,7 @@ export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
                     {brand}
                   </span>
                 </label>
-              )
+              ),
             )}
           </div>
         )}
@@ -97,9 +97,9 @@ export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
         >
           <span>Processor</span>
           {openSections.processor ? (
-            <FaChevronUp className="text-sm" />
+            <ChevronUp className="text-sm" />
           ) : (
-            <FaChevronDown className="text-sm" />
+            <ChevronDown className="text-sm" />
           )}
         </button>
         {openSections.processor && (
@@ -137,9 +137,9 @@ export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
         >
           <span>RAM</span>
           {openSections.ram ? (
-            <FaChevronUp className="text-sm" />
+            <ChevronUp className="text-sm" />
           ) : (
-            <FaChevronDown className="text-sm" />
+            <ChevronDown className="text-sm" />
           )}
         </button>
         {openSections.ram && (

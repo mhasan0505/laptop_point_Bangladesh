@@ -168,6 +168,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
             title="Add to Compare"
           >
             <input
+            
               type="checkbox"
               checked={isCompared}
               onChange={() => {}}

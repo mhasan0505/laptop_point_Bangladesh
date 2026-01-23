@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { FaWhatsapp } from "react-icons/fa";
+import { MessageCircle } from "lucide-react";
 
 export default function WhatsAppButton() {
   const phoneNumber = "+8801612182408"; // Placeholder from footer
@@ -28,7 +28,7 @@ export default function WhatsAppButton() {
       }}
       title="Chat on WhatsApp"
     >
-      <FaWhatsapp className="w-8 h-8" />
+      <MessageCircle className="w-8 h-8" />
       <span className="absolute right-full mr-3 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-sm font-medium shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap hidden md:block">
         Chat with us
       </span>
