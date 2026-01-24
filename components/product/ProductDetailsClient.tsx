@@ -361,7 +361,7 @@ export default function ProductDetailsClient({
                   </div>
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-gray-900 uppercase">
-                      Free Delivery
+                      Fast & Secure Delivery
                     </span>
                     <span className="text-[10px] text-gray-500">
                       All over Bangladesh
@@ -393,13 +393,19 @@ export default function ProductDetailsClient({
             <div className="bg-gray-50 dark:bg-gray-800/20 p-8 md:p-12 lg:p-16 min-h-[400px]">
               {activeTab === "description" && (
                 <div className="max-w-4xl mx-auto space-y-6 text-gray-600 leading-relaxed">
-                  <p className="text-lg font-medium text-gray-900">
+                  <p className="text-lg  font-bold text-gray-900">
                     {product.description?.short}
                   </p>
-                  <p>
-                    {product.description?.full ||
-                      "Full description coming soon..."}
-                  </p>
+                  <div
+                    className="whitespace-pre-wrap"
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        product.description?.full?.replace(
+                          /(^.*?\?$)/gm,
+                          "<strong>$1</strong>",
+                        ) || "Full description coming soon...",
+                    }}
+                  />
                 </div>
               )}
 
