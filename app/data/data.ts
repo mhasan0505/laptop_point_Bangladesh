@@ -1,4 +1,5 @@
 import { Product } from "@/types/product";
+import { RawProduct } from "@/types/raw-product";
 import productsRaw from "./products.json";
 
 // Helper to encode image paths with proper URL encoding
@@ -94,7 +95,7 @@ const slugify = (text: string) => {
 };
 
 // Map each product
-const laptops: Product[] = (productsRaw as unknown as RawProduct[]).map((p) => {
+const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
   // Use p.name preferably as it contains more detail (e.g. i5 vs i7 for Surface)
   const folder = getImageFolder(p.name || p.model);
   const description = p.description;
