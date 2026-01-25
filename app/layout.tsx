@@ -49,7 +49,7 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Laptop Point Bangladesh - Premium Used & Refurbished Laptops",
+        alt: "Laptop Point Bangladesh - Premium Brnd New And Used Laptops",
         type: "image/jpeg",
       },
     ],
@@ -140,6 +140,7 @@ export default function RootLayout({
       <body className={`${poppins.variable} antialiased`}>
         {process.env.NEXT_PUBLIC_FB_PIXEL_ID && (
           <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               alt="Facebook Pixel"
               height="1"
