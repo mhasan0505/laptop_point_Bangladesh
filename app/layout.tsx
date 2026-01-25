@@ -140,7 +140,7 @@ export default function RootLayout({
       <body className={`${poppins.variable} antialiased`}>
         {process.env.NEXT_PUBLIC_FB_PIXEL_ID && (
           <noscript>
-            <img
+            <image
               alt="Facebook Pixel"
               height="1"
               width="1"
