@@ -20,7 +20,6 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://laptoppointbd.com"),
-  robots: "noindex, nofollow",
   title: {
     default: SEO_CONFIG.metaTags.defaultTitle,
     template: "%s | Laptop Point Bangladesh",
