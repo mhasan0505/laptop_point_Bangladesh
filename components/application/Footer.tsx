@@ -264,6 +264,9 @@ export default function Footer() {
                       <br />
                       Mirpur-10, Dhaka-1216
                     </p>
+                    <p>
+                      open: <span className="font-medium">Mon - Sat</span>, 10:30 AM - 9:00
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -319,7 +322,7 @@ export default function Footer() {
           <div className="border-t border-gray-800 pt-8 mt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-gray-300 text-sm">
-                © {currentYear} Laptop Point BD. All rights reserved.
+                © {currentYear} Laptop Point BD. All rights reserved. Powered by <span className="text-yellow-400">Creative Artix </span>
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 {/* Payment Methods (Placeholder) */}

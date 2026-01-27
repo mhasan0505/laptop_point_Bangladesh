@@ -130,7 +130,7 @@ const Header = () => {
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-1">
                 <Clock className="w-3.5 h-3.5 text-yellow-400" />
-                <span>Mon-Sat: 10:00 AM - 8:30 PM</span>
+                <span>Mon-Sat: 10:30 AM - 9:00 PM</span>
               </div>
               <div className="hidden md:flex items-center space-x-1">
                 <MapPin className="w-3.5 h-3.5 text-yellow-400" />
