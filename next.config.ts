@@ -58,6 +58,24 @@ const nextConfig: NextConfig = {
         destination: "/shop?location=chittagong",
         permanent: false,
       },
+      // Redirect old /products/* routes to /product/*
+      {
+        source: "/products/:slug",
+        destination: "/product/:slug",
+        permanent: true,
+      },
+      // Block and redirect invalid locale routes
+      {
+        source: "/vi/:path*",
+        destination: "/:path*",
+        permanent: true,
+      },
+      // Block standalone /products/hp route
+      {
+        source: "/products/hp",
+        destination: "/shop",
+        permanent: true,
+      },
     ];
   },
   async headers() {

@@ -23,6 +23,8 @@ export default function robots(): MetadataRoute.Robots {
           "/checkout/",
           "/wishlist/",
           "/compare/",
+          "/products/",
+          "/vi/",
           "/*.json$",
           "/*?*sort=",
           "/*?*filter=",
