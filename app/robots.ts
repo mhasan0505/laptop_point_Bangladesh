@@ -30,11 +30,7 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 1,
       },
     ],
-    sitemap: [
-      "https://laptop-point-bangladesh.vercel.app/sitemap.xml",
-      "https://laptop-point-bangladesh.vercel.app/sitemap-products.xml",
-      "https://laptop-point-bangladesh.vercel.app/sitemap-blog.xml",
-    ],
-    host: "https://laptop-point-bangladesh.vercel.app",
+    sitemap: "https://laptoppointbd.com/sitemap.xml",
+    host: "https://laptoppointbd.com",
   };
 }

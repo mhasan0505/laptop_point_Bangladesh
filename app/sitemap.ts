@@ -3,7 +3,7 @@ import { SEO_CONFIG } from "@/lib/seo-config";
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://laptop-point-bangladesh.vercel.app";
+  const baseUrl = "https://laptoppointbd.com";
 
   // Product pages
   const products = laptopData.laptops.map((product) => ({
