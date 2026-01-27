@@ -35,7 +35,7 @@ const getImageFolder = (model: string): string | null => {
   if (m.includes("1040 g8") || m.includes("x360 1040"))
     return "/products/hp/HP Elitebook X360 1040 G8 Core I7 11TH Gen 16-512";
   if (m.includes("firefly 14 g9"))
-    return "/products/hp/HP Zbook Firefly 14 G9 Core i7 12TH Gen 16/512";
+    return "/products/hp/HP Zbook Firefly 14 G9 Core i7 12TH Gen 16";
 
   // Dell
   if (m.includes("3190"))
@@ -61,7 +61,7 @@ const getImageFolder = (model: string): string | null => {
     m.includes("x1 carbon gen 8") ||
     (m.includes("x1 carbon") && m.includes("i5"))
   )
-    return "/products/lenovo/19. Lenovo Thinkpad X1 Carbon i5 10TH Gen 16512 Touchscreen";
+    return "/products/lenovo/Lenovo_Thinkpad_X1_Carbon_i5_10TH_Gen_16512_Touchscreen";
   if (
     m.includes("x1 carbon gen 9") ||
     (m.includes("x1 carbon") && m.includes("i7"))
@@ -78,7 +78,8 @@ const getImageFolder = (model: string): string | null => {
     return "/products/microsoft/Microsoft_Surface_laptop_3_code_i7";
   if (m.includes("surface laptop 4"))
     return "/products/microsoft/Microsoft_Surface_laptop_4";
-  if (m.includes("surface book")) return "/products/microsoft/Surface_Book";
+  if (m.includes("surface book"))
+    return "/products/microsoft/Microsoft_Surface_laptop_4";
 
   return null;
 };
@@ -304,7 +305,11 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/side1.jpg`,
           `${folder}/side2.jpg`,
         ];
-      } else if (folder.includes("19. Lenovo Thinkpad X1 Carbon")) {
+      } else if (
+        folder.includes(
+          "Lenovo_Thinkpad_X1_Carbon_i5_10TH_Gen_16512_Touchscreen",
+        )
+      ) {
         // X1 Carbon Gen 8 (i5)
         mappedImages = [
           `${folder}/main.jpg`,

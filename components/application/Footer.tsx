@@ -112,7 +112,7 @@ export default function Footer() {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    href="/products"
+                    href="/shop"
                     className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
                   >
                     All Products
@@ -120,7 +120,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/laptops"
+                    href="/shop?category=laptop"
                     className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
                   >
                     Laptops
@@ -128,7 +128,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/accessories"
+                    href="/shop?category=accessories"
                     className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
                   >
                     Accessories
@@ -153,7 +153,7 @@ export default function Footer() {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    href="/account"
+                    href="/contact"
                     className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
                   >
                     My Account
@@ -161,7 +161,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/orders"
+                    href="/cart"
                     className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
                   >
                     Order Tracking
@@ -169,7 +169,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/faq"
+                    href="/contact"
                     className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
                   >
                     FAQs
@@ -265,7 +265,8 @@ export default function Footer() {
                       Mirpur-10, Dhaka-1216
                     </p>
                     <p>
-                      open: <span className="font-medium">Mon - Sat</span>, 10:30 AM - 9:00
+                      open: <span className="font-medium">Mon - Sat</span>,
+                      10:30 AM - 9:00
                     </p>
                   </div>
                 </div>
@@ -322,7 +323,8 @@ export default function Footer() {
           <div className="border-t border-gray-800 pt-8 mt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-gray-300 text-sm">
-                © {currentYear} Laptop Point BD. All rights reserved. Powered by <span className="text-yellow-400">Creative Artix </span>
+                © {currentYear} Laptop Point BD. All rights reserved. Powered by{" "}
+                <span className="text-yellow-400">Creative Artix </span>
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 {/* Payment Methods (Placeholder) */}

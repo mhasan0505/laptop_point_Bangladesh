@@ -30,13 +30,7 @@
         "touchscreen": false
       },
       "graphics": "Intel HD Graphics 520",
-      "ports": [
-        "HDMI",
-        "VGA",
-        "2x USB 3.0",
-        "1x USB 2.0",
-        "RJ-45"
-      ],
+      "ports": ["HDMI", "VGA", "2x USB 3.0", "1x USB 2.0", "RJ-45"],
       "weight": "1.68 kg",
       "os": "Windows 10 Pro"
     },
@@ -49,9 +43,7 @@
       "Spill-resistant Keyboard",
       "Legacy VGA Port"
     ],
-    "images": [
-      "/images/hp-440-g3-front.jpg"
-    ]
+    "images": ["/images/hp-440-g3-front.jpg"]
   },
   {
     "id": 2,
@@ -84,13 +76,7 @@
         "touchscreen": false
       },
       "graphics": "Intel HD Graphics 520",
-      "ports": [
-        "USB-C",
-        "DisplayPort",
-        "USB 3.0",
-        "VGA",
-        "Docking Connector"
-      ],
+      "ports": ["USB-C", "DisplayPort", "USB 3.0", "VGA", "Docking Connector"],
       "weight": "1.48 kg",
       "os": "Windows 10 Pro"
     },
@@ -103,9 +89,7 @@
       "Backlit Keyboard",
       "Enterprise Security"
     ],
-    "images": [
-      "/images/hp-840-g3-front.jpg"
-    ]
+    "images": ["/images/hp-840-g3-front.jpg"]
   },
   {
     "id": 3,
@@ -138,12 +122,7 @@
         "touchscreen": false
       },
       "graphics": "Intel UHD Graphics 620",
-      "ports": [
-        "Thunderbolt 3",
-        "HDMI 1.4b",
-        "2x USB 3.1",
-        "RJ-45"
-      ],
+      "ports": ["Thunderbolt 3", "HDMI 1.4b", "2x USB 3.1", "RJ-45"],
       "weight": "1.48 kg",
       "os": "Windows 10/11 Pro"
     },
@@ -157,9 +136,7 @@
       "Windows 11 Ready",
       "Bang & Olufsen Audio"
     ],
-    "images": [
-      "/images/hp-840-g6-front.jpg"
-    ]
+    "images": ["/images/hp-840-g6-front.jpg"]
   },
   {
     "id": 4,
@@ -192,12 +169,7 @@
         "touchscreen": false
       },
       "graphics": "AMD Radeon Pro WX 3200 (Dedicated)",
-      "ports": [
-        "Thunderbolt 3",
-        "HDMI",
-        "USB 3.1",
-        "Smart Card"
-      ],
+      "ports": ["Thunderbolt 3", "HDMI", "USB 3.1", "Smart Card"],
       "weight": "1.48 kg",
       "os": "Windows 10/11 Pro"
     },
@@ -205,14 +177,8 @@
       "short": "Portable workstation power with dedicated Radeon Pro graphics.",
       "full": "**What makes this a 'workstation' laptop?**\n The ZBook 14u G6 includes dedicated AMD Radeon Pro graphics, which are certified for professional applications and provide more power for tasks like CAD, photo editing, and video work. \n\n**How is it different from the EliteBook 840?**\n While it shares the same sleek and portable chassis as the EliteBook, the key difference is the inclusion of dedicated professional graphics for more demanding visual tasks. \n\n**Who should consider this laptop?**\n It's ideal for engineers, designers, and content creators who need a lightweight, portable machine with certified graphics performance for technical applications."
     },
-    "features": [
-      "Dedicated Graphics",
-      "Workstation Class",
-      "ISV Certified"
-    ],
-    "images": [
-      "/images/hp-zbook-14u-g6.jpg"
-    ]
+    "features": ["Dedicated Graphics", "Workstation Class", "ISV Certified"],
+    "images": ["/images/hp-zbook-14u-g6.jpg"]
   },
   {
     "id": 5,
@@ -245,12 +211,7 @@
         "touchscreen": false
       },
       "graphics": "Intel UHD Graphics",
-      "ports": [
-        "2x Thunderbolt 3",
-        "2x USB 3.1",
-        "HDMI 1.4",
-        "Audio Combo"
-      ],
+      "ports": ["2x Thunderbolt 3", "2x USB 3.1", "HDMI 1.4", "Audio Combo"],
       "weight": "1.33 kg",
       "os": "Windows 11 Pro"
     },
@@ -264,9 +225,7 @@
       "16GB RAM Standard",
       "Quiet Keyboard"
     ],
-    "images": [
-      "/images/hp-840-g7.jpg"
-    ]
+    "images": ["/images/hp-840-g7.jpg"]
   },
   {
     "id": 6,
@@ -299,12 +258,7 @@
         "touchscreen": false
       },
       "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0b",
-        "Audio Combo"
-      ],
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0b", "Audio Combo"],
       "weight": "1.32 kg",
       "os": "Windows 11 Pro"
     },
@@ -318,9 +272,7 @@
       "AI Noise Cancellation",
       "WiFi 6"
     ],
-    "images": [
-      "/images/hp-840-g8.jpg"
-    ]
+    "images": ["/images/hp-840-g8.jpg"]
   },
   {
     "id": 7,
@@ -353,11 +305,7 @@
         "touchscreen": false
       },
       "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0b"
-      ],
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0b"],
       "weight": "1.32 kg",
       "os": "Windows 11 Pro"
     },
@@ -370,9 +318,7 @@
       "High Brightness Display",
       "Thunderbolt 4"
     ],
-    "images": [
-      "/images/hp-840-g8-i7.jpg"
-    ]
+    "images": ["/images/hp-840-g8-i7.jpg"]
   },
   {
     "id": 8,
@@ -405,11 +351,7 @@
         "touchscreen": true
       },
       "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0"
-      ],
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0"],
       "weight": "1.32 kg",
       "os": "Windows 11 Pro"
     },
@@ -423,9 +365,7 @@
       "CNC Aluminum Body",
       "Premium Audio"
     ],
-    "images": [
-      "/images/hp-1040-g8.jpg"
-    ]
+    "images": ["/images/hp-1040-g8.jpg"]
   },
   {
     "id": 9,
@@ -458,11 +398,7 @@
         "touchscreen": false
       },
       "graphics": "AMD Radeon Graphics",
-      "ports": [
-        "2x USB-C",
-        "2x USB-A",
-        "HDMI 2.0"
-      ],
+      "ports": ["2x USB-C", "2x USB-A", "HDMI 2.0"],
       "weight": "1.35 kg",
       "os": "Windows 10/11 Pro"
     },
@@ -470,14 +406,8 @@
       "short": "Ryzen Pro power offering superior multi-core performance.",
       "full": "**What is the main advantage of the AMD Ryzen processor in this model?**\n The AMD Ryzen 5 Pro processor in the 845 G7 often outperforms its Intel equivalents in multi-core tasks, making it faster for applications that can use multiple processor cores simultaneously. \n\n**How is the user experience?**\n This laptop typically runs cooler and quieter than many competitors while also delivering exceptional battery efficiency, making it very comfortable to use for extended periods. \n\n**Who should buy this laptop?**\n It is a fantastic choice for users who do heavy multitasking, such as running virtual machines, coding, or having many browser tabs and applications open at once."
     },
-    "features": [
-      "AMD Ryzen Pro CPU",
-      "High Efficiency",
-      "HDMI 2.0"
-    ],
-    "images": [
-      "/images/hp-845-g7.jpg"
-    ]
+    "features": ["AMD Ryzen Pro CPU", "High Efficiency", "HDMI 2.0"],
+    "images": ["/images/hp-845-g7.jpg"]
   },
   {
     "id": 10,
@@ -510,11 +440,7 @@
         "touchscreen": false
       },
       "graphics": "AMD Radeon Graphics",
-      "ports": [
-        "2x USB-C",
-        "2x USB-A",
-        "HDMI 2.0"
-      ],
+      "ports": ["2x USB-C", "2x USB-A", "HDMI 2.0"],
       "weight": "1.37 kg",
       "os": "Windows 11 Pro"
     },
@@ -522,14 +448,8 @@
       "short": "Updated Ryzen 5000 series performance in a premium chassis.",
       "full": "**What's new in the 845 G8 model?**\n The G8 model gets a significant performance boost by upgrading the processor to the Ryzen 5000 series, which is based on the highly efficient 'Zen 3' architecture. \n\n**What does this upgrade mean for performance?**\n This results in blazing-fast speeds for both single-core and multi-core tasks, along with some of the best integrated graphics performance you can find in a business laptop. \n\n**Is it still a premium device?**\n Absolutely. It features the same high-quality premium build as the rest of the EliteBook 800 series, combining top-tier performance with a durable and professional design."
     },
-    "features": [
-      "Ryzen 5000 Series",
-      "Zen 3 Architecture",
-      "Premium Build"
-    ],
-    "images": [
-      "/images/hp-845-g8.jpg"
-    ]
+    "features": ["Ryzen 5000 Series", "Zen 3 Architecture", "Premium Build"],
+    "images": ["/images/hp-845-g8.jpg"]
   },
   {
     "id": 11,
@@ -562,11 +482,7 @@
         "touchscreen": true
       },
       "graphics": "Intel UHD Graphics 605",
-      "ports": [
-        "2x USB 3.1",
-        "HDMI",
-        "Audio Combo"
-      ],
+      "ports": ["2x USB 3.1", "HDMI", "Audio Combo"],
       "weight": "1.45 kg",
       "os": "Windows 10 Pro"
     },
@@ -580,9 +496,7 @@
       "Touchscreen",
       "Long Battery Life"
     ],
-    "images": [
-      "/images/dell-3190.jpg"
-    ]
+    "images": ["/images/dell-3190.jpg"]
   },
   {
     "id": 12,
@@ -615,12 +529,7 @@
         "touchscreen": false
       },
       "graphics": "Intel UHD Graphics 620",
-      "ports": [
-        "USB-C",
-        "2x USB 3.1",
-        "HDMI",
-        "RJ-45"
-      ],
+      "ports": ["USB-C", "2x USB 3.1", "HDMI", "RJ-45"],
       "weight": "1.56 kg",
       "os": "Windows 10 Pro"
     },
@@ -628,14 +537,8 @@
       "short": "Compact 13-inch laptop balancing durability and performance.",
       "full": "**What is the main advantage of this model?**\n The Latitude 3310 packs the solid performance of an 8th Gen Core i5 processor into a very compact and portable 13.3-inch form factor, making it easy to carry around. \n\n**How durable is it?**\n Like many Latitude models, it is tested against military standards (MIL-STD-810G) for durability, ensuring it can handle the rigors of daily commutes and business travel. \n\n**Who is the ideal user?**\n It’s a reliable choice for business users, students, or anyone who needs a balance of performance, portability, and durability for everyday tasks."
     },
-    "features": [
-      "Compact 13.3\"",
-      "Durable Build",
-      "Full Ports"
-    ],
-    "images": [
-      "/images/dell-3310.jpg"
-    ]
+    "features": ["Compact 13.3\"", "Durable Build", "Full Ports"],
+    "images": ["/images/dell-3310.jpg"]
   },
   {
     "id": 13,
@@ -668,12 +571,7 @@
         "touchscreen": false
       },
       "graphics": "Intel UHD Graphics 620",
-      "ports": [
-        "USB-C (DisplayPort)",
-        "3x USB 3.1",
-        "HDMI",
-        "RJ-45"
-      ],
+      "ports": ["USB-C (DisplayPort)", "3x USB 3.1", "HDMI", "RJ-45"],
       "weight": "1.4 kg",
       "os": "Windows 10/11 Pro"
     },
@@ -681,14 +579,8 @@
       "short": "Fan-favorite business ultrabook with exceptional keyboard.",
       "full": "**Why is the Latitude 7490 so popular?**\n It's widely regarded as one of the best all-around business laptops of its generation, known for its robust performance, premium feel, and exceptional reliability. \n\n**What makes the user experience stand out?**\n The 7490 is famous for its world-class keyboard, which is comfortable and responsive for long typing sessions. Many models also feature a pleasant soft-touch carbon fiber finish. \n\n**Who is it for?**\n It's the perfect all-rounder for a wide range of professionals, including coders, writers, and general business users who need a dependable machine that is a joy to work on."
     },
-    "features": [
-      "Premium Build",
-      "Excellent Keyboard",
-      "Business Favorite"
-    ],
-    "images": [
-      "/images/dell-7490.jpg"
-    ]
+    "features": ["Premium Build", "Excellent Keyboard", "Business Favorite"],
+    "images": ["/images/dell-7490.jpg"]
   },
   {
     "id": 14,
@@ -721,12 +613,7 @@
         "touchscreen": false
       },
       "graphics": "Intel UHD Graphics",
-      "ports": [
-        "USB-C",
-        "USB 3.2",
-        "HDMI 1.4",
-        "RJ-45"
-      ],
+      "ports": ["USB-C", "USB 3.2", "HDMI 1.4", "RJ-45"],
       "weight": "1.6 kg",
       "os": "Windows 10/11 Pro"
     },
@@ -734,14 +621,8 @@
       "short": "Modern 10th Gen essential business laptop.",
       "full": "**What is the Latitude 3410's main selling point?**\n It provides modern performance with a 10th Gen Intel processor and a generous 16GB of RAM, offering a cost-effective solution for users who need up-to-date specs without the premium price of Dell's 7000 series. \n\n**How has the design changed?**\n The Latitude 3410 features a more modern, thinner, and lighter design compared to its predecessors, making it more portable and stylish. \n\n**Is it ready for heavy multitasking?**\n Yes, with 16GB of RAM and a capable 10th Gen Core i5 processor, it is well-equipped to handle everyday business tasks and heavy multitasking with many applications open."
     },
-    "features": [
-      "Modern Design",
-      "10th Gen CPU",
-      "16GB RAM"
-    ],
-    "images": [
-      "/images/dell-3410.jpg"
-    ]
+    "features": ["Modern Design", "10th Gen CPU", "16GB RAM"],
+    "images": ["/images/dell-3410.jpg"]
   },
   {
     "id": 15,
@@ -774,11 +655,7 @@
         "touchscreen": false
       },
       "graphics": "Intel UHD Graphics 620",
-      "ports": [
-        "Thunderbolt 3",
-        "2x USB 3.1",
-        "HDMI 1.4"
-      ],
+      "ports": ["Thunderbolt 3", "2x USB 3.1", "HDMI 1.4"],
       "weight": "1.36 kg",
       "os": "Windows 10/11 Pro"
     },
@@ -792,9 +669,7 @@
       "Compact Footprint",
       "Thunderbolt 3"
     ],
-    "images": [
-      "/images/dell-7400-metal.jpg"
-    ]
+    "images": ["/images/dell-7400-metal.jpg"]
   },
   {
     "id": 16,
@@ -827,12 +702,7 @@
         "touchscreen": true
       },
       "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "1x USB-A",
-        "HDMI 2.0",
-        "MicroSD"
-      ],
+      "ports": ["2x Thunderbolt 4", "1x USB-A", "HDMI 2.0", "MicroSD"],
       "weight": "1.3 kg",
       "os": "Windows 11 Pro"
     },
@@ -846,9 +716,7 @@
       "Thunderbolt 4",
       "Premium Materials"
     ],
-    "images": [
-      "/images/dell-7420-2in1.jpg"
-    ]
+    "images": ["/images/dell-7420-2in1.jpg"]
   },
   {
     "id": 17,
@@ -881,13 +749,7 @@
         "touchscreen": false
       },
       "graphics": "Intel UHD Graphics 620",
-      "ports": [
-        "Thunderbolt 3",
-        "USB-C",
-        "2x USB 3.1",
-        "HDMI",
-        "Ethernet"
-      ],
+      "ports": ["Thunderbolt 3", "USB-C", "2x USB 3.1", "HDMI", "Ethernet"],
       "weight": "1.46 kg",
       "os": "Windows 10/11 Pro"
     },
@@ -900,9 +762,7 @@
       "Mil-Spec Durability",
       "Great Port Selection"
     ],
-    "images": [
-      "/images/thinkpad-t490.jpg"
-    ]
+    "images": ["/images/thinkpad-t490.jpg"]
   },
   {
     "id": 18,
@@ -935,12 +795,7 @@
         "touchscreen": false
       },
       "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0",
-        "Ethernet"
-      ],
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0", "Ethernet"],
       "weight": "1.47 kg",
       "os": "Windows 11 Pro"
     },
@@ -948,15 +803,8 @@
       "short": "Modern successor to the T490 with 11th Gen speed.",
       "full": "**What are the main upgrades from the T490/T14 Gen 1?**\n The T14 Gen 2 upgrades the engine with powerful 11th Gen Intel processors and advanced Intel Iris Xe graphics, delivering a significant boost in performance for demanding tasks and creative work. \n\n**How is it 'future-proofed'?**\n It includes modern connectivity standards like two Thunderbolt 4 ports and faster Wi-Fi 6, ensuring compatibility with the latest high-speed peripherals and networks. \n\n**Does it still have the classic ThinkPad features?**\n Yes, it maintains the iconic classic black ThinkPad aesthetic, the legendary keyboard, and the rugged, Mil-Spec tested build quality that the T-series is famous for."
     },
-    "features": [
-      "11th Gen Intel",
-      "WiFi 6",
-      "Thunderbolt 4",
-      "Rugged Design"
-    ],
-    "images": [
-      "/images/thinkpad-t14-gen2.jpg"
-    ]
+    "features": ["11th Gen Intel", "WiFi 6", "Thunderbolt 4", "Rugged Design"],
+    "images": ["/images/thinkpad-t14-gen2.jpg"]
   },
   {
     "id": 19,
@@ -989,12 +837,7 @@
         "touchscreen": false
       },
       "graphics": "Integrated AMD Radeon Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0",
-        "Ethernet"
-      ],
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0", "Ethernet"],
       "weight": "1.47 kg",
       "os": "Windows 11 Pro"
     },
@@ -1008,9 +851,7 @@
       "Thunderbolt 4",
       "Rugged Design"
     ],
-    "images": [
-      "/images/thinkpad-t14-gen2.jpg"
-    ]
+    "images": ["/images/thinkpad-t14-gen2.jpg"]
   },
   {
     "id": 20,
@@ -1043,11 +884,7 @@
         "touchscreen": true
       },
       "graphics": "Intel UHD Graphics",
-      "ports": [
-        "2x Thunderbolt 3",
-        "2x USB-A",
-        "HDMI 1.4"
-      ],
+      "ports": ["2x Thunderbolt 3", "2x USB-A", "HDMI 1.4"],
       "weight": "1.09 kg",
       "os": "Windows 11 Pro"
     },
@@ -1055,17 +892,11 @@
       "short": "Featherlight 1kg ultrabook with carbon fiber chassis.",
       "full": "**What makes the X1 Carbon so special?**\n The X1 Carbon is the jewel in the ThinkPad crown. It's incredibly lightweight at just over 1kg, making it astonishingly portable, yet it's also incredibly durable thanks to its carbon fiber and magnesium alloy chassis. \n\n**What are the key features of this Gen 8 model?**\n This model features a premium, responsive touchscreen display, a powerful 10th Gen Intel processor, and what many consider the best keyboard in any ultra-portable laptop. \n\n**Who is the ideal user for an X1 Carbon?**\n It's perfect for executives, frequent travelers, and anyone who needs maximum portability without sacrificing durability or typing comfort."
     },
-    "features": [
-      "Ultra-Light (1.09kg)",
-      "Carbon Fiber",
-      "Premium Touchscreen"
-    ],
-    "images": [
-      "/images/thinkpad-x1-carbon.jpg"
-    ]
+    "features": ["Ultra-Light (1.09kg)", "Carbon Fiber", "Premium Touchscreen"],
+    "images": ["/images/thinkpad-x1-carbon.jpg"]
   },
   {
-    "id": 20,
+    "id": 21,
     "sku": "LEN-X1C-11TH-020",
     "name": "Lenovo ThinkPad X1 Carbon (Gen 9) i7",
     "brand": "Lenovo",
@@ -1095,11 +926,7 @@
         "touchscreen": false
       },
       "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0"
-      ],
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0"],
       "weight": "1.13 kg",
       "os": "Windows 11 Pro"
     },
@@ -1113,9 +940,7 @@
       "Thunderbolt 4",
       "Flagship Model"
     ],
-    "images": [
-      "/images/thinkpad-x1-carbon-gen9.jpg"
-    ]
+    "images": ["/images/thinkpad-x1-carbon-gen9.jpg"]
   },
   {
     "id": 21,
@@ -1148,12 +973,7 @@
         "touchscreen": true
       },
       "graphics": "Intel Iris Plus Graphics",
-      "ports": [
-        "1x USB-C",
-        "1x USB-A",
-        "Surface Connect",
-        "Headphone Jack"
-      ],
+      "ports": ["1x USB-C", "1x USB-A", "Surface Connect", "Headphone Jack"],
       "weight": "1.25 kg",
       "os": "Windows 11 Home/Pro"
     },
@@ -1167,9 +987,7 @@
       "Premium Aluminum",
       "Touchscreen"
     ],
-    "images": [
-      "/images/surface-laptop-3.jpg"
-    ]
+    "images": ["/images/surface-laptop-3.jpg"]
   },
   {
     "id": 22,
@@ -1202,11 +1020,7 @@
         "touchscreen": true
       },
       "graphics": "Intel Iris Plus Graphics",
-      "ports": [
-        "1x USB-C",
-        "1x USB-A",
-        "Surface Connect"
-      ],
+      "ports": ["1x USB-C", "1x USB-A", "Surface Connect"],
       "weight": "1.25 kg",
       "os": "Windows 11 Home/Pro"
     },
@@ -1214,15 +1028,8 @@
       "short": "High-spec Surface Laptop with i7 and 16GB RAM.",
       "full": "**What do the Core i7 and 16GB of RAM add to the experience?**\n This high-spec configuration brings the extra power of the Core i7 processor and doubles the RAM to 16GB. This allows the laptop to handle heavier multitasking and more demanding creative applications much more smoothly than the base model. \n\n**Who should upgrade to the i7 model?**\n Users who are developers, photographers, or heavy multitaskers who frequently have many tabs and applications open will benefit significantly from the extra performance. \n\n**Does it have the same premium design?**\n Yes, it retains the same beautiful 2K PixelSense display and sleek, premium build quality as the i5 model, but with significantly more power under the hood."
     },
-    "features": [
-      "Core i7",
-      "16GB RAM",
-      "High Res Display",
-      "Premium Build"
-    ],
-    "images": [
-      "/images/surface-laptop-3-i7.jpg"
-    ]
+    "features": ["Core i7", "16GB RAM", "High Res Display", "Premium Build"],
+    "images": ["/images/surface-laptop-3-i7.jpg"]
   },
   {
     "id": 23,
@@ -1255,11 +1062,7 @@
         "touchscreen": true
       },
       "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "1x USB-C",
-        "1x USB-A",
-        "Surface Connect"
-      ],
+      "ports": ["1x USB-C", "1x USB-A", "Surface Connect"],
       "weight": "1.27 kg",
       "os": "Windows 11 Home/Pro"
     },
@@ -1273,9 +1076,7 @@
       "2K Touchscreen",
       "Iris Xe Graphics"
     ],
-    "images": [
-      "/images/surface-laptop-4.jpg"
-    ]
+    "images": ["/images/surface-laptop-4.jpg"]
   },
   {
     "id": 24,
@@ -1308,11 +1109,7 @@
         "touchscreen": false
       },
       "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0"
-      ],
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0"],
       "weight": "1.47 kg",
       "os": "Windows 11 Pro"
     },

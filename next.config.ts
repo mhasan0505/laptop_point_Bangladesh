@@ -64,6 +64,12 @@ const nextConfig: NextConfig = {
         destination: "/product/:slug",
         permanent: true,
       },
+      // Redirect /products to /shop
+      {
+        source: "/products",
+        destination: "/shop",
+        permanent: true,
+      },
       // Block and redirect invalid locale routes
       {
         source: "/vi/:path*",
