@@ -38,7 +38,7 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/refurbished-laptops",
+        source: "/used-laptops",
         destination: "/shop",
         permanent: true,
       },

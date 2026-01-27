@@ -7,12 +7,12 @@ import { eCommerceSchema } from "@/lib/seo-schemas";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Laptop Point Bangladesh | Premium Used & Refurbished Laptops",
+  title: "Laptop Point Bangladesh | Premium Used Laptops",
   description:
-    "Shop the best selection of used and refurbished laptops from HP, Dell, Lenovo, and Microsoft in Bangladesh. Official warranty, free delivery, and best prices guaranteed.",
+    "Shop the best selection of used laptops from HP, Dell, Lenovo, and Microsoft in Bangladesh. Official warranty, free delivery, and best prices guaranteed.",
   keywords: [
     "used laptop Bangladesh",
-    "refurbished laptop Dhaka",
+    "used laptop Dhaka",
     "HP laptop price",
     "Dell laptop Bangladesh",
     "Lenovo ThinkPad",
@@ -20,10 +20,10 @@ export const metadata: Metadata = {
     "laptop with warranty",
   ],
   openGraph: {
-    title: "Laptop Point Bangladesh | Premium Used & Refurbished Laptops",
+    title: "Laptop Point Bangladesh | Premium Used Laptops",
     description:
-      "Shop the best selection of used and refurbished laptops from HP, Dell, Lenovo, and Microsoft in Bangladesh.",
-    url: "https://laptop-point-bangladesh.vercel.app",
+      "Shop the best selection of used laptops from HP, Dell, Lenovo, and Microsoft in Bangladesh.",
+    url: "https://laptoppointbd.com",
     type: "website",
   },
 };

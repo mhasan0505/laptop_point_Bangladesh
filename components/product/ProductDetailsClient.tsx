@@ -82,7 +82,7 @@ export default function ProductDetailsClient({
     },
     offers: {
       "@type": "Offer",
-      url: `https://laptop-point-bangladesh.vercel.app/product/${product.slug}`,
+      url: `https://laptoppointbd.com/product/${product.slug}`,
       priceCurrency: "BDT",
       price: product.price,
       itemCondition: "https://schema.org/UsedCondition",

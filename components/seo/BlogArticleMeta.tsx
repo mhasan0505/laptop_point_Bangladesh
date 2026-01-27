@@ -32,10 +32,10 @@ export const BlogArticleMeta: React.FC<BlogMetaProps> = ({
           author: {
             "@type": "Organization",
             name: author,
-            url: "https://laptop-point-bangladesh.vercel.app",
+            url: "https://laptoppointbd.com",
             logo: {
               "@type": "ImageObject",
-              url: "https://laptop-point-bangladesh.vercel.app/logo.png",
+              url: "https://laptoppointbd.com/logo.png",
             },
           },
           publisher: {
@@ -43,7 +43,7 @@ export const BlogArticleMeta: React.FC<BlogMetaProps> = ({
             name: author,
             logo: {
               "@type": "ImageObject",
-              url: "https://laptop-point-bangladesh.vercel.app/logo.png",
+              url: "https://laptoppointbd.com/logo.png",
             },
           },
           mainEntityOfPage: {

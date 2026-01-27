@@ -3,13 +3,13 @@
 export const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "@id": "https://laptop-point-bangladesh.vercel.app/#organization",
+  "@id": "https://laptoppointbd.com/#organization",
   name: "Laptop Point Bangladesh",
-  url: "https://laptop-point-bangladesh.vercel.app",
-  logo: "https://laptop-point-bangladesh.vercel.app/logo.png",
+  url: "https://laptoppointbd.com",
+  logo: "https://laptoppointbd.com/logo.png",
   description:
-    "Premium used and refurbished laptops in Bangladesh with warranty and free delivery",
-  image: "https://laptop-point-bangladesh.vercel.app/og-image.jpg",
+    "Premium used laptops in Bangladesh with warranty and free delivery",
+  image: "https://laptoppointbd.com/og-image.jpg",
   telephone: "+8801612182408",
   email: "info@laptoppoint.bd",
   areaServed: {
@@ -63,7 +63,7 @@ export const productSchema = (product: {
     price: product.price,
     priceCurrency: product.currency || "BDT",
     availability: `https://schema.org/${product.availability || "InStock"}`,
-    url: "https://laptop-point-bangladesh.vercel.app",
+    url: "https://laptoppointbd.com",
   },
   ...(product.condition && {
     condition: `https://schema.org/${product.condition}`,
@@ -109,9 +109,9 @@ export const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   name: "Laptop Point Bangladesh",
-  image: "https://laptop-point-bangladesh.vercel.app/og-image.jpg",
+  image: "https://laptoppointbd.com/og-image.jpg",
   description:
-    "Best source for premium used and refurbished laptops in Bangladesh. HP, Dell, Lenovo, Microsoft Surface at unbeatable prices.",
+    "Best source for premium used laptops in Bangladesh. HP, Dell, Lenovo, Microsoft Surface at unbeatable prices.",
   address: {
     "@type": "PostalAddress",
     addressCountry: "BD",
@@ -171,7 +171,7 @@ export const articleSchema = (article: {
     name: "Laptop Point Bangladesh",
     logo: {
       "@type": "ImageObject",
-      url: "https://laptop-point-bangladesh.vercel.app/logo.png",
+      url: "https://laptoppointbd.com/logo.png",
     },
   },
 });
@@ -179,8 +179,8 @@ export const articleSchema = (article: {
 export const eCommerceSchema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Used & Refurbished Laptops in Bangladesh",
-  url: "https://laptop-point-bangladesh.vercel.app",
+  name: "Used Laptops in Bangladesh",
+  url: "https://laptoppointbd.com",
   description:
-    "Shop the best collection of used and refurbished laptops from top brands like HP, Dell, Lenovo, and Microsoft in Bangladesh.",
+    "Shop the best collection of used laptops from top brands like HP, Dell, Lenovo, and Microsoft in Bangladesh.",
 };

@@ -44,7 +44,7 @@ export const ProductSchemaMeta: React.FC<ProductMetaProps> = ({
       seller: {
         "@type": "Organization",
         name: "Laptop Point Bangladesh",
-        url: "https://laptop-point-bangladesh.vercel.app",
+        url: "https://laptoppointbd.com",
       },
     },
     ...(condition && {

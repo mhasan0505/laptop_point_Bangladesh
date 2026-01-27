@@ -306,7 +306,7 @@ export default function Footer() {
                     </svg>
                   </div>
                   <a
-                    href="tel:+8801717171717"
+                    href="tel:+8801612182408"
                     className="text-sm hover:text-yellow-400 transition-colors"
                   >
                     +880 1612-182408

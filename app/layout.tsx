@@ -19,7 +19,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://laptop-point-bangladesh.vercel.app"),
+  metadataBase: new URL("https://laptoppointbd.com"),
+  robots: "noindex, nofollow",
   title: {
     default: SEO_CONFIG.metaTags.defaultTitle,
     template: "%s | Laptop Point Bangladesh",
@@ -30,17 +31,17 @@ export const metadata: Metadata = {
   creator: "Laptop Point Bangladesh",
   publisher: "Laptop Point Bangladesh",
   alternates: {
-    canonical: "https://laptop-point-bangladesh.vercel.app",
+    canonical: "https://laptoppointbd.com",
     languages: {
-      en: "https://laptop-point-bangladesh.vercel.app",
-      bn: "https://laptop-point-bangladesh.vercel.app/bn",
+      en: "https://laptoppointbd.com",
+      bn: "https://laptoppointbd.com/bn",
     },
   },
   openGraph: {
     type: "website",
     locale: "en_US",
     alternateLocale: "bn_BD",
-    url: "https://laptop-point-bangladesh.vercel.app",
+    url: "https://laptoppointbd.com",
     siteName: "Laptop Point Bangladesh",
     title: SEO_CONFIG.metaTags.defaultTitle,
     description: SEO_CONFIG.metaTags.defaultDescription,

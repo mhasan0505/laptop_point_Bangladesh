@@ -5,7 +5,7 @@ export const SEO_CONFIG = {
   keywords: {
     primary: [
       "used laptop Bangladesh",
-      "refurbished laptop Dhaka",
+      "used laptop Dhaka",
       "second hand laptop price",
       "HP EliteBook price Bangladesh",
       "Dell Latitude Bangladesh",
@@ -31,9 +31,9 @@ export const SEO_CONFIG = {
       "best used laptop under 50000 Bangladesh",
       "where to buy used laptop in Dhaka",
       "HP laptop price in Bangladesh today",
-      "Dell laptop refurbished warranty",
+      "Dell laptop used warranty",
       "Lenovo laptop with guarantee Dhaka",
-      "original vs refurbished laptop",
+      "original vs used laptop",
       "how to buy safe used laptop Bangladesh",
       "laptop warranty period Bangladesh",
       "laptop return policy Dhaka",
@@ -81,9 +81,9 @@ export const SEO_CONFIG = {
       ],
     },
     {
-      title: "Refurbished vs Used Laptops: What You Need to Know",
-      slug: "refurbished-vs-used-laptops",
-      keywords: ["refurbished laptop", "used laptop", "difference"],
+      title: "New vs Used Laptops: What You Need to Know",
+      slug: "new-vs-used-laptops",
+      keywords: ["new laptop", "used laptop", "difference"],
     },
     {
       title: "Gaming Laptops in Bangladesh: Price & Performance Guide",
@@ -116,10 +116,9 @@ export const SEO_CONFIG = {
 
   // Meta Tags Configuration
   metaTags: {
-    defaultTitle:
-      "Laptop Point Bangladesh | Premium Used & Refurbished Laptops",
+    defaultTitle: "Laptop Point Bangladesh | Premium Used Laptops",
     defaultDescription:
-      "Best source for premium used and refurbished laptops in Bangladesh. HP, Dell, Lenovo, Microsoft Surface at unbeatable prices. Official warranty & free delivery.",
+      "Best source for premium used laptops in Bangladesh. HP, Dell, Lenovo, Microsoft Surface at unbeatable prices. Official warranty & free delivery.",
     twitterHandle: "@laptoppointbd",
     facebookPage: "https://www.facebook.com/laptoppointbd",
     instagramProfile: "https://www.instagram.com/laptoppointbd",
@@ -127,10 +126,10 @@ export const SEO_CONFIG = {
 
   // Open Graph Images for Different Pages
   ogImages: {
-    homepage: "https://laptop-point-bangladesh.vercel.app/og-image.jpg",
-    shop: "https://laptop-point-bangladesh.vercel.app/og-shop.jpg",
-    blog: "https://laptop-point-bangladesh.vercel.app/og-blog.jpg",
-    product: "https://laptop-point-bangladesh.vercel.app/og-product.jpg",
+    homepage: "https://laptoppointbd.com/og-image.jpg",
+    shop: "https://laptoppointbd.com/og-shop.jpg",
+    blog: "https://laptoppointbd.com/og-blog.jpg",
+    product: "https://laptoppointbd.com/og-product.jpg",
   },
 
   // Link Building Targets
@@ -231,7 +230,7 @@ export const imageOptimization = {
   },
   altTextGuidelines: {
     product: "Brand Model Year - Used Laptop Price in Bangladesh",
-    hero: "Premium Used & Refurbished Laptops - Laptop Point Bangladesh",
+    hero: "Premium Used & New Laptops - Laptop Point Bangladesh",
     category: "Used Laptop Category - Best Prices in Dhaka",
   },
 };

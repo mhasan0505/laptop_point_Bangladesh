@@ -13,7 +13,7 @@ const StickyMobileBar = () => {
   const navItems = [
     { name: "Home", href: "/", icon: Home },
     { name: "Shop", href: "/shop", icon: Grid },
-    { name: "Call", href: "tel:+8801717171717", icon: Phone, isAction: true }, // Special styling for Call
+    { name: "Call", href: "tel:+8801612182408", icon: Phone, isAction: true }, // Special styling for Call
     { name: "Cart", href: "/cart", icon: ShoppingCart, count: cartCount },
     { name: "Account", href: "/login", icon: User },
   ];
