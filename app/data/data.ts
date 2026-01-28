@@ -4,10 +4,12 @@ import productsRaw from "./products.json";
 
 // Helper to encode image paths with proper URL encoding
 // Converts spaces and special characters to URL-safe format
+// Only encode the folder names, not the slashes
 const encodeImagePath = (path: string): string => {
+  // Split the path and encode each segment except empty ones
   return path
     .split("/")
-    .map((segment) => encodeURIComponent(segment))
+    .map((segment) => (segment ? encodeURIComponent(segment) : segment))
     .join("/");
 };
 
@@ -206,14 +208,15 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
         ];
       } else if (folder.includes("Firefly 14 G9")) {
         mappedImages = [
-          `${folder}/main.png`,
-          `${folder}/front.png`,
-          `${folder}/front1.png`,
-          `${folder}/side.png`,
-          `${folder}/port.png`,
-          `${folder}/port2.png`,
-          `${folder}/keyboard.png`,
+          `${folder}/512/main.png`,
+          `${folder}/512/front.png`,
+          `${folder}/512/front1.png`,
+          `${folder}/512/side.png`,
+          `${folder}/512/port.png`,
+          `${folder}/512/port2.png`,
+          `${folder}/512/keyboard.png`,
         ];
+        mainImage = `${folder}/512/main.png`;
       } else {
         // Fallback for other HP products
         mappedImages = [

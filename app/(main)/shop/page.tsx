@@ -11,21 +11,111 @@ import { SlidersHorizontal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
+interface Filters {
+  priceMin: string;
+  priceMax: string;
+  brands: string[];
+  processors: string[];
+  rams: string[];
+}
+
 const ShopContent = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [filters, setFilters] = useState<Filters>({
+    priceMin: "",
+    priceMax: "",
+    brands: [],
+    processors: [],
+    rams: [],
+  });
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search");
 
   let products = laptopData.laptops || [];
 
+  // Apply search filter
   if (searchQuery) {
     const query = searchQuery.toLowerCase();
     products = products.filter(
       (product) =>
         product.name.toLowerCase().includes(query) ||
         (product.brand && product.brand.toLowerCase().includes(query)) ||
-        (product.category && product.category.toLowerCase().includes(query))
+        (product.category && product.category.toLowerCase().includes(query)),
     );
+  }
+
+  // Apply price filter
+  if (filters.priceMin) {
+    const minPrice = parseFloat(filters.priceMin);
+    products = products.filter(
+      (product) => product.pricing && product.pricing.sale_price >= minPrice,
+    );
+  }
+  if (filters.priceMax) {
+    const maxPrice = parseFloat(filters.priceMax);
+    products = products.filter(
+      (product) => product.pricing && product.pricing.sale_price <= maxPrice,
+    );
+  }
+
+  // Apply brand filter
+  if (filters.brands.length > 0) {
+    products = products.filter(
+      (product) => product.brand && filters.brands.includes(product.brand),
+    );
+  }
+
+  // Apply processor filter
+  if (filters.processors.length > 0) {
+    products = products.filter((product) => {
+      if (!product.specs?.processor) return false;
+      const processor = product.specs.processor.toLowerCase();
+      return filters.processors.some((filterProc) => {
+        const filterLower = filterProc.toLowerCase();
+        if (filterLower.includes("intel core i5")) {
+          return processor.includes("core i5") || /\bi5-/.test(processor);
+        }
+        if (filterLower.includes("intel core i7")) {
+          return processor.includes("core i7") || /\bi7-/.test(processor);
+        }
+        if (filterLower.includes("intel core i9")) {
+          return processor.includes("core i9") || /\bi9-/.test(processor);
+        }
+        if (filterLower.includes("ryzen 5")) {
+          return processor.includes("ryzen 5");
+        }
+        if (filterLower.includes("ryzen 7")) {
+          return processor.includes("ryzen 7");
+        }
+        if (
+          filterLower.includes("apple m1") ||
+          filterLower.includes("m2") ||
+          filterLower.includes("m3")
+        ) {
+          return (
+            processor.includes("apple m1") ||
+            processor.includes("apple m2") ||
+            processor.includes("apple m3") ||
+            /\bm1\b/.test(processor) ||
+            /\bm2\b/.test(processor) ||
+            /\bm3\b/.test(processor)
+          );
+        }
+        return false;
+      });
+    });
+  }
+
+  // Apply RAM filter
+  if (filters.rams.length > 0) {
+    products = products.filter((product) => {
+      if (!product.specs?.ram) return false;
+      const ram = product.specs.ram.toLowerCase();
+      return filters.rams.some((filterRam) => {
+        const ramValue = filterRam.toLowerCase();
+        return ram.includes(ramValue);
+      });
+    });
   }
 
   return (
@@ -65,7 +155,7 @@ const ShopContent = () => {
                 `}
           onClick={(e) => e.stopPropagation()}
         >
-          <FilterSidebar onFilterChange={(filters) => console.log(filters)} />
+          <FilterSidebar onFilterChange={setFilters} />
         </div>
       </aside>
 

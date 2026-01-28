@@ -11,14 +11,12 @@ const MegaMenu = ({
   isOpen,
   onClose,
   onMouseEnter,
-  onMouseLeave,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
 }) => {
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [hoveredCategory, setHoveredCategory] = useState<string>("Business");
 
   // Get unique categories from laptop data
   const categories = [
@@ -28,10 +26,22 @@ const MegaMenu = ({
     { name: "Budget", icon: "💰" },
   ];
 
-  // Get featured products for each category
+  // Get featured products for each category based on product names/brands
   const getFeaturedProducts = (category: string) => {
+    const categoryMap: { [key: string]: string[] } = {
+      Business: ["HP", "Dell", "Lenovo"],
+      Professional: ["HP", "Dell", "Lenovo"],
+      Gaming: ["ASUS", "MSI", "Acer"],
+      Budget: ["Dell", "Lenovo"],
+    };
+
+    const brands = categoryMap[category] || [];
     return laptopData.laptops
-      .filter((laptop) => laptop.category === category)
+      .filter((laptop) =>
+        brands.some((brand) =>
+          laptop.name.toUpperCase().includes(brand.toUpperCase()),
+        ),
+      )
       .slice(0, 3);
   };
 
@@ -54,7 +64,6 @@ const MegaMenu = ({
         transition={{ duration: 0.2 }}
         className="absolute left-0 right-0 top-full mt-1 bg-white shadow-2xl border-t border-gray-100 z-50"
         onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
       >
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-12 gap-8">
@@ -65,34 +74,39 @@ const MegaMenu = ({
               </h3>
               <div className="space-y-1">
                 {categories.map((category) => (
-                  <Link
+                  <div
                     key={category.name}
-                    href={`/shop?category=${category.name.toLowerCase()}`}
                     onMouseEnter={() => setHoveredCategory(category.name)}
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all group ${
-                      hoveredCategory === category.name
-                        ? "bg-yellow-50 text-yellow-700"
-                        : "hover:bg-gray-50 text-gray-700"
-                    }`}
+                    onMouseLeave={() => setHoveredCategory(categories[0].name)}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{category.icon}</span>
-                      <span className="font-medium">{category.name}</span>
-                    </div>
-                    <ChevronRight
-                      className={`w-4 h-4 transition-transform ${
+                    <Link
+                      href={`/shop?category=${category.name.toLowerCase()}`}
+                      className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all group ${
                         hoveredCategory === category.name
-                          ? "translate-x-1 text-yellow-600"
-                          : "text-gray-400"
+                          ? "bg-yellow-50 text-yellow-700"
+                          : "hover:bg-gray-50 text-gray-700"
                       }`}
-                    />
-                  </Link>
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{category.icon}</span>
+                        <span className="font-medium">{category.name}</span>
+                      </div>
+                      <ChevronRight
+                        className={`w-4 h-4 transition-transform ${
+                          hoveredCategory === category.name
+                            ? "translate-x-1 text-yellow-600"
+                            : "text-gray-400"
+                        }`}
+                      />
+                    </Link>
+                  </div>
                 ))}
               </div>
 
               {/* View All Link */}
               <Link
                 href="/shop"
+                onClick={onClose}
                 className="mt-6 flex items-center gap-2 text-sm font-semibold text-yellow-600 hover:text-yellow-700 transition-colors"
               >
                 <Laptop className="w-4 h-4" />
@@ -115,6 +129,7 @@ const MegaMenu = ({
                     </h3>
                     <Link
                       href={`/shop?category=${hoveredCategory.toLowerCase()}`}
+                      onClick={onClose}
                       className="text-sm font-medium text-yellow-600 hover:text-yellow-700 flex items-center gap-1"
                     >
                       See All
@@ -127,6 +142,7 @@ const MegaMenu = ({
                       <Link
                         key={product.id}
                         href={`/product/${product.slug}`}
+                        onClick={onClose}
                         className="group bg-white border border-gray-100 rounded-xl p-4 hover:shadow-lg hover:border-yellow-200 transition-all"
                       >
                         <div className="aspect-square relative mb-3 bg-gray-50 rounded-lg overflow-hidden">

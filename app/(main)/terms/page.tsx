@@ -29,7 +29,7 @@ export default function TermsOfService() {
             </h2>
             <p className="text-gray-700 mb-4">
               Permission is granted to temporarily download one copy of the
-              materials (information or software) on Laptop Point Bangladesh's
+              materials (information or software) on Laptop Point Bangladesh&apos;s
               website for personal, non-commercial transitory viewing only. This
               is the grant of a license, not a transfer of title, and under this
               license you may not:
@@ -57,7 +57,7 @@ export default function TermsOfService() {
               3. Disclaimer
             </h2>
             <p className="text-gray-700 mb-4">
-              The materials on Laptop Point Bangladesh's website are provided on
+              The materials on Laptop Point Bangladesh&apos;s website are provided on
               an &apos;as is&apos; basis. Laptop Point Bangladesh makes no
               warranties, expressed or implied, and hereby disclaims and negates
               all other warranties including, without limitation, implied
@@ -76,7 +76,7 @@ export default function TermsOfService() {
               liable for any damages (including, without limitation, damages for
               loss of data or profit, or due to business interruption) arising
               out of the use or inability to use the materials on Laptop Point
-              Bangladesh's website.
+              Bangladesh&apos;s website.
             </p>
           </section>
 
@@ -85,7 +85,7 @@ export default function TermsOfService() {
               5. Accuracy of Materials
             </h2>
             <p className="text-gray-700 mb-4">
-              The materials appearing on Laptop Point Bangladesh's website could
+              The materials appearing on Laptop Point Bangladesh&apos;s website could
               include technical, typographical, or photographic errors. Laptop
               Point Bangladesh does not warrant that any of the materials on our
               website are accurate, complete, or current. Laptop Point

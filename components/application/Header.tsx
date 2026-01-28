@@ -115,12 +115,6 @@ const Header = () => {
     setIsMegaMenuOpen(true);
   };
 
-  const handleMegaMenuClose = () => {
-    closeTimerRef.current = setTimeout(() => {
-      setIsMegaMenuOpen(false);
-    }, 200);
-  };
-
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
       {/* Top Bar */}
@@ -210,7 +204,6 @@ const Header = () => {
                   key={link.name}
                   link={link}
                   onMegaMenuOpen={handleMegaMenuOpen}
-                  onMegaMenuClose={handleMegaMenuClose}
                 />
               ))}
             </nav>
@@ -452,7 +445,6 @@ const Header = () => {
         isOpen={isMegaMenuOpen}
         onClose={() => setIsMegaMenuOpen(false)}
         onMouseEnter={handleMegaMenuOpen}
-        onMouseLeave={handleMegaMenuClose}
       />
     </header>
   );
@@ -469,16 +461,22 @@ interface NavLink {
 const NavItem = ({
   link,
   onMegaMenuOpen,
-  onMegaMenuClose,
 }: {
   link: NavLink;
   onMegaMenuOpen?: () => void;
-  onMegaMenuClose?: () => void;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
+  const submenuRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleMouseEnter = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
     setIsHovered(true);
+
     // Open MegaMenu for Categories link
     if (link.name === "Categories" && onMegaMenuOpen) {
       onMegaMenuOpen();
@@ -486,12 +484,10 @@ const NavItem = ({
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
-
-    // For Categories, set a timer to close
-    if (link.name === "Categories" && onMegaMenuClose) {
-      onMegaMenuClose();
-    }
+    closeTimerRef.current = setTimeout(() => {
+      setIsHovered(false);
+      // Don't close MegaMenu on mouse leave - it should only close when clicking outside
+    }, 250);
   };
 
   return (
@@ -524,6 +520,7 @@ const NavItem = ({
       {/* Submenu - only show for non-Categories links */}
       {link.hasDropdown && link.submenu && link.name !== "Categories" && (
         <motion.div
+          ref={submenuRef}
           initial={{ opacity: 0, y: 10, scale: 0.95 }}
           animate={
             isHovered
@@ -531,9 +528,9 @@ const NavItem = ({
               : { opacity: 0, y: 10, scale: 0.95 }
           }
           transition={{ duration: 0.2 }}
-          className={`absolute left-0 top-full mt-1 w-56 p-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 origin-top-left ${
-            isHovered ? "pointer-events-auto" : "pointer-events-none"
-          }`}
+          className="absolute left-0 top-full mt-1 w-56 p-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 origin-top-left pointer-events-auto"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="flex flex-col gap-1">
             {link.submenu.map((subItem) => (
