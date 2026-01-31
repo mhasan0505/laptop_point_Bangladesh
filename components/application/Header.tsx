@@ -39,6 +39,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const [isMegaMenuHovered, setIsMegaMenuHovered] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -113,6 +114,14 @@ const Header = () => {
       closeTimerRef.current = null;
     }
     setIsMegaMenuOpen(true);
+  };
+
+  const handleMegaMenuClose = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setIsMegaMenuOpen(false);
   };
 
   return (
@@ -204,6 +213,8 @@ const Header = () => {
                   key={link.name}
                   link={link}
                   onMegaMenuOpen={handleMegaMenuOpen}
+                  onMegaMenuClose={handleMegaMenuClose}
+                  isMegaMenuHovered={isMegaMenuHovered}
                 />
               ))}
             </nav>
@@ -444,7 +455,11 @@ const Header = () => {
       <MegaMenu
         isOpen={isMegaMenuOpen}
         onClose={() => setIsMegaMenuOpen(false)}
-        onMouseEnter={handleMegaMenuOpen}
+        onMouseEnter={() => {
+          handleMegaMenuOpen();
+          setIsMegaMenuHovered(true);
+        }}
+        onMouseLeave={() => setIsMegaMenuHovered(false)}
       />
     </header>
   );
@@ -461,9 +476,13 @@ interface NavLink {
 const NavItem = ({
   link,
   onMegaMenuOpen,
+  onMegaMenuClose,
+  isMegaMenuHovered,
 }: {
   link: NavLink;
   onMegaMenuOpen?: () => void;
+  onMegaMenuClose?: () => void;
+  isMegaMenuHovered?: boolean;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -480,6 +499,8 @@ const NavItem = ({
     // Open MegaMenu for Categories link
     if (link.name === "Categories" && onMegaMenuOpen) {
       onMegaMenuOpen();
+    } else if (onMegaMenuClose && !isMegaMenuHovered) {
+      onMegaMenuClose();
     }
   };
 

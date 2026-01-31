@@ -11,10 +11,12 @@ const MegaMenu = ({
   isOpen,
   onClose,
   onMouseEnter,
+  onMouseLeave,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }) => {
   const [hoveredCategory, setHoveredCategory] = useState<string>("Business");
 
@@ -64,6 +66,7 @@ const MegaMenu = ({
         transition={{ duration: 0.2 }}
         className="absolute left-0 right-0 top-full mt-1 bg-white shadow-2xl border-t border-gray-100 z-50"
         onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-12 gap-8">

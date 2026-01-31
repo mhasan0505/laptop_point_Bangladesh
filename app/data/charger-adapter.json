@@ -1,0 +1,30 @@
+[
+  {
+    id: "charger001",
+    name: "HP 18.5V 3.5A Port 65W Adapter ",
+    brand: "HP",
+    discount_price: 600,
+    regular_price: 750,
+    condition: "New",
+    availability: "In Stock",
+    warranty: "6 Months",
+    color: "Black",
+    description: "This HP 18.5V 3.5A Port 65W Adapter is designed to provide reliable power to your HP laptop. It features a compact design and is compatible with various HP laptop models.",
+    image_url: "/images/charger-adapter/hp-18.5v-3
+
+
+  },
+  {
+    id: "charger002",
+    name: "Dell 19.5V 3.34A 65W AC Adapter",
+    brand: "Dell",
+    discount_price: 650,
+    regular_price: 800,
+    condition: "New",
+    availability: "In Stock",
+    warranty: "1 Year",
+    color: "Black",
+    description: "The Dell 19.5V 3.34A 65W AC Adapter is perfect for powering your Dell laptop. It offers efficient charging and is built to last with high-quality materials.",
+    image_url: "/images/charger-adapter/dell-19.5v-3.34a-65w.jpg"
+  }
+]
