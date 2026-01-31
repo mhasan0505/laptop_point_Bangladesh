@@ -2,15 +2,13 @@ import { Product } from "@/types/product";
 import { RawProduct } from "@/types/raw-product";
 import productsRaw from "./products.json";
 
-// Helper to encode image paths with proper URL encoding
-// Converts spaces and special characters to URL-safe format
-// Only encode the folder names, not the slashes
+// Helper to handle image paths
+// For local images in /public, Next.js handles the path resolution
+// No encoding needed for local images
 const encodeImagePath = (path: string): string => {
-  // Split the path and encode each segment except empty ones
-  return path
-    .split("/")
-    .map((segment) => (segment ? encodeURIComponent(segment) : segment))
-    .join("/");
+  // Return the path as-is for local images
+  // Next.js Image component handles path resolution for /public folder
+  return path;
 };
 
 // Helper to map product ID/SKU/Model to image folder path

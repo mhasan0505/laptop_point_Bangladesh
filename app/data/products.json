@@ -217,7 +217,7 @@
     },
     "description": {
       "short": "Redesigned 10th Gen lightweight ultrabook with narrow bezels.",
-      "full": "**What are the main design improvements in the G7?**\n The G7 features a major design overhaul, resulting in a lighter chassis (1.33kg) and significantly thinner screen bezels, giving it a more modern and compact footprint. \n\n**How does it handle multitasking?**\n With 16GB of RAM as a standard configuration, this laptop is built to handle heavy multitasking with ease, allowing you to run multiple applications smoothly. \n\n**What are the user experience upgrades?**\n The keyboard has been redesigned to be quieter and more comfortable for long typing sessions, and it features improved battery life for genuine all-day usage."
+      "full": "**What are the main design improvements in the G7?**\n The G7 features a major design overhaul, resulting in a lighter chassis (1.33kg) and significantly thinner screen bezels, giving it a more modern and compact footprint. \n\n**How does it handle multitasking?**\n With 16GB of RAM as a standard configuration, this laptop is built to handle heavy multitasking with ease, allowing you to run multiple applications smoothly. \n\n**What are the user experience upgrades?**\n The keyboard has been redesigned to be quieter and more comfortable for long typing sessions, and it offers around 3 hours of battery life for typical use."
     },
     "features": [
       "Lightweight (1.33kg)",
@@ -357,7 +357,7 @@
     },
     "description": {
       "short": "Premium 2-in-1 convertible with tablet mode and touch.",
-      "full": "**What does 'x360' mean?**\n The 'x360' signifies that this is a convertible laptop with a 360-degree hinge. You can use it as a traditional powerful laptop, or flip the screen all the way around to use it as a responsive tablet. \n\n**What makes it a 'flagship' model?**\n The x360 1040 G8 is crafted from premium CNC aluminum for a stunning look and feel, features a powerful Core i7 processor, and has a long battery life, representing the best of HP's business line. \n\n**Who is the ideal user for this device?**\n It's the ultimate device for executives, creatives, and sales professionals who need the flexibility of a tablet and the power of a laptop in a single, premium package."
+      "full": "**What does 'x360' mean?**\n The 'x360' signifies that this is a convertible laptop with a 360-degree hinge. You can use it as a traditional powerful laptop, or flip the screen all the way around to use it as a responsive tablet. \n\n**What makes it a 'flagship' model?**\n The x360 1040 G8 is crafted from premium CNC aluminum for a stunning look and feel, features a powerful Core i7 processor, and offers around 3 hours of battery life for typical use. \n\n**Who is the ideal user for this device?**\n It's the ultimate device for executives, creatives, and sales professionals who need the flexibility of a tablet and the power of a laptop in a single, premium package."
     },
     "features": [
       "360 Degree Hinge",
@@ -404,7 +404,7 @@
     },
     "description": {
       "short": "Ryzen Pro power offering superior multi-core performance.",
-      "full": "**What is the main advantage of the AMD Ryzen processor in this model?**\n The AMD Ryzen 5 Pro processor in the 845 G7 often outperforms its Intel equivalents in multi-core tasks, making it faster for applications that can use multiple processor cores simultaneously. \n\n**How is the user experience?**\n This laptop typically runs cooler and quieter than many competitors while also delivering exceptional battery efficiency, making it very comfortable to use for extended periods. \n\n**Who should buy this laptop?**\n It is a fantastic choice for users who do heavy multitasking, such as running virtual machines, coding, or having many browser tabs and applications open at once."
+      "full": "**What is the main advantage of the AMD Ryzen processor in this model?**\n The AMD Ryzen 5 Pro processor in the 845 G7 often outperforms its Intel equivalents in multi-core tasks, making it faster for applications that can use multiple processor cores simultaneously. \n\n**How is the user experience?**\n This laptop typically runs cooler and quieter than many competitors while offering around 3 hours of battery life, making it comfortable to use for extended periods. \n\n**Who should buy this laptop?**\n It is a fantastic choice for users who do heavy multitasking, such as running virtual machines, coding, or having many browser tabs and applications open at once."
     },
     "features": ["AMD Ryzen Pro CPU", "High Efficiency", "HDMI 2.0"],
     "images": ["/images/hp-845-g7.jpg"]
@@ -488,13 +488,13 @@
     },
     "description": {
       "short": "Rugged 11-inch convertible designed for students and travel.",
-      "full": "**What makes this laptop so durable?**\n The Latitude 3190 is specifically built for tough environments like classrooms. It features rubberized edges and a spill-resistant keyboard to withstand accidental drops and spills. \n\n**What are its main use cases?**\n Its 360-degree hinge allows it to be used as a compact laptop or a convenient tablet. This makes it perfect for students' online classes, media consumption, or for professionals doing fieldwork. \n\n**Is it fast?**\n This device prioritizes durability and battery life over raw speed. It's great for web browsing, document editing, and video calls, but not intended for heavy gaming or video editing."
+      "full": "**What makes this laptop so durable?**\n The Latitude 3190 is specifically built for tough environments like classrooms. It features rubberized edges and a spill-resistant keyboard to withstand accidental drops and spills. \n\n**What are its main use cases?**\n Its 360-degree hinge allows it to be used as a compact laptop or a convenient tablet. This makes it perfect for students' online classes, media consumption, or for professionals doing fieldwork. \n\n**Is it fast?**\n This device prioritizes durability and about 3 hours of battery life over raw speed. It's great for web browsing, document editing, and video calls, but not intended for heavy gaming or video editing."
     },
     "features": [
       "Rugged Design",
       "360 Hinge",
       "Touchscreen",
-      "Long Battery Life"
+      "Battery Life ~3 Hours"
     ],
     "images": ["/images/dell-3190.jpg"]
   },
@@ -708,7 +708,7 @@
     },
     "description": {
       "short": "High-end 11th Gen convertible with carbon fiber/aluminum build.",
-      "full": "**What does 'Intel Evo Certified' mean?**\n The Intel Evo certification guarantees a premium mobile experience, ensuring the device has instant wake, long battery life, fast charging, and excellent responsiveness. \n\n**What are its standout features?**\n This is a top-tier business machine featuring a flexible 2-in-1 convertible design, powerful 11th Gen performance with Iris Xe graphics, and two Thunderbolt 4 ports for ultimate connectivity. \n\n**What is the build quality like?**\n It's exceptionally premium, available in materials like carbon fiber or aluminum. It’s lightweight, durable, and designed for professionals who need the best."
+      "full": "**What does 'Intel Evo Certified' mean?**\n The Intel Evo certification guarantees a premium mobile experience, ensuring the device has instant wake, about 3 hours of battery life, fast charging, and excellent responsiveness. \n\n**What are its standout features?**\n This is a top-tier business machine featuring a flexible 2-in-1 convertible design, powerful 11th Gen performance with Iris Xe graphics, and two Thunderbolt 4 ports for ultimate connectivity. \n\n**What is the build quality like?**\n It's exceptionally premium, available in materials like carbon fiber or aluminum. It’s lightweight, durable, and designed for professionals who need the best."
     },
     "features": [
       "Evo Certified",
@@ -1067,12 +1067,12 @@
       "os": "Windows 11 Home/Pro"
     },
     "description": {
-      "short": "Improved battery life and performance in the classic Surface design.",
-      "full": "**What are the main improvements in the Surface Laptop 4?**\n The Laptop 4 refines the successful formula of its predecessor by using more efficient 11th Gen Intel processors. This results in significantly better battery life and improved performance. \n\n**What's the user experience like?**\n It runs cooler and longer than the Laptop 3, making it an even better daily driver. It retains the same beloved high-resolution touchscreen, comfortable keyboard, and premium design. \n\n**What kind of performance can I expect from the graphics?**\n The 11th Gen processor includes the much-improved Intel Iris Xe graphics, which provides a noticeable boost for graphically intensive tasks, light gaming, and creative applications."
+      "short": "Around 3 hours of battery life with the classic Surface design.",
+      "full": "**What are the main improvements in the Surface Laptop 4?**\n The Laptop 4 refines the successful formula of its predecessor by using more efficient 11th Gen Intel processors. It offers around 3 hours of battery life with improved performance. \n\n**What's the user experience like?**\n It runs cooler and delivers around 3 hours of battery life, making it a solid daily driver. It retains the same beloved high-resolution touchscreen, comfortable keyboard, and premium design. \n\n**What kind of performance can I expect from the graphics?**\n The 11th Gen processor includes the much-improved Intel Iris Xe graphics, which provides a noticeable boost for graphically intensive tasks, light gaming, and creative applications."
     },
     "features": [
       "11th Gen Intel",
-      "Improved Battery",
+      "Battery Life ~3 Hours",
       "2K Touchscreen",
       "Iris Xe Graphics"
     ],

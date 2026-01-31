@@ -47,15 +47,11 @@ const ShopContent = () => {
   // Apply price filter
   if (filters.priceMin) {
     const minPrice = parseFloat(filters.priceMin);
-    products = products.filter(
-      (product) => product.pricing && product.pricing.sale_price >= minPrice,
-    );
+    products = products.filter((product) => product.price >= minPrice);
   }
   if (filters.priceMax) {
     const maxPrice = parseFloat(filters.priceMax);
-    products = products.filter(
-      (product) => product.pricing && product.pricing.sale_price <= maxPrice,
-    );
+    products = products.filter((product) => product.price <= maxPrice);
   }
 
   // Apply brand filter

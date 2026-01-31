@@ -117,7 +117,7 @@ export default function ContactPage() {
                       Our Location
                     </h3>
                     <p className="text-gray-900 font-medium">
-                      123 Tech Street, Dhaka 1207
+                      Madbar Mansion, Shop-08, Mirpur-10, Dhaka-1216
                     </p>
                     <p className="text-gray-600">Bangladesh</p>
                   </div>
@@ -132,9 +132,11 @@ export default function ContactPage() {
                       Phone Number
                     </h3>
                     <p className="text-gray-900 font-medium">
-                      +880 1XXX XXXXXX
+                      +880 1612-182408
                     </p>
-                    <p className="text-gray-500 text-sm">Mon-Fri 9am-6pm</p>
+                    <p className="text-gray-500 text-sm">
+                      Mon-Sat 10.30 am-9.00 pm
+                    </p>
                   </div>
                 </div>
 
@@ -164,10 +166,7 @@ export default function ContactPage() {
                       Working Hours
                     </h3>
                     <p className="text-gray-900 font-medium">
-                      Sat - Thu: 9:00 AM - 8:00 PM
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      Friday: 2:00 PM - 8:00 PM
+                      Mon - Fri: 10:30 AM - 9:00 PM
                     </p>
                   </div>
                 </div>
@@ -218,6 +217,7 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label
+
                       htmlFor="name"
                       className="text-sm font-medium text-gray-700"
                     >

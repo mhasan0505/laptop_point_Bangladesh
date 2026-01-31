@@ -52,7 +52,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
       { label: "Display", value: '14" FHD (1920x1080)' },
       { label: "Graphics", value: "Intel HD Graphics 520" },
       { label: "Operating System", value: "Windows 10 Pro" },
-      { label: "Battery", value: "Up to 8 hours" },
+      { label: "Battery", value: "Around 3 hours" },
       { label: "Weight", value: "1.5 kg" },
       { label: "Connectivity", value: "Wi-Fi, Bluetooth, USB 3.0, HDMI" },
       { label: "Warranty", value: "1 Year" },
