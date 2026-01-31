@@ -49,7 +49,7 @@ const items = [
     header: (
       <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP Elitebook 840 G6 Core i5 8TH Gen 8-256/main.jpg"
+          src="/products/hp/HP-Elitebook-840-G6-Core-i5-8TH-Gen-8-256/main.jpg"
           alt="HP Elitebook 840 G6"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -67,7 +67,7 @@ const items = [
     header: (
       <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP Probook 440 G3 Core i5 6TH Gen 8-256/main.jpg"
+          src="/products/hp/HP-Probook-440-G3-Core-i5-6TH-Gen-8-256/main.jpg"
           alt="HP Probook 440 G3"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -84,7 +84,7 @@ const items = [
     header: (
       <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP Elitebook 840 G6 Core i5 8TH Gen 8-256/side.jpg"
+          src="/products/hp/HP-Elitebook-840-G6-Core-i5-8TH-Gen-8-256/side.jpg"
           alt="HP Elitebook Side"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -101,7 +101,7 @@ const items = [
     header: (
       <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP Elitebook 840 G6 Core i5 8TH Gen 8-256/port.jpg"
+          src="/products/hp/HP-Elitebook-840-G6-Core-i5-8TH-Gen-8-256/port.jpg"
           alt="Connectivity Ports"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -118,7 +118,7 @@ const items = [
     header: (
       <div className="flex flex-1 w-full h-full min-h-24 rounded-xl overflow-hidden relative">
         <Image
-          src="/products/hp/HP Elitebook 840 G3 Core i5 6TH Gen 8-256/main.jpg"
+          src="/products/hp/HP-Elitebook-840-G3-Core-i5-6TH-Gen-8-256/main.jpg"
           alt="HP Elitebook 840 G3"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
