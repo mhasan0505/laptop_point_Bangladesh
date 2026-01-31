@@ -17,69 +17,69 @@ const getImageFolder = (model: string): string | null => {
 
   // HP
   if (m.includes("440 g3"))
-    return "/products/hp/HP Probook 440 G3 Core i5 6TH Gen 8-256";
+    return "/products/hp/HP-Probook-440-G3-Core-i5-6TH-Gen-8-256";
   if (m.includes("840 g3"))
-    return "/products/hp/HP Elitebook 840 G3 Core i5 6TH Gen 8-256";
+    return "/products/hp/HP-Elitebook-840-G3-Core-i5-6TH-Gen-8-256";
   if (m.includes("840 g6"))
-    return "/products/hp/HP Elitebook 840 G6 Core i5 8TH Gen 8-256";
+    return "/products/hp/HP-Elitebook-840-G6-Core-i5-8TH-Gen-8-256";
   if (m.includes("zbook 14u g6"))
-    return "/products/hp/HP Zbook 14U G6 Core i5 8TH Gen 8-256";
+    return "/products/hp/HP-Zbook-14U-G6-Core-i5-8TH-Gen-8-256";
   if (m.includes("840 g7"))
-    return "/products/hp/HP Elitebook 840 G7 Core i5 10TH Gen 16-512";
+    return "/products/hp/HP-Elitebook-840-G7-Core-i5-10TH-Gen-16-512";
   if (m.includes("840 g8"))
-    return "/products/hp/HP Elitebook 840 G8 Core i5 11TH Gen 16-512";
+    return "/products/hp/HP-Elitebook-840-G8-Core-i5-11TH-Gen-16-512";
   if (m.includes("845 g7"))
-    return "/products/hp/HP Elitebook 845 G7 Ryzen 5 Pro 16-512";
+    return "/products/hp/HP-Elitebook-845-G7-Ryzen-5-Pro-16-512";
   if (m.includes("845 g8"))
-    return "/products/hp/HP Elitebook 845 G8 Ryzen 5 pro 16-512";
+    return "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512";
   if (m.includes("1040 g8") || m.includes("x360 1040"))
-    return "/products/hp/HP Elitebook X360 1040 G8 Core I7 11TH Gen 16-512";
+    return "/products/hp/HP-Elitebook-X360-1040-G8-Core-I7-11TH-Gen-16-512";
   if (m.includes("firefly 14 g9"))
-    return "/products/hp/HP Zbook Firefly 14 G9 Core i7 12TH Gen 16";
+    return "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16";
 
   // Dell
   if (m.includes("3190"))
-    return "/products/dell/Dell_latitude 3190 2-1 Pentium Silver 8-128";
+    return "/products/dell/Dell-latitude-3190-2-1-Pentium-Silver-8-128";
   if (m.includes("3310"))
-    return "/products/dell/Dell latitude 3310 Core i5 8TH Gen 8-256";
+    return "/products/dell/Dell-latitude-3310-Core-i5-8TH-Gen-8-256";
   if (m.includes("3410"))
-    return "/products/dell/Dell latitude 3410 Core i5 10TH Gen 16-512";
+    return "/products/dell/Dell-latitude-3410-Core-i5-10TH-Gen-16-512";
   if (m.includes("7490"))
-    return "/products/dell/Dell latitude 7490 Core i5 8TH Gen 8-256";
+    return "/products/dell/Dell-latitude-7490-Core-i5-8TH-Gen-8-256";
   if (m.includes("7400"))
-    return "/products/dell/Dell latitude 7400 Core i5 8TH gen 16256 Metal body";
+    return "/products/dell/Dell-latitude-7400-Core-i5-8TH-gen-16256-Metal-body";
   if (m.includes("7420"))
-    return "/products/dell/Dell latitude 7420 2-1 Core i5 11TH Gen 16512";
+    return "/products/dell/Dell-latitude-7420-2-1-Core-i5-11TH-Gen-16512";
 
   // Lenovo
   if (m.includes("t490"))
-    return "/products/lenovo/Lenovo_Thinkpad_T490_code_i5";
+    return "/products/lenovo/Lenovo-Thinkpad-T490-code-i5";
   if (m.includes("t14") && !m.includes("t490"))
-    return "/products/lenovo/Lenovo_Thinkpad_T14";
+    return "/products/lenovo/Lenovo-Thinkpad-T14";
   // X1 Carbon - distinguish between Gen 8 (i5/10th) and Gen 9 (i7/11th)
   if (
     m.includes("x1 carbon gen 8") ||
     (m.includes("x1 carbon") && m.includes("i5"))
   )
-    return "/products/lenovo/Lenovo_Thinkpad_X1_Carbon_i5_10TH_Gen_16512_Touchscreen";
+    return "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-i5-10TH-Gen-16512-Touchscreen";
   if (
     m.includes("x1 carbon gen 9") ||
     (m.includes("x1 carbon") && m.includes("i7"))
   )
-    return "/products/lenovo/Lenovo_Thinkpad_X1_core_i7";
+    return "/products/lenovo/Lenovo-Thinkpad-X1-core-i7";
   // Fallback for generic X1 Carbon
   if (m.includes("x1 carbon") || m.includes("x1c"))
-    return "/products/lenovo/Lenovo_Thinkpad_X1_core_i7";
+    return "/products/lenovo/Lenovo-Thinkpad-X1-core-i7";
 
   // Microsoft
   if (m.includes("surface laptop 3") && m.includes("i5"))
-    return "/products/microsoft/Microsoft_Surface_laptop_3_code_i5";
+    return "/products/microsoft/Microsoft-Surface-laptop-3-code-i5";
   if (m.includes("surface laptop 3") && m.includes("i7"))
-    return "/products/microsoft/Microsoft_Surface_laptop_3_code_i7";
+    return "/products/microsoft/Microsoft-Surface-laptop-3-code-i7";
   if (m.includes("surface laptop 4"))
-    return "/products/microsoft/Microsoft_Surface_laptop_4";
+    return "/products/microsoft/Microsoft-Surface-laptop-4";
   if (m.includes("surface book"))
-    return "/products/microsoft/Microsoft_Surface_laptop_4";
+    return "/products/microsoft/Microsoft-Surface-laptop-4";
 
   return null;
 };
@@ -230,14 +230,14 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
       mainImage = `${folder}/main.jpg`;
 
       // Dell product mappings
-      if (folder.includes("Dell_latitude 3190")) {
+      if (folder.includes("Dell-latitude-3190")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/image.jpg`,
           `${folder}/image2.jpg`,
           `${folder}/image3.jpg`,
         ];
-      } else if (folder.includes("Dell latitude 3310")) {
+      } else if (folder.includes("Dell-latitude-3310")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
@@ -247,7 +247,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/flip.jpg`,
           `${folder}/flip2.jpg`,
         ];
-      } else if (folder.includes("Dell latitude 3410")) {
+      } else if (folder.includes("Dell-latitude-3410")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
@@ -255,14 +255,14 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/dual.jpg`,
           `${folder}/rotate.jpg`,
         ];
-      } else if (folder.includes("Dell latitude 7490")) {
+      } else if (folder.includes("Dell-latitude-7490")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/side.jpg`,
           `${folder}/port.jpg`,
           `${folder}/cables.jpg`,
         ];
-      } else if (folder.includes("Dell latitude 7400")) {
+      } else if (folder.includes("Dell-latitude-7400")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
@@ -273,7 +273,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/side (2).jpg`,
           `${folder}/side3.jpg`,
         ];
-      } else if (folder.includes("Dell latitude 7420")) {
+      } else if (folder.includes("Dell-latitude-7420")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/port.jpg`,
@@ -285,7 +285,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
         ];
       }
       // Lenovo product mappings
-      else if (folder.includes("Lenovo_Thinkpad_T490_code_i5")) {
+      else if (folder.includes("Lenovo-Thinkpad-T490-code-i5")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
@@ -297,7 +297,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/port2.jpg`,
           `${folder}/port3.jpg`,
         ];
-      } else if (folder.includes("Lenovo_Thinkpad_T14")) {
+      } else if (folder.includes("Lenovo-Thinkpad-T14")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
@@ -308,7 +308,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
         ];
       } else if (
         folder.includes(
-          "Lenovo_Thinkpad_X1_Carbon_i5_10TH_Gen_16512_Touchscreen",
+          "Lenovo-Thinkpad-X1-Carbon-i5-10TH-Gen-16512-Touchscreen",
         )
       ) {
         // X1 Carbon Gen 8 (i5)
@@ -323,7 +323,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/keyborad.jpg`,
           `${folder}/keyborad1.jpg`,
         ];
-      } else if (folder.includes("Lenovo_Thinkpad_X1_core_i7")) {
+      } else if (folder.includes("Lenovo-Thinkpad-X1-core-i7")) {
         // X1 Carbon Gen 9 (i7) - same files as Gen 8
         mappedImages = [
           `${folder}/main.jpg`,
@@ -346,7 +346,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
         ];
       }
     } else if (isMicrosoft) {
-      if (folder.includes("Microsoft_Surface_laptop_4")) {
+      if (folder.includes("Microsoft-Surface-laptop-4")) {
         mappedImages = [
           `${folder}/main.png`,
           `${folder}/front.png`,

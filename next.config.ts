@@ -22,8 +22,8 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000,
-    // Set to true if images with spaces in paths don't work in production
-    unoptimized: process.env.NODE_ENV === "production" ? true : false,
+    // Now optimized since paths use dashes instead of spaces
+    unoptimized: false,
     dangerouslyAllowSVG: true,
   },
   compress: true,
