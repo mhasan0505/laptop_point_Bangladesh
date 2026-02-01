@@ -1,19 +1,11 @@
 "use client";
 
-import {
-  ChevronDown,
-  Heart,
-  Minus,
-  Plus,
-  Share2,
-  ShoppingCart,
-  Star,
-} from "lucide-react";
+import { Heart, Minus, Plus, Share2, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
 interface ProductDetailsProps {
-  product?: {
+  product: {
     name: string;
     category: string;
     description: string;
@@ -23,57 +15,40 @@ interface ProductDetailsProps {
     rating: number;
     reviewCount: number;
     images: string[];
-    specifications?: Array<{ label: string; value: string }>;
+    specifications?: Array<{ label: string; value: string; category?: string }>;
   };
 }
 
 const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
-  // Default product data for demonstration
-  const defaultProduct = {
-    name: "HP Elitebook 840 G3",
-    category: "Laptops",
-    description:
-      "Professional business laptop featuring Intel Core i5 processor, 8GB RAM, and 256GB SSD. Perfect for productivity with a stunning 14-inch FHD display, premium build quality, and long battery life. Ideal for professionals who demand performance and reliability.",
-    price: 1200.0,
-    originalPrice: 1300.0,
-    inStock: true,
-    rating: 4.5,
-    reviewCount: 128,
-    images: [
-      "/products/hp/HP_Elitebook_840_G3/front.png",
-      "/products/hp/HP_Elitebook_840_G3/front.png",
-      "/products/hp/HP_Elitebook_840_G3/front.png",
-      "/products/hp/HP_Elitebook_840_G3/front.png",
-    ],
-    specifications: [
-      { label: "Processor", value: "Intel Core i5-6300U (6th Gen)" },
-      { label: "RAM", value: "8GB DDR4" },
-      { label: "Storage", value: "256GB SSD" },
-      { label: "Display", value: '14" FHD (1920x1080)' },
-      { label: "Graphics", value: "Intel HD Graphics 520" },
-      { label: "Operating System", value: "Windows 10 Pro" },
-      { label: "Battery", value: "Around 3 hours" },
-      { label: "Weight", value: "1.5 kg" },
-      { label: "Connectivity", value: "Wi-Fi, Bluetooth, USB 3.0, HDMI" },
-      { label: "Warranty", value: "1 Year" },
-    ],
-  };
-
-  const productData = product || defaultProduct;
-  const savings = productData.originalPrice
-    ? productData.originalPrice - productData.price
+  const savings = product.originalPrice
+    ? product.originalPrice - product.price
     : 0;
-  const discountPercentage = productData.originalPrice
-    ? Math.round((savings / productData.originalPrice) * 100)
+  const discountPercentage = product.originalPrice
+    ? Math.round((savings / product.originalPrice) * 100)
     : 0;
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [showAllSpecs, setShowAllSpecs] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({});
   const [isZoomed, setIsZoomed] = useState(false);
+  const [activeSpecTab, setActiveSpecTab] = useState("Specification");
+
+  // Group specifications by category
+  const specCategories = Array.from(
+    new Set(
+      product.specifications?.map((spec) => spec.category || "General") || [],
+    ),
+  );
+
+  const getSpecsByCategory = (categoryName: string) => {
+    return (
+      product.specifications?.filter(
+        (spec) => (spec.category || "General") === categoryName,
+      ) || []
+    );
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isZoomed) return;
@@ -90,14 +65,12 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
 
   const toggleZoom = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isZoomed) {
-      // Zoom out
       setIsZoomed(false);
       setZoomStyle({
         transformOrigin: "center center",
         transform: "scale(1)",
       });
     } else {
-      // Zoom in
       setIsZoomed(true);
       const { left, top, width, height } =
         e.currentTarget.getBoundingClientRect();
@@ -154,8 +127,8 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                   style={zoomStyle}
                 >
                   <Image
-                    src={productData.images[selectedImage]}
-                    alt={productData.name}
+                    src={product.images[selectedImage]}
+                    alt={product.name}
                     width={500}
                     height={500}
                     className={`w-full h-full object-contain mix-blend-multiply ${
@@ -177,7 +150,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
 
             {/* Thumbnail Gallery */}
             <div className="grid grid-cols-4 gap-3">
-              {productData.images.map((image, index) => (
+              {product.images.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => {
@@ -192,7 +165,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                 >
                   <Image
                     src={image}
-                    alt={`${productData.name} - Image ${index + 1}`}
+                    alt={`${product.name} - Image ${index + 1}`}
                     width={100}
                     height={100}
                     className="object-contain mix-blend-multiply p-2 bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900"
@@ -207,13 +180,13 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             {/* Category Badge */}
             <div className="inline-block">
               <span className="px-4 py-1.5 bg-primary/10 text-primary text-sm font-medium rounded-full">
-                {productData.category}
+                {product.category}
               </span>
             </div>
 
             {/* Product Name */}
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
-              {productData.name}
+              {product.name}
             </h1>
 
             {/* Rating */}
@@ -223,9 +196,9 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                   <Star
                     key={star}
                     className={`w-5 h-5 transition-all duration-200 ${
-                      star <= Math.floor(productData.rating)
+                      star <= Math.floor(product.rating)
                         ? "text-yellow-500 fill-yellow-500"
-                        : star - 0.5 <= productData.rating
+                        : star - 0.5 <= product.rating
                           ? "text-yellow-500 fill-yellow-500/50"
                           : "text-gray-300 dark:text-gray-600"
                     }`}
@@ -233,18 +206,17 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                 ))}
               </div>
               <span className="text-sm text-muted-foreground">
-                {productData.rating.toFixed(1)} ({productData.reviewCount}{" "}
-                reviews)
+                {product.rating.toFixed(1)} ({product.reviewCount} reviews)
               </span>
             </div>
 
             {/* Price Section */}
             <div className="bg-linear-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 rounded-2xl p-6 border border-primary/20">
               <div className="space-y-2">
-                {productData.originalPrice && (
+                {product.originalPrice && (
                   <div className="flex items-center gap-3">
                     <span className="text-lg text-muted-foreground line-through">
-                      ${productData.originalPrice.toFixed(2)}
+                      ${product.originalPrice.toFixed(2)}
                     </span>
                     <span className="px-3 py-1 bg-emerald-500 text-white text-sm font-semibold rounded-full">
                       Save ${savings.toFixed(2)}
@@ -252,7 +224,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                   </div>
                 )}
                 <div className="text-4xl md:text-5xl font-bold text-primary">
-                  ${productData.price.toFixed(2)}
+                  ${product.price.toFixed(2)}
                 </div>
               </div>
             </div>
@@ -261,25 +233,25 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             <div className="flex items-center gap-2">
               <div
                 className={`w-3 h-3 rounded-full ${
-                  productData.inStock
+                  product.inStock
                     ? "bg-emerald-500 animate-pulse"
                     : "bg-red-500"
                 }`}
               ></div>
               <span
                 className={`font-medium ${
-                  productData.inStock
+                  product.inStock
                     ? "text-emerald-600 dark:text-emerald-400"
                     : "text-red-600 dark:text-red-400"
                 }`}
               >
-                {productData.inStock ? "In Stock" : "Out of Stock"}
+                {product.inStock ? "In Stock" : "Out of Stock"}
               </span>
             </div>
 
             {/* Description */}
             <p className="text-muted-foreground leading-relaxed">
-              {productData.description}
+              {product.description}
             </p>
 
             {/* Quantity Selector */}
@@ -313,7 +285,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
               <button
-                disabled={!productData.inStock}
+                disabled={!product.inStock}
                 className="flex-1 flex items-center justify-center gap-2 bg-linear-to-r from-primary to-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <ShoppingCart className="w-5 h-5" />
@@ -347,50 +319,74 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             </div>
 
             {/* Specifications Section */}
-            {productData.specifications &&
-              productData.specifications.length > 0 && (
-                <div className="mt-8 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-foreground">
-                      Specifications
-                    </h2>
+            {product.specifications && product.specifications.length > 0 && (
+              <div className="mt-8 space-y-4 w-full">
+                {/* Tab Navigation */}
+                <div className="flex gap-0 border-b border-border overflow-x-auto">
+                  {[
+                    "Specification",
+                    "Description",
+                    "Questions (0)",
+                    "Reviews (0)",
+                  ].map((tab) => (
                     <button
-                      onClick={() => setShowAllSpecs(!showAllSpecs)}
-                      className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                      key={tab}
+                      onClick={() => setActiveSpecTab(tab)}
+                      className={`px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors ${
+                        activeSpecTab === tab
+                          ? "border-red-500 text-red-500"
+                          : "border-transparent text-muted-foreground hover:text-foreground"
+                      }`}
                     >
-                      <span className="text-sm font-medium">
-                        {showAllSpecs ? "Show Less" : "Show All"}
-                      </span>
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform duration-300 ${
-                          showAllSpecs ? "rotate-180" : ""
-                        }`}
-                      />
+                      {tab}
                     </button>
-                  </div>
-
-                  <div className="bg-card border border-border rounded-xl overflow-hidden">
-                    <div className="divide-y divide-border">
-                      {(showAllSpecs
-                        ? productData.specifications
-                        : productData.specifications.slice(0, 5)
-                      ).map((spec, index) => (
-                        <div
-                          key={index}
-                          className="grid grid-cols-2 gap-4 p-4 hover:bg-muted/50 transition-colors"
-                        >
-                          <span className="font-medium text-foreground">
-                            {spec.label}
-                          </span>
-                          <span className="text-muted-foreground">
-                            {spec.value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              )}
+
+                {/* Specifications Content */}
+                {activeSpecTab === "Specification" && (
+                  <div className="space-y-6">
+                    {specCategories.map((category) => (
+                      <div key={category}>
+                        {/* Category Header */}
+                        <h3 className="text-lg font-semibold text-foreground mb-4 pb-2 border-b border-border/50">
+                          {category}
+                        </h3>
+
+                        {/* Specs in Category */}
+                        <div className="space-y-0">
+                          {getSpecsByCategory(category).map((spec, index) => (
+                            <div
+                              key={index}
+                              className={`grid grid-cols-2 gap-4 p-4 hover:bg-muted/30 transition-colors ${
+                                index !==
+                                getSpecsByCategory(category).length - 1
+                                  ? "border-b border-border/30"
+                                  : ""
+                              }`}
+                            >
+                              <span className="font-medium text-foreground text-sm">
+                                {spec.label}
+                              </span>
+                              <span className="text-muted-foreground text-sm">
+                                {spec.value}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Other Tabs Placeholder */}
+                {activeSpecTab !== "Specification" && (
+                  <div className="py-8 text-center text-muted-foreground">
+                    {activeSpecTab} content coming soon
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

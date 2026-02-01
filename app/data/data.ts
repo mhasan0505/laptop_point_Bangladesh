@@ -400,7 +400,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
       storage: p.specs.storage,
       display: `${p.specs.display.size} ${p.specs.display.resolution}`,
       graphics: p.specs.graphics,
-      battery: "Up to 10 hours",
+      battery: "Up to 4 hours",
       weight: p.specs.weight,
     },
     features: p.features,
