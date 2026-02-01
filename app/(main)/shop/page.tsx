@@ -31,6 +31,13 @@ const ShopContent = () => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search");
 
+  const normalizeBrand = (value?: string) =>
+    value
+      ?.toString()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "")
+      .trim() || "";
+
   let products = laptopData.laptops || [];
 
   // Apply search filter
@@ -56,9 +63,17 @@ const ShopContent = () => {
 
   // Apply brand filter
   if (filters.brands.length > 0) {
-    products = products.filter(
-      (product) => product.brand && filters.brands.includes(product.brand),
+    const normalizedBrands = filters.brands.map((brand) =>
+      normalizeBrand(brand),
     );
+    products = products.filter((product) => {
+      const productBrand = normalizeBrand(product.brand);
+      if (productBrand) {
+        return normalizedBrands.includes(productBrand);
+      }
+      const productName = normalizeBrand(product.name);
+      return normalizedBrands.some((brand) => productName.includes(brand));
+    });
   }
 
   // Apply processor filter
@@ -115,22 +130,23 @@ const ShopContent = () => {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 relative">
-      {/* Mobile Filter Toggle */}
-      <div className="lg:hidden flex justify-end">
-        <Button
-          variant="outline"
-          onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
-          className="gap-2"
-        >
-          <SlidersHorizontal className="w-4 h-4" />
-          Filters
-        </Button>
-      </div>
+    <>
+      <div className="flex flex-col lg:flex-row gap-8 relative">
+        {/* Mobile Filter Toggle */}
+        <div className="lg:hidden flex justify-end">
+          <Button
+            variant="outline"
+            onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+            className="gap-2"
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            Filters
+          </Button>
+        </div>
 
-      {/* Sidebar (Desktop) / Mobile Drawer Overlay */}
-      <aside
-        className={`
+        {/* Sidebar (Desktop) / Mobile Drawer Overlay */}
+        <aside
+          className={`
             fixed inset-0 z-40 bg-black/50 lg:static lg:bg-transparent lg:z-auto transition-opacity
             ${
               isMobileFilterOpen
@@ -138,10 +154,10 @@ const ShopContent = () => {
                 : "opacity-0 invisible lg:opacity-100 lg:visible"
             }
         `}
-        onClick={() => setIsMobileFilterOpen(false)}
-      >
-        <div
-          className={`
+          onClick={() => setIsMobileFilterOpen(false)}
+        >
+          <div
+            className={`
                     bg-white w-[280px] h-full lg:h-auto lg:w-auto p-4 lg:p-0 overflow-y-auto lg:overflow-visible transition-transform duration-300
                     ${
                       isMobileFilterOpen
@@ -149,47 +165,50 @@ const ShopContent = () => {
                         : "-translate-x-full lg:translate-x-0"
                     }
                 `}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <FilterSidebar onFilterChange={setFilters} />
-        </div>
-      </aside>
-
-      {/* Product Grid */}
-      <main className="flex-1">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {searchQuery
-              ? `Search Results for "${searchQuery}"`
-              : "All Products"}
-          </h1>
-          <span className="text-sm text-gray-500">
-            {products.length} Products
-          </span>
-        </div>
-
-        {products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
-            {products.map((product) => (
-              <ProductsCard key={product.id} product={product} />
-            ))}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <FilterSidebar onFilterChange={setFilters} />
           </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-lg text-gray-500">
-              No products found matching your search.
-            </p>
-            <Button
-              variant="link"
-              onClick={() => (window.location.href = "/shop")}
-              className="mt-2 text-primary"
-            >
-              Clear Search
-            </Button>
+        </aside>
+
+        {/* Product Grid */}
+        <main className="flex-1">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {searchQuery
+                ? `Search Results for "${searchQuery}"`
+                : "All Products"}
+            </h1>
+            <span className="text-sm text-gray-500">
+              {products.length} Products
+            </span>
           </div>
-        )}
-      </main>
-    </div>
+
+          {products.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
+              {products.map((product) => (
+                <ProductsCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-lg text-gray-500">
+                No products found matching your search.
+              </p>
+              <Button
+                variant="link"
+                onClick={() => (window.location.href = "/shop")}
+                className="mt-2 text-primary"
+              >
+                Clear Search
+              </Button>
+            </div>
+          )}
+        </main>
+      </div>
+
+      <RecentlyViewed />
+    </>
   );
 };
 
@@ -208,9 +227,6 @@ export default function ShopPage() {
       >
         <ShopContent />
       </Suspense>
-
-      {/* Recently Viewed */}
-      <RecentlyViewed />
     </div>
   );
 }

@@ -28,7 +28,7 @@ const ComparisonBar = () => {
                 Compare Products
               </h3>
               <span className="text-sm text-gray-500">
-                {comparisonItems.length}/4 selected
+                {comparisonItems.length}/3 selected
               </span>
             </div>
 

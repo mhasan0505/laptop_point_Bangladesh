@@ -13,10 +13,10 @@ interface ComparisonContextType {
   canAddMore: () => boolean;
 }
 
-const MAX_COMPARISON_ITEMS = 4;
+const MAX_COMPARISON_ITEMS = 3;
 
 const ComparisonContext = createContext<ComparisonContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const ComparisonProvider = ({
@@ -55,7 +55,7 @@ export const ComparisonProvider = ({
       // Check max limit
       if (prev.length >= MAX_COMPARISON_ITEMS) {
         console.warn(
-          `Maximum ${MAX_COMPARISON_ITEMS} products can be compared`
+          `Maximum ${MAX_COMPARISON_ITEMS} products can be compared`,
         );
         return prev;
       }

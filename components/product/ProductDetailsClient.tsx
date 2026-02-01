@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ProductDetailsClientProps {
   product: Product;
@@ -44,6 +44,33 @@ export default function ProductDetailsClient({
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
+
+  // Track recently viewed products
+  useEffect(() => {
+    if (typeof window !== "undefined" && product) {
+      const saved = localStorage.getItem("recentlyViewed");
+      let recent: Product[] = [];
+
+      if (saved) {
+        try {
+          recent = JSON.parse(saved);
+        } catch (e) {
+          console.error("Failed to parse recently viewed items", e);
+        }
+      }
+
+      // Remove current product if already exists
+      recent = recent.filter((p) => p.id !== product.id);
+
+      // Add current product to the beginning
+      recent.unshift(product);
+
+      // Keep only the last 10 items
+      recent = recent.slice(0, 10);
+
+      localStorage.setItem("recentlyViewed", JSON.stringify(recent));
+    }
+  }, [product]);
 
   const handleAddToCart = () => {
     addToCart(

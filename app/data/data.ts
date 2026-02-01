@@ -101,10 +101,15 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
   const folder = getImageFolder(p.name || p.model);
   const description = p.description;
 
-  let mappedImages: string[] = p.images || [];
-  let mainImage = mappedImages[0] || "/placeholder.png";
+  // Check if product has valid image paths (not placeholder paths)
+  const hasValidImages =
+    p.images && p.images.length > 0 && p.images[0].startsWith("/products/");
 
-  if (folder) {
+  let mappedImages: string[] = hasValidImages ? p.images : [];
+  let mainImage = hasValidImages ? p.images[0] : "/placeholder.png";
+
+  // Only generate images if product doesn't have valid paths already
+  if (folder && !hasValidImages) {
     // Check if it's one of the new Laptop Point BD folders which use .jpg
     const isNewStructure = folder.includes("Laptop Point BD");
     const isHP = folder.includes("products/hp");

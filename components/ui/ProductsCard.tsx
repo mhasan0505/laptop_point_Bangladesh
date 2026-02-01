@@ -66,7 +66,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
       if (canAddMore()) {
         addToComparison(product);
       } else {
-        alert("You can compare up to 4 products at a time");
+        alert("You can compare up to 3 products at a time");
       }
     }
   };
