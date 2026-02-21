@@ -227,7 +227,7 @@ const Header = () => {
                 className={`transition-all duration-300 ease-in-out ${
                   isSearchExpanded
                     ? "fixed inset-0 bg-white/95 backdrop-blur-sm z-50 p-4 flex items-start justify-center"
-                    : "relative w-10"
+                    : "relative w-10 lg:w-auto"
                 }`}
               >
                 {isSearchExpanded ? (
@@ -345,20 +345,41 @@ const Header = () => {
                     </motion.div>
                   </motion.div>
                 ) : (
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full h-10 w-10 hover:bg-gray-100 transition-colors"
-                      onClick={() => setIsSearchExpanded(true)}
-                      aria-label="Open search"
-                    >
-                      <Search className="h-[18px] w-[18px] text-gray-700" />
-                    </Button>
-                  </motion.div>
+                  <>
+                    {/* Desktop: Mini Search Box */}
+                    <div className="hidden lg:block">
+                      <motion.div
+                        whileHover={{
+                          scale: 1.01,
+                        }}
+                        whileTap={{ scale: 0.99 }}
+                        onClick={() => setIsSearchExpanded(true)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 border border-gray-300 rounded-full cursor-pointer transition-all bg-white shadow-sm hover:shadow-md hover:border-primary/50 min-w-[200px]"
+                      >
+                        <Search className="h-4 w-4 text-gray-400 shrink-0" />
+                        <span className="text-sm text-gray-500 whitespace-nowrap">
+                          Search products...
+                        </span>
+                      </motion.div>
+                    </div>
+                    {/* Mobile: Icon Only */}
+                    <div className="lg:hidden">
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="rounded-full h-10 w-10 hover:bg-gray-100 transition-colors"
+                          onClick={() => setIsSearchExpanded(true)}
+                          aria-label="Open search"
+                        >
+                          <Search className="h-5 w-5 text-gray-700" />
+                        </Button>
+                      </motion.div>
+                    </div>
+                  </>
                 )}
               </div>
 
