@@ -1,13 +1,12 @@
 "use client";
 import MobileMenu from "@/components/application/MobileMenu";
 
-import { laptopData } from "@/app/data/data";
 import { navigationLinks } from "@/app/data/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { Product } from "@/types/product";
+import type { SearchItem } from "@/lib/search-index";
 import { motion } from "framer-motion";
 import {
   ChevronDown,
@@ -28,7 +27,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import MegaMenu from "../navigation/MegaMenu";
 
@@ -43,19 +42,31 @@ const Header = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
+  const [searchIndex, setSearchIndex] = useState<SearchItem[] | null>(null);
+
+  // Lazy load search data only when search is opened
+  const loadSearchIndex = useCallback(async () => {
+    if (searchIndex) return; // Already loaded
+
+    try {
+      const { getSearchIndex } = await import("@/lib/search-index");
+      const index = await getSearchIndex();
+      setSearchIndex(index);
+    } catch (error) {
+      console.error("Failed to load search index:", error);
+    }
+  }, [searchIndex]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (query.trim()) {
-      const filtered = laptopData.laptops
+    if (query.trim() && searchIndex) {
+      const filtered = searchIndex
         .filter(
           (product) =>
             product.name.toLowerCase().includes(query.toLowerCase()) ||
-            (product.brand &&
-              product.brand.toLowerCase().includes(query.toLowerCase())) ||
-            (product.category &&
-              product.category.toLowerCase().includes(query.toLowerCase())),
+            product.brand.toLowerCase().includes(query.toLowerCase()) ||
+            product.category.toLowerCase().includes(query.toLowerCase()),
         )
         .slice(0, 5);
       setSearchResults(filtered);
@@ -76,7 +87,7 @@ const Header = () => {
 
   const navLinks = navigationLinks;
 
-  // Handle click outside search
+  // Handle click outside search and load search index when opened
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -97,13 +108,14 @@ const Header = () => {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("keydown", handleEscKey);
       searchInputRef.current?.focus();
+      loadSearchIndex(); // Load search data only when search is opened
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscKey);
     };
-  }, [isSearchExpanded]);
+  }, [isSearchExpanded, searchIndex, loadSearchIndex]);
 
   // Timer ref for closing delay
   const closeTimerRef = useRef<NodeJS.Timeout | null>(null);

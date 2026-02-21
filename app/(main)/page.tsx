@@ -1,10 +1,19 @@
 import BentoGridSection from "@/components/application/BentoGridSection";
-import BrandProductSection from "@/components/application/BrandProductSection";
 import HeroSection from "@/components/application/HeroSection";
 import NewProductsSection from "@/components/application/NewProductsSection";
 import TestimonialsSection from "@/components/application/TestimonialsSection";
 import { eCommerceSchema } from "@/lib/seo-schemas";
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+// Lazy load brand sections that are below the fold for better initial load
+const BrandProductSection = dynamic(
+  () => import("@/components/application/BrandProductSection"),
+  {
+    loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+
+  },
+);
 
 export const metadata: Metadata = {
   title: "Laptop Point Bangladesh | Premium Used Laptops",

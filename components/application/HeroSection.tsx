@@ -49,7 +49,10 @@ const HeroSection = () => {
             src={slide.image}
             alt={slide.alt}
             fill
-            priority={index === 0}
+            priority={index === 0} // Only first image has priority
+            loading={index === 0 ? "eager" : "lazy"} // Lazy load non-visible images
+            quality={85} // Reduce quality slightly for better performance
+            sizes="100vw"
             className="object-contain"
           />
         </div>

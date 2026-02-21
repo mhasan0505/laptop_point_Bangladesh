@@ -211,7 +211,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
             <div className="flex items-center gap-1 text-amber-600 font-bold">
               <Star className="w-3.5 h-3.5 fill-amber-600" />
-              <span>{product.rating?.toFixed(1)}</span>
+              <span suppressHydrationWarning>{product.rating?.toFixed(1)}</span>
             </div>
           </div>
         </div>
