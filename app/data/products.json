@@ -1132,5 +1132,121 @@
       "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/port.png",
       "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/port2.png"
     ]
+  },
+  {
+    "id": 25,
+    "sku": "LEN-X1C-G7-I5-025",
+    "name": "Lenovo ThinkPad X1 Carbon Gen 7 i5 8th Gen 16/256",
+    "brand": "Lenovo",
+    "model": "ThinkPad X1 Carbon Gen 7",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 31700,
+      "market_price": 31700,
+      "discount_percentage": 0,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
+    },
+    "specs": {
+      "processor": "Intel Core i5-8365U (8th Gen)",
+      "ram": "16GB LPDDR3",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": [
+        "2x Thunderbolt 3",
+        "2x USB-A 3.1",
+        "HDMI",
+        "Headphone/Mic Combo"
+      ],
+      "weight": "1.09 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Ultra-light ThinkPad with 16GB RAM and 8th Gen Intel performance.",
+      "full": "**Who is this model best for?**\nThis X1 Carbon Gen 7 is ideal for professionals who want premium build quality, portability, and strong day-to-day performance with 16GB RAM for multitasking.\n\n**What are the key strengths?**\nIt combines the classic ThinkPad keyboard, durable carbon-fiber chassis, and reliable 8th Gen Core i5 efficiency in a very lightweight form factor.\n\n**Why choose this configuration?**\nWith 16GB RAM and 256GB SSD, it offers a balanced setup for office work, browsing, coding, and remote productivity tasks."
+    },
+    "features": [
+      "16GB RAM",
+      "Ultra-light Chassis",
+      "ThinkPad Keyboard",
+      "Business Grade Build"
+    ],
+    "images": [
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/main.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/front.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/back.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/keyborad.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/close.jpg"
+    ]
+  },
+  {
+    "id": 26,
+    "sku": "LEN-X1C-G6-I5-026",
+    "name": "Lenovo ThinkPad X1 Carbon Gen 6 i5 8th Gen 8/256",
+    "brand": "Lenovo",
+    "model": "ThinkPad X1 Carbon Gen 6",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 29500,
+      "market_price": 29500,
+      "discount_percentage": 0,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
+    },
+    "specs": {
+      "processor": "Intel Core i5-8250U (8th Gen)",
+      "ram": "8GB LPDDR3",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": [
+        "2x Thunderbolt 3",
+        "2x USB-A 3.1",
+        "HDMI",
+        "Headphone/Mic Combo"
+      ],
+      "weight": "1.13 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Portable flagship ThinkPad with 8th Gen i5 and 8GB RAM.",
+      "full": "**What makes the Gen 6 X1 Carbon popular?**\nThe Gen 6 offers premium ThinkPad quality in a compact and lightweight body while still delivering dependable 8th Gen performance for business tasks.\n\n**How does this 8/256 setup perform?**\nIt is a practical configuration for office software, web-based work, online classes, and everyday multitasking with fast SSD responsiveness.\n\n**Who should buy this?**\nUsers who want an affordable premium ultrabook with the trusted ThinkPad typing experience and durability will find this model a strong choice."
+    },
+    "features": [
+      "8th Gen Intel",
+      "Lightweight Design",
+      "Fast NVMe SSD",
+      "Durable ThinkPad Build"
+    ],
+    "images": [
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-6-i5-8TH-Gen-8-256/main.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-6-i5-8TH-Gen-8-256/front.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-6-i5-8TH-Gen-8-256/back.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-6-i5-8TH-Gen-8-256/keyborad.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-6-i5-8TH-Gen-8-256/close.jpg"
+    ]
   }
 ]
