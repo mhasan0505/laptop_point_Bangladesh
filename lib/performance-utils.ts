@@ -10,7 +10,7 @@ export const preloadImage = (src: string) => {
   link.rel = "preload";
   link.as = "image";
   link.href = src;
-  (link as any).imageSrcset = src;
+  (link as HTMLLinkElement & { imageSrcset?: string }).imageSrcset = src;
   document.head.appendChild(link);
 };
 
@@ -62,7 +62,7 @@ export const observeElement = (
 /**
  * Debounce function for resize/scroll events
  */
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: unknown[]) => void>(
   func: T,
   wait: number,
 ): ((...args: Parameters<T>) => void) => {
@@ -76,7 +76,7 @@ export const debounce = <T extends (...args: any[]) => any>(
 /**
  * Throttle function for high-frequency events
  */
-export const throttle = <T extends (...args: any[]) => any>(
+export const throttle = <T extends (...args: unknown[]) => void>(
   func: T,
   limit: number,
 ): ((...args: Parameters<T>) => void) => {

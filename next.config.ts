@@ -127,6 +127,24 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        source: "/Logo.webp",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, max-age=0",
+          },
+        ],
+      },
+      {
+        source: "/Logo-admin.webp",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, max-age=0",
+          },
+        ],
+      },
+      {
         source: "/:path*",
         headers: [
           {

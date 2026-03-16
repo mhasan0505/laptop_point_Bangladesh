@@ -47,7 +47,7 @@ export default function ContactPage() {
         message: "Message sent successfully! We will get back to you shortly.",
       });
       reset();
-    } catch (error) {
+    } catch {
       setSubmitStatus({
         success: false,
         message: "Something went wrong. Please try again later.",
@@ -67,8 +67,8 @@ export default function ContactPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="relative bg-zinc-900 text-white py-20 lg:py-28 overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-primary/20 to-transparent"></div>
 
         <div className="container mx-auto px-4 relative z-10 text-center">
           <motion.h1
@@ -174,7 +174,7 @@ export default function ContactPage() {
             </div>
 
             {/* Map Card */}
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 h-[300px] relative">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 h-75 relative">
               <MapWithNoSSR />
             </div>
           </motion.div>
@@ -217,7 +217,6 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label
-
                       htmlFor="name"
                       className="text-sm font-medium text-gray-700"
                     >

@@ -1,76 +1,45 @@
 "use client";
+import { StockUpdateDialog } from "@/components/admin/StockUpdateDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Edit, Laptop, Plus, Trash2 } from "lucide-react";
+import { AdminProduct } from "@/lib/admin-data";
+import { deleteProduct, fetchProducts } from "@/lib/sanity-admin";
+import { Edit, Laptop, Package, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: string;
-  stock: number;
-  status: string;
-  sku: string;
-}
+import { useCallback, useEffect, useState } from "react";
 
 const AdminProducts = () => {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      name: "HP EliteBook 840 G7",
-      category: "Business Laptops",
-      price: "৳42,500",
-      stock: 25,
-      status: "Active",
-      sku: "HP-840-G7",
-    },
-    {
-      id: 2,
-      name: "Dell XPS 13 9310",
-      category: "Premium Laptops",
-      price: "৳95,000",
-      stock: 15,
-      status: "Active",
-      sku: "DELL-XPS-9310",
-    },
-    {
-      id: 3,
-      name: "Lenovo ThinkPad X1 Carbon",
-      category: "Business Laptops",
-      price: "৳85,000",
-      stock: 3,
-      status: "Low Stock",
-      sku: "LEN-X1-CAR",
-    },
-    {
-      id: 4,
-      name: "MacBook Air M2",
-      category: "Apple",
-      price: "৳125,000",
-      stock: 12,
-      status: "Active",
-      sku: "APP-MBA-M2",
-    },
-    {
-      id: 5,
-      name: "Asus ROG Zephyrus G14",
-      category: "Gaming Laptops",
-      price: "৳145,000",
-      stock: 0,
-      status: "Out of Stock",
-      sku: "ASU-ROG-G14",
-    },
-  ]);
-
+  const [products, setProducts] = useState<AdminProduct[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
+  const [stockDialogOpen, setStockDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<{
+    id: string;
+    name: string;
+    currentStock: number;
+  } | null>(null);
+
+  const loadProducts = useCallback(async () => {
+    setIsLoading(true);
+    const data = await fetchProducts();
+    setProducts(data);
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      void loadProducts();
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [loadProducts]);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchTerm.toLowerCase());
+      product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.brand.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
       filterCategory === "All" || product.category === filterCategory;
     return matchesSearch && matchesCategory;
@@ -91,11 +60,37 @@ const AdminProducts = () => {
     }
   };
 
-  const handleDeleteProduct = (productId: number) => {
+  const handleDeleteProduct = async (productId: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      setProducts(products.filter((p) => p.id !== productId));
+      const success = await deleteProduct(productId);
+      if (success) {
+        setProducts(products.filter((p) => p.id !== productId));
+      } else {
+        alert("Failed to delete product. Please try again.");
+      }
     }
   };
+
+  const handleOpenStockDialog = (product: AdminProduct) => {
+    setSelectedProduct({
+      id: product.id,
+      name: product.name,
+      currentStock: product.stock,
+    });
+    setStockDialogOpen(true);
+  };
+
+  const handleStockUpdateSuccess = () => {
+    loadProducts(); // Reload products after stock update
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -209,13 +204,13 @@ const AdminProducts = () => {
                       {product.category}
                     </td>
                     <td className="py-4 px-4 font-semibold text-black">
-                      {product.price}
+                      ৳{product.price.toLocaleString()}
                     </td>
                     <td className="py-4 px-4 text-gray-600">{product.stock}</td>
                     <td className="py-4 px-4">
                       <span
                         className={`inline-block px-2 py-1 text-xs rounded-full ${getStatusColor(
-                          product.status
+                          product.status,
                         )}`}
                       >
                         {product.status}
@@ -223,6 +218,15 @@ const AdminProducts = () => {
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => handleOpenStockDialog(product)}
+                          title="Update Stock"
+                        >
+                          <Package className="w-4 h-4" />
+                        </Button>
                         <Link href={`/admin/products/edit/${product.id}`}>
                           <Button
                             variant="ghost"
@@ -249,6 +253,13 @@ const AdminProducts = () => {
           </div>
         </CardContent>
       </Card>
+
+      <StockUpdateDialog
+        isOpen={stockDialogOpen}
+        onClose={() => setStockDialogOpen(false)}
+        product={selectedProduct}
+        onSuccess={handleStockUpdateSuccess}
+      />
     </>
   );
 };

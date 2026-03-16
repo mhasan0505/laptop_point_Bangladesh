@@ -2,6 +2,22 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
+  // Check if the request is for an admin route (but not login)
+  if (request.nextUrl.pathname.startsWith("/admin")) {
+    const isLoginPage = request.nextUrl.pathname === "/admin/login";
+
+    if (!isLoginPage) {
+      // Check for authentication cookie/header
+      const isAuthenticated =
+        request.cookies.get("admin_authenticated")?.value === "true";
+
+      if (!isAuthenticated) {
+        // Redirect to login page
+        return NextResponse.redirect(new URL("/admin/login", request.url));
+      }
+    }
+  }
+
   const response = NextResponse.next();
 
   // Enable compression headers

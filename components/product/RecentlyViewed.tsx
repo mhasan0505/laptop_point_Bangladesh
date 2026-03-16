@@ -11,7 +11,7 @@ import ProductsCard from "../ui/ProductsCard";
 
 const RecentlyViewed = () => {
   // Use lazy initial state to read from localStorage only once during initialization
-  const [recentProducts, setRecentProducts] = useState<Product[]>(() => {
+  const [recentProducts] = useState<Product[]>(() => {
     if (typeof window === "undefined") return [];
 
     const saved = localStorage.getItem("recentlyViewed");

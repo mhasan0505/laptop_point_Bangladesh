@@ -1,4 +1,3 @@
-import WhatsAppButton from "@/components/application/WhatsAppButton";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import { localBusinessSchema, organizationSchema } from "@/lib/seo-schemas";
 import { Analytics } from "@vercel/analytics/next";
@@ -152,7 +151,6 @@ export default function RootLayout({
         )}
         <Providers>
           {children}
-          <WhatsAppButton />
         </Providers>
         <SpeedInsights />
         <Analytics />

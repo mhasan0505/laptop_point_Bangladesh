@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
-
 export default function WhatsAppButton() {
   const phoneNumber = "+8801612182408"; // Placeholder from footer
   const message =

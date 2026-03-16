@@ -3,13 +3,73 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { AdminAuthProvider, useAdminAuth } from "@/contexts/AdminAuthContext";
 import { Menu } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+function AdminBrandLink({
+  onClick,
+  className,
+}: {
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <Link
+      href="/admin"
+      className={className ?? "flex items-center"}
+      onClick={onClick}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/Logo.webp"
+        alt="Laptop Point Admin"
+        width={200}
+        height={48}
+        className="object-contain w-auto h-12"
+      />
+    </Link>
+  );
+}
+
+function AdminShell({ children }: { children: ReactNode }) {
+  const { isAuthenticated, isLoading, logout } = useAdminAuth();
+  const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+
+  const isLoginPage = pathname === "/admin/login";
+
+  // Login page renders without the shell
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
+  // Still checking auth state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
+      </div>
+    );
+  }
+
+  // Not authenticated — redirect to login
+  if (!isAuthenticated) {
+    router.replace("/admin/login");
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
+      </div>
+    );
+  }
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/admin/login");
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
@@ -28,23 +88,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 </SheetTrigger>
                 <SheetContent side="left" className="p-0 w-72">
                   <div className="p-6 border-b border-gray-100">
-                    <Link
-                      href="/admin"
-                      className="flex items-center space-x-2"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <div className="relative w-8 h-8">
-                        <Image
-                          src="/Logo.webp"
-                          alt="Laptop Point Admin"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                      <span className="text-lg font-bold text-black">
-                        Laptop Point
-                      </span>
-                    </Link>
+                    <AdminBrandLink onClick={() => setIsOpen(false)} />
                   </div>
                   <div className="p-4">
                     <AdminSidebar onNavigate={() => setIsOpen(false)} />
@@ -52,23 +96,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 </SheetContent>
               </Sheet>
 
-              {/* Desktop Logo */}
-              <Link href="/admin" className="flex items-center space-x-3">
-                <div className="relative w-8 h-8 hidden md:block">
-                  <Image
-                    src="/Logo.webp"
-                    alt="Laptop Point Admin"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                <span className="text-lg md:text-xl font-bold text-black hidden md:block">
-                  Laptop Point Admin
-                </span>
-                <span className="text-lg font-bold text-black md:hidden">
-                  Admin
-                </span>
-              </Link>
+              {/* Mobile logo shown in header; desktop logo stays in sidebar */}
+              <AdminBrandLink className="flex items-center md:hidden" />
             </div>
 
             <div className="flex items-center space-x-2 md:space-x-4">
@@ -80,7 +109,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                   Site
                 </Button>
               </Link>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleLogout}>
                 Logout
               </Button>
             </div>
@@ -92,16 +121,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         {/* Desktop Sidebar */}
         <aside className="w-64 bg-white shadow-sm hidden md:block border-r min-h-[calc(100vh-64px)]">
           <div className="p-4 sticky top-16">
-            <div className="flex items-center space-x-2 mb-6 px-3">
-              <div className="relative w-8 h-8">
-                <Image
-                  src="/Logo.webp"
-                  alt="Laptop Point Admin"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-              <span className="text-lg font-bold text-black">Laptop Point</span>
+            <div className="flex items-center mb-6 px-3">
+              <AdminBrandLink />
             </div>
             <AdminSidebar />
           </div>
@@ -113,5 +134,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function AdminLayout({ children }: { children: ReactNode }) {
+  return (
+    <AdminAuthProvider>
+      <AdminShell>{children}</AdminShell>
+    </AdminAuthProvider>
   );
 }

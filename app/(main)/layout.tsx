@@ -1,3 +1,4 @@
+import WhatsAppButton from "@/components/application/WhatsAppButton";
 import Breadcrumb from "@/components/application/Breadcrumb";
 import CookieConsent from "@/components/application/CookieConsent";
 import Footer from "@/components/application/Footer";
@@ -26,6 +27,7 @@ export default function MainLayout({
           <CookieConsent />
           <NewsletterPopup />
           <StickyMobileBar />
+          <WhatsAppButton />
         </ComparisonProvider>
       </WishlistProvider>
     </CartProvider>

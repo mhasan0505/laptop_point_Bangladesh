@@ -1,6 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { AdminStats, OrderData } from "@/lib/admin-data";
+import {
+  fetchOrders,
+  fetchProducts,
+  getAdminStatsFromSanity,
+} from "@/lib/sanity-admin";
 import {
   CircleDollarSign,
   Laptop,
@@ -9,55 +16,83 @@ import {
   Truck,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const AdminDashboard = () => {
-  const [stats] = useState({
-    totalProducts: 156,
-    totalOrders: 89,
-    pendingOrders: 12,
-    totalRevenue: "৳245,670",
-    lowStockItems: 8,
-    deliveredToday: 15,
+  const { isAuthenticated, isLoading } = useAdminAuth();
+  const router = useRouter();
+  const [stats, setStats] = useState<AdminStats>({
+    totalProducts: 0,
+    totalOrders: 0,
+    pendingOrders: 0,
+    totalRevenue: "৳0",
+    lowStockItems: 0,
+    deliveredToday: 0,
   });
+  const [recentOrders, setRecentOrders] = useState<OrderData[]>([]);
+  const [lowStockProducts, setLowStockProducts] = useState<
+    Array<{
+      name: string;
+      stock: number;
+      category: string;
+    }>
+  >([]);
+  const [dataLoading, setDataLoading] = useState(true);
 
-  const recentOrders = [
-    {
-      id: "#ORD001",
-      customer: "Ahmed Hassan",
-      amount: "৳82,450",
-      status: "Pending",
-      date: "2025-01-20",
-    },
-    {
-      id: "#ORD002",
-      customer: "Rafiq Islam",
-      amount: "৳45,890",
-      status: "Shipped",
-      date: "2025-01-20",
-    },
-    {
-      id: "#ORD003",
-      customer: "Karim Rahman",
-      amount: "৳153,200",
-      status: "Delivered",
-      date: "2025-01-19",
-    },
-    {
-      id: "#ORD004",
-      customer: "Nasir Ahmed",
-      amount: "৳1,650",
-      status: "Processing",
-      date: "2025-01-19",
-    },
-  ];
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        const [statsData, ordersData, productsData] = await Promise.all([
+          getAdminStatsFromSanity(),
+          fetchOrders(),
+          fetchProducts(),
+        ]);
 
-  const lowStockProducts = [
-    { name: "HP EliteBook 840 G7", stock: 1, category: "Business Laptops" },
-    { name: "Dell XPS 13 9310", stock: 2, category: "Premium Laptops" },
-    { name: "MacBook Air M1", stock: 3, category: "Apple" },
-    { name: "Lenovo ThinkPad X1", stock: 1, category: "Business Laptops" },
-  ];
+        setStats(statsData);
+        setRecentOrders(ordersData.slice(0, 4));
+        setLowStockProducts(
+          productsData
+            .filter((p) => p.stock < 10 && p.stock > 0)
+            .slice(0, 4)
+            .map((p) => ({
+              name: p.name,
+              stock: p.stock,
+              category: p.category,
+            })),
+        );
+      } finally {
+        setDataLoading(false);
+      }
+    };
+
+    if (isAuthenticated) {
+      loadDashboardData();
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace("/admin/login");
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  // Show loading state while checking authentication
+  if (isLoading || !isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
+      </div>
+    );
+  }
+
+  if (dataLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
+      </div>
+    );
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -76,23 +111,40 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-black mb-2">
-          Dashboard Overview
-        </h1>
-        <p className="text-gray-600">
-          Welcome back! Here&apos;s what&apos;s happening with your store today.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-black mb-2">
+            Dashboard Overview
+          </h1>
+          <p className="text-gray-600">
+            Welcome back! Here&apos;s what&apos;s happening with your store
+            today.
+          </p>
+        </div>
+        <div className="flex items-center space-x-3">
+          <Link href="/admin/products/add">
+            <Button className="bg-black hover:bg-gray-800 text-white" size="sm">
+              Add New Product
+            </Button>
+          </Link>
+          <Link href="/admin/orders">
+            <Button variant="outline" size="sm">
+              View All Orders
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <Card className="bg-blue-100 shadow-sm border-0">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <Card className="bg-white shadow-sm border border-gray-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               Total Products
             </CardTitle>
-            <Laptop className="w-5 h-5 text-blue-600" />
+            <div className="p-2 bg-blue-50 rounded-lg">
+              <Laptop className="w-5 h-5 text-blue-600" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-black">
@@ -102,12 +154,14 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-orange-100 shadow-sm border-0">
+        <Card className="bg-white shadow-sm border border-gray-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               Total Orders
             </CardTitle>
-            <Truck className="w-5 h-5 text-orange-600" />
+            <div className="p-2 bg-orange-50 rounded-lg">
+              <Truck className="w-5 h-5 text-orange-600" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-black">
@@ -119,12 +173,14 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-green-100 shadow-sm border-0">
+        <Card className="bg-white shadow-sm border border-gray-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               Revenue
             </CardTitle>
-            <CircleDollarSign className="w-5 h-5 text-green-600" />
+            <div className="p-2 bg-green-50 rounded-lg">
+              <CircleDollarSign className="w-5 h-5 text-green-600" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-black">
@@ -134,12 +190,14 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-red-100 shadow-sm border-0">
+        <Card className="bg-white shadow-sm border border-gray-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               Low Stock Alert
             </CardTitle>
-            <Siren className="w-5 h-5 text-red-600" />
+            <div className="p-2 bg-red-50 rounded-lg">
+              <Siren className="w-5 h-5 text-red-600" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
@@ -149,12 +207,14 @@ const AdminDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-violet-100 shadow-sm border-0">
+        <Card className="bg-white shadow-sm border border-gray-100">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">
               Delivered Today
             </CardTitle>
-            <PackageOpen className="w-5 h-5 text-violet-600" />
+            <div className="p-2 bg-violet-50 rounded-lg">
+              <PackageOpen className="w-5 h-5 text-violet-600" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-black">
@@ -165,45 +225,22 @@ const AdminDashboard = () => {
             </p>
           </CardContent>
         </Card>
-
-        <Card className="bg-gray-100 shadow-sm border-0">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              Quick Actions
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Link href="/admin/products/add">
-              <Button
-                className="w-full bg-black hover:bg-gray-800 text-white"
-                size="sm"
-              >
-                Add New Product
-              </Button>
-            </Link>
-            <Link href="/admin/orders">
-              <Button variant="outline" className="w-full" size="sm">
-                View All Orders
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
         {/* Recent Orders */}
-        <Card>
+        <Card className="flex flex-col h-full shadow-sm border border-gray-100">
           <CardHeader>
             <CardTitle className="text-lg font-semibold text-black">
               Recent Orders
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col flex-1">
             <div className="space-y-4">
               {recentOrders.map((order, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-gray-200 transition-colors"
                 >
                   <div>
                     <p className="font-medium text-black">{order.id}</p>
@@ -213,8 +250,8 @@ const AdminDashboard = () => {
                   <div className="text-right">
                     <p className="font-semibold text-black">{order.amount}</p>
                     <span
-                      className={`inline-block px-2 py-1 text-xs rounded-full ${getStatusColor(
-                        order.status
+                      className={`inline-block px-2 py-1 mt-1 text-xs rounded-full ${getStatusColor(
+                        order.status,
                       )}`}
                     >
                       {order.status}
@@ -223,7 +260,7 @@ const AdminDashboard = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-4">
+            <div className="mt-auto pt-6">
               <Link href="/admin/orders">
                 <Button variant="outline" className="w-full">
                   View All Orders
@@ -234,30 +271,37 @@ const AdminDashboard = () => {
         </Card>
 
         {/* Low Stock Alert */}
-        <Card>
-          <CardHeader>
+        <Card className="flex flex-col h-full shadow-sm border border-gray-100">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle className="text-lg font-semibold text-black">
               Low Stock Alert
             </CardTitle>
+            <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+              Top 4
+            </span>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col flex-1">
             <div className="space-y-4">
               {lowStockProducts.map((product, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100"
+                  className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-red-100 transition-colors group"
                 >
                   <div>
-                    <p className="font-medium text-black">{product.name}</p>
+                    <p className="font-medium text-black group-hover:text-red-700 transition-colors">
+                      {product.name}
+                    </p>
                     <p className="text-sm text-gray-600">{product.category}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-red-600">
-                      {product.stock} left
+                    <p className="font-semibold text-red-600 text-sm mb-2">
+                      {product.stock} {product.stock === 1 ? "unit" : "units"}{" "}
+                      left
                     </p>
                     <Button
                       size="sm"
-                      className="mt-1 bg-red-600 hover:bg-red-700 text-white"
+                      variant="outline"
+                      className="h-7 text-xs border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
                     >
                       Restock
                     </Button>
@@ -265,7 +309,7 @@ const AdminDashboard = () => {
                 </div>
               ))}
             </div>
-            <div className="mt-4">
+            <div className="mt-auto pt-6">
               <Link href="/admin/inventory">
                 <Button variant="outline" className="w-full">
                   Manage Inventory
