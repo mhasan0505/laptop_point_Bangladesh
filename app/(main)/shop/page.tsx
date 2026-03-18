@@ -192,7 +192,7 @@ const ShopContent = () => {
           {products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
               {products.map((product) => (
-                <ProductsCard key={product.id} product={product} />
+                <ProductsCard key={product.sku || product.id} product={product} />
               ))}
             </div>
           ) : (

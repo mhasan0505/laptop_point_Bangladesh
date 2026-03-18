@@ -9,6 +9,8 @@ import { Product } from "@/types/product";
 import {
   ArrowLeft,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Heart,
   Minus,
   Plus,
@@ -18,10 +20,11 @@ import {
   Star,
   StarHalf,
   Truck,
+  X,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface ProductDetailsClientProps {
   product: Product;
@@ -39,8 +42,74 @@ export default function ProductDetailsClient({
     useComparison();
 
   const [mainImage, setMainImage] = useState(product?.image);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
+
+  const galleryImages = useMemo(
+    () =>
+      product.images && product.images.length > 0
+        ? product.images
+        : [product.image],
+    [product.images, product.image],
+  );
+
+  const getImageSrc = (img: Product["image"]) =>
+    typeof img === "string" ? img : img.src;
+
+  const currentImageSrc = getImageSrc(mainImage || product.image);
+  const currentImageIndex = Math.max(
+    0,
+    galleryImages.findIndex((img) => getImageSrc(img) === currentImageSrc),
+  );
+
+  useEffect(() => {
+    const resetTimer = window.setTimeout(() => {
+      setMainImage(product?.image);
+    }, 0);
+
+    return () => window.clearTimeout(resetTimer);
+  }, [product]);
+
+  useEffect(() => {
+    if (!isViewerOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsViewerOpen(false);
+      }
+      if (event.key === "ArrowRight" && galleryImages.length > 1) {
+        const nextIndex = (currentImageIndex + 1) % galleryImages.length;
+        setMainImage(galleryImages[nextIndex]);
+      }
+      if (event.key === "ArrowLeft" && galleryImages.length > 1) {
+        const prevIndex =
+          (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+        setMainImage(galleryImages[prevIndex]);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isViewerOpen, currentImageIndex, galleryImages]);
+
+  const goToNextImage = () => {
+    if (galleryImages.length < 2) return;
+    const nextIndex = (currentImageIndex + 1) % galleryImages.length;
+    setMainImage(galleryImages[nextIndex]);
+  };
+
+  const goToPrevImage = () => {
+    if (galleryImages.length < 2) return;
+    const prevIndex =
+      (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+    setMainImage(galleryImages[prevIndex]);
+  };
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
@@ -142,7 +211,19 @@ export default function ProductDetailsClient({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* Left Column: Images */}
             <div className="p-8 lg:p-12 bg-gray-50 dark:bg-gray-800/50 flex flex-col items-center">
-              <div className="relative w-full aspect-square max-w-[500px] bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm mb-6 flex items-center justify-center">
+              <div
+                className="relative w-full aspect-square max-w-125 bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm mb-6 flex items-center justify-center cursor-zoom-in"
+                role="button"
+                tabIndex={0}
+                onClick={() => setIsViewerOpen(true)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    setIsViewerOpen(true);
+                  }
+                }}
+                aria-label="Open full image view"
+              >
                 {/* Floating Badges */}
                 <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
                   {discountPercentage > 0 && (
@@ -169,30 +250,67 @@ export default function ProductDetailsClient({
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                 />
+
+                <span className="absolute bottom-4 right-4 bg-black/65 text-white text-[11px] font-medium px-2.5 py-1 rounded-full">
+                  Click to zoom
+                </span>
               </div>
 
               {/* Thumbnails */}
               {product.images && product.images.length > 0 && (
-                <div className="flex gap-4 overflow-x-auto pb-4 w-full justify-center">
-                  {product.images.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setMainImage(img)}
-                      className={`relative w-20 h-20 rounded-xl bg-white p-2 border-2 transition-all shrink-0 ${
-                        (mainImage || product.image) === img
-                          ? "border-primary shadow-md scale-105"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <Image
-                        src={img}
-                        alt={`View ${idx + 1}`}
-                        fill
-                        className="object-contain"
-                        sizes="(max-width: 768px) 20vw, 10vw"
-                      />
-                    </button>
-                  ))}
+                <div className="w-full max-w-125">
+                  <div className="mb-3 flex items-center justify-between px-1">
+                    <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-gray-500 dark:text-gray-400">
+                      Gallery
+                    </p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">
+                      {product.images.length} photos
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-gray-200/70 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-sm p-3">
+                    <div className="flex gap-3 overflow-x-auto pb-1 w-full [scrollbar-width:thin] [scrollbar-color:#cbd5e1_transparent]">
+                      {galleryImages.map((img, idx) => {
+                        const isActive = (mainImage || product.image) === img;
+
+                        return (
+                          <button
+                            key={`${String(img)}-${idx}`}
+                            onClick={() => setMainImage(img)}
+                            aria-label={`Show image ${idx + 1}`}
+                            className={`group relative w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 border transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900 ${
+                              isActive
+                                ? "border-primary shadow-lg shadow-primary/15"
+                                : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 hover:-translate-y-0.5"
+                            }`}
+                          >
+                            <div className="absolute inset-0 bg-white dark:bg-gray-800" />
+                            <Image
+                              src={img}
+                              alt={`${product.name} view ${idx + 1}`}
+                              fill
+                              className="object-contain p-1.5 transition-transform duration-300 group-hover:scale-105"
+                              sizes="(max-width: 768px) 22vw, 92px"
+                            />
+
+                            <span
+                              className={`absolute left-2 top-2 text-[10px] font-semibold px-1.5 py-0.5 rounded-full transition-colors ${
+                                isActive
+                                  ? "bg-primary text-white"
+                                  : "bg-black/45 text-white"
+                              }`}
+                            >
+                              {idx + 1}
+                            </span>
+
+                            {isActive && (
+                              <span className="absolute inset-x-2 bottom-1 h-0.5 rounded-full bg-primary" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -291,7 +409,7 @@ export default function ProductDetailsClient({
 
               {/* Actions */}
               <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-                <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full p-1.5 w-full sm:w-[140px] justify-between">
+                <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full p-1.5 w-full sm:w-35 justify-between">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-700 shadow-sm hover:shadow-md transition-all disabled:opacity-50"
@@ -417,7 +535,7 @@ export default function ProductDetailsClient({
               ))}
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800/20 p-8 md:p-12 lg:p-16 min-h-[400px]">
+            <div className="bg-gray-50 dark:bg-gray-800/20 p-8 md:p-12 lg:p-16 min-h-100">
               {activeTab === "description" && (
                 <div className="max-w-4xl mx-auto space-y-6 text-gray-600 leading-relaxed">
                   <p className="text-lg  font-bold text-gray-900">
@@ -499,6 +617,66 @@ export default function ProductDetailsClient({
           </div>
         )}
       </div>
+
+      {isViewerOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm p-4 md:p-8 flex items-center justify-center"
+          onClick={() => setIsViewerOpen(false)}
+        >
+          <button
+            className="absolute top-4 right-4 md:top-6 md:right-6 h-11 w-11 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center"
+            onClick={() => setIsViewerOpen(false)}
+            aria-label="Close image viewer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          {galleryImages.length > 1 && (
+            <>
+              <button
+                className="absolute left-3 md:left-6 h-11 w-11 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  goToPrevImage();
+                }}
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                className="absolute right-3 md:right-6 h-11 w-11 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  goToNextImage();
+                }}
+                aria-label="Next image"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </>
+          )}
+
+          <div
+            className="relative w-full h-full max-w-6xl max-h-[85vh]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Image
+              src={mainImage || product.image}
+              alt={product.name}
+              fill
+              className="object-contain"
+              sizes="100vw"
+              priority
+            />
+          </div>
+
+          {galleryImages.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-medium">
+              {currentImageIndex + 1} / {galleryImages.length}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
