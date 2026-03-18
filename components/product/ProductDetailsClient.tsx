@@ -331,7 +331,7 @@ export default function ProductDetailsClient({
               </h1>
 
               {/* Rating & Stock */}
-              <div className="flex items-center gap-6 mb-8 text-sm">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-8 text-sm">
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((star) => {
                     const rating = product.rating || 0;
@@ -370,7 +370,7 @@ export default function ProductDetailsClient({
               </div>
 
               {/* Pricing */}
-              <div className="flex items-end gap-4 mb-8">
+              <div className="flex flex-wrap items-end gap-4 mb-8">
                 <span className="text-5xl font-bold text-gray-900 dark:text-white">
                   ৳{product.price.toLocaleString()}
                 </span>
@@ -519,7 +519,7 @@ export default function ProductDetailsClient({
 
           {/* Tabs Section (Description, Specs, Reviews) */}
           <div className="border-t border-gray-200">
-            <div className="flex items-center justify-center gap-8 border-b border-gray-200 px-4">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8 border-b border-gray-200 px-4">
               {["description", "specifications", "reviews"].map((tab) => (
                 <button
                   key={tab}
