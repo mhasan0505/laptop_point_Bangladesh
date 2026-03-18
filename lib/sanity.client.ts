@@ -1,9 +1,10 @@
-import { createClient } from "next-sanity";
-
-export const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  apiVersion: "2024-01-01",
-  useCdn: process.env.NODE_ENV === "production",
-  token: process.env.SANITY_API_TOKEN,
-});
+// Sanity client stubbed — enable when Sanity is re-integrated.
+// TODO: Restore createClient call once NEXT_PUBLIC_SANITY_PROJECT_ID is configured.
+export const client = {
+  fetch: () => Promise.resolve([]),
+  patch: (_id: string) => ({
+    set: () => ({ commit: () => Promise.resolve({}) }),
+  }),
+  delete: (_id: string) => Promise.resolve({}),
+  create: (_doc: object) => Promise.resolve({ _id: "" }),
+};

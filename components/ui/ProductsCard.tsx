@@ -20,6 +20,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
   const { addToComparison, removeFromComparison, isInComparison, canAddMore } =
     useComparison();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [hoverImageLoaded, setHoverImageLoaded] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
   const [isMobile, setIsMobile] = useState(
@@ -124,19 +125,35 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
           {/* Product Image */}
           <div className="relative w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
+            {/* Main image — fades out on hover */}
             <Image
               src={product.image}
               alt={product.name}
               width={220}
               height={220}
-              className={`object-contain mix-blend-multiply transition-opacity duration-300 ${
+              className={`object-contain mix-blend-multiply transition-opacity duration-500 absolute inset-0 m-auto ${
                 imageLoaded ? "opacity-100" : "opacity-0"
-              }`}
+              } ${product.images && product.images.length > 1 ? "group-hover:opacity-0" : ""}`}
               onLoad={() => setImageLoaded(true)}
               priority={!isMobile}
               loading={isMobile ? "lazy" : "eager"}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
+            {/* Hover image (second image) — fades in on hover */}
+            {product.images && product.images.length > 1 && (
+              <Image
+                src={product.images[1]}
+                alt={`${product.name} side view`}
+                width={220}
+                height={220}
+                className={`object-contain mix-blend-multiply transition-opacity duration-500 absolute inset-0 m-auto opacity-0 group-hover:opacity-100 ${
+                  hoverImageLoaded ? "" : "invisible group-hover:visible"
+                }`}
+                onLoad={() => setHoverImageLoaded(true)}
+                loading="lazy"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
+            )}
           </div>
 
           {/* Minimal Add to Cart (Bottom Right Floating) */}

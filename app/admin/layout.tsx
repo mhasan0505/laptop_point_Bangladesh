@@ -7,7 +7,7 @@ import { AdminAuthProvider, useAdminAuth } from "@/contexts/AdminAuthContext";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 function AdminBrandLink({
   onClick,
@@ -42,23 +42,20 @@ function AdminShell({ children }: { children: ReactNode }) {
 
   const isLoginPage = pathname === "/admin/login";
 
+  // Redirect unauthenticated users on the client only (never during SSR)
+  useEffect(() => {
+    if (!isLoginPage && !isLoading && !isAuthenticated) {
+      router.replace("/admin/login");
+    }
+  }, [isLoginPage, isLoading, isAuthenticated, router]);
+
   // Login page renders without the shell
   if (isLoginPage) {
     return <>{children}</>;
   }
 
-  // Still checking auth state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
-      </div>
-    );
-  }
-
-  // Not authenticated — redirect to login
-  if (!isAuthenticated) {
-    router.replace("/admin/login");
+  // Still checking auth state or not yet authenticated — show spinner
+  if (isLoading || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />

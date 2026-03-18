@@ -1,0 +1,11 @@
+
+Brand : HP
+Model Name : EliteBook 845 G8
+Screen Size : 14 Inches
+Color : Silver
+Hard Disk Size : 256 GB
+CPU Model : Ryzen 5
+Ram Memory Installed Size : 16 GB
+Operating System : Windows 10 Pro
+Special Feature : Anti Glare Coating, Miracast Technology
+Graphics Card Description : Radeon Graphics

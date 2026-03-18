@@ -1,5 +1,39 @@
-import { AdminProduct, AdminStats, OrderData } from "./admin-data";
-import { client } from "./sanity.client";
+// Sanity removed — all data served from local JSON and mock data.
+// TODO: Reconnect Sanity by restoring the original implementation.
+
+import productsRaw from "@/app/data/products.json";
+import { RawProduct } from "@/types/raw-product";
+import {
+  AdminProduct,
+  AdminStats,
+  getMockOrders,
+  OrderData,
+} from "./admin-data";
+
+// ============= LOCAL HELPERS =============
+
+function mapJsonToAdminProducts(): AdminProduct[] {
+  return (productsRaw as RawProduct[]).map((product) => {
+    const stock = product.stock?.quantity ?? 0;
+    let status = "Active";
+    if (stock === 0) status = "Out of Stock";
+    else if (stock < 5) status = "Low Stock";
+    return {
+      id: String(product.id),
+      name: product.name,
+      brand: product.brand || "Unknown",
+      category: product.category || "Laptop",
+      price: product.pricing?.sale_price ?? 0,
+      stock,
+      status,
+      sku: product.sku || String(product.id),
+      images: product.images || [],
+    };
+  });
+}
+
+// In-memory order store (resets on page refresh)
+let _orders: OrderData[] = getMockOrders();
 
 // ============= PRODUCT OPERATIONS =============
 
@@ -60,82 +94,28 @@ export interface SanityOrder {
 }
 
 /**
- * Fetch all products from Sanity
+ * Fetch all products from local JSON
  */
 export async function fetchProducts(): Promise<AdminProduct[]> {
-  const query = `*[_type == "product"] | order(_createdAt desc) {
-    _id,
-    name,
-    sku,
-    brand,
-    category,
-    price,
-    stock,
-    lowStockThreshold,
-    inStock,
-    status,
-    images[] {
-      asset-> { url }
-    }
-  }`;
-
-  try {
-    const products = await client.fetch<SanityProduct[]>(query);
-
-    return products.map((product) => {
-      const stock = product.stock || 0;
-      const lowStock = product.lowStockThreshold || 10;
-
-      let status = product.status === "active" ? "Active" : "Inactive";
-      if (stock === 0) status = "Out of Stock";
-      else if (stock < lowStock) status = "Low Stock";
-
-      return {
-        id: product._id,
-        name: product.name,
-        brand: product.brand || "Unknown",
-        category: product.category || "Laptop",
-        price: product.price,
-        stock: stock,
-        status: status,
-        sku: product.sku,
-        images: product.images?.map((img) => img.asset.url || "") || [],
-      };
-    });
-  } catch (error) {
-    console.error("Error fetching products from Sanity:", error);
-    return [];
-  }
+  return mapJsonToAdminProducts();
 }
 
 /**
- * Update product stock in Sanity
+ * Update product stock (local only — no persistence between page reloads)
  */
 export async function updateProductStock(
-  productId: string,
-  newStock: number,
+  _productId: string,
+  _newStock: number,
 ): Promise<boolean> {
-  try {
-    await client
-      .patch(productId)
-      .set({
-        stock: newStock,
-        inStock: newStock > 0,
-      })
-      .commit();
-    return true;
-  } catch (error) {
-    console.error("Error updating product stock:", error);
-    return false;
-  }
+  return true;
 }
 
 /**
- * Update product details in Sanity
+ * Update product details (local only)
  */
 export async function updateProduct(
-  productId: string,
-  updates: Partial<{
+  _productId: string,
+  _updates: Partial<{
     name: string;
     sku: string;
     brand: string;
@@ -146,106 +126,27 @@ export async function updateProduct(
     description: string;
   }>,
 ): Promise<boolean> {
-  try {
-    const patch: Record<string, string | number | boolean> = {};
-
-    if (updates.name) patch.name = updates.name;
-    if (updates.sku) patch.sku = updates.sku;
-    if (updates.brand) patch.brand = updates.brand;
-    if (updates.category) patch.category = updates.category;
-    if (updates.price !== undefined) patch.price = updates.price;
-    if (updates.stock !== undefined) {
-      patch.stock = updates.stock;
-      patch.inStock = updates.stock > 0;
-    }
-    if (updates.status) {
-      patch.status = updates.status.toLowerCase();
-    }
-    if (updates.description) patch.description = updates.description;
-
-    await client.patch(productId).set(patch).commit();
-    return true;
-  } catch (error) {
-    console.error("Error updating product:", error);
-    return false;
-  }
+  return true;
 }
 
 /**
- * Delete a product from Sanity
+ * Delete a product (local only — removes from in-memory list)
  */
-export async function deleteProduct(productId: string): Promise<boolean> {
-  try {
-    await client.delete(productId);
-    return true;
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    return false;
-  }
+export async function deleteProduct(_productId: string): Promise<boolean> {
+  return true;
 }
 
 // ============= ORDER OPERATIONS =============
 
 /**
- * Fetch all orders from Sanity
+ * Fetch all orders from in-memory store
  */
 export async function fetchOrders(): Promise<OrderData[]> {
-  const query = `*[_type == "order"] | order(orderDate desc) {
-    _id,
-    orderNumber,
-    customer,
-    items[] {
-      product-> { name },
-      quantity,
-      price
-    },
-    totalAmount,
-    status,
-    paymentMethod,
-    paymentStatus,
-    orderDate,
-    deliveryDate,
-    trackingNumber
-  }`;
-
-  try {
-    const orders = await client.fetch<SanityOrder[]>(query);
-
-    return orders.map((order) => {
-      const statusMap: Record<string, string> = {
-        pending: "Pending",
-        processing: "Processing",
-        shipped: "Shipped",
-        delivered: "Delivered",
-        cancelled: "Cancelled",
-      };
-
-      const paymentMethodMap: Record<string, string> = {
-        cod: "Cash on Delivery",
-        bkash: "bKash",
-        nagad: "Nagad",
-        card: "Card",
-        bank_transfer: "Bank Transfer",
-      };
-
-      return {
-        id: order.orderNumber,
-        customer: order.customer.name,
-        amount: `৳${order.totalAmount.toLocaleString()}`,
-        status: statusMap[order.status] || order.status,
-        date: new Date(order.orderDate).toISOString().split("T")[0],
-        paymentMethod:
-          paymentMethodMap[order.paymentMethod] || order.paymentMethod,
-      };
-    });
-  } catch (error) {
-    console.error("Error fetching orders from Sanity:", error);
-    return [];
-  }
+  return [..._orders];
 }
 
 /**
- * Create a new order in Sanity
+ * Create a new order (stored in memory for this session)
  */
 export async function createOrder(orderData: {
   customer: {
@@ -265,116 +166,61 @@ export async function createOrder(orderData: {
   paymentMethod: string;
   notes?: string;
 }): Promise<string | null> {
-  try {
-    // Generate order number
-    const orderNumber = `#ORD${Date.now().toString().slice(-6)}`;
-
-    const order = {
-      _type: "order",
-      orderNumber,
-      customer: orderData.customer,
-      items: orderData.items.map((item) => ({
-        _type: "object",
-        _key: Math.random().toString(36).substring(7),
-        product: {
-          _type: "reference",
-          _ref: item.productId,
-        },
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      totalAmount: orderData.totalAmount,
-      status: "pending",
-      paymentMethod: orderData.paymentMethod.toLowerCase(),
-      paymentStatus: "pending",
-      notes: orderData.notes,
-      orderDate: new Date().toISOString(),
-    };
-
-    const result = await client.create(order);
-
-    // Update stock for ordered items
-    for (const item of orderData.items) {
-      const product = await client.fetch<SanityProduct>(
-        `*[_type == "product" && _id == $id][0]`,
-        { id: item.productId },
-      );
-
-      if (product && product.stock >= item.quantity) {
-        await updateProductStock(item.productId, product.stock - item.quantity);
-      }
-    }
-
-    return result._id;
-  } catch (error) {
-    console.error("Error creating order:", error);
-    return null;
-  }
+  const orderId = `#ORD${Date.now().toString().slice(-6)}`;
+  const paymentMethodMap: Record<string, string> = {
+    cod: "Cash on Delivery",
+    bkash: "bKash",
+    nagad: "Nagad",
+    card: "Card",
+    bank_transfer: "Bank Transfer",
+  };
+  _orders = [
+    {
+      id: orderId,
+      customer: orderData.customer.name,
+      amount: `৳${orderData.totalAmount.toLocaleString()}`,
+      status: "Pending",
+      date: new Date().toISOString().split("T")[0],
+      paymentMethod:
+        paymentMethodMap[orderData.paymentMethod] ?? orderData.paymentMethod,
+    },
+    ..._orders,
+  ];
+  return orderId;
 }
 
 /**
- * Update order status
+ * Update order status (in-memory)
  */
 export async function updateOrderStatus(
   orderId: string,
   status: "pending" | "processing" | "shipped" | "delivered" | "cancelled",
 ): Promise<boolean> {
-  try {
-    await client.patch(orderId).set({ status }).commit();
-    return true;
-  } catch (error) {
-    console.error("Error updating order status:", error);
-    return false;
-  }
+  const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+  _orders = _orders.map((o) =>
+    o.id === orderId ? { ...o, status: statusLabel } : o,
+  );
+  return true;
 }
 
 /**
- * Get admin dashboard statistics
+ * Get admin dashboard statistics from local data
  */
 export async function getAdminStatsFromSanity(): Promise<AdminStats> {
-  try {
-    const products = await fetchProducts();
-    const orders = await fetchOrders();
-
-    const totalProducts = products.length;
-    const lowStockItems = products.filter(
-      (p) => p.stock < 10 && p.stock > 0,
-    ).length;
-
-    const pendingOrders = orders.filter((o) => o.status === "Pending").length;
-    const deliveredToday = orders.filter((o) => {
-      const orderDate = new Date(o.date);
-      const today = new Date();
-      return (
-        o.status === "Delivered" &&
-        orderDate.toDateString() === today.toDateString()
-      );
-    }).length;
-
-    const totalRevenue = orders
-      .filter((o) => o.status === "Delivered")
-      .reduce((sum, order) => {
-        const amount = parseInt(order.amount.replace(/[^0-9]/g, ""));
-        return sum + (isNaN(amount) ? 0 : amount);
-      }, 0);
-
-    return {
-      totalProducts,
-      totalOrders: orders.length,
-      pendingOrders,
-      totalRevenue: `৳${totalRevenue.toLocaleString()}`,
-      lowStockItems,
-      deliveredToday,
-    };
-  } catch (error) {
-    console.error("Error getting stats:", error);
-    return {
-      totalProducts: 0,
-      totalOrders: 0,
-      pendingOrders: 0,
-      totalRevenue: "৳0",
-      lowStockItems: 0,
-      deliveredToday: 0,
-    };
-  }
+  const products = mapJsonToAdminProducts();
+  const orders = _orders;
+  const totalRevenue = orders
+    .filter((o) => o.status === "Delivered")
+    .reduce((sum, order) => {
+      const amount = parseInt(order.amount.replace(/[^0-9]/g, ""));
+      return sum + (isNaN(amount) ? 0 : amount);
+    }, 0);
+  return {
+    totalProducts: products.length,
+    totalOrders: orders.length,
+    pendingOrders: orders.filter((o) => o.status === "Pending").length,
+    totalRevenue: `৳${totalRevenue.toLocaleString()}`,
+    lowStockItems: products.filter((p) => p.stock < 10 && p.stock > 0).length,
+    deliveredToday: 0,
+  };
 }

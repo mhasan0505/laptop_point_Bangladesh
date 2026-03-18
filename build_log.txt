@@ -1,0 +1,20 @@
+Γû▓ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+
+ΓÜá The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 3.8s
+  Running TypeScript ...
+Failed to compile.
+
+./lib/sanity.image.ts:4:39
+Type error: Argument of type '{ fetch: () => Promise<never[]>; patch: (_id: string) => { set: () => { commit: () => Promise<{}>; }; }; delete: (_id: string) => Promise<{}>; create: (_doc: object) => Promise<...>; }' is not assignable to parameter of type 'SanityClientLike | SanityProjectDetails | SanityModernClientLike | undefined'.
+
+  2 | import { client } from "./sanity.client";
+  3 |
+> 4 | const builder = createImageUrlBuilder(client);
+    |                                       ^
+  5 |
+  6 | export function urlFor(source: SanityImageSource) {
+  7 |   return builder.image(source);
+Next.js build worker exited with code: 1 and signal: null

@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateProductStock } from "@/lib/sanity-admin";
 import { useState } from "react";
 
 interface StockUpdateDialogProps {
@@ -22,7 +21,7 @@ interface StockUpdateDialogProps {
     name: string;
     currentStock: number;
   } | null;
-  onSuccess: () => void;
+  onSuccess: (newStock: number) => void;
 }
 
 export function StockUpdateDialog({
@@ -34,7 +33,7 @@ export function StockUpdateDialog({
   const [newStock, setNewStock] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleUpdate = async () => {
+  const handleUpdate = () => {
     if (!product || !newStock) return;
 
     const stockValue = parseInt(newStock);
@@ -44,21 +43,10 @@ export function StockUpdateDialog({
     }
 
     setIsUpdating(true);
-    try {
-      const success = await updateProductStock(product.id, stockValue);
-      if (success) {
-        onSuccess();
-        onClose();
-        setNewStock("");
-      } else {
-        alert("Failed to update stock. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error updating stock:", error);
-      alert("An error occurred while updating stock.");
-    } finally {
-      setIsUpdating(false);
-    }
+    onSuccess(stockValue);
+    onClose();
+    setNewStock("");
+    setIsUpdating(false);
   };
 
   return (

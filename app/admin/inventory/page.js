@@ -1,36 +1,40 @@
 "use client";
 
+import productsRaw from "@/app/data/products.json";
 import { StockUpdateDialog } from "@/components/admin/StockUpdateDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { fetchProducts } from "@/lib/sanity-admin";
 import { AlertTriangle, Edit2, Package, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+function mapProducts() {
+  return productsRaw.map((product) => {
+    const stock = product.stock?.quantity ?? 0;
+    let status = "Active";
+    if (stock === 0) status = "Out of Stock";
+    else if (stock < 5) status = "Low Stock";
+
+    return {
+      id: String(product.id),
+      name: product.name,
+      brand: product.brand || "Unknown",
+      category: product.category || "Laptop",
+      price: product.pricing?.sale_price ?? 0,
+      stock,
+      status,
+      sku: product.sku || String(product.id),
+      images: product.images || [],
+    };
+  });
+}
 
 const InventoryPage = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(() => mapProducts());
   const [searchTerm, setSearchTerm] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [stockDialogOpen, setStockDialogOpen] = useState(false);
-
-  const loadProducts = async () => {
-    setIsLoading(true);
-    try {
-      const data = await fetchProducts();
-      setProducts(data);
-    } catch (error) {
-      console.error("Failed to load products:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadProducts();
-  }, []);
 
   const filteredProducts = products.filter(
     (product) =>
@@ -59,17 +63,26 @@ const InventoryPage = () => {
     setStockDialogOpen(true);
   };
 
-  const handleStockUpdateSuccess = () => {
-    loadProducts();
+  const handleStockUpdateSuccess = (newStock) => {
+    if (selectedProduct) {
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.id === selectedProduct.id
+            ? {
+                ...p,
+                stock: newStock,
+                status:
+                  newStock === 0
+                    ? "Out of Stock"
+                    : newStock < 5
+                      ? "Low Stock"
+                      : "Active",
+              }
+            : p,
+        ),
+      );
+    }
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
-      </div>
-    );
-  }
 
   return (
     <>
@@ -82,7 +95,6 @@ const InventoryPage = () => {
         </p>
       </div>
 
-      {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -137,7 +149,6 @@ const InventoryPage = () => {
         </Card>
       </div>
 
-      {/* Search */}
       <Card className="mb-6">
         <CardContent className="p-4">
           <div className="relative">
@@ -153,7 +164,6 @@ const InventoryPage = () => {
         </CardContent>
       </Card>
 
-      {/* Inventory Table */}
       <Card>
         <CardHeader>
           <CardTitle>Stock Levels</CardTitle>

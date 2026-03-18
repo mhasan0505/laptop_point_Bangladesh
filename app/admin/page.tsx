@@ -15,7 +15,6 @@ import {
   Siren,
   Truck,
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -109,6 +108,10 @@ const AdminDashboard = () => {
     }
   };
 
+  const navigateTo = (href: string) => {
+    router.push(href);
+  };
+
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
@@ -122,16 +125,20 @@ const AdminDashboard = () => {
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <Link href="/admin/products/add">
-            <Button className="bg-black hover:bg-gray-800 text-white" size="sm">
-              Add New Product
-            </Button>
-          </Link>
-          <Link href="/admin/orders">
-            <Button variant="outline" size="sm">
-              View All Orders
-            </Button>
-          </Link>
+          <Button
+            className="bg-black hover:bg-gray-800 text-white"
+            size="sm"
+            onClick={() => navigateTo("/admin/products/add")}
+          >
+            Add New Product
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigateTo("/admin/orders")}
+          >
+            View All Orders
+          </Button>
         </div>
       </div>
 
@@ -261,11 +268,13 @@ const AdminDashboard = () => {
               ))}
             </div>
             <div className="mt-auto pt-6">
-              <Link href="/admin/orders">
-                <Button variant="outline" className="w-full">
-                  View All Orders
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigateTo("/admin/orders")}
+              >
+                View All Orders
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -310,11 +319,13 @@ const AdminDashboard = () => {
               ))}
             </div>
             <div className="mt-auto pt-6">
-              <Link href="/admin/inventory">
-                <Button variant="outline" className="w-full">
-                  Manage Inventory
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigateTo("/admin/inventory")}
+              >
+                Manage Inventory
+              </Button>
             </div>
           </CardContent>
         </Card>

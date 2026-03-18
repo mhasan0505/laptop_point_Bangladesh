@@ -8,8 +8,7 @@ import {
   Truck,
   Warehouse,
 } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface AdminSidebarProps {
   className?: string;
@@ -18,6 +17,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     {
@@ -56,12 +56,15 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
             : pathname.startsWith(item.href);
         const Icon = item.icon;
         return (
-          <Link
+          <button
+            type="button"
             key={item.href}
-            href={item.href}
-            onClick={onNavigate}
+            onClick={() => {
+              onNavigate?.();
+              router.push(item.href);
+            }}
             className={cn(
-              "flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group font-medium text-sm",
+              "flex w-full items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 group font-medium text-sm text-left",
               isActive
                 ? "bg-black text-white shadow-md shadow-black/10"
                 : "text-gray-600 hover:bg-gray-100 hover:text-black",
@@ -76,7 +79,7 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
               )}
             />
             <span>{item.label}</span>
-          </Link>
+          </button>
         );
       })}
     </nav>

@@ -38,7 +38,9 @@ const ShopContent = () => {
       .replace(/[^a-z0-9]+/g, "")
       .trim() || "";
 
-  let products = laptopData.laptops || [];
+  let products = [...(laptopData.laptops || [])].sort(
+    (a, b) => Number(b.id) - Number(a.id),
+  );
 
   // Apply search filter
   if (searchQuery) {
@@ -47,7 +49,10 @@ const ShopContent = () => {
       (product) =>
         product.name.toLowerCase().includes(query) ||
         (product.brand && product.brand.toLowerCase().includes(query)) ||
-        (product.category && product.category.toLowerCase().includes(query)),
+        (product.category && product.category.toLowerCase().includes(query)) ||
+        (product.sku && product.sku.toLowerCase().includes(query)) ||
+        (product.specs?.processor &&
+          product.specs.processor.toLowerCase().includes(query)),
     );
   }
 

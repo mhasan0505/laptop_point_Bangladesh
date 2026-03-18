@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface AdminAuthContextType {
   isAuthenticated: boolean;
@@ -39,15 +45,18 @@ function deleteCookie(name: string) {
 }
 
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Only check cookies on client-side after mount
-    if (typeof window !== "undefined") {
-      return getCookie(ADMIN_AUTH_KEY) === "true";
-    }
-    return false;
-  });
+  // Start with isLoading=true so server and client render the same initial HTML
+  // (both render a spinner), preventing hydration mismatches.
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const isLoading = false;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAuthenticated(getCookie(ADMIN_AUTH_KEY) === "true");
+      setIsLoading(false);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     // Check against environment variables or hardcoded admin credentials

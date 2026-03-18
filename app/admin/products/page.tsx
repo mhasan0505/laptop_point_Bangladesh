@@ -1,39 +1,38 @@
 "use client";
-import { StockUpdateDialog } from "@/components/admin/StockUpdateDialog";
+import productsRaw from "@/app/data/products.json";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminProduct } from "@/lib/admin-data";
-import { deleteProduct, fetchProducts } from "@/lib/sanity-admin";
-import { Edit, Laptop, Package, Plus, Trash2 } from "lucide-react";
+import { RawProduct } from "@/types/raw-product";
+import { Edit, Laptop, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 
 const AdminProducts = () => {
-  const [products, setProducts] = useState<AdminProduct[]>([]);
+  const [products, setProducts] = useState<AdminProduct[]>(() =>
+    (productsRaw as RawProduct[]).map((product) => {
+      const stock = product.stock?.quantity ?? 0;
+
+      let status = "Active";
+      if (stock === 0) status = "Out of Stock";
+      else if (stock < 5) status = "Low Stock";
+
+      return {
+        id: String(product.id),
+        name: product.name,
+        brand: product.brand || "Unknown",
+        category: product.category || "Laptop",
+        price: product.pricing?.sale_price ?? 0,
+        stock,
+        status,
+        sku: product.sku || String(product.id),
+        images: product.images || [],
+      };
+    }),
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
-  const [isLoading, setIsLoading] = useState(true);
-  const [stockDialogOpen, setStockDialogOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<{
-    id: string;
-    name: string;
-    currentStock: number;
-  } | null>(null);
-
-  const loadProducts = useCallback(async () => {
-    setIsLoading(true);
-    const data = await fetchProducts();
-    setProducts(data);
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      void loadProducts();
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [loadProducts]);
+  const [isLoading] = useState(false);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -60,28 +59,10 @@ const AdminProducts = () => {
     }
   };
 
-  const handleDeleteProduct = async (productId: string) => {
+  const handleDeleteProduct = (productId: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      const success = await deleteProduct(productId);
-      if (success) {
-        setProducts(products.filter((p) => p.id !== productId));
-      } else {
-        alert("Failed to delete product. Please try again.");
-      }
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
     }
-  };
-
-  const handleOpenStockDialog = (product: AdminProduct) => {
-    setSelectedProduct({
-      id: product.id,
-      name: product.name,
-      currentStock: product.stock,
-    });
-    setStockDialogOpen(true);
-  };
-
-  const handleStockUpdateSuccess = () => {
-    loadProducts(); // Reload products after stock update
   };
 
   if (isLoading) {
@@ -180,86 +161,83 @@ const AdminProducts = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredProducts.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                  >
-                    <td className="py-4 px-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
-                          <Laptop className="w-6 h-6" />
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                    >
+                      <td className="py-4 px-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                            <Laptop className="w-6 h-6" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-black">
+                              {product.name}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium text-black">
-                            {product.name}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4 text-gray-600 text-sm">
-                      {product.sku}
-                    </td>
-                    <td className="py-4 px-4 text-gray-600 text-sm">
-                      {product.category}
-                    </td>
-                    <td className="py-4 px-4 font-semibold text-black">
-                      ৳{product.price.toLocaleString()}
-                    </td>
-                    <td className="py-4 px-4 text-gray-600">{product.stock}</td>
-                    <td className="py-4 px-4">
-                      <span
-                        className={`inline-block px-2 py-1 text-xs rounded-full ${getStatusColor(
-                          product.status,
-                        )}`}
-                      >
-                        {product.status}
-                      </span>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleOpenStockDialog(product)}
-                          title="Update Stock"
+                      </td>
+                      <td className="py-4 px-4 text-gray-600 text-sm">
+                        {product.sku}
+                      </td>
+                      <td className="py-4 px-4 text-gray-600 text-sm">
+                        {product.category}
+                      </td>
+                      <td className="py-4 px-4 font-semibold text-black">
+                        ৳{product.price.toLocaleString()}
+                      </td>
+                      <td className="py-4 px-4 text-gray-600">
+                        {product.stock}
+                      </td>
+                      <td className="py-4 px-4">
+                        <span
+                          className={`inline-block px-2 py-1 text-xs rounded-full ${getStatusColor(
+                            product.status,
+                          )}`}
                         >
-                          <Package className="w-4 h-4" />
-                        </Button>
-                        <Link href={`/admin/products/edit/${product.id}`}>
+                          {product.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center space-x-2">
+                          <Link href={`/admin/products/edit/${product.id}`}>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                          </Link>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8"
+                            onClick={() => handleDeleteProduct(product.id)}
                           >
-                            <Edit className="w-4 h-4" />
+                            <Trash2 className="w-4 h-4" />
                           </Button>
-                        </Link>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8"
-                          onClick={() => handleDeleteProduct(product.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      className="py-8 px-4 text-center text-gray-500"
+                      colSpan={7}
+                    >
+                      No products found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
         </CardContent>
       </Card>
-
-      <StockUpdateDialog
-        isOpen={stockDialogOpen}
-        onClose={() => setStockDialogOpen(false)}
-        product={selectedProduct}
-        onSuccess={handleStockUpdateSuccess}
-      />
     </>
   );
 };
