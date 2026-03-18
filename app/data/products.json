@@ -640,7 +640,7 @@
   {
     "id": 15,
     "sku": "DELL-7400-015",
-    "name": "Dell Latitude 7400 Metal",
+    "name": "Dell Latitude 7400 Metal Black",
     "brand": "Dell",
     "model": "Latitude 7400",
     "category": "Ultrabook",
@@ -749,7 +749,7 @@
     "grade": "A",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 25999,
+      "sale_price": 26900,
       "market_price": 32000,
       "discount_percentage": 19,
       "tax_included": true
@@ -973,7 +973,7 @@
     "grade": "A+",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 40500,
+      "sale_price": 43500,
       "market_price": 48000,
       "discount_percentage": 16,
       "tax_included": true
@@ -1020,7 +1020,7 @@
     "grade": "A+",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 54500,
+      "sale_price": 53500,
       "market_price": 62000,
       "discount_percentage": 16,
       "tax_included": true
@@ -1164,7 +1164,7 @@
     "grade": "A",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 31700,
+      "sale_price": 33500,
       "market_price": 31700,
       "discount_percentage": 0,
       "tax_included": true
@@ -1222,7 +1222,7 @@
     "grade": "A",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 29500,
+      "sale_price": 29999,
       "market_price": 29500,
       "discount_percentage": 0,
       "tax_included": true

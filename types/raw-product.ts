@@ -11,7 +11,7 @@ export interface RawProduct {
     currency: string;
     sale_price: number;
     market_price: number;
-    discount_percentage: number;
+    discount_percentage?: number;
     tax_included: boolean;
   };
   stock: {

@@ -391,7 +391,10 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
     brand: p.brand,
     price: p.pricing.sale_price,
     originalPrice: p.pricing.market_price,
-    discount: p.pricing.discount_percentage,
+    discount:
+      p.pricing.market_price > 0
+        ? Math.round((1 - p.pricing.sale_price / p.pricing.market_price) * 100)
+        : 0,
     rating: 4.5 + Math.random() * 0.5, // Simulate rating
     reviews: Math.floor(Math.random() * 500) + 50, // Simulate reviews
     inStock: p.stock.quantity > 0,
