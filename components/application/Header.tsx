@@ -541,7 +541,7 @@ const NavItem = ({
     closeTimerRef.current = setTimeout(() => {
       setIsHovered(false);
       // Don't close MegaMenu on mouse leave - it should only close when clicking outside
-    }, 250);
+    }, 350);
   };
 
   return (
@@ -582,7 +582,9 @@ const NavItem = ({
               : { opacity: 0, y: 10, scale: 0.95 }
           }
           transition={{ duration: 0.2 }}
-          className="absolute left-0 top-full mt-1 w-56 p-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 origin-top-left pointer-events-auto"
+          className={`absolute left-0 top-full w-56 p-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 origin-top-left ${
+            isHovered ? "pointer-events-auto" : "pointer-events-none"
+          }`}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
