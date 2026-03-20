@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // Check if the request is for an admin route (but not login)
   if (request.nextUrl.pathname.startsWith("/admin")) {
     const isLoginPage = request.nextUrl.pathname === "/admin/login";
