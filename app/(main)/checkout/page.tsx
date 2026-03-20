@@ -17,11 +17,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function CheckoutPage() {
-  const { items, clearCart, getCartTotal } = useCart();
+  const { items, clearCart, getCartTotal, getSubtotal, getShipping } =
+    useCart();
   const router = useRouter();
   const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>("cod");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     register,
@@ -31,24 +34,62 @@ export default function CheckoutPage() {
 
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Simulate order processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerName: `${data.firstName} ${data.lastName}`,
+          customerPhone: data.phone,
+          customerEmail: data.email,
+          address: data.address,
+          city: data.city,
+          district: data.district,
+          postalCode: data.postalCode,
+          paymentMethod: selectedPayment,
+          notes: data.orderNotes,
+          items: items.map((item) => ({
+            productId: item.id,
+            sku: item.id,
+            name: item.name,
+            unitPrice: item.price,
+            quantity: item.quantity,
+          })),
+          subtotal: getSubtotal(),
+          shippingCost: getShipping(),
+          totalAmount: getCartTotal(),
+        }),
+      });
 
-    console.log("Order placed:", {
-      ...data,
-      paymentMethod: selectedPayment,
-      items,
-    });
+      const result = (await response.json()) as {
+        success?: boolean;
+        orderNumber?: string;
+        error?: string;
+      };
 
-    setOrderPlaced(true);
-    setIsSubmitting(false);
+      if (!response.ok) {
+        throw new Error(
+          result.error ?? "Failed to place order. Please try again.",
+        );
+      }
 
-    // Clear cart and redirect after 3 seconds
-    setTimeout(() => {
+      setOrderNumber(result.orderNumber ?? null);
+      setOrderPlaced(true);
       clearCart();
-      router.push("/");
-    }, 3000);
+
+      // Redirect to home after 5 seconds
+      setTimeout(() => router.push("/"), 5000);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (items.length === 0 && !orderPlaced) {
@@ -84,12 +125,17 @@ export default function CheckoutPage() {
             <h1 className="text-3xl font-bold mb-4">
               Order Placed Successfully!
             </h1>
+            {orderNumber && (
+              <p className="text-lg font-semibold text-primary mb-2">
+                Order #{orderNumber}
+              </p>
+            )}
             <p className="text-muted-foreground mb-2">
-              Thank you for your order.
+              Thank you for your order. We will contact you shortly to confirm
+              delivery.
             </p>
             <p className="text-sm text-muted-foreground mb-8">
-              We&apos;ll send you a confirmation email shortly. Redirecting to
-              home page...
+              Redirecting to home page in 5 seconds…
             </p>
             <div className="flex items-center justify-center gap-2">
               <div
@@ -395,6 +441,11 @@ export default function CheckoutPage() {
                 {errors.agreeToTerms && (
                   <p className="text-red-500 text-sm mb-4">
                     {errors.agreeToTerms.message}
+                  </p>
+                )}
+                {submitError && (
+                  <p className="text-red-600 text-sm mb-4 p-3 bg-red-50 rounded-lg border border-red-200">
+                    {submitError}
                   </p>
                 )}
                 <button

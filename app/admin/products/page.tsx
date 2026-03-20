@@ -1,38 +1,24 @@
 "use client";
-import productsRaw from "@/app/data/products.json";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminProduct } from "@/lib/admin-data";
-import { RawProduct } from "@/types/raw-product";
+import { deleteProduct, fetchProducts } from "@/lib/sanity-admin";
 import { Edit, Laptop, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const AdminProducts = () => {
-  const [products, setProducts] = useState<AdminProduct[]>(() =>
-    (productsRaw as RawProduct[]).map((product) => {
-      const stock = product.stock?.quantity ?? 0;
-
-      let status = "Active";
-      if (stock === 0) status = "Out of Stock";
-      else if (stock < 5) status = "Low Stock";
-
-      return {
-        id: String(product.id),
-        name: product.name,
-        brand: product.brand || "Unknown",
-        category: product.category || "Laptop",
-        price: product.pricing?.sale_price ?? 0,
-        stock,
-        status,
-        sku: product.sku || String(product.id),
-        images: product.images || [],
-      };
-    }),
-  );
+  const [products, setProducts] = useState<AdminProduct[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts().then((data) => {
+      setProducts(data);
+      setIsLoading(false);
+    });
+  }, []);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -61,7 +47,9 @@ const AdminProducts = () => {
 
   const handleDeleteProduct = (productId: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
+      deleteProduct(productId).then(() => {
+        setProducts((prev) => prev.filter((p) => p.id !== productId));
+      });
     }
   };
 

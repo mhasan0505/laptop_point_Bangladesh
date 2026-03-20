@@ -35,6 +35,16 @@ function mapJsonToAdminProducts(): AdminProduct[] {
 // In-memory order store (resets on page refresh)
 let _orders: OrderData[] = getMockOrders();
 
+// In-memory product store (initialized from JSON, persists within browser tab session)
+let _products: AdminProduct[] | null = null;
+
+function getProductsStore(): AdminProduct[] {
+  if (!_products) {
+    _products = mapJsonToAdminProducts();
+  }
+  return _products;
+}
+
 // ============= PRODUCT OPERATIONS =============
 
 export interface SanityProduct {
@@ -94,45 +104,75 @@ export interface SanityOrder {
 }
 
 /**
- * Fetch all products from local JSON
+ * Fetch all products from in-memory store (initialized from JSON)
  */
 export async function fetchProducts(): Promise<AdminProduct[]> {
-  return mapJsonToAdminProducts();
+  return [...getProductsStore()];
 }
 
 /**
- * Update product stock (local only — no persistence between page reloads)
+ * Add a new product to the in-memory store
+ */
+export async function addProduct(
+  product: Omit<AdminProduct, "id">,
+): Promise<string> {
+  const store = getProductsStore();
+  const id = `prod_${Date.now()}`;
+  const stock = product.stock ?? 0;
+  let status = product.status || "Active";
+  if (stock === 0) status = "Out of Stock";
+  else if (stock < 5) status = "Low Stock";
+  store.push({ ...product, id, stock, status });
+  return id;
+}
+
+/**
+ * Update product stock (in-memory store)
  */
 export async function updateProductStock(
-  _productId: string,
-  _newStock: number,
+  productId: string,
+  newStock: number,
 ): Promise<boolean> {
+  const store = getProductsStore();
+  const idx = store.findIndex((p) => p.id === productId);
+  if (idx === -1) return false;
+  const updated = { ...store[idx], stock: newStock };
+  if (newStock === 0) updated.status = "Out of Stock";
+  else if (newStock < 5) updated.status = "Low Stock";
+  else if (updated.status === "Out of Stock" || updated.status === "Low Stock")
+    updated.status = "Active";
+  store[idx] = updated;
   return true;
 }
 
 /**
- * Update product details (local only)
+ * Update product details (in-memory store)
  */
 export async function updateProduct(
-  _productId: string,
-  _updates: Partial<{
-    name: string;
-    sku: string;
-    brand: string;
-    category: string;
-    price: number;
-    stock: number;
-    status: string;
-    description: string;
-  }>,
+  productId: string,
+  updates: Partial<AdminProduct>,
 ): Promise<boolean> {
+  const store = getProductsStore();
+  const idx = store.findIndex((p) => p.id === productId);
+  if (idx === -1) return false;
+  const merged = { ...store[idx], ...updates };
+  // Recompute auto-status from stock unless explicitly set
+  if (updates.stock !== undefined && updates.status === undefined) {
+    if (merged.stock === 0) merged.status = "Out of Stock";
+    else if (merged.stock < 5) merged.status = "Low Stock";
+  }
+  store[idx] = merged;
   return true;
 }
 
 /**
- * Delete a product (local only — removes from in-memory list)
+ * Delete a product (in-memory store)
  */
-export async function deleteProduct(_productId: string): Promise<boolean> {
+export async function deleteProduct(productId: string): Promise<boolean> {
+  const store = getProductsStore();
+  const idx = store.findIndex((p) => p.id === productId);
+  if (idx === -1) return false;
+  store.splice(idx, 1);
   return true;
 }
 

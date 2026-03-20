@@ -21,12 +21,47 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AdminProduct, OrderData } from "@/lib/admin-data";
-import { fetchOrders, fetchProducts } from "@/lib/sanity-admin";
+import { fetchProducts } from "@/lib/sanity-admin";
 import { Plus, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
+// Extends OrderData with the database cuid for API calls
+type OrderRow = OrderData & { dbId: string };
+
+function paymentLabel(method: string): string {
+  const map: Record<string, string> = {
+    cod: "Cash on Delivery",
+    bkash: "bKash",
+    nagad: "Nagad",
+    card: "Card",
+  };
+  return map[method] ?? method;
+}
+
+interface ApiOrder {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  totalAmount: number;
+  status: string;
+  paymentMethod: string;
+  createdAt: string;
+}
+
+function mapApiOrder(o: ApiOrder): OrderRow {
+  return {
+    dbId: o.id,
+    id: o.orderNumber,
+    customer: o.customerName,
+    amount: `৳${o.totalAmount.toLocaleString()}`,
+    status: o.status,
+    date: o.createdAt.slice(0, 10),
+    paymentMethod: paymentLabel(o.paymentMethod),
+  };
+}
+
 export default function OrdersPage() {
-  const [orders, setOrders] = useState<OrderData[]>([]);
+  const [orders, setOrders] = useState<OrderRow[]>([]);
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -35,13 +70,19 @@ export default function OrdersPage() {
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
-    const [ordersData, productsData] = await Promise.all([
-      fetchOrders(),
-      fetchProducts(),
-    ]);
-    setOrders(ordersData);
-    setProducts(productsData.filter((p) => p.stock > 0)); // Only active products
-    setIsLoading(false);
+    try {
+      const [ordersRes, productsData] = await Promise.all([
+        fetch("/api/orders"),
+        fetchProducts(),
+      ]);
+      if (ordersRes.ok) {
+        const apiOrders = (await ordersRes.json()) as ApiOrder[];
+        setOrders(apiOrders.map(mapApiOrder));
+      }
+      setProducts(productsData.filter((p) => p.stock > 0));
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -69,14 +110,27 @@ export default function OrdersPage() {
     }
   };
 
-  const handleStatusChange = async (orderNumber: string, newStatus: string) => {
-    // Find the order to get its _id (implementation depends on your data structure)
-    // For now, just update local state
+  const handleStatusChange = async (order: OrderRow, newStatus: string) => {
+    // Optimistic update
     setOrders((prev) =>
-      prev.map((order) =>
-        order.id === orderNumber ? { ...order, status: newStatus } : order,
+      prev.map((o) =>
+        o.dbId === order.dbId ? { ...o, status: newStatus } : o,
       ),
     );
+    try {
+      await fetch(`/api/orders/${order.dbId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+    } catch {
+      // Roll back on failure
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.dbId === order.dbId ? { ...o, status: order.status } : o,
+        ),
+      );
+    }
   };
 
   const filteredOrders = orders.filter((order) => {
@@ -206,7 +260,7 @@ export default function OrdersPage() {
                         <Select
                           value={order.status}
                           onValueChange={(value) =>
-                            handleStatusChange(order.id, value)
+                            handleStatusChange(order, value)
                           }
                         >
                           <SelectTrigger className="w-32.5 ml-auto h-8 text-xs bg-white border-gray-200">

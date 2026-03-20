@@ -1,0 +1,124 @@
+// Prisma schema for Laptop Point Bangladesh
+// Transactional data: orders, order items, status history, inventory
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────────────────────
+// ORDERS
+// ─────────────────────────────────────────────────────────────
+
+model Order {
+  id          String @id @default(cuid())
+  orderNumber String @unique
+
+  // Customer snapshot (denormalised — no user account required)
+  customerName  String
+  customerPhone String
+  customerEmail String?
+
+  // Shipping address snapshot
+  address    String?
+  city       String?
+  district   String?
+  postalCode String?
+
+  // Financials (in BDT)
+  subtotal     Float
+  shippingCost Float @default(100)
+  totalAmount  Float
+
+  // Payment
+  paymentMethod String @default("cod") // cod | bkash | nagad | card
+  paymentStatus String @default("pending") // pending | paid | failed | refunded
+
+  // Lifecycle status
+  status         String    @default("Pending") // Pending | Processing | Shipped | Delivered | Cancelled
+  notes          String?
+  trackingNumber String?
+  deliveredAt    DateTime?
+
+  // Relations
+  items         OrderItem[]
+  statusHistory OrderStatusEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([customerPhone])
+}
+
+// Line-item snapshot — prices locked at purchase time
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  // Sanity _id or local JSON id
+  productId String
+  sku       String
+  name      String
+  unitPrice Float
+  quantity  Int
+
+  inventoryDeducted Boolean @default(false)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+// Immutable audit trail of every status transition
+model OrderStatusEvent {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  status    String
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([orderId])
+}
+
+// ─────────────────────────────────────────────────────────────
+// INVENTORY
+// ─────────────────────────────────────────────────────────────
+
+// Current stock level per product
+model Inventory {
+  id        String @id @default(cuid())
+  productId String @unique // Sanity _id or local JSON id (as string)
+  sku       String @unique
+  name      String
+
+  quantity Int @default(0) // Available units
+  reserved Int @default(0) // Held by pending/processing orders
+
+  updatedAt DateTime @updatedAt
+
+  @@index([quantity])
+}
+
+// Append-only audit log of every stock movement
+model InventoryLog {
+  id        String @id @default(cuid())
+  productId String
+  sku       String
+
+  delta   Int // negative = outbound, positive = inbound
+  reason  String // "sale" | "restock" | "adjustment" | "return" | "cancellation"
+  orderId String? // linked order number when reason = "sale" | "return" | "cancellation"
+  note    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+  @@index([createdAt])
+}

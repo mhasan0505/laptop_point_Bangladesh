@@ -20,3 +20,5 @@ Lenovo x1 carbon i5 8th 8/256 price = 29,999tk-done
 
 Surface laptop 3 i5 10th gen 8/256 rose gold price = 43,500tk--Done
 Surface laptop 3 i7 10th gen 16/512 black price = 53,500tk--Done
+
+supabase password : tnbmwkft5Ax0XTvq
