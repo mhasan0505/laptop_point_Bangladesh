@@ -22,3 +22,48 @@ Surface laptop 3 i5 10th gen 8/256 rose gold price = 43,500tk--Done
 Surface laptop 3 i7 10th gen 16/512 black price = 53,500tk--Done
 
 supabase password : tnbmwkft5Ax0XTvq
+
+
+
+
+
+
+
+
+Industry-standard approach is to build a merchant-managed catalog system, not JSON-file editing.
+
+How it is usually done
+
+Use a real product database table set.
+Give clients a secure admin portal (login + roles) to create and edit products.
+Store images in object storage (S3, Cloudinary, Supabase Storage), not inside codebase.
+Validate all product data server-side before saving.
+Keep an audit trail (who changed what, when).
+Use publish workflow (draft -> review -> published) for safer updates.
+Expose product data through APIs to storefront and app.
+Typical architecture
+
+Catalog data: PostgreSQL (products, variants, prices, stock, categories, attributes).
+Rich marketing content: CMS or rich text fields.
+Inventory and orders: transactional tables with logs.
+Search: indexed copy (Meilisearch/Algolia/Elastic) for fast filtering.
+Background jobs: image processing, reindexing, cache invalidation.
+Must-have controls
+
+RBAC permissions: owner, manager, editor.
+SKU uniqueness checks.
+Slug uniqueness checks.
+Price rules and stock constraints.
+Soft delete + restore.
+Version history + rollback.
+Webhook events for downstream systems.
+For your current setup
+
+Move product creation from local JSON/in-memory to database-backed CRUD.
+Keep admin form but save through product API endpoints.
+Add tables for full product shape (specs, features, media, pricing, stock).
+Add image upload flow and product status workflow.
+Keep orders using snapshot prices at checkout (this is already best practice).
+If you want, I can design the exact table schema and API contract for your current app so your client can self-manage products safely in production.
+
+GPT-5.3-Codex • 0.9x
