@@ -32,8 +32,16 @@ function createClient(): PrismaClient {
   });
 }
 
-export const prisma = globalForPrisma.prisma ?? createClient();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+// Use a Proxy so the PrismaClient is only instantiated on the first actual
+// database call, not at module-import time. This lets Next.js import route
+// handlers during the build phase without DATABASE_URL being present.
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    if (!globalForPrisma.prisma) {
+      globalForPrisma.prisma = createClient();
+    }
+    return (
+      globalForPrisma.prisma as unknown as Record<string | symbol, unknown>
+    )[prop];
+  },
+});
