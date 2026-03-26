@@ -188,12 +188,16 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Failed to create order";
-    if (message.startsWith("Insufficient stock")) {
-      return NextResponse.json({ error: message }, { status: 409 });
+    const raw = error instanceof Error ? error.message : "";
+    // Only surface domain-level messages that are safe to show to the user.
+    // All other errors (DB config, network, etc.) are logged server-side only.
+    if (raw.startsWith("Insufficient stock")) {
+      return NextResponse.json({ error: raw }, { status: 409 });
     }
     console.error("[POST /api/orders]", error);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create order. Please try again." },
+      { status: 500 },
+    );
   }
 }

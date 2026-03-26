@@ -1,69 +1,77 @@
-Hp 830 g6 i5 8/256 8th generation price = 28k --done
-Hp 840 g6 i5 8/256 price = 29k-done
-Hp 840 g7 i5 16/256 price = 35,500tk --done
-Hp 845 g7 ryzen 5 16/512 price = 37,000tk--Done
+## Product Catalog Plan (Industry Standard)
 
-HP 840 g8 i5 16/512 price = 41,500tk
-Hp 845 g8 ryzen 5 16/512 price = 39,500tk--Done
-Hp 845 g9 Ryzen 5 pro 16/512 price = 50,500tk--Done
-Hp 1040 g8 i7 16/512 price = 67000tk--Done
+Build a merchant-managed catalog system, not JSON-file editing.
 
-Dell latitude 3310 i5 8th 8/256 price = 23,500tk--Done
-Dell latitude 7400 i5 8/256 price = 26,700tk black--Done
-Dell XPS 13 9370 i7 8th 16/256 price = 40,900tk--Done
-Dell latitude 7400 Core i5 8th gen 8/256 price = 26,700tk black colour--
+### Phase 1 - Foundation (Database + Core APIs)
 
-Lenovo Thinkpad T490s i5 8/256 price = 26,900tk--done
+Goal: Move products from JSON/in-memory to PostgreSQL with stable CRUD.
 
-Lenovo x1 carbon i5 8th 8/256 price = 29,999tk-done
-16/256 price = 33,500tk--Donee
+- [ ] Add Prisma models for `Product`, `ProductImage`, `ProductFeature`.
+- [ ] Link `Inventory.productId` to real product IDs (not JSON-only IDs).
+- [ ] Generate and apply migration for new catalog tables.
+- [ ] Create admin catalog APIs:
+  - [ ] `GET /api/admin/products`
+  - [ ] `POST /api/admin/products`
+  - [ ] `GET /api/admin/products/[id]`
+  - [ ] `PATCH /api/admin/products/[id]`
+  - [ ] `DELETE /api/admin/products/[id]` (archive/soft delete)
+- [ ] Add server-side validation for create/update payloads.
+- [ ] Enforce unique checks: SKU and slug.
+- [ ] Write product audit logs on create/update/delete.
+- [ ] Add seed/migration script from `app/data/products.json` to database.
 
-Surface laptop 3 i5 10th gen 8/256 rose gold price = 43,500tk--Done
-Surface laptop 3 i7 10th gen 16/512 black price = 53,500tk--Done
+Definition of done (Phase 1):
 
-supabase password : tnbmwkft5Ax0XTvq
+- [ ] Product list and details can be fetched fully from DB APIs.
+- [ ] Admin can create and update products without touching JSON files.
+- [ ] Existing order flow still works with price snapshots.
 
+### Phase 2 - Admin UX + Media Pipeline
 
+Goal: Let clients self-manage full product data safely from admin panel.
 
+- [ ] Upgrade admin add/edit forms to support full product schema:
+  - [ ] basic info (name, SKU, brand, model, category)
+  - [ ] pricing (sale, market, discount, tax)
+  - [ ] stock inputs and inventory sync
+  - [ ] specs (CPU, RAM, storage, display, graphics, ports, weight, OS)
+  - [ ] descriptions (short + full)
+  - [ ] features array
+  - [ ] images list
+- [ ] Integrate image upload to cloud storage (Supabase Storage/S3/Cloudinary).
+- [ ] Save only image URLs/metadata in DB.
+- [ ] Add publish workflow statuses: `draft`, `review`, `published`, `archived`.
+- [ ] Add soft-delete and restore actions in admin.
+- [ ] Show validation and API errors clearly in admin UI.
 
+Definition of done (Phase 2):
 
+- [ ] A client user can create and publish a product end-to-end from admin.
+- [ ] Product appears correctly on storefront after publish.
+- [ ] No product creation/edit requires developer code changes.
 
+### Phase 3 - Security, Quality, and Operations
 
+Goal: Production-hardening and operational reliability.
 
-Industry-standard approach is to build a merchant-managed catalog system, not JSON-file editing.
+- [ ] Implement RBAC roles: owner, manager, editor.
+- [ ] Protect all admin product APIs with authentication + authorization.
+- [ ] Add version history and rollback for product changes.
+- [ ] Add webhook/event hooks for downstream services (search/index, analytics).
+- [ ] Add search indexing flow (Meilisearch/Algolia/Elastic) and reindex jobs.
+- [ ] Add background jobs for image optimization and cache invalidation.
+- [ ] Add monitoring + alerting for catalog API failures.
+- [ ] Add integration tests for product CRUD, publish flow, and permission checks.
+- [ ] Add deployment checklist for env vars, storage keys, and migration safety.
 
-How it is usually done
+Definition of done (Phase 3):
 
-Use a real product database table set.
-Give clients a secure admin portal (login + roles) to create and edit products.
-Store images in object storage (S3, Cloudinary, Supabase Storage), not inside codebase.
-Validate all product data server-side before saving.
-Keep an audit trail (who changed what, when).
-Use publish workflow (draft -> review -> published) for safer updates.
-Expose product data through APIs to storefront and app.
-Typical architecture
+- [ ] Catalog operations are role-secure, auditable, and recoverable.
+- [ ] Search/index updates are automated and reliable.
+- [ ] Team can deploy without breaking catalog or inventory behavior.
 
-Catalog data: PostgreSQL (products, variants, prices, stock, categories, attributes).
-Rich marketing content: CMS or rich text fields.
-Inventory and orders: transactional tables with logs.
-Search: indexed copy (Meilisearch/Algolia/Elastic) for fast filtering.
-Background jobs: image processing, reindexing, cache invalidation.
-Must-have controls
+### Implementation Order (Suggested)
 
-RBAC permissions: owner, manager, editor.
-SKU uniqueness checks.
-Slug uniqueness checks.
-Price rules and stock constraints.
-Soft delete + restore.
-Version history + rollback.
-Webhook events for downstream systems.
-For your current setup
-
-Move product creation from local JSON/in-memory to database-backed CRUD.
-Keep admin form but save through product API endpoints.
-Add tables for full product shape (specs, features, media, pricing, stock).
-Add image upload flow and product status workflow.
-Keep orders using snapshot prices at checkout (this is already best practice).
-If you want, I can design the exact table schema and API contract for your current app so your client can self-manage products safely in production.
-
-GPT-5.3-Codex • 0.9x
+- [ ] Complete all Phase 1 tasks first.
+- [ ] Deliver Phase 2 in two increments: form upgrade, then media upload.
+- [ ] Complete Phase 3 hardening before giving broad client access.
