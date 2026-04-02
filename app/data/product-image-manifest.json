@@ -50,13 +50,22 @@
     "/products/hp/HP-Elitebook-840-G8-Core-I7-11TH-Gen-16-512/port1.jpg"
   ],
   "HP-845G8-010": [
-    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/main.jpg",
-    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/front.jpg",
-    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/back.jpg",
-    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/side.jpg",
-    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/side1.jpg",
-    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/port.jpg",
-    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/port2.jpg"
+    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/main.png",
+    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/back.png",
+    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/side.png",
+    "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/port.png"
+  ],
+  "HP-845G9-R5P-030": [
+    "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/main.png",
+    "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/back.png",
+    "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/side.png",
+    "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/port.png"
+  ],
+  "HP-845G10-R5-027": [
+    "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/main.png",
+    "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/back.png",
+    "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/side.png",
+    "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/port.png"
   ],
   "DELL-3190-011": [
     "/products/dell/Dell-latitude-3190-2-1-Pentium-Silver-8-128/main.jpg",
@@ -173,5 +182,50 @@
     "/products/microsoft/Microsoft-Surface-laptop-4/side.png",
     "/products/microsoft/Microsoft-Surface-laptop-4/side2.png",
     "/products/microsoft/Microsoft-Surface-laptop-4/back.png"
+  ],
+  "HP-ZFIREFLY14G9-024": [
+    "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16-512/main.png",
+    "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16-512/back.png",
+    "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16-512/port.png",
+    "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16-512/side.png"
+  ],
+  "LEN-T490S-I5-032": [
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/main.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/front.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/back.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/fullSize.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/side1.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/side2.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/port.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/port2.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/port3.jpg"
+  ],
+  "LEN-T14SG2-R5-033": [
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/main.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/front.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/fullSize.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/side.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/side1.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/side2.jpg"
+  ],
+  "LEN-T14SG2-R7-034": [
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/main.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/front.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/fullSize.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/side.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/side1.jpg",
+    "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/side2.jpg"
+  ],
+  "HP-ZFIREFLY14G8-I5-035": [
+    "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/main.png",
+    "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/front.png",
+    "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/back.png",
+    "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/port.png",
+    "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/side.png"
+  ],
+  "DELL-5580-I7-036": [
+    "/products/dell/Dell-latitude-5580-Core-i7-7TH-Gen-8-256-Full-HD-IPS-Display/main.png",
+    "/products/dell/Dell-latitude-5580-Core-i7-7TH-Gen-8-256-Full-HD-IPS-Display/front.png",
+    "/products/dell/Dell-latitude-5580-Core-i7-7TH-Gen-8-256-Full-HD-IPS-Display/side.png"
   ]
 }

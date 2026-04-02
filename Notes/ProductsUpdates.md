@@ -67,3 +67,13 @@ Keep orders using snapshot prices at checkout (this is already best practice).
 If you want, I can design the exact table schema and API contract for your current app so your client can self-manage products safely in production.
 
 GPT-5.3-Codex • 0.9x
+
+
+
+updates APRIL
+lenovo Thinkpad T490s i5 8th gen 8/256 price = 26,900tk
+Lenovo Thinkpad T14s gen 2 Ryzen 5 pro dedicated graphics 1gb 16/256 price = 36,900tk
+Lenovo Thinkpad T14s gen 2 Ryzen 7 pro dedicated graphics 1gb  16/256 price = 40,900tk
+ T14s ase
+ Hp Zbook Firefly 14 g8 i5 11th gen 16/512 price = 44k
+ Dell latitude 5580 i7 7th gen 8/256 Display 15.6 price = 26,500tk

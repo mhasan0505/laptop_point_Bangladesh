@@ -462,7 +462,7 @@
       "full": "**What's new in the 845 G8 model?**\n The G8 model gets a significant performance boost by upgrading the processor to the Ryzen 5000 series, which is based on the highly efficient 'Zen 3' architecture. \n\n**What does this upgrade mean for performance?**\n This results in blazing-fast speeds for both single-core and multi-core tasks, along with some of the best integrated graphics performance you can find in a business laptop. \n\n**Is it still a premium device?**\n Absolutely. It features the same high-quality premium build as the rest of the EliteBook 800 series, combining top-tier performance with a durable and professional design."
     },
     "features": ["Ryzen 5000 Series", "Zen 3 Architecture", "Premium Build"],
-    "images": ["/images/hp-845-g8.jpg"]
+    "images": []
   },
   {
     "id": 11,
@@ -659,7 +659,7 @@
     },
     "specs": {
       "processor": "Intel Core i5-8365U (8th Gen)",
-      "ram": "16GB DDR4",
+      "ram": "8GB DDR4",
       "storage": "256GB NVMe SSD",
       "display": {
         "size": "14.0 inch",
@@ -674,7 +674,7 @@
     },
     "description": {
       "short": "Premium aluminum body with compact narrow-bezel design.",
-      "full": "**What are the key design features of the Latitude 7400?**\n The 7400 stands out with its stunning machined aluminum finish and a much more compact footprint than the previous 7490 model, thanks to its modern, narrow screen bezels. \n\n**Does it have modern connectivity?**\n Yes, it features a powerful Thunderbolt 3 port, which allows for high-speed data transfer, single-cable docking solutions, and connecting multiple high-resolution displays. \n\n**Is it a good choice for multitasking?**\n Absolutely. With 16GB of RAM as standard, it combines premium aesthetics with serious business utility, making it perfect for users who need to run multiple applications smoothly."
+      "full": "**What are the key design features of the Latitude 7400?**\n The 7400 stands out with its stunning machined aluminum finish and a much more compact footprint than the previous 7490 model, thanks to its modern, narrow screen bezels. \n\n**Does it have modern connectivity?**\n Yes, it features a powerful Thunderbolt 3 port, which allows for high-speed data transfer, single-cable docking solutions, and connecting multiple high-resolution displays. \n\n**Is it a good choice for multitasking?**\n Absolutely. With 8GB of RAM as standard, it combines premium aesthetics with serious business utility, making it perfect for users who need to run multiple applications smoothly."
     },
     "features": [
       "Metal Body",
@@ -937,7 +937,7 @@
     },
     "specs": {
       "processor": "Intel Core i7-1165G7 (11th Gen)",
-      "ram": "16GB LPDDR4x",
+      "ram": "16GB DD4",
       "storage": "512GB NVMe SSD",
       "display": {
         "size": "14.0 inch",
@@ -973,7 +973,7 @@
     "grade": "A+",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 43500,
+      "sale_price": 42700,
       "market_price": 48000,
       "discount_percentage": 16,
       "tax_included": true
@@ -1143,15 +1143,7 @@
       "16:10 Display",
       "DDR5 RAM"
     ],
-    "images": [
-      "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/main.png",
-      "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/front.png",
-      "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/front1.png",
-      "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/keyboard.png",
-      "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/side.png",
-      "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/port.png",
-      "/products/hp/HP-Zbook-Firefly-14-G9-Core-i7-12TH-Gen-16/512/port2.png"
-    ]
+    "images": []
   },
   {
     "id": 25,
@@ -1207,7 +1199,7 @@
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/main.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/front.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/back.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/keyborad.jpg",
+      "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/keyboard.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/close.jpg"
     ]
   },
@@ -1314,15 +1306,7 @@
       "512GB NVMe SSD",
       "Business Grade Build"
     ],
-    "images": [
-      "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/main.jpg",
-      "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/front.jpg",
-      "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/back.jpg",
-      "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/side.jpg",
-      "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/side1.jpg",
-      "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/port.jpg",
-      "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/port2.jpg"
-    ]
+    "images": []
   },
   {
     "id": 28,
@@ -1481,14 +1465,7 @@
       "Windows 11 Pro",
       "Thunderbolt Support"
     ],
-    "images": [
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/main.jpg",
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/back.jpg",
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/front.jpg",
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/side.jpg",
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/port.jpg",
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/port2.jpg"
-    ]
+    "images": []
   },
   {
     "id": 31,
@@ -1541,5 +1518,240 @@
       "/products/dell/Dell-XPS-13-9370code-i7-8th-Gen-16-256/side.png",
       "/products/dell/Dell-XPS-13-9370code-i7-8th-Gen-16-256/side2.png"
     ]
+  },
+  {
+    "id": 32,
+    "sku": "LEN-T490S-I5-032",
+    "name": "Lenovo ThinkPad T490s i5 8th Gen 8/256",
+    "brand": "Lenovo",
+    "model": "ThinkPad T490s",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 26900,
+      "market_price": 31500,
+      "discount_percentage": 15,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
+    },
+    "specs": {
+      "processor": "Intel Core i5-8365U (8th Gen)",
+      "ram": "8GB DDR4",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": ["Thunderbolt 3", "2x USB 3.1", "HDMI", "RJ-45", "Audio Combo"],
+      "weight": "1.35 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Ultra-thin business ultrabook with excellent keyboard and portability.",
+      "full": "**What makes the T490s special?**\nThe T490s is ThinkPad's thinnest standard business laptop, packed into a lightweight 1.35kg chassis without sacrificing performance or the legendary keyboard comfort.\n\n**Who is this for?**\nIt's ideal for frequent travelers, remote workers, and business professionals who prioritize portability without compromising durability.\n\n**What are the standout features?**\nWith modern Thunderbolt 3, comprehensive ports, and an exceptional keyboard, it delivers professional-grade connectivity and ergonomic comfort in an impossibly slim form factor."
+    },
+    "features": [
+      "Ultra-thin Design (1.35kg)",
+      "Legendary Keyboard",
+      "Thunderbolt 3",
+      "Mil-Spec Durability"
+    ],
+    "images": []
+  },
+  {
+    "id": 33,
+    "sku": "LEN-T14SG2-R5-033",
+    "name": "Lenovo ThinkPad T14s Gen 2 Ryzen 5 Pro 16/256",
+    "brand": "Lenovo",
+    "model": "ThinkPad T14s Gen 2",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 36900,
+      "market_price": 43500,
+      "discount_percentage": 15,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
+    },
+    "specs": {
+      "processor": "AMD Ryzen 5 PRO 4650U (6C/12T)",
+      "ram": "16GB DDR4",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "AMD Radeon Pro (1GB Dedicated)",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0", "Audio Combo"],
+      "weight": "1.43 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Ryzen Pro ultrabook with dedicated graphics and modern performance.",
+      "full": "**What makes the T14s Gen 2 unique?**\nCombining AMD Ryzen Pro efficiency with dedicated graphics, this ultrabook delivers strong multi-core performance ideal for creative professionals and developers.\n\n**What does Ryzen Pro offer?**\nRyzen Pro processors include professional-grade security, system management, and excellent battery efficiency—making it perfect for business users.\n\n**Who should consider this?**\nFreelancers, content creators, and business professionals who need extra graphics performance and thermal efficiency in a portable ThinkPad."
+    },
+    "features": [
+      "Ryzen 5 Pro 6C/12T",
+      "1GB Dedicated Graphics",
+      "16GB DDR4 RAM",
+      "Thunderbolt 4"
+    ],
+    "images": []
+  },
+  {
+    "id": 34,
+    "sku": "LEN-T14SG2-R7-034",
+    "name": "Lenovo ThinkPad T14s Gen 2 Ryzen 7 Pro 16/256",
+    "brand": "Lenovo",
+    "model": "ThinkPad T14s Gen 2",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 40900,
+      "market_price": 48000,
+      "discount_percentage": 15,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 2
+    },
+    "specs": {
+      "processor": "AMD Ryzen 7 PRO 4750U (8C/16T)",
+      "ram": "16GB DDR4",
+      "storage": "256GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "AMD Radeon Pro (1GB Dedicated)",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0", "Audio Combo"],
+      "weight": "1.43 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Top-tier Ryzen 7 Pro ultrabook with 8-core performance and graphics.",
+      "full": "**How does Ryzen 7 Pro differ from Ryzen 5 Pro?**\nWith 8 cores vs 6, the Ryzen 7 Pro delivers significantly higher multi-threaded performance while maintaining the same lightweight form factor and professional features.\n\n**What's the benefit of 8-core performance?**\nIdeal for heavy multitasking, video editing, CAD, programming, and running virtual machines—all while maintaining excellent portability and battery life.\n\n**Who is this built for?**\nPower users, engineers, designers, and business professionals who need maximum performance in an ultraportable ThinkPad."
+    },
+    "features": [
+      "Ryzen 7 Pro 8C/16T",
+      "1GB Dedicated Graphics",
+      "16GB DDR4 RAM",
+      "Thunderbolt 4"
+    ],
+    "images": []
+  },
+  {
+    "id": 35,
+    "sku": "HP-ZFIREFLY14G8-I5-035",
+    "name": "HP ZBook Firefly 14 G8 i5 11th Gen 16/512",
+    "brand": "HP",
+    "model": "ZBook Firefly 14 G8",
+    "category": "Workstation",
+    "condition": "Used",
+    "grade": "Like New",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 44000,
+      "market_price": 52000,
+      "discount_percentage": 15,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 2
+    },
+    "specs": {
+      "processor": "Intel Core i5-11300H (11th Gen)",
+      "ram": "16GB DDR4",
+      "storage": "512GB NVMe SSD",
+      "display": {
+        "size": "14.0 inch",
+        "resolution": "1920 x 1200 (16:10)",
+        "type": "IPS Anti-Glare High Brightness",
+        "touchscreen": false
+      },
+      "graphics": "NVIDIA GeForce RTX 3050",
+      "ports": ["2x Thunderbolt 4", "2x USB-A", "HDMI 2.0", "SD Card"],
+      "weight": "1.48 kg",
+      "os": "Windows 11 Pro"
+    },
+    "description": {
+      "short": "Professional mobile workstation with RTX graphics and 11th Gen power.",
+      "full": "**What makes the Firefly 14 G8 a workstation?**\nWith NVIDIA RTX dedicated graphics, ISV certification, and robust performance, it's engineered for CAD, 3D modeling, photo/video editing, and professional applications.\n\n**What are the key upgrades?**\nThe G8 brings 11th Gen Intel, RTX graphics, and a tall 16:10 display—perfect for professional applications and timeline work.\n\n**Who is it for?**\nEngineers, architects, photographers, video editors, and creative professionals who need certified, portable workstation power."
+    },
+    "features": [
+      "11th Gen Intel Core i5",
+      "NVIDIA RTX 3050 Graphics",
+      "16:10 Display",
+      "ISV Certified Workstation"
+    ],
+    "images": []
+  },
+  {
+    "id": 36,
+    "sku": "DELL-5580-I7-036",
+    "name": "Dell Latitude 5580 i7 7th Gen 8/256 15.6 FHD",
+    "brand": "Dell",
+    "model": "Latitude 5580",
+    "category": "Laptop",
+    "condition": "Used",
+    "grade": "A",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 26500,
+      "market_price": 31000,
+      "discount_percentage": 15,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
+    },
+    "specs": {
+      "processor": "Intel Core i7-7600U (7th Gen)",
+      "ram": "8GB DDR4",
+      "storage": "256GB SSD",
+      "display": {
+        "size": "15.6 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "IPS Anti-Glare",
+        "touchscreen": false
+      },
+      "graphics": "Intel HD Graphics 620",
+      "ports": ["USB-C", "2x USB 3.1", "HDMI", "RJ-45", "Audio Combo"],
+      "weight": "2.0 kg",
+      "os": "Windows 10 Pro"
+    },
+    "description": {
+      "short": "Reliable 15.6-inch business laptop with solid 7th Gen performance.",
+      "full": "**Why choose a 15.6-inch Latitude?**\nThe larger screen is perfect for spreadsheets, presentations, and extended work sessions while maintaining professional portability compared to larger desktop replacements.\n\n**What's the performance like?**\nWith 7th Gen Core i7, 8GB RAM, and 256GB SSD, it delivers solid everyday performance for business applications and multitasking.\n\n**Who should buy this?**\nBusiness users, office workers, and professionals who prefer a larger display for comfortable all-day productivity work."
+    },
+    "features": [
+      "15.6-inch FHD Display",
+      "7th Gen Core i7",
+      "Durable Business Build",
+      "Full Port Selection"
+    ],
+    "images": []
   }
 ]

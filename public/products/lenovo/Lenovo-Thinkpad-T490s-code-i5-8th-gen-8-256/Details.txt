@@ -1,0 +1,10 @@
+Brand : Lenovo
+Model Name : Lenovo Thinkpad
+Screen Size :14 Inches
+Color : Black
+Hard Disk Size : 256 GB
+CPU Model : Core i5-8365U
+Ram Memory Installed Size : 16 GB
+Operating System : Windows 10 Pro
+Special Feature : Fingerprint Reader
+Graphics Card Description : Dedicated, Integrated
