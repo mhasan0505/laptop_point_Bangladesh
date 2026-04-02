@@ -203,7 +203,7 @@
     "specs": {
       "processor": "Intel Core i5-10310U (10th Gen)",
       "ram": "16GB DDR4",
-      "storage": "512GB NVMe SSD",
+      "storage": "256GB NVMe SSD",
       "display": {
         "size": "14.0 inch",
         "resolution": "1920 x 1080 (FHD)",

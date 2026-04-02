@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "prisma generate && next build",
+    "build": "pnpm validate:images && prisma generate && next build",
     "start": "next start",
     "postinstall": "prisma generate",
     "lint": "eslint",
@@ -13,7 +13,8 @@
     "prisma:migrate:prod": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "prisma:seed": "tsx prisma/seed.ts",
-    "prisma:reset": "prisma migrate reset"
+    "prisma:reset": "prisma migrate reset",
+    "validate:images": "node scripts/validate-product-images.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",
