@@ -136,7 +136,10 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${poppins.variable} antialiased`}>
+      <body
+        className={`${poppins.variable} antialiased`}
+        suppressHydrationWarning
+      >
         {process.env.NEXT_PUBLIC_FB_PIXEL_ID && (
           <noscript>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -149,9 +152,7 @@ export default function RootLayout({
             />
           </noscript>
         )}
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
         <SpeedInsights />
         <Analytics />
       </body>

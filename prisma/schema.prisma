@@ -88,14 +88,109 @@ model OrderStatusEvent {
 }
 
 // ─────────────────────────────────────────────────────────────
+// PRODUCT CATALOG
+// ─────────────────────────────────────────────────────────────
+
+model Product {
+  id       String  @id @default(cuid())
+  legacyId String? // Original numeric id from products.json (migration reference)
+
+  // Identity
+  sku       String  @unique
+  slug      String  @unique
+  name      String
+  brand     String
+  model     String
+  category  String
+  condition String  @default("Used")
+  grade     String?
+
+  // Pricing (BDT)
+  salePrice          Float
+  marketPrice        Float
+  discountPercentage Float   @default(0)
+  taxIncluded        Boolean @default(true)
+
+  // Specs
+  processor         String?
+  ram               String?
+  storage           String?
+  displaySize       String?
+  displayResolution String?
+  displayType       String?
+  touchscreen       Boolean  @default(false)
+  graphics          String?
+  ports             String[]
+  weight            String?
+  os                String?
+
+  // Content
+  descriptionShort String?
+  descriptionFull  String? @db.Text
+
+  // Lifecycle status
+  status String @default("published") // draft | published | archived
+
+  // Relations
+  images    ProductImage[]
+  features  ProductFeature[]
+  inventory Inventory?
+  auditLogs ProductAuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sku])
+  @@index([slug])
+  @@index([status])
+  @@index([category])
+  @@index([brand])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  position  Int     @default(0)
+
+  @@index([productId])
+}
+
+model ProductFeature {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  label     String
+  position  Int     @default(0)
+
+  @@index([productId])
+}
+
+// Append-only audit trail for product create/update/delete
+model ProductAuditLog {
+  id            String   @id @default(cuid())
+  productId     String
+  action        String // create | update | delete
+  changedFields Json?
+  note          String?
+  createdAt     DateTime @default(now())
+  product       Product  @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────────────────────
 // INVENTORY
 // ─────────────────────────────────────────────────────────────
 
 // Current stock level per product
 model Inventory {
-  id        String @id @default(cuid())
-  productId String @unique // Sanity _id or local JSON id (as string)
-  sku       String @unique
+  id        String   @id @default(cuid())
+  productId String   @unique // Product.id (cuid) after migration; legacy JSON id before seed
+  product   Product? @relation(fields: [productId], references: [id])
+  sku       String   @unique
   name      String
 
   quantity Int @default(0) // Available units

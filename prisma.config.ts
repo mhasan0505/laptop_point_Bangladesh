@@ -6,6 +6,7 @@ import { defineConfig } from "prisma/config";
 dotenv.config({ path: ".env.local" });
 
 const databaseUrl = process.env.DATABASE_URL;
+const directUrl = process.env.DIRECT_URL;
 
 // Only override the datasource URL when DATABASE_URL is available.
 // During `prisma generate` (e.g. postinstall on Vercel), a live URL is not
@@ -16,7 +17,10 @@ const datasource = databaseUrl
       url.searchParams.set("sslmode", "require");
       url.searchParams.set("pgbouncer", "true");
       url.searchParams.set("connection_limit", "1");
-      return { url: url.toString() };
+      return {
+        url: url.toString(),
+        directUrl: directUrl ?? url.toString(),
+      };
     })()
   : undefined;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Product } from "@/types/product";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -10,23 +10,22 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ProductsCard from "../ui/ProductsCard";
 
 const RecentlyViewed = () => {
-  // Use lazy initial state to read from localStorage only once during initialization
-  const [recentProducts] = useState<Product[]>(() => {
-    if (typeof window === "undefined") return [];
+  const [recentProducts, setRecentProducts] = useState<Product[]>([]);
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => {
     const saved = localStorage.getItem("recentlyViewed");
     if (saved) {
       try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Failed to parse recently viewed items", e);
-        return [];
+        setRecentProducts(JSON.parse(saved));
+      } catch {
+        // ignore malformed data
       }
     }
-    return [];
-  });
+    setMounted(true);
+  }, []);
 
-  if (recentProducts.length === 0) return null;
+  if (!mounted || recentProducts.length === 0) return null;
 
   return (
     <section className="py-12 bg-gray-50/50">

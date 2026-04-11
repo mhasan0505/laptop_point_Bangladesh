@@ -23,13 +23,22 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
   const [hoverImageLoaded, setHoverImageLoaded] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== "undefined" ? window.innerWidth < 1024 : false,
+  const [mainImageSrc, setMainImageSrc] = useState(
+    typeof product.image === "string" ? product.image : product.image.src,
   );
+  const [hoverImageSrc, setHoverImageSrc] = useState<string | null>(
+    product.images && product.images.length > 1
+      ? typeof product.images[1] === "string"
+        ? product.images[1]
+        : product.images[1].src
+      : null,
+  );
+  const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile on component mount
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -127,7 +136,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
           <div className="relative w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
             {/* Main image — fades out on hover only after hover image is ready */}
             <Image
-              src={product.image}
+              src={mainImageSrc}
               alt={product.name}
               width={220}
               height={220}
@@ -135,14 +144,23 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                 imageLoaded ? "opacity-100" : "opacity-0"
               } ${hoverImageLoaded ? "group-hover:opacity-0" : ""}`}
               onLoad={() => setImageLoaded(true)}
+              onError={() => {
+                if (mainImageSrc !== "/Logo.webp") {
+                  setMainImageSrc("/Logo.webp");
+                  setImageLoaded(false);
+                  return;
+                }
+
+                setImageLoaded(true);
+              }}
               priority={!isMobile}
               loading={isMobile ? "lazy" : "eager"}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
             {/* Hover image — preloads silently, crossfade activates once loaded */}
-            {product.images && product.images.length > 1 && (
+            {hoverImageSrc && (
               <Image
-                src={product.images[1]}
+                src={hoverImageSrc}
                 alt={`${product.name} side view`}
                 width={220}
                 height={220}
@@ -152,6 +170,10 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                     : "opacity-0"
                 }`}
                 onLoad={() => setHoverImageLoaded(true)}
+                onError={() => {
+                  setHoverImageSrc(null);
+                  setHoverImageLoaded(false);
+                }}
                 loading="eager"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />

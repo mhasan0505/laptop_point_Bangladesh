@@ -1,15 +1,21 @@
 "use client";
 
 import { laptopData } from "@/app/data/data";
-import RecentlyViewed from "@/components/product/RecentlyViewed";
 import FilterSidebar from "@/components/shop/FilterSidebar";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import ProductsCard from "@/components/ui/ProductsCard";
 import TrustBadges from "@/components/ui/TrustBadges";
+import { Product } from "@/types/product";
 import { SlidersHorizontal } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+
+const RecentlyViewed = dynamic(
+  () => import("@/components/product/RecentlyViewed"),
+  { ssr: false },
+);
 
 interface Filters {
   priceMin: string;
@@ -28,8 +34,28 @@ const ShopContent = () => {
     processors: [],
     rams: [],
   });
+  const [dbProducts, setDbProducts] = useState<Product[]>([]);
+  const [dbLoading, setDbLoading] = useState(true);
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search");
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data: Product[]) => {
+        if (!cancelled && Array.isArray(data)) setDbProducts(data);
+      })
+      .catch(() => {
+        /* silently fall back to static data */
+      })
+      .finally(() => {
+        if (!cancelled) setDbLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const normalizeBrand = (value?: string) =>
     value
@@ -38,9 +64,15 @@ const ShopContent = () => {
       .replace(/[^a-z0-9]+/g, "")
       .trim() || "";
 
-  let products = [...(laptopData.laptops || [])].sort(
-    (a, b) => Number(b.id) - Number(a.id),
-  );
+  // Merge: DB products first, then static products not already represented by SKU
+  const staticProducts = laptopData.laptops || [];
+  const dbSkus = new Set(dbProducts.map((p) => p.sku));
+  // DB products keep their natural API order (newest first from createdAt desc).
+  // Static products sort by numeric id descending.
+  const sortedStatic = staticProducts
+    .filter((p) => !dbSkus.has(p.sku))
+    .sort((a, b) => Number(b.id) - Number(a.id));
+  let products: Product[] = [...dbProducts, ...sortedStatic];
 
   // Apply search filter
   if (searchQuery) {
@@ -163,7 +195,7 @@ const ShopContent = () => {
         >
           <div
             className={`
-                    bg-white w-[280px] h-full lg:h-auto lg:w-auto p-4 lg:p-0 overflow-y-auto lg:overflow-visible transition-transform duration-300
+                    bg-white w-70 h-full lg:h-auto lg:w-auto p-4 lg:p-0 overflow-y-auto lg:overflow-visible transition-transform duration-300
                     ${
                       isMobileFilterOpen
                         ? "translate-x-0"
@@ -185,27 +217,34 @@ const ShopContent = () => {
                 : "All Products"}
             </h1>
             <span className="text-sm text-gray-500">
-              {products.length} Products
+              {dbLoading ? "Loading…" : `${products.length} Products`}
             </span>
           </div>
 
-          {products.length > 0 ? (
+          {dbLoading ? (
+            <div className="min-h-100 flex items-center justify-center">
+              <LoadingSpinner size="lg" />
+            </div>
+          ) : products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 justify-items-center">
               {products.map((product) => (
-                <ProductsCard key={product.sku || product.id} product={product} />
+                <ProductsCard
+                  key={product.sku || product.id}
+                  product={product}
+                />
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
               <p className="text-lg text-gray-500">
-                No products found matching your search.
+                No products found matching your filters.
               </p>
               <Button
                 variant="link"
                 onClick={() => (window.location.href = "/shop")}
                 className="mt-2 text-primary"
               >
-                Clear Search
+                Clear filters
               </Button>
             </div>
           )}
@@ -225,7 +264,7 @@ export default function ShopPage() {
 
       <Suspense
         fallback={
-          <div className="min-h-[400px] flex items-center justify-center">
+          <div className="min-h-100 flex items-center justify-center">
             <LoadingSpinner size="lg" />
           </div>
         }

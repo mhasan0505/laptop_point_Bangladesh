@@ -1,48 +1,128 @@
-// Sanity removed — all data served from local JSON and mock data.
-// TODO: Reconnect Sanity by restoring the original implementation.
+import { AdminProduct, AdminStats, OrderData } from "./admin-data";
 
-import productsRaw from "@/app/data/products.json";
-import { RawProduct } from "@/types/raw-product";
-import {
-  AdminProduct,
-  AdminStats,
-  getMockOrders,
-  OrderData,
-} from "./admin-data";
-
-// ============= LOCAL HELPERS =============
-
-function mapJsonToAdminProducts(): AdminProduct[] {
-  return (productsRaw as RawProduct[]).map((product) => {
-    const stock = product.stock?.quantity ?? 0;
-    let status = "Active";
-    if (stock === 0) status = "Out of Stock";
-    else if (stock < 5) status = "Low Stock";
-    return {
-      id: String(product.id),
-      name: product.name,
-      brand: product.brand || "Unknown",
-      category: product.category || "Laptop",
-      price: product.pricing?.sale_price ?? 0,
-      stock,
-      status,
-      sku: product.sku || String(product.id),
-      images: product.images || [],
+export interface AdminCatalogProduct {
+  id: string;
+  sku: string;
+  slug: string;
+  name: string;
+  brand: string;
+  model: string;
+  category: string;
+  condition: string;
+  grade: string | null;
+  pricing: {
+    currency: string;
+    sale_price: number;
+    market_price: number;
+    discount_percentage: number;
+    tax_included: boolean;
+  };
+  stock: {
+    status: string;
+    quantity: number;
+    reserved: number;
+  };
+  specs: {
+    processor: string | null;
+    ram: string | null;
+    storage: string | null;
+    display: {
+      size: string | null;
+      resolution: string | null;
+      type: string | null;
+      touchscreen: boolean;
     };
-  });
+    graphics: string | null;
+    ports: string[];
+    weight: string | null;
+    os: string | null;
+  };
+  description: {
+    short: string | null;
+    full: string | null;
+  };
+  features: string[];
+  images: string[];
+  status: "draft" | "review" | "published" | "archived";
+  createdAt: string;
+  updatedAt: string;
 }
 
-// In-memory order store (resets on page refresh)
-let _orders: OrderData[] = getMockOrders();
+export type AdminCatalogPayload = {
+  sku: string;
+  slug?: string;
+  name: string;
+  brand: string;
+  model: string;
+  category: string;
+  condition?: string;
+  grade?: string;
+  pricing: {
+    sale_price: number;
+    market_price: number;
+    discount_percentage?: number;
+    tax_included?: boolean;
+  };
+  stock: {
+    quantity: number;
+  };
+  specs?: {
+    processor?: string;
+    ram?: string;
+    storage?: string;
+    display?: {
+      size?: string;
+      resolution?: string;
+      type?: string;
+      touchscreen?: boolean;
+    };
+    graphics?: string;
+    ports?: string[];
+    weight?: string;
+    os?: string;
+  };
+  description?: {
+    short?: string;
+    full?: string;
+  };
+  features?: string[];
+  images?: string[];
+  status?: "draft" | "review" | "published" | "archived";
+};
 
-// In-memory product store (initialized from JSON, persists within browser tab session)
-let _products: AdminProduct[] | null = null;
+async function fetchJson<T>(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<T> {
+  const response = await fetch(input, {
+    ...init,
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...(init?.headers ?? {}),
+    },
+  });
 
-function getProductsStore(): AdminProduct[] {
-  if (!_products) {
-    _products = mapJsonToAdminProducts();
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(body || `Request failed with ${response.status}`);
   }
-  return _products;
+
+  return (await response.json()) as T;
+}
+
+function mapCatalogToAdminProduct(product: AdminCatalogProduct): AdminProduct {
+  return {
+    id: product.id,
+    name: product.name,
+    brand: product.brand,
+    category: product.category,
+    price: product.pricing.sale_price,
+    stock: product.stock.quantity,
+    status: product.status,
+    sku: product.sku,
+    images: product.images,
+  };
 }
 
 // ============= PRODUCT OPERATIONS =============
@@ -107,23 +187,33 @@ export interface SanityOrder {
  * Fetch all products from in-memory store (initialized from JSON)
  */
 export async function fetchProducts(): Promise<AdminProduct[]> {
-  return [...getProductsStore()];
+  const products = await fetchJson<AdminCatalogProduct[]>(
+    "/api/admin/products",
+  );
+  return products.map(mapCatalogToAdminProduct);
+}
+
+export async function fetchCatalogProducts(): Promise<AdminCatalogProduct[]> {
+  return fetchJson<AdminCatalogProduct[]>("/api/admin/products");
+}
+
+export async function fetchCatalogProductById(
+  id: string,
+): Promise<AdminCatalogProduct> {
+  return fetchJson<AdminCatalogProduct>(`/api/admin/products/${id}`);
 }
 
 /**
  * Add a new product to the in-memory store
  */
 export async function addProduct(
-  product: Omit<AdminProduct, "id">,
+  product: AdminCatalogPayload,
 ): Promise<string> {
-  const store = getProductsStore();
-  const id = `prod_${Date.now()}`;
-  const stock = product.stock ?? 0;
-  let status = product.status || "Active";
-  if (stock === 0) status = "Out of Stock";
-  else if (stock < 5) status = "Low Stock";
-  store.push({ ...product, id, stock, status });
-  return id;
+  const created = await fetchJson<AdminCatalogProduct>("/api/admin/products", {
+    method: "POST",
+    body: JSON.stringify(product),
+  });
+  return created.id;
 }
 
 /**
@@ -133,15 +223,10 @@ export async function updateProductStock(
   productId: string,
   newStock: number,
 ): Promise<boolean> {
-  const store = getProductsStore();
-  const idx = store.findIndex((p) => p.id === productId);
-  if (idx === -1) return false;
-  const updated = { ...store[idx], stock: newStock };
-  if (newStock === 0) updated.status = "Out of Stock";
-  else if (newStock < 5) updated.status = "Low Stock";
-  else if (updated.status === "Out of Stock" || updated.status === "Low Stock")
-    updated.status = "Active";
-  store[idx] = updated;
+  await fetchJson(`/api/admin/products/${productId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ stock: { quantity: newStock } }),
+  });
   return true;
 }
 
@@ -150,18 +235,12 @@ export async function updateProductStock(
  */
 export async function updateProduct(
   productId: string,
-  updates: Partial<AdminProduct>,
+  updates: Partial<AdminCatalogPayload>,
 ): Promise<boolean> {
-  const store = getProductsStore();
-  const idx = store.findIndex((p) => p.id === productId);
-  if (idx === -1) return false;
-  const merged = { ...store[idx], ...updates };
-  // Recompute auto-status from stock unless explicitly set
-  if (updates.stock !== undefined && updates.status === undefined) {
-    if (merged.stock === 0) merged.status = "Out of Stock";
-    else if (merged.stock < 5) merged.status = "Low Stock";
-  }
-  store[idx] = merged;
+  await fetchJson(`/api/admin/products/${productId}`, {
+    method: "PATCH",
+    body: JSON.stringify(updates),
+  });
   return true;
 }
 
@@ -169,10 +248,82 @@ export async function updateProduct(
  * Delete a product (in-memory store)
  */
 export async function deleteProduct(productId: string): Promise<boolean> {
-  const store = getProductsStore();
-  const idx = store.findIndex((p) => p.id === productId);
-  if (idx === -1) return false;
-  store.splice(idx, 1);
+  await fetchJson(`/api/admin/products/${productId}`, {
+    method: "DELETE",
+  });
+  return true;
+}
+
+export async function restoreProduct(
+  productId: string,
+  status: "draft" | "review" | "published" = "published",
+): Promise<boolean> {
+  await fetchJson(`/api/admin/products/${productId}/restore`, {
+    method: "POST",
+    body: JSON.stringify({ status }),
+  });
+  return true;
+}
+
+export async function requestCatalogReindex(): Promise<{
+  message: string;
+  activeProducts: number;
+  engine: string;
+}> {
+  return fetchJson("/api/admin/products/reindex", {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
+
+export async function uploadAdminImage(
+  file: File,
+  metadata?: {
+    sku?: string;
+    slug?: string;
+    brand?: string;
+    model?: string;
+  },
+): Promise<string> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  if (metadata?.sku) {
+    formData.append("sku", metadata.sku);
+  }
+  if (metadata?.slug) {
+    formData.append("slug", metadata.slug);
+  }
+  if (metadata?.brand) {
+    formData.append("brand", metadata.brand);
+  }
+  if (metadata?.model) {
+    formData.append("model", metadata.model);
+  }
+
+  const response = await fetch("/api/admin/upload/image", {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(body || "Image upload failed");
+  }
+
+  const result = (await response.json()) as { url: string };
+  return result.url;
+}
+
+export async function rollbackProduct(
+  productId: string,
+  auditLogId: string,
+): Promise<boolean> {
+  await fetchJson(`/api/admin/products/${productId}/rollback`, {
+    method: "POST",
+    body: JSON.stringify({ auditLogId }),
+  });
   return true;
 }
 
@@ -182,7 +333,26 @@ export async function deleteProduct(productId: string): Promise<boolean> {
  * Fetch all orders from in-memory store
  */
 export async function fetchOrders(): Promise<OrderData[]> {
-  return [..._orders];
+  const orders = await fetchJson<
+    Array<{
+      id: string;
+      orderNumber: string;
+      customerName: string;
+      totalAmount: number;
+      status: string;
+      createdAt: string;
+      paymentMethod: string;
+    }>
+  >("/api/orders");
+
+  return orders.map((o) => ({
+    id: o.orderNumber,
+    customer: o.customerName,
+    amount: `৳${o.totalAmount.toLocaleString()}`,
+    status: o.status,
+    date: o.createdAt.slice(0, 10),
+    paymentMethod: o.paymentMethod,
+  }));
 }
 
 /**
@@ -206,27 +376,31 @@ export async function createOrder(orderData: {
   paymentMethod: string;
   notes?: string;
 }): Promise<string | null> {
-  const orderId = `#ORD${Date.now().toString().slice(-6)}`;
-  const paymentMethodMap: Record<string, string> = {
-    cod: "Cash on Delivery",
-    bkash: "bKash",
-    nagad: "Nagad",
-    card: "Card",
-    bank_transfer: "Bank Transfer",
-  };
-  _orders = [
-    {
-      id: orderId,
-      customer: orderData.customer.name,
-      amount: `৳${orderData.totalAmount.toLocaleString()}`,
-      status: "Pending",
-      date: new Date().toISOString().split("T")[0],
-      paymentMethod:
-        paymentMethodMap[orderData.paymentMethod] ?? orderData.paymentMethod,
-    },
-    ..._orders,
-  ];
-  return orderId;
+  const created = await fetchJson<{ orderNumber: string }>("/api/orders", {
+    method: "POST",
+    body: JSON.stringify({
+      customerName: orderData.customer.name,
+      customerPhone: orderData.customer.phone,
+      customerEmail: orderData.customer.email,
+      address: orderData.customer.address,
+      city: orderData.customer.city,
+      postalCode: orderData.customer.postalCode,
+      paymentMethod: orderData.paymentMethod,
+      notes: orderData.notes,
+      items: orderData.items.map((item) => ({
+        productId: item.productId,
+        sku: item.productId,
+        name: "Product",
+        unitPrice: item.price,
+        quantity: item.quantity,
+      })),
+      subtotal: orderData.totalAmount,
+      shippingCost: 0,
+      totalAmount: orderData.totalAmount,
+    }),
+  });
+
+  return created.orderNumber || null;
 }
 
 /**
@@ -237,9 +411,10 @@ export async function updateOrderStatus(
   status: "pending" | "processing" | "shipped" | "delivered" | "cancelled",
 ): Promise<boolean> {
   const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
-  _orders = _orders.map((o) =>
-    o.id === orderId ? { ...o, status: statusLabel } : o,
-  );
+  await fetchJson(`/api/orders/${orderId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ status: statusLabel }),
+  });
   return true;
 }
 
@@ -247,8 +422,10 @@ export async function updateOrderStatus(
  * Get admin dashboard statistics from local data
  */
 export async function getAdminStatsFromSanity(): Promise<AdminStats> {
-  const products = mapJsonToAdminProducts();
-  const orders = _orders;
+  const [products, orders] = await Promise.all([
+    fetchProducts(),
+    fetchOrders(),
+  ]);
   const totalRevenue = orders
     .filter((o) => o.status === "Delivered")
     .reduce((sum, order) => {

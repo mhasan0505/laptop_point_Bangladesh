@@ -2,8 +2,20 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminProduct } from "@/lib/admin-data";
-import { deleteProduct, fetchProducts } from "@/lib/sanity-admin";
-import { Edit, Laptop, Plus, Trash2 } from "lucide-react";
+import {
+  deleteProduct,
+  fetchProducts,
+  requestCatalogReindex,
+  restoreProduct,
+} from "@/lib/sanity-admin";
+import {
+  Edit,
+  Laptop,
+  Plus,
+  RefreshCcw,
+  Trash2,
+  UploadCloud,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -11,13 +23,25 @@ const AdminProducts = () => {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
+  const [filterStatus, setFilterStatus] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchProducts().then((data) => {
-      setProducts(data);
-      setIsLoading(false);
-    });
+    const run = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Failed to load products",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    void run();
   }, []);
 
   const filteredProducts = products.filter((product) => {
@@ -27,29 +51,80 @@ const AdminProducts = () => {
       product.brand.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory =
       filterCategory === "All" || product.category === filterCategory;
-    return matchesSearch && matchesCategory;
+    const matchesStatus =
+      filterStatus === "All" || product.status === filterStatus;
+    return matchesSearch && matchesCategory && matchesStatus;
   });
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Active":
+      case "published":
         return "bg-green-100 text-green-800";
-      case "Low Stock":
+      case "review":
         return "bg-yellow-100 text-yellow-800";
-      case "Out of Stock":
+      case "draft":
+        return "bg-blue-100 text-blue-800";
+      case "archived":
         return "bg-red-100 text-red-800";
-      case "Inactive":
-        return "bg-gray-100 text-gray-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
 
-  const handleDeleteProduct = (productId: string) => {
-    if (confirm("Are you sure you want to delete this product?")) {
-      deleteProduct(productId).then(() => {
-        setProducts((prev) => prev.filter((p) => p.id !== productId));
-      });
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm("Archive this product? You can restore it later.")) {
+      return;
+    }
+
+    try {
+      await deleteProduct(productId);
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.id === productId
+            ? {
+                ...p,
+                status: "archived",
+              }
+            : p,
+        ),
+      );
+      setMessage("Product archived");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to archive product",
+      );
+    }
+  };
+
+  const handleRestoreProduct = async (productId: string) => {
+    try {
+      await restoreProduct(productId, "published");
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.id === productId
+            ? {
+                ...p,
+                status: "published",
+              }
+            : p,
+        ),
+      );
+      setMessage("Product restored");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to restore product",
+      );
+    }
+  };
+
+  const handleReindex = async () => {
+    try {
+      const result = await requestCatalogReindex();
+      setMessage(
+        `${result.message}. Active products: ${result.activeProducts}`,
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to reindex");
     }
   };
 
@@ -73,14 +148,31 @@ const AdminProducts = () => {
               Manage your product catalog, inventory, and pricing.
             </p>
           </div>
-          <Link href="/admin/products/add">
-            <Button className="bg-black hover:bg-gray-800 text-white gap-2">
-              <Plus className="w-4 h-4" />
-              Add New Product
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={handleReindex} className="gap-2">
+              <RefreshCcw className="w-4 h-4" />
+              Reindex
             </Button>
-          </Link>
+            <Link href="/admin/products/add">
+              <Button className="bg-black hover:bg-gray-800 text-white gap-2">
+                <Plus className="w-4 h-4" />
+                Add New Product
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
+
+      {message && (
+        <div className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          {message}
+        </div>
+      )}
+      {error && (
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
 
       {/* Filters and Search */}
       <Card className="mb-6">
@@ -102,11 +194,26 @@ const AdminProducts = () => {
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none pr-8"
               >
                 <option value="All">All Categories</option>
-                <option value="Business Laptops">Business Laptops</option>
-                <option value="Premium Laptops">Premium Laptops</option>
-                <option value="Gaming Laptops">Gaming Laptops</option>
-                <option value="Apple">Apple</option>
-                <option value="Accessories">Accessories</option>
+                {[...new Set(products.map((p) => p.category))].map(
+                  (category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ),
+                )}
+              </select>
+            </div>
+            <div>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none pr-8"
+              >
+                <option value="All">All Statuses</option>
+                <option value="draft">draft</option>
+                <option value="review">review</option>
+                <option value="published">published</option>
+                <option value="archived">archived</option>
               </select>
             </div>
           </div>
@@ -158,11 +265,23 @@ const AdminProducts = () => {
                       <td className="py-4 px-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
-                            <Laptop className="w-6 h-6" />
+                            {product.images[0] ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={product.images[0]}
+                                alt={product.name}
+                                className="w-10 h-10 rounded-lg object-cover"
+                              />
+                            ) : (
+                              <Laptop className="w-6 h-6" />
+                            )}
                           </div>
                           <div>
                             <p className="font-medium text-black">
                               {product.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {product.brand}
                             </p>
                           </div>
                         </div>
@@ -199,14 +318,27 @@ const AdminProducts = () => {
                               <Edit className="w-4 h-4" />
                             </Button>
                           </Link>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8"
-                            onClick={() => handleDeleteProduct(product.id)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
+                          {product.status === "archived" ? (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 h-8 w-8"
+                              onClick={() => handleRestoreProduct(product.id)}
+                              title="Restore"
+                            >
+                              <UploadCloud className="w-4 h-4" />
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8"
+                              onClick={() => handleDeleteProduct(product.id)}
+                              title="Archive"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
                         </div>
                       </td>
                     </tr>

@@ -11,6 +11,7 @@ import {
 interface AdminAuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
+  role: "owner" | "manager" | "editor" | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
@@ -20,12 +21,14 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(
 );
 
 const ADMIN_AUTH_KEY = "admin_authenticated";
+const ADMIN_ROLE_KEY = "admin_role";
 
 // Helper functions for cookie management
 function setCookie(name: string, value: string, days: number = 7) {
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  const isSecure = window.location.protocol === "https:" ? ";Secure" : "";
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax${isSecure}`;
 }
 
 function getCookie(name: string): string | null {
@@ -49,24 +52,63 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   // (both render a spinner), preventing hydration mismatches.
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [role, setRole] = useState<"owner" | "manager" | "editor" | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsAuthenticated(getCookie(ADMIN_AUTH_KEY) === "true");
+      const authenticated = getCookie(ADMIN_AUTH_KEY) === "true";
+      setIsAuthenticated(authenticated);
+      const cookieRole = getCookie(ADMIN_ROLE_KEY);
+      if (
+        cookieRole === "owner" ||
+        cookieRole === "manager" ||
+        cookieRole === "editor"
+      ) {
+        setRole(cookieRole);
+      } else if (authenticated) {
+        // Backward compat: authenticated session without role cookie — seed owner role.
+        setCookie(ADMIN_ROLE_KEY, "owner", 7);
+        setRole("owner");
+      }
       setIsLoading(false);
     }, 0);
     return () => clearTimeout(timer);
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Check against environment variables or hardcoded admin credentials
-    const adminEmail =
-      process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@laptoppointbd.com";
-    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin@123";
+    const users = [
+      {
+        role: "owner" as const,
+        email:
+          process.env.NEXT_PUBLIC_ADMIN_OWNER_EMAIL ||
+          process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
+          "admin@laptoppointbd.com",
+        password:
+          process.env.NEXT_PUBLIC_ADMIN_OWNER_PASSWORD ||
+          process.env.NEXT_PUBLIC_ADMIN_PASSWORD ||
+          "admin@123",
+      },
+      {
+        role: "manager" as const,
+        email: process.env.NEXT_PUBLIC_ADMIN_MANAGER_EMAIL || "",
+        password: process.env.NEXT_PUBLIC_ADMIN_MANAGER_PASSWORD || "",
+      },
+      {
+        role: "editor" as const,
+        email: process.env.NEXT_PUBLIC_ADMIN_EDITOR_EMAIL || "",
+        password: process.env.NEXT_PUBLIC_ADMIN_EDITOR_PASSWORD || "",
+      },
+    ];
 
-    if (email === adminEmail && password === adminPassword) {
+    const matched = users.find(
+      (user) => user.email === email && user.password === password,
+    );
+
+    if (matched) {
       setCookie(ADMIN_AUTH_KEY, "true", 7); // Cookie expires in 7 days
+      setCookie(ADMIN_ROLE_KEY, matched.role, 7);
       setIsAuthenticated(true);
+      setRole(matched.role);
       return true;
     }
     return false;
@@ -74,12 +116,14 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     deleteCookie(ADMIN_AUTH_KEY);
+    deleteCookie(ADMIN_ROLE_KEY);
     setIsAuthenticated(false);
+    setRole(null);
   };
 
   return (
     <AdminAuthContext.Provider
-      value={{ isAuthenticated, isLoading, login, logout }}
+      value={{ isAuthenticated, isLoading, role, login, logout }}
     >
       {children}
     </AdminAuthContext.Provider>

@@ -3,12 +3,22 @@ import { RawProduct } from "@/types/raw-product";
 import productsRaw from "./products.json";
 
 // Helper to handle image paths
-// For local images in /public, Next.js handles the path resolution
-// No encoding needed for local images
+// Encode local public paths so filenames with spaces or parentheses resolve reliably.
 const encodeImagePath = (path: string): string => {
-  // Return the path as-is for local images
-  // Next.js Image component handles path resolution for /public folder
-  return path;
+  if (!path.startsWith("/")) {
+    return path;
+  }
+
+  return path
+    .split("/")
+    .map((segment, index) => {
+      if (index === 0 || segment.length === 0) {
+        return segment;
+      }
+
+      return encodeURIComponent(decodeURIComponent(segment));
+    })
+    .join("/");
 };
 
 // Helper to map product ID/SKU/Model to image folder path
@@ -106,7 +116,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
     p.images && p.images.length > 0 && p.images[0].startsWith("/products/");
 
   let mappedImages: string[] = hasValidImages ? p.images : [];
-  let mainImage = hasValidImages ? p.images[0] : "/placeholder.png";
+  let mainImage = hasValidImages ? p.images[0] : "/Logo.webp";
 
   // Only generate images if product doesn't have valid paths already
   if (folder && !hasValidImages) {
@@ -130,23 +140,24 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
     } else if (isHP) {
       // HP products use .jpg format with varying image files
       mainImage = `${folder}/main.jpg`;
+      const hpFolder = folder.toLowerCase();
 
       // HP product mappings based on actual folder contents
-      if (folder.includes("440 G3")) {
+      if (hpFolder.includes("440-g3")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
           `${folder}/back.jpg`,
           `${folder}/keyborad.jpg`,
         ];
-      } else if (folder.includes("840 G3")) {
+      } else if (hpFolder.includes("840-g3")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/side.jpg`,
           `${folder}/side1.jpg`,
           `${folder}/back.jpg`,
         ];
-      } else if (folder.includes("840 G6")) {
+      } else if (hpFolder.includes("840-g6")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/back.jpg`,
@@ -155,7 +166,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/port.jpg`,
           `${folder}/port2.jpg`,
         ];
-      } else if (folder.includes("840 G7")) {
+      } else if (hpFolder.includes("840-g7")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
@@ -163,35 +174,35 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/side.jpg`,
           `${folder}/side1.jpg`,
         ];
-      } else if (folder.includes("840 G8") && folder.includes("I7")) {
+      } else if (hpFolder.includes("840-g8") && hpFolder.includes("i7")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
           `${folder}/back.jpg`,
           `${folder}/side.jpg`,
         ];
-      } else if (folder.includes("840 G8")) {
+      } else if (hpFolder.includes("840-g8")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
           `${folder}/back.jpg`,
           `${folder}/side.jpg`,
         ];
-      } else if (folder.includes("845 G7")) {
+      } else if (hpFolder.includes("845-g7")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
           `${folder}/back.jpg`,
           `${folder}/side.jpg`,
         ];
-      } else if (folder.includes("845 G8")) {
+      } else if (hpFolder.includes("845-g8")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front.jpg`,
           `${folder}/back.jpg`,
           `${folder}/side.jpg`,
         ];
-      } else if (folder.includes("X360 1040")) {
+      } else if (hpFolder.includes("x360-1040")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/front1.jpg`,
@@ -201,7 +212,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/side1.jpg`,
           `${folder}/port.jpg`,
         ];
-      } else if (folder.includes("14U G6")) {
+      } else if (hpFolder.includes("14u-g6")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/back.jpg`,
@@ -209,7 +220,7 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/side.jpg`,
           `${folder}/side1.jpg`,
         ];
-      } else if (folder.includes("Firefly 14 G9")) {
+      } else if (hpFolder.includes("firefly-14-g9")) {
         mappedImages = [
           `${folder}/512/main.png`,
           `${folder}/512/front.png`,
@@ -274,19 +285,19 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
           `${folder}/back.jpg`,
           `${folder}/back2.jpg`,
           `${folder}/port.jpg`,
-          `${folder}/side (1).jpg`,
-          `${folder}/side (2).jpg`,
+          `${folder}/side.jpg`,
+          `${folder}/side2.jpg`,
           `${folder}/side3.jpg`,
         ];
       } else if (folder.includes("Dell-latitude-7420")) {
         mappedImages = [
           `${folder}/main.jpg`,
           `${folder}/port.jpg`,
-          `${folder}/side (1).jpg`,
-          `${folder}/side (2).jpg`,
-          `${folder}/side (3).jpg`,
-          `${folder}/side (4).jpg`,
-          `${folder}/side (5).jpg`,
+          `${folder}/side1.jpg`,
+          `${folder}/side2.jpg`,
+          `${folder}/side3.jpg`,
+          `${folder}/side4.jpg`,
+          `${folder}/side5.jpg`,
         ];
       }
       // Lenovo product mappings

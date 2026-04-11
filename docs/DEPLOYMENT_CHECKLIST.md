@@ -52,6 +52,53 @@ pnpm install
 
 ---
 
+## CATALOG PHASE DEPLOYMENT (Required for product management)
+
+### Environment Variables
+
+- [ ] `DATABASE_URL` points to direct PostgreSQL connection for migrations
+- [ ] `CATALOG_WEBHOOK_URLS` configured (comma-separated, optional)
+- [ ] `CATALOG_ALERT_WEBHOOK_URL` configured (optional)
+- [ ] `SEARCH_ENGINE` set (`internal` / custom)
+- [ ] `CLOUDINARY_CLOUD_NAME` configured for image upload
+- [ ] `CLOUDINARY_UPLOAD_PRESET` configured for image upload
+- [ ] `NEXT_PUBLIC_ADMIN_OWNER_EMAIL` and password set
+- [ ] `NEXT_PUBLIC_ADMIN_MANAGER_EMAIL` and password set (optional)
+- [ ] `NEXT_PUBLIC_ADMIN_EDITOR_EMAIL` and password set (optional)
+
+### Database Migration and Seed
+
+```powershell
+pnpm prisma:generate
+pnpm prisma:migrate:prod
+pnpm prisma:seed
+```
+
+- [ ] Product tables created (`Product`, `ProductImage`, `ProductFeature`, `ProductAuditLog`)
+- [ ] Inventory rows linked to real `Product.id`
+- [ ] Seed completed without duplicate SKU conflicts
+
+### Admin API Verification
+
+- [ ] Login as `owner`
+- [ ] `/api/admin/products` returns product list
+- [ ] Create product from admin add form succeeds
+- [ ] Edit full schema product fields succeeds
+- [ ] Archive and restore actions both work
+- [ ] Reindex action works from admin products page
+
+### Smoke Test
+
+```powershell
+$env:BASE_URL="http://localhost:3000"
+$env:ADMIN_COOKIE="admin_authenticated=true; admin_role=owner"
+pnpm test:catalog:smoke
+```
+
+- [ ] Smoke script passes
+
+---
+
 ## BUILD PHASE (pnpm build)
 
 ```powershell
