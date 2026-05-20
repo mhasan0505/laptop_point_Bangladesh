@@ -1,4 +1,3 @@
-import productsRaw from "@/app/data/products.json";
 import { Product } from "@/types/product";
 import { prisma } from "./prisma";
 import { client } from "./sanity.client";
@@ -9,7 +8,7 @@ export async function getLiveProducts(): Promise<Product[]> {
     process.env.NEXT_PUBLIC_SANITY_PROJECT_ID !== "your_project_id";
 
   if (!isSanityConfigured) {
-    return getFallbackProductsWithLiveStock();
+    return [];
   }
 
   try {
@@ -40,7 +39,7 @@ export async function getLiveProducts(): Promise<Product[]> {
     const sanityProducts = await client.fetch<any[]>(query);
 
     if (!sanityProducts || sanityProducts.length === 0) {
-      return getFallbackProductsWithLiveStock();
+      return [];
     }
 
     // Fetch real-time stock levels from Prisma
@@ -120,79 +119,6 @@ export async function getLiveProducts(): Promise<Product[]> {
     return mappedProducts;
   } catch (error) {
     console.error("Error loading products from Sanity:", error);
-    return getFallbackProductsWithLiveStock();
-  }
-}
-
-async function getFallbackProductsWithLiveStock(): Promise<Product[]> {
-  try {
-    const inventoryItems = await prisma.inventory.findMany();
-    const inventoryMap = new Map(
-      inventoryItems.map((item) => [item.productId, item]),
-    );
-
-    return (productsRaw as any[]).map((product) => {
-      const inv = inventoryMap.get(String(product.id));
-      const quantity = inv ? inv.quantity : (product.stock?.quantity ?? 0);
-      const inStock = quantity > 0;
-
-      return {
-        id: String(product.id),
-        name: product.name,
-        brand: product.brand,
-        price: product.pricing?.sale_price || product.price || 0,
-        originalPrice:
-          product.pricing?.regular_price ||
-          product.originalPrice ||
-          product.price ||
-          0,
-        discount: product.pricing?.discount_percentage || 0,
-        rating: product.rating || 4.5,
-        reviews: product.reviews || 10,
-        inStock,
-        image: product.image?.src || product.image || "/placeholder.jpg",
-        images: product.images || [],
-        specs: product.specs || {},
-        category: product.category || "Laptop",
-        features: product.features || [],
-        condition: product.condition || [],
-        sku: product.sku,
-        description: {
-          short: product.description?.short || "",
-          full: product.description?.full || "",
-        },
-        slug: product.slug || "",
-      };
-    });
-  } catch (error) {
-    // If the database is unavailable during build or deploy, fall back to
-    // static stock from products.json without noisy logs.
-    return (productsRaw as any[]).map((product) => ({
-      id: String(product.id),
-      name: product.name,
-      brand: product.brand,
-      price: product.pricing?.sale_price || product.price || 0,
-      originalPrice:
-        product.pricing?.regular_price ||
-        product.originalPrice ||
-        product.price ||
-        0,
-      discount: product.pricing?.discount_percentage || 0,
-      rating: product.rating || 4.5,
-      reviews: product.reviews || 10,
-      inStock: (product.stock?.quantity ?? 0) > 0,
-      image: product.image?.src || product.image || "/placeholder.jpg",
-      images: product.images || [],
-      specs: product.specs || {},
-      category: product.category || "Laptop",
-      features: product.features || [],
-      condition: product.condition || [],
-      sku: product.sku,
-      description: {
-        short: product.description?.short || "",
-        full: product.description?.full || "",
-      },
-      slug: product.slug || "",
-    }));
+    return [];
   }
 }

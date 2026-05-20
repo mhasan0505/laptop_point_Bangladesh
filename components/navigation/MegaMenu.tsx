@@ -1,11 +1,11 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
+import { Product } from "@/types/product";
 import { motion } from "framer-motion";
 import { ChevronRight, Laptop } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const MegaMenu = ({
   isOpen,
@@ -19,6 +19,22 @@ const MegaMenu = ({
   onMouseLeave?: () => void;
 }) => {
   const [hoveredCategory, setHoveredCategory] = useState<string>("Business");
+  const [liveProducts, setLiveProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active && Array.isArray(data)) {
+          setLiveProducts(data);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Get unique categories from laptop data
   const categories = [
@@ -28,7 +44,6 @@ const MegaMenu = ({
     { name: "Budget", icon: "💰" },
   ];
 
-  // Get featured products for each category based on product names/brands
   const getFeaturedProducts = (category: string) => {
     const categoryMap: { [key: string]: string[] } = {
       Business: ["HP", "Dell", "Lenovo"],
@@ -38,7 +53,7 @@ const MegaMenu = ({
     };
 
     const brands = categoryMap[category] || [];
-    return laptopData.laptops
+    return liveProducts
       .filter((laptop) =>
         brands.some((brand) =>
           laptop.name.toUpperCase().includes(brand.toUpperCase()),

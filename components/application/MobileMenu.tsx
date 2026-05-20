@@ -1,6 +1,5 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
 import { navigationLinks } from "@/app/data/navigation";
 import { Product } from "@/types/product";
 import { AnimatePresence, motion, Variants } from "framer-motion";
@@ -31,6 +30,23 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+
+  // Load admin panel products on mount for search
+  useEffect(() => {
+    let active = true;
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active && Array.isArray(data)) {
+          setAllProducts(data);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Lock body scroll when menu is open
   useEffect(() => {
@@ -51,7 +67,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim()) {
-      const filtered = laptopData.laptops
+      const filtered = allProducts
         .filter(
           (product) =>
             product.name.toLowerCase().includes(query.toLowerCase()) ||

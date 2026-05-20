@@ -1,6 +1,4 @@
 "use client";
-
-import { laptopData } from "@/app/data/data";
 import RecentlyViewed from "@/components/product/RecentlyViewed";
 import FilterSidebar from "@/components/shop/FilterSidebar";
 import { Button } from "@/components/ui/button";
@@ -39,7 +37,7 @@ const ShopContent = () => {
       .replace(/[^a-z0-9]+/g, "")
       .trim() || "";
 
-  const [rawProducts, setRawProducts] = useState<Product[]>(laptopData.laptops || []);
+  const [rawProducts, setRawProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     let active = true;

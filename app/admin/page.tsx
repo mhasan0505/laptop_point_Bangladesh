@@ -297,9 +297,9 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent className="flex flex-col flex-1">
             <div className="space-y-4">
-              {recentOrders.map((order, index) => (
+              {recentOrders.map((order) => (
                 <div
-                  key={index}
+                  key={order.id}
                   className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-gray-200 transition-colors"
                 >
                   <div>
@@ -346,7 +346,7 @@ const AdminDashboard = () => {
             <div className="space-y-4">
               {lowStockProducts.map((product, index) => (
                 <div
-                  key={index}
+                  key={`${product.name}-${index}`}
                   className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-red-100 transition-colors group"
                 >
                   <div>

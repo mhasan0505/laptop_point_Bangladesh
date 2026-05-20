@@ -454,10 +454,12 @@ export function ProductEditorForm({
       .toUpperCase()
       .replace(/[^A-Z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "")
-      .slice(0, 48);
+      .slice(0, 44);
 
     if (base) {
-      setField("sku", base);
+      // If the current SKU has a conflict error, append a short unique suffix
+      const suffix = errors.sku ? `-${Date.now().toString(36).toUpperCase().slice(-4)}` : "";
+      setField("sku", `${base}${suffix}`);
     }
   };
 
@@ -694,13 +696,29 @@ export function ProductEditorForm({
 
       router.push("/admin/products");
     } catch (error) {
-      setSubmitError(
-        error instanceof Error ? error.message : "Failed to save product",
-      );
+      const message =
+        error instanceof Error ? error.message : "Failed to save product";
+
+      // Detect SKU conflict (409) and highlight the SKU field
+      const isSkuConflict =
+        /already exists|duplicate|sku/i.test(message);
+
+      if (isSkuConflict) {
+        setErrors((current) => ({
+          ...current,
+          sku: `SKU "${form.sku.trim()}" is already taken. Please use a different SKU.`,
+        }));
+        setSubmitError(
+          "SKU conflict: a product with this SKU already exists. Update the SKU field above and try again.",
+        );
+      } else {
+        setSubmitError(message);
+      }
     } finally {
       setSaving(false);
     }
   };
+
 
   return (
     <div className="space-y-6">
@@ -866,7 +884,7 @@ export function ProductEditorForm({
                   value={form.sku}
                   onChange={(event) => setField("sku", event.target.value)}
                   placeholder="e.g. HP-840G8-I5-006"
-                  className={inputCls}
+                  className={`${inputCls} ${errors.sku ? "border-red-500 ring-2 ring-red-200" : ""}`}
                 />
                 {errors.sku && (
                   <p className="text-red-500 text-xs mt-1">{errors.sku}</p>

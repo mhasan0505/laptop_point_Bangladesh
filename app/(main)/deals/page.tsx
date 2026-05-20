@@ -1,10 +1,31 @@
-import { laptopData } from "@/app/data/data";
+"use client";
+
 import FlashSaleBanner from "@/components/application/FlashSaleBanner";
 import ProductsCard from "@/components/ui/ProductsCard";
+import { Product } from "@/types/product";
+import { useEffect, useState } from "react";
 
 export default function DealsPage() {
-  // Simulate discounted products
-  const discountedProducts = laptopData.laptops.filter(
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active && Array.isArray(data)) {
+          setAllProducts(data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load live products for deals:", err);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const discountedProducts = allProducts.filter(
     (product) => product.discount && product.discount > 0
   );
 

@@ -31,15 +31,19 @@ const AdminProducts = () => {
     });
   }, []);
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      filterCategory === "All" || product.category === filterCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredProducts = products
+    .filter((product) => {
+      const searchLower = searchTerm.toLowerCase();
+      const matchesSearch =
+        (product.name?.toLowerCase() || "").includes(searchLower) ||
+        (product.sku?.toLowerCase() || "").includes(searchLower) ||
+        (product.brand?.toLowerCase() || "").includes(searchLower);
+      const matchesCategory =
+        filterCategory === "All" || product.category === filterCategory;
+      return matchesSearch && matchesCategory;
+    })
+    // Deduplicate by id to avoid React duplicate key warnings
+    .filter((product, index, arr) => arr.findIndex((p) => p.id === product.id) === index);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -161,9 +165,9 @@ const AdminProducts = () => {
               </thead>
               <tbody>
                 {filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
+                  filteredProducts.map((product, index) => (
                     <tr
-                      key={product.id}
+                      key={product.id ? `${product.id}-${index}` : `row-${index}`}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                     >
                       <td className="py-4 px-4">

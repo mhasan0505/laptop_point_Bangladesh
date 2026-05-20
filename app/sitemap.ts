@@ -1,17 +1,20 @@
-import { laptopData } from "@/app/data/data";
+import { getLiveProducts } from "@/lib/products";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import { MetadataRoute } from "next";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://laptoppointbd.com";
 
-  // Product pages
-  const products = laptopData.laptops.map((product) => ({
-    url: `${baseUrl}/product/${product.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.9,
-  }));
+  // Product pages from admin-uploaded Sanity products only
+  const liveProducts = await getLiveProducts();
+  const products = liveProducts
+    .filter((p) => p.slug)
+    .map((product) => ({
+      url: `${baseUrl}/product/${product.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    }));
 
   // Main static routes
   const staticRoutes = [

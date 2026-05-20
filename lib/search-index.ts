@@ -10,21 +10,35 @@ export interface SearchItem {
   image: string;
 }
 
-// This will be generated from products.json but only includes search-relevant fields
-// Reducing bundle size significantly for components that only need basic product info
+// Fetches products from the admin panel API and maps to lightweight search items
 export async function getSearchIndex(): Promise<SearchItem[]> {
-  // Dynamic import only when search is triggered
-  const { laptopData } = await import("@/app/data/data");
+  try {
+    const response = await fetch("/api/products", { cache: "no-store" });
+    if (!response.ok) return [];
+    const products: Array<{
+      id: string | number;
+      name: string;
+      slug: string;
+      brand?: string;
+      category?: string;
+      price: number;
+      image: string;
+    }> = await response.json();
 
-  return laptopData.laptops.map((product) => ({
-    id: product.id,
-    name: product.name,
-    slug: product.slug,
-    brand: product.brand || "",
-    category: product.category || "",
-    price: product.price,
-    image: typeof product.image === 'string' ? product.image : product.image.src,
-  }));
+    if (!Array.isArray(products)) return [];
+
+    return products.map((product) => ({
+      id: product.id,
+      name: product.name,
+      slug: product.slug,
+      brand: product.brand || "",
+      category: product.category || "",
+      price: product.price,
+      image: typeof product.image === "string" ? product.image : "",
+    }));
+  } catch {
+    return [];
+  }
 }
 
 // For components that need immediate access (like search suggestions)

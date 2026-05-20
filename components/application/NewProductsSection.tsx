@@ -1,6 +1,4 @@
 "use client";
-
-import { laptopData } from "@/app/data/data";
 import { Product } from "@/types/product";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -13,7 +11,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ProductsCard from "../ui/ProductsCard";
 
 const NewProductsSection = () => {
-  const [rawProducts, setRawProducts] = useState<Product[]>(laptopData.laptops || []);
+  const [rawProducts, setRawProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     let active = true;

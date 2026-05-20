@@ -1,6 +1,4 @@
 "use client";
-
-import { laptopData } from "@/app/data/data";
 import { Product } from "@/types/product";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -24,7 +22,7 @@ import ProductsCard from "../ui/ProductsCard";
 
 const HpLaptopSection = () => {
   const [activeCategory, setActiveCategory] = useState("All Series");
-  const [rawProducts, setRawProducts] = useState<Product[]>(laptopData.laptops || []);
+  const [rawProducts, setRawProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     let active = true;

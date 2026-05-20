@@ -1,5 +1,3 @@
-import { laptopData } from "@/app/data/data";
-
 export interface AdminProduct {
   id: string;
   name: string;
@@ -68,35 +66,13 @@ export interface OrderData {
   paymentMethod?: string;
 }
 
-// Convert website products to admin format
-export function getAdminProducts(): AdminProduct[] {
-  return laptopData.laptops.map((product) => ({
-    id: String(product.id),
-    name: product.name,
-    brand: product.brand || "Unknown",
-    category: product.category || "Laptop",
-    price: product.price,
-    stock: product.inStock ? Math.floor(Math.random() * 50) + 5 : 0, // Random stock for now
-    status: product.inStock ? "Active" : "Out of Stock",
-    sku: String(product.sku || product.id),
-    images: (product.images || []).map((img) =>
-      typeof img === "string" ? img : img.src,
-    ),
-  }));
-}
-
 export function getAdminStats(): AdminStats {
-  const products = getAdminProducts();
-  const lowStockThreshold = 10;
-
   return {
-    totalProducts: products.length,
-    totalOrders: 0, // Will be implemented with order management
+    totalProducts: 0,
+    totalOrders: 0,
     pendingOrders: 0,
     totalRevenue: "৳0",
-    lowStockItems: products.filter(
-      (p) => p.stock < lowStockThreshold && p.stock > 0,
-    ).length,
+    lowStockItems: 0,
     deliveredToday: 0,
   };
 }

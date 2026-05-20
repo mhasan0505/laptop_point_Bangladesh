@@ -9,6 +9,11 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
+// Force clear cached PrismaClient on hot reload to ensure it picks up the latest schema
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = undefined;
+}
+
 function createClient(): PrismaClient {
   if (!process.env.DATABASE_URL) {
     throw new Error(

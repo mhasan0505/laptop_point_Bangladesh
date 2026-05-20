@@ -3,6 +3,8 @@ import { AdminProduct, AdminStats, OrderData } from "./admin-data";
 import { prisma } from "./prisma";
 import { client, writeClient } from "./sanity.client";
 
+const adminReadClient = process.env.SANITY_API_TOKEN ? writeClient : client;
+
 const SANITY_PRODUCT_PROJECTION = `
   _id,
   name,
@@ -56,7 +58,7 @@ function getProductImageUrls(
 }
 
 async function fetchSanityProductById(productId: string) {
-  return client.fetch<SanityProduct | null>(
+  return adminReadClient.fetch<SanityProduct | null>(
     `*[_type == "product" && _id == $id][0] {${SANITY_PRODUCT_PROJECTION}}`,
     { id: productId },
   );
@@ -223,7 +225,7 @@ export async function fetchProducts(): Promise<AdminProduct[]> {
   const query = `*[_type == "product"] | order(_createdAt desc) {${SANITY_PRODUCT_PROJECTION}}`;
 
   try {
-    const products = await client.fetch<SanityProduct[]>(query);
+    const products = await adminReadClient.fetch<SanityProduct[]>(query);
 
     // Asynchronous background sync to PostgreSQL (Neon) via Prisma
     Promise.resolve().then(async () => {
@@ -290,10 +292,11 @@ export async function addProduct(
   product: Omit<AdminProduct, "id">,
 ): Promise<string> {
   try {
-    const existingProductWithSku = await client.fetch<{ _id: string } | null>(
-      `*[_type == "product" && sku == $sku][0]{ _id }`,
-      { sku: product.sku },
-    );
+    const existingProductWithSku = await adminReadClient.fetch<{
+      _id: string;
+    } | null>(`*[_type == "product" && sku == $sku][0]{ _id }`, {
+      sku: product.sku,
+    });
 
     if (existingProductWithSku?._id) {
       throw new Error(`SKU \"${product.sku}\" already exists.`);
@@ -340,42 +343,23 @@ export async function addProduct(
 
     const result = await writeClient.create(sanityDoc);
 
-    try {
-      const createdProduct = await fetchSanityProductById(result._id);
-
-      if (!createdProduct) {
-        throw new Error("Created product could not be reloaded from Sanity.");
-      }
-
-      await syncProductToNeon(createdProduct);
-    } catch (inventoryError) {
-      // Prevent partial writes: if Neon sync fails, delete the newly created Sanity product.
-      await writeClient.delete(result._id).catch((rollbackError) => {
-        console.error(
-          "Rollback failed after inventory sync error:",
-          rollbackError,
+    // Best-effort Neon sync. Product creation succeeds as long as Sanity write succeeds.
+    fetchSanityProductById(result._id)
+      .then((createdProduct) => {
+        if (!createdProduct) {
+          throw new Error("Created product could not be reloaded from Sanity.");
+        }
+        return syncProductToNeon(createdProduct);
+      })
+      .catch((inventoryError) => {
+        const details =
+          inventoryError instanceof Error
+            ? inventoryError.message
+            : "Unknown database error";
+        console.warn(
+          `Product created in Sanity, but inventory sync to Neon failed (${details}).`,
         );
       });
-
-      if (
-        typeof inventoryError === "object" &&
-        inventoryError !== null &&
-        "code" in inventoryError &&
-        (inventoryError as { code?: unknown }).code === "P2002"
-      ) {
-        throw new Error(
-          `Inventory sync failed because SKU \"${product.sku}\" already exists in Neon inventory. Use a unique SKU.`,
-        );
-      }
-
-      const details =
-        inventoryError instanceof Error
-          ? inventoryError.message
-          : "Unknown database error";
-      throw new Error(
-        `Product create rolled back: failed to sync inventory in Neon (${details}).`,
-      );
-    }
 
     return result._id;
   } catch (error) {
@@ -404,7 +388,17 @@ export async function updateProductStock(
     const product = await fetchSanityProductById(productId);
 
     if (product) {
-      await syncProductToNeon(product);
+      try {
+        await syncProductToNeon(product);
+      } catch (inventoryError) {
+        const details =
+          inventoryError instanceof Error
+            ? inventoryError.message
+            : "Unknown database error";
+        console.warn(
+          `Stock updated in Sanity, but Neon sync failed (${details}).`,
+        );
+      }
     }
 
     return true;
@@ -514,7 +508,17 @@ export async function updateProduct(
     const updatedProduct = await fetchSanityProductById(productId);
 
     if (updatedProduct) {
-      await syncProductToNeon(updatedProduct);
+      try {
+        await syncProductToNeon(updatedProduct);
+      } catch (inventoryError) {
+        const details =
+          inventoryError instanceof Error
+            ? inventoryError.message
+            : "Unknown database error";
+        console.warn(
+          `Product updated in Sanity, but Neon sync failed (${details}).`,
+        );
+      }
     }
 
     return true;
@@ -533,14 +537,24 @@ export async function deleteProduct(productId: string): Promise<boolean> {
     await writeClient.delete(productId);
 
     // 2. Delete from PostgreSQL Product + Inventory snapshots
-    await prisma.$transaction([
-      prisma.product.deleteMany({
-        where: { sanityId: productId },
-      }),
-      prisma.inventory.deleteMany({
-        where: { productId },
-      }),
-    ]);
+    try {
+      await prisma.$transaction([
+        prisma.product.deleteMany({
+          where: { sanityId: productId },
+        }),
+        prisma.inventory.deleteMany({
+          where: { productId },
+        }),
+      ]);
+    } catch (inventoryError) {
+      const details =
+        inventoryError instanceof Error
+          ? inventoryError.message
+          : "Unknown database error";
+      console.warn(
+        `Product deleted in Sanity, but Neon cleanup failed (${details}).`,
+      );
+    }
 
     return true;
   } catch (error) {
@@ -574,7 +588,7 @@ export async function fetchOrders(): Promise<OrderData[]> {
   }`;
 
   try {
-    const orders = await client.fetch<SanityOrder[]>(query);
+    const orders = await adminReadClient.fetch<SanityOrder[]>(query);
 
     return orders.map((order) => {
       const statusMap: Record<string, string> = {
@@ -659,7 +673,7 @@ export async function createOrder(orderData: {
 
     // Update stock for ordered items
     for (const item of orderData.items) {
-      const product = await client.fetch<SanityProduct>(
+      const product = await adminReadClient.fetch<SanityProduct>(
         `*[_type == "product" && _id == $id][0]`,
         { id: item.productId },
       );

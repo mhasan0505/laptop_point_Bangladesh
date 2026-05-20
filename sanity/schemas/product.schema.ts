@@ -68,15 +68,15 @@ export const productSchema = defineType({
     }),
     defineField({
       name: "images",
-      title: "Product Images",
+      title: "Product Images (Sanity Assets)",
       description:
-        "Upload high-quality images (at least 800x800px). First image is the main product image.",
+        "Upload high-quality images via Sanity Studio. First image is the main product image.",
       type: "array",
       of: [
         {
           type: "image",
           options: {
-            hotspot: true, // Enables crop and focal point selection
+            hotspot: true,
           },
           fields: [
             {
@@ -84,7 +84,6 @@ export const productSchema = defineType({
               type: "string",
               title: "Alternative Text",
               description: "Describe the image for accessibility and SEO",
-              validation: (Rule) => Rule.required(),
             },
             {
               name: "caption",
@@ -95,23 +94,20 @@ export const productSchema = defineType({
           ],
         },
       ],
-      validation: (Rule) => Rule.required().min(1).max(10),
+    }),
+    defineField({
+      name: "imageUrls",
+      title: "Product Image URLs",
+      description:
+        "External image URLs (e.g., from ImageKit CDN). Used by the admin panel when uploading via the web form.",
+      type: "array",
+      of: [{ type: "url" }],
     }),
     defineField({
       name: "category",
       title: "Category",
       description: "Product category for organization and filtering",
       type: "string",
-      options: {
-        list: [
-          { title: "Laptop", value: "Laptop" },
-          { title: "Desktop", value: "Desktop" },
-          { title: "Accessories", value: "Accessories" },
-          { title: "Components", value: "Components" },
-          { title: "Gaming", value: "Gaming" },
-          { title: "Business", value: "Business" },
-        ],
-      },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
