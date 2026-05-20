@@ -5,14 +5,16 @@ import TestimonialsSection from "@/components/application/TestimonialsSection";
 import { getLiveProducts } from "@/lib/products";
 import { eCommerceSchema } from "@/lib/seo-schemas";
 import { Metadata } from "next";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 // Lazy load brand sections that are below the fold for better initial load
-const BrandProductSection = dynamic(
+const BrandProductSection = nextDynamic(
   () => import("@/components/application/BrandProductSection"),
   {
     loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
-
   },
 );
 

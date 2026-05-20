@@ -1,7 +1,10 @@
-import dynamic from "next/dynamic";
 import { getLiveProducts } from "@/lib/products";
+import nextDynamic from "next/dynamic";
 
-const BrandProductSection = dynamic(
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const BrandProductSection = nextDynamic(
   () => import("@/components/application/BrandProductSection"),
   {
     loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,

@@ -165,7 +165,8 @@ async function getFallbackProductsWithLiveStock(): Promise<Product[]> {
       };
     });
   } catch (error) {
-    console.error("Error reading live stock for fallback products:", error);
+    // If the database is unavailable during build or deploy, fall back to
+    // static stock from products.json without noisy logs.
     return (productsRaw as any[]).map((product) => ({
       id: String(product.id),
       name: product.name,
