@@ -19,13 +19,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createOrder } from "@/lib/sanity-admin";
 import { useState } from "react";
 
 interface OrderCreateDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  products: Array<{ id: string; name: string; price: number; stock: number }>;
+  products: Array<{
+    id: string;
+    sku: string;
+    name: string;
+    price: number;
+    stock: number;
+  }>;
   onSuccess: () => void;
 }
 
@@ -120,25 +125,36 @@ export function OrderCreateDialog({
 
     setIsCreating(true);
     try {
-      const orderId = await createOrder({
-        customer: {
-          name: customerName,
-          phone: customerPhone,
-          email: customerEmail || undefined,
-          address: customerAddress || undefined,
-          city: customerCity || undefined,
-        },
-        items: orderItems.map((item) => ({
-          productId: item.productId,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-        totalAmount,
+      const payload = {
+        customerName,
+        customerPhone,
+        customerEmail: customerEmail || undefined,
+        address: customerAddress || undefined,
+        city: customerCity || undefined,
         paymentMethod,
         notes: notes || undefined,
+        items: orderItems.map((item) => {
+          const product = products.find((p) => p.id === item.productId);
+          return {
+            productId: item.productId,
+            sku: product?.sku || item.productId,
+            name: item.productName,
+            unitPrice: item.price,
+            quantity: item.quantity,
+          };
+        }),
+        subtotal: totalAmount,
+        shippingCost: 0,
+        totalAmount,
+      };
+
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
 
-      if (orderId) {
+      if (response.ok) {
         onSuccess();
         resetForm();
         onClose();

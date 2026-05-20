@@ -1,7 +1,9 @@
 "use client";
 
 import { laptopData } from "@/app/data/data";
+import { Product } from "@/types/product";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import {
   Briefcase,
   Building2,
@@ -12,7 +14,6 @@ import {
   LayoutGrid,
   Wallet,
 } from "lucide-react";
-import { useState } from "react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
@@ -23,9 +24,27 @@ import ProductsCard from "../ui/ProductsCard";
 
 const HpLaptopSection = () => {
   const [activeCategory, setActiveCategory] = useState("All Series");
+  const [rawProducts, setRawProducts] = useState<Product[]>(laptopData.laptops || []);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active && Array.isArray(data) && data.length > 0) {
+          setRawProducts(data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load live HP laptops:", err);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Filter for all HP brand laptops first
-  const allHpLaptops = laptopData.laptops.filter(
+  const allHpLaptops = rawProducts.filter(
     (product) => product.brand === "HP"
   );
 

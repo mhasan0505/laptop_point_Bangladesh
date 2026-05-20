@@ -2,7 +2,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AdminProduct } from "@/lib/admin-data";
-import { deleteProduct, fetchProducts } from "@/lib/sanity-admin";
+import {
+  deleteAdminProduct,
+  fetchAdminProducts,
+} from "@/lib/admin-products-api";
 import { Edit, Laptop, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -13,8 +16,16 @@ const AdminProducts = () => {
   const [filterCategory, setFilterCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
 
+  const categoryOptions = [
+    ...new Set(
+      products
+        .map((product) => product.category?.trim())
+        .filter((category): category is string => Boolean(category)),
+    ),
+  ].sort((a, b) => a.localeCompare(b));
+
   useEffect(() => {
-    fetchProducts().then((data) => {
+    fetchAdminProducts().then((data) => {
       setProducts(data);
       setIsLoading(false);
     });
@@ -47,7 +58,7 @@ const AdminProducts = () => {
 
   const handleDeleteProduct = (productId: string) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      deleteProduct(productId).then(() => {
+      deleteAdminProduct(productId).then(() => {
         setProducts((prev) => prev.filter((p) => p.id !== productId));
       });
     }
@@ -102,11 +113,11 @@ const AdminProducts = () => {
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none pr-8"
               >
                 <option value="All">All Categories</option>
-                <option value="Business Laptops">Business Laptops</option>
-                <option value="Premium Laptops">Premium Laptops</option>
-                <option value="Gaming Laptops">Gaming Laptops</option>
-                <option value="Apple">Apple</option>
-                <option value="Accessories">Accessories</option>
+                {categoryOptions.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

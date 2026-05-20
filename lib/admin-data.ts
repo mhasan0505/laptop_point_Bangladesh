@@ -4,12 +4,50 @@ export interface AdminProduct {
   id: string;
   name: string;
   brand: string;
+  model?: string;
   category: string;
+  condition?: string;
+  grade?: string;
   price: number;
+  salePrice?: number;
+  currency?: string;
+  taxIncluded?: boolean;
   stock: number;
+  stockStatus?: string;
+  lowStockThreshold?: number;
   status: string;
+  statusValue?: "active" | "draft" | "archived";
+  featured?: boolean;
   sku: string;
   images: string[];
+  description?: string;
+  fullDescription?: string;
+  tags?: string[];
+  features?: string[];
+  specs?: {
+    processor?: string;
+    ram?: string;
+    storage?: string;
+    display?: string;
+    displayDetails?: {
+      size?: string;
+      resolution?: string;
+      type?: string;
+      touchscreen?: boolean;
+    };
+    graphics?: string;
+    ports?: string;
+    portsList?: string[];
+    battery?: string;
+    weight?: string;
+    dimensions?: string;
+    os?: string;
+  };
+  warranty?: {
+    period?: string;
+    type?: string;
+    details?: string;
+  };
 }
 
 export interface AdminStats {

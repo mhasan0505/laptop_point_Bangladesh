@@ -1,7 +1,9 @@
 "use client";
 
 import { laptopData } from "@/app/data/data";
+import { Product } from "@/types/product";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
@@ -11,8 +13,26 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ProductsCard from "../ui/ProductsCard";
 
 const NewProductsSection = () => {
-  // Use first 8 products as "New" for now, or filter by a 'new' flag if it existed
-  const newProducts = laptopData.laptops.slice(0, 8);
+  const [rawProducts, setRawProducts] = useState<Product[]>(laptopData.laptops || []);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active && Array.isArray(data) && data.length > 0) {
+          setRawProducts(data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load live products for New arrivals:", err);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const newProducts = rawProducts.slice(0, 8);
 
   return (
     <div className="w-full bg-linear-to-b from-gray-50/50 to-white dark:from-gray-900/50 dark:to-gray-950 py-8 md:py-12 lg:py-16">

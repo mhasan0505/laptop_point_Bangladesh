@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AdminProduct, OrderData } from "@/lib/admin-data";
-import { fetchProducts } from "@/lib/sanity-admin";
+import { fetchAdminProducts } from "@/lib/admin-products-api";
 import { Plus, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -73,7 +73,7 @@ export default function OrdersPage() {
     try {
       const [ordersRes, productsData] = await Promise.all([
         fetch("/api/orders"),
-        fetchProducts(),
+        fetchAdminProducts(),
       ]);
       if (ordersRes.ok) {
         const apiOrders = (await ordersRes.json()) as ApiOrder[];
@@ -300,6 +300,7 @@ export default function OrdersPage() {
         onClose={() => setCreateDialogOpen(false)}
         products={products.map((p) => ({
           id: p.id,
+          sku: p.sku,
           name: p.name,
           price: p.price,
           stock: p.stock,

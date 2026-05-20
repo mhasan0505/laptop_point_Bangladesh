@@ -20,10 +20,12 @@ export interface Product {
     graphics?: string;
     battery?: string;
     weight?: string;
+    os?: string;
+    ports?: string[] | string;
   };
   category?: string;
   features?: string[];
-  condition?: string[];
+  condition?: string | string[];
   sku?: string;
   description?: {
     short: string;

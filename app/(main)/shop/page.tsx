@@ -8,8 +8,9 @@ import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import ProductsCard from "@/components/ui/ProductsCard";
 import TrustBadges from "@/components/ui/TrustBadges";
 import { SlidersHorizontal } from "lucide-react";
+import { Product } from "@/types/product";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 interface Filters {
   priceMin: string;
@@ -38,9 +39,30 @@ const ShopContent = () => {
       .replace(/[^a-z0-9]+/g, "")
       .trim() || "";
 
-  let products = [...(laptopData.laptops || [])].sort(
-    (a, b) => Number(b.id) - Number(a.id),
-  );
+  const [rawProducts, setRawProducts] = useState<Product[]>(laptopData.laptops || []);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active && Array.isArray(data) && data.length > 0) {
+          setRawProducts(data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load live products:", err);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  let products = [...(rawProducts || [])].sort((a, b) => {
+    const aId = typeof a.id === "number" ? a.id : parseInt(a.id.replace(/[^0-9]/g, "")) || 0;
+    const bId = typeof b.id === "number" ? b.id : parseInt(b.id.replace(/[^0-9]/g, "")) || 0;
+    return bId - aId;
+  });
 
   // Apply search filter
   if (searchQuery) {

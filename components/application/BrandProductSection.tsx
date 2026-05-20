@@ -1,6 +1,6 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
+import { Product } from "@/types/product";
 import { motion } from "framer-motion";
 import {
   Briefcase,
@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import "swiper/css";
-import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
@@ -27,6 +26,12 @@ interface BrandProductSectionProps {
   description: string;
   badgeText: string;
   theme: "hp" | "dell" | "lenovo" | "microsoft";
+  products: Product[];
+  sectionType?: "laptop" | "accessory";
+}
+
+function isAccessoryCategory(category?: string) {
+  return category?.toLowerCase().includes("accessor") ?? false;
 }
 
 const BrandProductSection = ({
@@ -35,13 +40,23 @@ const BrandProductSection = ({
   description,
   badgeText,
   theme,
+  products,
+  sectionType = "laptop",
 }: BrandProductSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("All Series");
+  const brandSlug = brand.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
-  // Filter for brand laptops
-  const brandProducts = laptopData.laptops.filter(
-    (product) => product.brand?.toLowerCase() === brand.toLowerCase()
-  );
+  // Filter by brand and section type from live products.
+  const brandProducts = products.filter((product) => {
+    const belongsToBrand = product.brand?.toLowerCase() === brand.toLowerCase();
+    if (!belongsToBrand) return false;
+
+    if (sectionType === "accessory") {
+      return isAccessoryCategory(product.category);
+    }
+
+    return !isAccessoryCategory(product.category);
+  });
 
   // Extract unique categories
   const categories = [
@@ -134,10 +149,10 @@ const BrandProductSection = ({
             theme === "hp"
               ? "bg-yellow-500/5"
               : theme === "dell"
-              ? "bg-blue-500/5"
-              : theme === "lenovo"
-              ? "bg-red-500/5"
-              : "bg-gray-500/5"
+                ? "bg-blue-500/5"
+                : theme === "lenovo"
+                  ? "bg-red-500/5"
+                  : "bg-gray-500/5"
           }`}
         />
         <div
@@ -145,10 +160,10 @@ const BrandProductSection = ({
             theme === "hp"
               ? "bg-purple-500/5"
               : theme === "dell"
-              ? "bg-cyan-500/5"
-              : theme === "lenovo"
-              ? "bg-gray-500/5"
-              : "bg-blue-500/5"
+                ? "bg-cyan-500/5"
+                : theme === "lenovo"
+                  ? "bg-gray-500/5"
+                  : "bg-blue-500/5"
           }`}
         />
       </div>
@@ -209,7 +224,7 @@ const BrandProductSection = ({
                 >
                   {isActive && (
                     <motion.div
-                      layoutId={`activeTab-${brand}`}
+                      layoutId={`activeTab-${brandSlug}`}
                       className={`absolute inset-0 rounded-full ${currentTheme.accentBg}`}
                       transition={{
                         type: "spring",
@@ -235,13 +250,13 @@ const BrandProductSection = ({
           {/* Navigation Buttons */}
           <div className="hidden lg:flex absolute top-1/2 -translate-y-1/2 -left-12 -right-12 justify-between pointer-events-none z-20">
             <button
-              className={`${brand}-prev pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg ${currentTheme.hoverBg} hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0`}
+              className={`${brandSlug}-prev pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg ${currentTheme.hoverBg} hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0`}
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
-              className={`${brand}-next pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg ${currentTheme.hoverBg} hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0`}
+              className={`${brandSlug}-next pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg ${currentTheme.hoverBg} hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0`}
               aria-label="Next slide"
             >
               <ChevronRight className="w-6 h-6" />
@@ -260,12 +275,12 @@ const BrandProductSection = ({
               spaceBetween={20}
               slidesPerView={1}
               navigation={{
-                nextEl: `.${brand}-next`,
-                prevEl: `.${brand}-prev`,
+                nextEl: `.${brandSlug}-next`,
+                prevEl: `.${brandSlug}-prev`,
               }}
               pagination={{
                 clickable: true,
-                el: `.${brand}-pagination`,
+                el: `.${brandSlug}-pagination`,
                 renderBullet: (_, className) => {
                   return `<span class="${className} w-2 h-2 rounded-full transition-all duration-300 mx-1"></span>`;
                 },
@@ -302,7 +317,7 @@ const BrandProductSection = ({
 
             {/* Custom Pagination */}
             <div
-              className={`${brand}-pagination flex justify-center gap-2 w-auto!`}
+              className={`${brandSlug}-pagination flex justify-center gap-2 w-auto!`}
             />
           </motion.div>
         </div>

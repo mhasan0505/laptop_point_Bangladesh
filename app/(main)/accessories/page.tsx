@@ -1,3 +1,13 @@
+import dynamic from "next/dynamic";
+import { getLiveProducts } from "@/lib/products";
+
+const BrandProductSection = dynamic(
+  () => import("@/components/application/BrandProductSection"),
+  {
+    loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+  },
+);
+
 const categories = [
   {
     title: "Chargers & Adapters",
@@ -73,7 +83,34 @@ const benefits = [
   },
 ];
 
-const page = () => {
+const brandThemes: Record<string, "hp" | "dell" | "lenovo" | "microsoft"> = {
+  hp: "hp",
+  dell: "dell",
+  lenovo: "lenovo",
+  microsoft: "microsoft",
+};
+
+function getThemeByBrand(brand: string) {
+  return brandThemes[brand.toLowerCase()] || "microsoft";
+}
+
+const page = async () => {
+  const products = await getLiveProducts();
+  const accessoryProducts = products.filter((product) =>
+    product.category?.toLowerCase().includes("accessor"),
+  );
+
+  const accessoryBrandCounts = new Map<string, number>();
+  accessoryProducts.forEach((product) => {
+    const brand = product.brand?.trim();
+    if (!brand) return;
+    accessoryBrandCounts.set(brand, (accessoryBrandCounts.get(brand) || 0) + 1);
+  });
+
+  const accessoryBrands = [...accessoryBrandCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([brand]) => brand);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
@@ -182,6 +219,19 @@ const page = () => {
           </div>
         </div>
       </section>
+
+      {accessoryBrands.map((brand) => (
+        <BrandProductSection
+          key={brand}
+          brand={brand}
+          title={`${brand} Accessories`}
+          description={`Uploaded ${brand} accessories are shown here automatically from your catalog.`}
+          badgeText={`${brand} Accessories`}
+          theme={getThemeByBrand(brand)}
+          products={products}
+          sectionType="accessory"
+        />
+      ))}
 
       {/* Benefits */}
       <section className="container mx-auto px-4 pb-14">

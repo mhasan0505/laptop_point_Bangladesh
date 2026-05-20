@@ -1,10 +1,18 @@
 import { ImageLoader } from "next/image";
+import { getOptimizedImageUrl } from "./imagekit";
 
 /**
  * Custom image loader for Next.js Image component
- * Handles local images with spaces in paths properly
+ * Handles local images with spaces in paths properly, and integrates ImageKit CDN
  */
 export const customImageLoader: ImageLoader = ({ src, width, quality }) => {
+  const imagekitEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
+
+  // If ImageKit is configured, optimize via ImageKit
+  if (imagekitEndpoint) {
+    return getOptimizedImageUrl(src, width, quality);
+  }
+
   // For external URLs, return as-is
   if (src.startsWith("http://") || src.startsWith("https://")) {
     return src;

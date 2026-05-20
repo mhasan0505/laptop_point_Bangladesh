@@ -10,6 +10,37 @@ datasource db {
 }
 
 // ─────────────────────────────────────────────────────────────
+// PRODUCTS
+// ─────────────────────────────────────────────────────────────
+
+model Product {
+  id                String   @id @default(cuid())
+  sanityId          String   @unique
+  sku               String   @unique
+  slug              String?
+  name              String
+  brand             String
+  category          String
+  description       String?
+  price             Float
+  salePrice         Float?
+  stock             Int      @default(0)
+  lowStockThreshold Int      @default(10)
+  status            String   @default("active")
+  featured          Boolean  @default(false)
+  tags              String[]
+  images            String[]
+  specs             Json?
+  warranty          Json?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([brand])
+  @@index([category])
+  @@index([status])
+}
+
+// ─────────────────────────────────────────────────────────────
 // ORDERS
 // ─────────────────────────────────────────────────────────────
 

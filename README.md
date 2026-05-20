@@ -102,6 +102,7 @@ pnpm install
 # Sanity Configuration
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
 NEXT_PUBLIC_SANITY_DATASET=production
+NEXT_PUBLIC_SANITY_API_VERSION=2025-01-01
 SANITY_API_TOKEN=your_api_token
 
 # MongoDB (if applicable)
@@ -122,6 +123,15 @@ pnpm dev
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+6. **Open Sanity Studio**
+   Navigate to [http://localhost:3000/studio](http://localhost:3000/studio)
+
+7. **Deploy schema to Sanity Content Lake**
+
+```bash
+pnpm sanity:deploy-schema
+```
 
 ## 🏗️ Project Structure
 
