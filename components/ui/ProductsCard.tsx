@@ -36,6 +36,12 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
+  const discountPercentage = product.discount || (
+    product.originalPrice && product.originalPrice > product.price
+      ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+      : 0
+  );
+
 
   const handleAddToCart = () => {
     addToCart({
@@ -80,9 +86,9 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
         <div className="relative aspect-4/5 bg-gray-50 dark:bg-gray-800/50 p-6 overflow-hidden">
           {/* Badges */}
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
-            {product.discount && (
+            {discountPercentage > 0 && (
               <span className="px-2 py-1 text-[10px] font-bold tracking-wider text-white bg-black dark:bg-white dark:text-black rounded-sm uppercase">
-                -{product.discount}%
+                -{discountPercentage}%
               </span>
             )}
           </div>
@@ -224,9 +230,16 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
           <div className="flex items-end justify-between mt-2">
             <div className="flex flex-col">
-              <span className="text-lg font-bold text-gray-900 dark:text-white">
-                ৳{product.price.toLocaleString()}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold text-gray-900 dark:text-white">
+                  ৳{product.price.toLocaleString()}
+                </span>
+                {product.originalPrice && product.originalPrice > product.price && (
+                  <span className="text-xs text-gray-400 line-through">
+                    ৳{product.originalPrice.toLocaleString()}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center gap-1 text-amber-600 font-bold">

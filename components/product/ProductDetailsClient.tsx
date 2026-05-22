@@ -12,7 +12,10 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Clock,
+  Frown,
   Heart,
+  Meh,
   MessageCircle,
   Minus,
   Phone,
@@ -22,6 +25,7 @@ import {
   Shield,
   ShoppingBag,
   ShoppingCart,
+  Smile,
   Star,
   ZoomIn,
   X,
@@ -397,63 +401,48 @@ export default function ProductDetailsClient({
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-border bg-linear-to-br from-secondary/30 to-card p-6">
-                <div className="flex flex-wrap items-end gap-3">
-                  <span className="text-2xl font-black text-foreground">
-                    ৳ {product.price.toLocaleString()}
+              <div className="flex flex-wrap items-baseline gap-3 mt-2">
+                {product.originalPrice && product.originalPrice > product.price ? (
+                  <>
+                    <span className="text-xl text-gray-400 line-through">
+                      {product.originalPrice.toLocaleString()}৳
+                    </span>
+                    <span className="text-3xl font-bold text-[#f56523]">
+                      {product.price.toLocaleString()}৳
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                    {product.price.toLocaleString()}৳
                   </span>
-                  {product.originalPrice && (
-                    <div className="mb-1 flex flex-col">
-                      <span className="text-sm text-muted-foreground line-through">
-                        ৳ {product.originalPrice.toLocaleString()}
-                      </span>
-                      {discountPercentage > 0 && (
-                        <span className="text-xs font-bold text-red-500">
-                          Save ৳ {(product.originalPrice - product.price).toLocaleString()} ({discountPercentage}%)
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="relative flex h-2 w-2">
-                    <span
-                      className={`absolute inline-flex h-full w-full animate-ping rounded-full ${
-                        product.inStock ? "bg-emerald-500" : "bg-red-500"
-                      } opacity-75`}
-                    />
-                    <span
-                      className={`relative inline-flex h-2 w-2 rounded-full ${
-                        product.inStock ? "bg-emerald-500" : "bg-red-500"
-                      }`}
-                    />
-                  </span>
-                  <span
-                    className={`text-xs font-semibold ${
-                      product.inStock ? "text-emerald-600" : "text-red-500"
-                    }`}
-                  >
-                    {product.inStock ? "In Stock - Ready to Ship" : "Out of Stock"}
-                  </span>
-                </div>
+                )}
               </div>
 
               {product.features && product.features.length > 0 && (
-                <div>
-                  <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    Key Highlights
-                  </h3>
-                  <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {product.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2 text-sm text-foreground">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <ul className="space-y-3.5 mt-2">
+                  {product.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5 text-sm text-gray-800 dark:text-gray-200">
+                      <span className="w-1.5 h-1.5 bg-gray-900 dark:bg-gray-100 mt-2 shrink-0 rounded-[1px]" />
+                      <span className="leading-tight font-medium">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               )}
+
+              {/* Stock Status with Icon */}
+              <div className="mt-1">
+                {!product.inStock ? (
+                  <div className="flex items-center gap-2 text-[#ff4d4f] font-bold text-lg">
+                    <Frown className="w-5 h-5 shrink-0" />
+                    <span>Out Of Stock</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-[#52c41a] font-bold text-lg">
+                    <Smile className="w-5 h-5 shrink-0" />
+                    <span>In Stock</span>
+                  </div>
+                )}
+              </div>
 
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-3">

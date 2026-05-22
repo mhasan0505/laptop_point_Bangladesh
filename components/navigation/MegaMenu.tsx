@@ -156,43 +156,51 @@ const MegaMenu = ({
                   </div>
 
                   <div className="grid grid-cols-3 gap-6">
-                    {getFeaturedProducts(hoveredCategory).map((product) => (
-                      <Link
-                        key={product.id}
-                        href={`/product/${product.slug}`}
-                        onClick={onClose}
-                        className="group bg-white border border-gray-100 rounded-xl p-4 hover:shadow-lg hover:border-yellow-200 transition-all"
-                      >
-                        <div className="aspect-square relative mb-3 bg-gray-50 rounded-lg overflow-hidden">
-                          <Image
-                            src={product.image}
-                            alt={product.name}
-                            fill
-                            className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                        <h4 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-yellow-700 transition-colors">
-                          {product.name}
-                        </h4>
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg font-bold text-gray-900">
-                            ৳{product.price.toLocaleString()}
-                          </span>
-                          {product.originalPrice && (
-                            <span className="text-sm text-gray-400 line-through">
-                              ৳{product.originalPrice.toLocaleString()}
-                            </span>
-                          )}
-                        </div>
-                        {product.discount && (
-                          <div className="mt-2">
-                            <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">
-                              {product.discount}% OFF
-                            </span>
+                    {getFeaturedProducts(hoveredCategory).map((product) => {
+                      const discountPercentage = product.discount || (
+                        product.originalPrice && product.originalPrice > product.price
+                          ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+                          : 0
+                      );
+
+                      return (
+                        <Link
+                          key={product.id}
+                          href={`/product/${product.slug}`}
+                          onClick={onClose}
+                          className="group bg-white border border-gray-100 rounded-xl p-4 hover:shadow-lg hover:border-yellow-200 transition-all"
+                        >
+                          <div className="aspect-square relative mb-3 bg-gray-50 rounded-lg overflow-hidden">
+                            <Image
+                              src={product.image}
+                              alt={product.name}
+                              fill
+                              className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+                            />
                           </div>
-                        )}
-                      </Link>
-                    ))}
+                          <h4 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-yellow-700 transition-colors">
+                            {product.name}
+                          </h4>
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg font-bold text-gray-900">
+                              ৳{product.price.toLocaleString()}
+                            </span>
+                            {product.originalPrice && (
+                              <span className="text-sm text-gray-400 line-through">
+                                ৳{product.originalPrice.toLocaleString()}
+                              </span>
+                            )}
+                          </div>
+                          {discountPercentage > 0 && (
+                            <div className="mt-2">
+                              <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">
+                                {discountPercentage}% OFF
+                              </span>
+                            </div>
+                          )}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </motion.div>
               ) : (
