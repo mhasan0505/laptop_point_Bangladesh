@@ -152,7 +152,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             <div className="grid grid-cols-4 gap-3">
               {product.images.map((image, index) => (
                 <button
-                  key={index}
+                  key={image || index}
                   onClick={() => {
                     setSelectedImage(index);
                     setImageLoaded(false);
@@ -268,7 +268,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-6 py-3 font-semibold min-w-[60px] text-center">
+                  <span className="px-6 py-3 font-semibold min-w-15 text-center">
                     {quantity}
                   </span>
                   <button
@@ -357,7 +357,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                         <div className="space-y-0">
                           {getSpecsByCategory(category).map((spec, index) => (
                             <div
-                              key={index}
+                              key={spec.label || index}
                               className={`grid grid-cols-2 gap-4 p-4 hover:bg-muted/30 transition-colors ${
                                 index !==
                                 getSpecsByCategory(category).length - 1

@@ -19,31 +19,6 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(
   undefined,
 );
 
-const ADMIN_AUTH_KEY = "admin_authenticated";
-
-// Helper functions for cookie management
-function setCookie(name: string, value: string, days: number = 7) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-}
-
-function getCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
-  const nameEQ = name + "=";
-  const ca = document.cookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
-
-function deleteCookie(name: string) {
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
-}
-
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
   // Start with isLoading=true so server and client render the same initial HTML
   // (both render a spinner), preventing hydration mismatches.
@@ -51,29 +26,38 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAuthenticated(getCookie(ADMIN_AUTH_KEY) === "true");
-      setIsLoading(false);
-    }, 0);
-    return () => clearTimeout(timer);
+    // Verify session server-side on mount
+    fetch("/api/admin/auth")
+      .then((res) => {
+        setIsAuthenticated(res.ok);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Check against environment variables or hardcoded admin credentials
-    const adminEmail =
-      process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@laptoppointbd.com";
-    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin@123";
-
-    if (email === adminEmail && password === adminPassword) {
-      setCookie(ADMIN_AUTH_KEY, "true", 7); // Cookie expires in 7 days
-      setIsAuthenticated(true);
-      return true;
+    try {
+      const res = await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (res.ok) {
+        setIsAuthenticated(true);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
     }
-    return false;
   };
 
-  const logout = () => {
-    deleteCookie(ADMIN_AUTH_KEY);
+  const logout = async () => {
+    await fetch("/api/admin/auth", { method: "DELETE" }).catch(() => {});
     setIsAuthenticated(false);
   };
 

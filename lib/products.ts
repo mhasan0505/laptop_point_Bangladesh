@@ -42,8 +42,11 @@ export async function getLiveProducts(): Promise<Product[]> {
       return [];
     }
 
-    // Fetch real-time stock levels from Prisma
-    const inventoryItems = await prisma.inventory.findMany();
+    // Fetch real-time stock levels only for the products we have
+    const sanityIds = sanityProducts.map((p) => p._id as string);
+    const inventoryItems = await prisma.inventory.findMany({
+      where: { productId: { in: sanityIds } },
+    });
     const inventoryMap = new Map(
       inventoryItems.map((item) => [item.productId, item]),
     );

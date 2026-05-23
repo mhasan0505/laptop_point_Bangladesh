@@ -103,11 +103,50 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
+    // Email format validation
+    if (customerEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(customerEmail.trim())) {
+        return NextResponse.json(
+          { error: "Invalid email format" },
+          { status: 400 },
+        );
+      }
+    }
+
+    // Bangladeshi phone: optional +88 prefix, then 01[3-9]\d{8}
+    const phoneDigits = customerPhone.trim().replace(/^\+?88/, "");
+    if (!/^01[3-9]\d{8}$/.test(phoneDigits)) {
+      return NextResponse.json(
+        { error: "Invalid phone number. Must be a valid Bangladeshi mobile number (e.g. 017XXXXXXXX)" },
+        { status: 400 },
+      );
+    }
+
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
         { error: "items array cannot be empty" },
         { status: 400 },
       );
+    }
+
+    // Validate each item has required numeric fields
+    for (const item of items) {
+      if (
+        !item.productId ||
+        !item.name ||
+        typeof item.unitPrice !== "number" ||
+        item.unitPrice <= 0 ||
+        typeof item.quantity !== "number" ||
+        item.quantity < 1 ||
+        !Number.isInteger(item.quantity)
+      ) {
+        return NextResponse.json(
+          { error: "Each item must have productId, name, positive unitPrice, and integer quantity ≥ 1" },
+          { status: 400 },
+        );
+      }
     }
 
     const orderNumber = generateOrderNumber();

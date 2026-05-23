@@ -1,8 +1,18 @@
 import { deleteProduct, updateProduct } from "@/lib/sanity-admin";
+import { createHash, timingSafeEqual } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
-function isAdminRequest(request: NextRequest) {
-  return request.cookies.get("admin_authenticated")?.value === "true";
+function isAdminRequest(request: NextRequest): boolean {
+  const sessionSecret = process.env.ADMIN_SESSION_SECRET;
+  const cookie = request.cookies.get("admin_session")?.value;
+  if (!sessionSecret || !cookie) return false;
+  try {
+    const ha = createHash("sha256").update(cookie).digest();
+    const hb = createHash("sha256").update(sessionSecret).digest();
+    return timingSafeEqual(ha, hb);
+  } catch {
+    return false;
+  }
 }
 
 function normalizeSpecs(specs: unknown) {

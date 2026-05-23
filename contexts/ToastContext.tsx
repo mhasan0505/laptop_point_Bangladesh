@@ -57,7 +57,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             let Icon = Info;
             let bgCls = "bg-white/95 border-gray-200 text-gray-900 shadow-lg shadow-gray-200/50";
             let iconCls = "text-blue-500 bg-blue-50";
-            
+
             if (t.type === "success") {
               Icon = CheckCircle2;
               bgCls = "bg-white/95 border-emerald-100 text-gray-900 shadow-xl shadow-emerald-500/10";
@@ -95,13 +95,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               >
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-lg ${iconCls} flex items-center justify-center`}>
-                    <Icon className="w-5 h-5 flex-shrink-0" />
+                    <Icon className="w-5 h-5 shrink-0" />
                   </div>
                   <p className="text-sm font-semibold leading-snug">{t.message}</p>
                 </div>
                 <button
                   onClick={() => removeToast(t.id)}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-lg hover:bg-gray-100/50 flex-shrink-0"
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-lg hover:bg-gray-100/50 shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </button>

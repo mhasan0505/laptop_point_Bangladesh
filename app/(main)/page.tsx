@@ -7,8 +7,7 @@ import { eCommerceSchema } from "@/lib/seo-schemas";
 import { Metadata } from "next";
 import nextDynamic from "next/dynamic";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300; // re-fetch from Sanity every 5 minutes
 
 // Lazy load brand sections that are below the fold for better initial load
 const BrandProductSection = nextDynamic(

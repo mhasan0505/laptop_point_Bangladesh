@@ -13,7 +13,6 @@ import {
   Wallet,
 } from "lucide-react";
 import "swiper/css";
-import "swiper/css/autoplay";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
@@ -76,8 +75,8 @@ const HpLaptopSection = () => {
     <div className="relative w-full bg-linear-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 py-16 md:py-24 overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-yellow-500/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
+        <div className="absolute top-0 left-1/4 w-125 h-125 bg-yellow-500/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-purple-500/5 rounded-full blur-[100px]" />
       </div>
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
