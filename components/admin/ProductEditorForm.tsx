@@ -9,6 +9,7 @@ import { ArrowDown, ArrowUp, ChevronLeft, Plus, Trash2, UploadCloud } from "luci
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useToast } from "@/contexts/ToastContext";
 
 const CONDITIONS = ["New", "Used", "Refurbished", "Open Box"];
 const STOCK_STATUSES = [
@@ -171,7 +172,7 @@ function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
     marketPrice:
       initialProduct?.salePrice !== undefined
         ? String(initialProduct.salePrice)
-        : "",
+          : "",
     currency: initialProduct?.currency || "BDT",
     taxIncluded: initialProduct?.taxIncluded ?? true,
     stock: initialProduct ? String(initialProduct.stock) : "",
@@ -227,6 +228,7 @@ export function ProductEditorForm({
   onSubmitProductAction,
 }: ProductEditorFormProps) {
   const router = useRouter();
+  const { success: showSuccessToast, error: showErrorToast } = useToast();
   const [saving, setSaving] = useState(false);
   const [uploadingImages, setUploadingImages] = useState(false);
   const [isDraggingFiles, setIsDraggingFiles] = useState(false);
@@ -729,6 +731,11 @@ export function ProductEditorForm({
         images: imageUrls,
       });
 
+      showSuccessToast(
+        initialProduct
+          ? "Product updated successfully!"
+          : "Product created successfully!"
+      );
       router.push("/admin/products");
     } catch (error) {
       const message =
@@ -743,11 +750,12 @@ export function ProductEditorForm({
           ...current,
           sku: `SKU "${form.sku.trim()}" is already taken. Please use a different SKU.`,
         }));
-        setSubmitError(
-          "SKU conflict: a product with this SKU already exists. Update the SKU field above and try again.",
-        );
+        const errMsg = "SKU conflict: a product with this SKU already exists. Update the SKU field above and try again.";
+        setSubmitError(errMsg);
+        showErrorToast(errMsg);
       } else {
         setSubmitError(message);
+        showErrorToast(message);
       }
     } finally {
       setSaving(false);

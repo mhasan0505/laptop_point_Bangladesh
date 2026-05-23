@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 // ─── GET /api/inventory ───────────────────────────────────────────────────────
 // Returns all inventory records sorted by quantity asc (low stock first)
 export async function GET() {

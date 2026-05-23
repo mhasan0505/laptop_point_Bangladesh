@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useToast } from "@/contexts/ToastContext";
 
 interface StockUpdateDialogProps {
   isOpen: boolean;
@@ -32,13 +33,14 @@ export function StockUpdateDialog({
 }: StockUpdateDialogProps) {
   const [newStock, setNewStock] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const { warning } = useToast();
 
   const handleUpdate = () => {
     if (!product || !newStock) return;
 
     const stockValue = parseInt(newStock);
     if (isNaN(stockValue) || stockValue < 0) {
-      alert("Please enter a valid stock quantity (0 or greater)");
+      warning("Please enter a valid stock quantity (0 or greater)");
       return;
     }
 

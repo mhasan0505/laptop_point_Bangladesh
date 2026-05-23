@@ -6,15 +6,29 @@ import {
   deleteAdminProduct,
   fetchAdminProducts,
 } from "@/lib/admin-products-api";
-import { Edit, Laptop, Plus, Trash2 } from "lucide-react";
+import { Edit, Laptop, Plus, Trash2, AlertTriangle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useToast } from "@/contexts/ToastContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const AdminProducts = () => {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
+  const { success: showSuccessToast, error: showErrorToast } = useToast();
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<AdminProduct | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const categoryOptions = [
     ...new Set(
@@ -60,12 +74,27 @@ const AdminProducts = () => {
     }
   };
 
-  const handleDeleteProduct = (productId: string) => {
-    if (confirm("Are you sure you want to delete this product?")) {
-      deleteAdminProduct(productId).then(() => {
-        setProducts((prev) => prev.filter((p) => p.id !== productId));
+  const handleDeleteProduct = (product: AdminProduct) => {
+    setProductToDelete(product);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (!productToDelete) return;
+    setIsDeleting(true);
+    deleteAdminProduct(productToDelete.id)
+      .then(() => {
+        setProducts((prev) => prev.filter((p) => p.id !== productToDelete.id));
+        showSuccessToast("Product deleted successfully!");
+        setDeleteDialogOpen(false);
+        setProductToDelete(null);
+      })
+      .catch((err) => {
+        showErrorToast(err instanceof Error ? err.message : "Failed to delete product.");
+      })
+      .finally(() => {
+        setIsDeleting(false);
       });
-    }
   };
 
   if (isLoading) {
@@ -218,7 +247,7 @@ const AdminProducts = () => {
                             variant="ghost"
                             size="icon"
                             className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8"
-                            onClick={() => handleDeleteProduct(product.id)}
+                            onClick={() => handleDeleteProduct(product)}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -241,6 +270,64 @@ const AdminProducts = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader className="text-left">
+            <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/30 flex items-center justify-center text-rose-600 dark:text-rose-400 mb-4">
+              <AlertTriangle className="w-6 h-6 animate-pulse" />
+            </div>
+            <DialogTitle className="text-xl font-bold text-gray-900 dark:text-gray-100">Delete Product</DialogTitle>
+            <DialogDescription className="text-gray-500 dark:text-gray-400 mt-2">
+              Are you sure you want to delete this product? This action cannot be undone and will permanently remove the product from the catalog.
+            </DialogDescription>
+          </DialogHeader>
+
+          {productToDelete && (
+            <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl my-2 text-left">
+              <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200/60 dark:border-gray-700/60 flex items-center justify-center text-gray-400">
+                <Laptop className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                  {productToDelete.name}
+                </h4>
+                <p className="text-xs text-gray-500 truncate">
+                  SKU: {productToDelete.sku} | Price: ৳{productToDelete.price.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="mt-4 gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDeleteDialogOpen(false);
+                setProductToDelete(null);
+              }}
+              disabled={isDeleting}
+              className="w-full sm:w-auto"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmDelete}
+              disabled={isDeleting}
+              className="w-full sm:w-auto bg-rose-600 hover:bg-rose-700 text-white gap-2"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete Product"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
