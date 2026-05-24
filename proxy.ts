@@ -8,8 +8,10 @@ export function proxy(request: NextRequest) {
 
     if (!isLoginPage) {
       // Check for authentication cookie/header
+      const sessionSecret = process.env.ADMIN_SESSION_SECRET;
+      const sessionCookie = request.cookies.get("admin_session")?.value;
       const isAuthenticated =
-        request.cookies.get("admin_authenticated")?.value === "true";
+        Boolean(sessionSecret) && sessionCookie === sessionSecret;
 
       if (!isAuthenticated) {
         // Redirect to login page

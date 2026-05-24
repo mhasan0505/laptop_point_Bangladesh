@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 function isAdminRequest(request: NextRequest) {
-  return request.cookies.get("admin_authenticated")?.value === "true";
+  const sessionSecret = process.env.ADMIN_SESSION_SECRET;
+  const cookie = request.cookies.get("admin_session")?.value;
+  return Boolean(sessionSecret) && cookie === sessionSecret;
 }
 
 export async function POST(request: NextRequest) {
