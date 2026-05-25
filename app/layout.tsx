@@ -83,8 +83,8 @@ export const metadata: Metadata = {
 };
 
 const jsonLd = organizationSchema;
-
 const localBusinessJsonLd = localBusinessSchema;
+const GOOGLE_TAG_ID = "G-Y7GRYG9473";
 
 export default function RootLayout({
   children,
@@ -119,6 +119,19 @@ export default function RootLayout({
           strategy="lazyOnload"
           src="https://connect.facebook.net/en_US/fbevents.js"
         />
+        <Script
+          id="google-tag-base"
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`}
+        />
+        <Script id="google-tag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GOOGLE_TAG_ID}');
+          `}
+        </Script>
         <Script id="fb-pixel-init" strategy="lazyOnload">
           {`
             !function(f,b,e,v,n,t,s)
@@ -145,9 +158,7 @@ export default function RootLayout({
             />
           </noscript>
         )}
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
         <SpeedInsights />
         <Analytics />
       </body>
