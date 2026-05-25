@@ -103,7 +103,7 @@ export default function Footer() {
       {/* Main Links Section - Dark Background */}
       <div className="bg-gray-900 text-white pt-16 pb-8">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-12 mb-12">
             {/* Quick Links */}
             <div>
               <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-yellow-400 after:rounded-full">
@@ -326,11 +326,25 @@ export default function Footer() {
                 © {currentYear} Laptop Point BD. All rights reserved. Powered by{" "}
                 <span className="text-yellow-400">Creative Artix </span>
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                {/* Payment Methods (Placeholder) */}
-                <div className="h-6 w-10 bg-gray-800 rounded"></div>
-                <div className="h-6 w-10 bg-gray-800 rounded"></div>
-                <div className="h-6 w-10 bg-gray-800 rounded"></div>
+              <div className="rounded-xl border border-gray-700 bg-gray-800/70 px-4 py-3 text-center md:text-right">
+                <p className="text-xs font-semibold uppercase tracking-wide text-yellow-400">
+                  SSLCommerz EMI Available
+                </p>
+                <p className="mt-1 text-xs text-gray-300">
+                  3, 6, 9, and 12 month EMI on eligible bank cards.
+                </p>
+                <div className="mt-2 flex flex-wrap justify-center gap-2 md:justify-end">
+                  {["VISA", "Mastercard", "AMEX", "bKash", "Nagad"].map(
+                    (method) => (
+                      <span
+                        key={method}
+                        className="rounded-md border border-gray-600 bg-gray-900 px-2 py-1 text-[10px] font-medium text-gray-200"
+                      >
+                        {method}
+                      </span>
+                    ),
+                  )}
+                </div>
               </div>
             </div>
           </div>

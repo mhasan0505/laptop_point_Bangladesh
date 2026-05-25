@@ -141,8 +141,8 @@ const Header = () => {
       {/* Top Bar */}
       <div className="bg-linear-to-r from-gray-900 to-gray-800 text-white text-xs">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between py-2">
-            <div className="flex items-center space-x-6">
+          <div className="flex flex-col items-center justify-between py-2 md:flex-row">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 md:justify-start">
               <div className="flex items-center space-x-1">
                 <Clock className="w-3.5 h-3.5 text-yellow-400" />
                 <span>Mon-Sat: 10:30 AM - 9:00 PM</span>
@@ -202,8 +202,8 @@ const Header = () => {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white container mx-auto">
-        <div className="container mx-auto px-4">
+      <div className="bg-white">
+        <div className="container mx-auto px-3 sm:px-4">
           <div className="flex items-center justify-between h-24">
             {/* Logo */}
             <Link href="/" className="shrink-0">
@@ -232,7 +232,7 @@ const Header = () => {
             </nav>
 
             {/* Search and Actions */}
-            <div className="flex items-center space-x-2 md:space-x-4 relative">
+            <div className="relative flex items-center space-x-1.5 sm:space-x-2 md:space-x-4">
               {/* Search Container */}
               <div
                 ref={searchContainerRef}
@@ -366,7 +366,7 @@ const Header = () => {
                         }}
                         whileTap={{ scale: 0.99 }}
                         onClick={() => setIsSearchExpanded(true)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 border border-gray-300 rounded-full cursor-pointer transition-all bg-white shadow-sm hover:shadow-md hover:border-primary/50 min-w-[200px]"
+                        className="flex min-w-50 items-center gap-2.5 rounded-full border border-gray-300 bg-white px-4 py-2.5 shadow-sm transition-all hover:border-primary/50 hover:shadow-md cursor-pointer"
                       >
                         <Search className="h-4 w-4 text-gray-400 shrink-0" />
                         <span className="text-sm text-gray-500 whitespace-nowrap">

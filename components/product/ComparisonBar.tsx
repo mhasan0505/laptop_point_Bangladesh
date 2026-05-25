@@ -20,20 +20,20 @@ const ComparisonBar = () => {
         exit={{ y: 100 }}
         className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-yellow-400 shadow-2xl z-40"
       >
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between gap-4">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex flex-wrap items-start justify-between gap-3 sm:items-center sm:gap-4">
             {/* Left Side - Title */}
-            <div className="flex items-center gap-3">
-              <h3 className="font-bold text-gray-900 whitespace-nowrap">
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <h3 className="font-bold text-gray-900 text-sm sm:text-base whitespace-nowrap">
                 Compare Products
               </h3>
-              <span className="text-sm text-gray-500">
+              <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">
                 {comparisonItems.length}/3 selected
               </span>
             </div>
 
             {/* Middle - Product Items (Scrollable on mobile) */}
-            <div className="flex-1 overflow-x-auto">
+            <div className="order-3 w-full flex-1 overflow-x-auto sm:order-2 sm:w-auto">
               <div className="flex items-center gap-3">
                 {comparisonItems.map((product) => (
                   <div
@@ -60,17 +60,17 @@ const ComparisonBar = () => {
             </div>
 
             {/* Right Side - Actions */}
-            <div className="flex items-center gap-2">
+            <div className="order-2 flex w-full items-center justify-end gap-2 sm:order-3 sm:w-auto">
               <button
                 onClick={clearComparison}
-                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                className="px-3 py-2 text-xs sm:px-4 sm:text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 Clear All
               </button>
               {comparisonItems.length >= 2 && (
                 <Link
                   href="/compare"
-                  className="px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors flex items-center gap-2"
+                  className="px-4 py-2 text-xs sm:px-6 sm:text-sm bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors flex items-center gap-2"
                 >
                   Compare Now
                   <ArrowRight className="w-4 h-4" />
