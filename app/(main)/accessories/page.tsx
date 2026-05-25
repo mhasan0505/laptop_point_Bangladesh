@@ -1,8 +1,26 @@
 import { getLiveProducts } from "@/lib/products";
+import { Metadata } from "next";
 import nextDynamic from "next/dynamic";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Laptop Accessories in Bangladesh",
+  description:
+    "Explore laptop accessories including chargers, batteries, bags, cables, and peripherals with trusted quality and warranty support.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/accessories",
+  },
+  openGraph: {
+    title: "Laptop Accessories in Bangladesh",
+    description:
+      "Explore laptop accessories including chargers, batteries, bags, cables, and peripherals.",
+    url: "https://laptoppointbd.com/accessories",
+    type: "website",
+    images: ["/Hero_Image.png"],
+  },
+};
 
 const BrandProductSection = nextDynamic(
   () => import("@/components/application/BrandProductSection"),

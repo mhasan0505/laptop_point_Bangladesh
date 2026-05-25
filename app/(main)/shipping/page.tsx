@@ -1,3 +1,14 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shipping Information",
+  description:
+    "Learn about delivery timelines, shipping charges, and coverage areas for Laptop Point Bangladesh orders.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/shipping",
+  },
+};
+
 export default function ShippingInfo() {
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">

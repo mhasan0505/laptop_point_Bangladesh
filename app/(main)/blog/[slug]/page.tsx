@@ -1,61 +1,10 @@
+import { BLOG_POSTS } from "@/lib/blog-posts";
+import { articleSchema } from "@/lib/seo-schemas";
 import { Calendar, Facebook, Linkedin, Twitter } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-// Mock Data (duplicated for now, ideally moved to a separate data file)
-const posts = [
-  {
-    title: "Top 5 Laptops for Programming in 2024",
-    excerpt:
-      "Choosing the right laptop for coding can be tricky. We break down the best options based on performance, keyboard quality, and battery life.",
-    slug: "top-5-laptops-programming-2024",
-    coverImage:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1200&auto=format&fit=crop",
-    date: "2024-03-15",
-    author: {
-      name: "Arif Islam",
-      picture: "https://randomuser.me/api/portraits/men/32.jpg",
-    },
-    category: "Guides",
-    content: `
-      <h2>Introduction</h2>
-      <p>Programming requires a specific set of features in a laptop. You need a fast processor for compiling code, plenty of RAM for running virtual machines, and a comfortable keyboard for long coding sessions. In this guide, we'll explore the top 5 laptops that meet these criteria in 2024.</p>
-
-      <h2>1. MacBook Pro 14-inch (M3 Pro)</h2>
-      <p>The MacBook Pro remains the gold standard for many developers. The M3 Pro chip offers incredible performance per watt, meaning you get top-tier speed without sacrificing battery life. The display is stunning, and the keyboard is one of the best on the market.</p>
-
-      <h2>2. Dell XPS 15</h2>
-      <p>For Windows users, the Dell XPS 15 is a powerhouse. It features a high-resolution OLED display and premium build quality. We recommend configuring it with at least 32GB of RAM for heavy development tasks.</p>
-
-      <h2>3. Lenovo ThinkPad X1 Carbon Gen 11</h2>
-      <p>If typing experience is your priority, look no further than the ThinkPad X1 Carbon. It's lightweight, durable, and features the legendary ThinkPad keyboard. It's also great for Linux support.</p>
-
-      <h2>4. ASUS ROG Zephyrus G14</h2>
-      <p>Who says you can't game and code? The G14 is a beast of a machine in a compact form factor. It's powerful enough for game development and portable enough to carry to hackathons.</p>
-
-      <h2>5. HP EliteBook 840 G8</h2>
-      <p>A more budget-friendly business option that doesn't skimp on quality. It offers great upgradability and security features, making it a solid choice for enterprise developers.</p>
-
-      <h2>Conclusion</h2>
-      <p>The best laptop for you depends on your specific needs and budget. Consider what kind of development you do (web, mobile, game, systems) and choose accordingly.</p>
-    `,
-  },
-  {
-    title: "How to Maintain Your Laptop for Longevity",
-    slug: "how-to-maintain-laptop",
-    coverImage:
-      "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=1200&auto=format&fit=crop",
-    date: "2024-03-10",
-    author: {
-      name: "Sonia Akter",
-      picture: "https://randomuser.me/api/portraits/women/44.jpg",
-    },
-    category: "Tips",
-    content: "<p>Content for maintaining your laptop...</p>",
-  },
-  // ... other posts would go here
-];
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -63,16 +12,90 @@ interface BlogPostPageProps {
   }>;
 }
 
+const htmlToText = (value: string) =>
+  value
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = BLOG_POSTS.find((p) => p.slug === slug);
+
+  if (!post) {
+    return {
+      title: "Blog Post Not Found",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const description =
+    post.excerpt ||
+    htmlToText(post.content).slice(0, 155) ||
+    "Read laptop buying guides and insights from Laptop Point Bangladesh.";
+
+  const canonicalUrl = `https://laptoppointbd.com/blog/${post.slug}`;
+
+  return {
+    title: post.title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: post.title,
+      description,
+      url: canonicalUrl,
+      type: "article",
+      publishedTime: post.date,
+      images: [
+        {
+          url: post.coverImage,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+      images: [post.coverImage],
+    },
+  };
+}
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = posts.find((p) => p.slug === slug);
+  const post = BLOG_POSTS.find((p) => p.slug === slug);
 
   if (!post) {
     notFound();
   }
 
+  const blogPostingJsonLd = articleSchema({
+    title: post.title,
+    description:
+      post.excerpt ||
+      htmlToText(post.content).slice(0, 155) ||
+      "Read laptop buying guides and insights from Laptop Point Bangladesh.",
+    image: post.coverImage,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: post.author.name,
+  });
+
   return (
     <article className="pb-16 bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
+      />
+
       {/* Hero Section */}
       <div className="relative h-64 md:h-96 w-full">
         <Image
@@ -128,13 +151,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               Share this post:
             </h4>
             <div className="flex gap-4">
-              <button title="Share on Facebook" className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
+              <button
+                title="Share on Facebook"
+                className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+              >
                 <Facebook size={20} />
               </button>
-              <button title="Share on Twitter" className="p-3 bg-sky-500 text-white rounded-full hover:bg-sky-600 transition-colors">
+              <button
+                title="Share on Twitter"
+                className="p-3 bg-sky-500 text-white rounded-full hover:bg-sky-600 transition-colors"
+              >
                 <Twitter size={20} />
               </button>
-              <button title="Share on LinkedIn" className="p-3 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors">
+              <button
+                title="Share on LinkedIn"
+                className="p-3 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition-colors"
+              >
                 <Linkedin size={20} />
               </button>
             </div>

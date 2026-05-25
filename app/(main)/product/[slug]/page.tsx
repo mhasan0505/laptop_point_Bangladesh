@@ -30,9 +30,14 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://laptoppointbd.com/product/${product.slug}`,
+    },
     openGraph: {
       title,
       description,
+      url: `https://laptoppointbd.com/product/${product.slug}`,
+      type: "website",
       images: [{ url: image }],
     },
     twitter: {

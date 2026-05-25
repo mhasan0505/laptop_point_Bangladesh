@@ -1,5 +1,5 @@
+import { BLOG_POSTS } from "@/lib/blog-posts";
 import { getLiveProducts } from "@/lib/products";
-import { SEO_CONFIG } from "@/lib/seo-config";
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -36,35 +36,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     },
-    {
-      url: `${baseUrl}/compare`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/wishlist`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    },
   ];
 
-  // Blog routes based on SEO_CONFIG
-  const blogRoutes = SEO_CONFIG.contentTopics.map((topic) => ({
-    url: `${baseUrl}/blog/${topic.slug}`,
+  // Blog routes from real published blog post data
+  const blogRoutes = BLOG_POSTS.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
 
-  // Local pages by district
-  const localRoutes = SEO_CONFIG.locations.map((location) => ({
-    url: `${baseUrl}/shop?location=${location.toLowerCase()}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
-
-  return [...staticRoutes, ...products, ...blogRoutes, ...localRoutes];
+  return [...staticRoutes, ...products, ...blogRoutes];
 }

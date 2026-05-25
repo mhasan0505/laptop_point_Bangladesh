@@ -30,10 +30,6 @@ export const metadata: Metadata = {
   publisher: "Laptop Point Bangladesh",
   alternates: {
     canonical: "https://laptoppointbd.com",
-    languages: {
-      en: "https://laptoppointbd.com",
-      bn: "https://laptoppointbd.com/bn",
-    },
   },
   openGraph: {
     type: "website",
@@ -45,11 +41,11 @@ export const metadata: Metadata = {
     description: SEO_CONFIG.metaTags.defaultDescription,
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/Hero_Image.png",
         width: 1200,
         height: 630,
         alt: "Laptop Point Bangladesh - Premium Brnd New And Used Laptops",
-        type: "image/jpeg",
+        type: "image/png",
       },
     ],
   },
@@ -58,12 +54,12 @@ export const metadata: Metadata = {
     title: SEO_CONFIG.metaTags.defaultTitle,
     description: SEO_CONFIG.metaTags.defaultDescription,
     creator: SEO_CONFIG.metaTags.twitterHandle,
-    images: ["/og-image.jpg"],
+    images: ["/Hero_Image.png"],
   },
   verification: {
-    google: "add-your-google-verification-code",
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
     other: {
-      "msvalidate.01": "add-your-bing-verification-code",
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
     },
   },
   icons: {

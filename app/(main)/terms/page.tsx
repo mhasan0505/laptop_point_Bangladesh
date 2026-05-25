@@ -1,3 +1,14 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description:
+    "Read the terms of service for using Laptop Point Bangladesh website, products, and services.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/terms",
+  },
+};
+
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">

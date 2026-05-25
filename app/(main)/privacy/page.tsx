@@ -1,3 +1,14 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "Read how Laptop Point Bangladesh collects, uses, and protects your personal data and browsing information.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/privacy",
+  },
+};
+
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">

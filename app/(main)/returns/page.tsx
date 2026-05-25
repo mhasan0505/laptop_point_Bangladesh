@@ -1,3 +1,14 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Returns & Refund Policy",
+  description:
+    "Review eligibility, timelines, and steps for returns, replacements, and refunds at Laptop Point Bangladesh.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/returns",
+  },
+};
+
 export default function ReturnsRefund() {
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">
