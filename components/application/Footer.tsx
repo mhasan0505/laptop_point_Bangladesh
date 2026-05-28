@@ -396,7 +396,7 @@ export default function Footer() {
                 © {currentYear} Laptop Point BD. All rights reserved.{" "}
                 <span className="text-gray-600">·</span> Built with care by{" "}
                 <span className="text-yellow-400 font-medium">
-                  Creative Artix
+                  Artix Digital
                 </span>
               </p>
 

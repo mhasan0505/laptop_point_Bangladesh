@@ -809,6 +809,22 @@ export default function ProductDetailsClient({
                     Chat &amp; Order
                   </a>
                   <a
+                    href="https://m.me/laptoppointbd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs font-bold text-blue-600 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-100 sm:flex-1"
+                  >
+                    <svg
+                      className="h-3.5 w-3.5"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 2C6.477 2 2 6.145 2 11.259c0 2.928 1.42 5.54 3.644 7.255V21.5l3.338-1.834A11.5 11.5 0 0 0 12 20c5.523 0 10-4.144 10-9.741C22 6.145 17.523 2 12 2Zm1.004 13.128-2.55-2.718-4.97 2.718 5.47-5.808 2.612 2.718 4.908-2.718-5.47 5.808Z" />
+                    </svg>
+                    Messenger
+                  </a>
+                  <a
                     href="tel:+8801701561395"
                     className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary sm:flex-1"
                   >

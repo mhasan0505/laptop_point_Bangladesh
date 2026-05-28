@@ -1,10 +1,11 @@
-import WhatsAppButton from "@/components/application/WhatsAppButton";
 import Breadcrumb from "@/components/application/Breadcrumb";
 import CookieConsent from "@/components/application/CookieConsent";
 import Footer from "@/components/application/Footer";
 import Header from "@/components/application/Header";
+import MessengerButton from "@/components/application/MessengerButton";
 import NewsletterPopup from "@/components/application/NewsletterPopup";
 import StickyMobileBar from "@/components/application/StickyMobileBar";
+import WhatsAppButton from "@/components/application/WhatsAppButton";
 import ComparisonBar from "@/components/product/ComparisonBar";
 import { CartProvider } from "@/contexts/CartContext";
 import { ComparisonProvider } from "@/contexts/ComparisonContext";
@@ -28,6 +29,7 @@ export default function MainLayout({
           <NewsletterPopup />
           <StickyMobileBar />
           <WhatsAppButton />
+          <MessengerButton />
         </ComparisonProvider>
       </WishlistProvider>
     </CartProvider>
