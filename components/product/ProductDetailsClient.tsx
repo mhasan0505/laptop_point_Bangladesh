@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Frown,
   Heart,
   MessageCircle,
   Minus,
@@ -23,7 +22,6 @@ import {
   Shield,
   ShoppingBag,
   ShoppingCart,
-  Smile,
   Star,
   X,
   ZoomIn,
@@ -338,7 +336,7 @@ export default function ProductDetailsClient({
             aria-label="Go back"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back
+            Back to results
           </button>
         </div>
 
@@ -550,7 +548,7 @@ export default function ProductDetailsClient({
                   </span>
                 </div>
 
-                <h1 className="text-xl font-semibold leading-tight tracking-tight text-foreground sm:text-2xl">
+                <h1 className="text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl">
                   {product.name}
                 </h1>
 
@@ -579,10 +577,10 @@ export default function ProductDetailsClient({
                   <span className="text-sm text-muted-foreground">
                     ({reviews} reviews)
                   </span>
-                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                  <button className="inline-flex items-center gap-1 text-xs text-muted-foreground underline-offset-2 hover:underline hover:text-foreground transition-colors">
                     <MessageCircle className="h-3 w-3" />
                     Write a review
-                  </span>
+                  </button>
                 </div>
               </div>
 
@@ -707,17 +705,17 @@ export default function ProductDetailsClient({
                 </ul>
               )}
 
-              {/* Stock Status with Icon */}
+              {/* Stock Status */}
               <div className="mt-1">
                 {!product.inStock ? (
-                  <div className="flex items-center gap-2 text-[#ff4d4f] font-bold text-lg">
-                    <Frown className="w-5 h-5 shrink-0" />
-                    <span>Out Of Stock</span>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-3.5 py-1.5 text-sm font-semibold text-red-600">
+                    <span className="h-2 w-2 rounded-full bg-red-500 shrink-0" />
+                    Out of stock
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 text-[#52c41a] font-bold text-lg">
-                    <Smile className="w-5 h-5 shrink-0" />
-                    <span>In Stock</span>
+                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-sm font-semibold text-emerald-700">
+                    <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
+                    In stock · Ready to ship
                   </div>
                 )}
               </div>
@@ -750,7 +748,7 @@ export default function ProductDetailsClient({
 
                 <div className="flex flex-wrap gap-3">
                   <Button
-                    className="w-full rounded-xl px-6 py-3.5 text-sm font-bold shadow-[0_4px_16px_rgba(47,84,235,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110 sm:flex-1"
+                    className="w-full rounded-xl px-6 py-3.5 text-sm font-bold shadow-[0_4px_20px_rgba(0,0,0,0.13)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,0,0,0.18)] sm:flex-1"
                     onClick={handleAddToCart}
                     aria-label="Add to cart"
                   >
@@ -802,18 +800,20 @@ export default function ProductDetailsClient({
 
                 <div className="flex flex-wrap gap-2">
                   <a
-                    href="https://wa.me/8801701561395"
+                    href={`https://wa.me/+8801612182408?text=I'm%20interested%20in%20the%20product%20${product.name}%20(https://laptoppointbd.com/product/${product.slug})`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs font-bold text-emerald-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-100 sm:flex-1"
                   >
                     <ShoppingBag className="h-3.5 w-3.5" />
-                    WhatsApp Order
+                    Chat &amp; Order
                   </a>
                   <a
                     href="tel:+8801701561395"
                     className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary sm:flex-1"
                   >
                     <Phone className="h-3.5 w-3.5" />
-                    Call Us
+                    Call to Buy
                   </a>
                 </div>
               </div>
@@ -923,11 +923,11 @@ export default function ProductDetailsClient({
           <div className="mt-20">
             <div className="mb-8 flex items-end justify-between">
               <div>
-                <span className="mb-1 inline-block rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase tracking-widest text-foreground">
-                  You May Also Like
-                </span>
-                <h2 className="text-xl font-extrabold text-foreground sm:text-2xl">
-                  Related Products
+                <p className="mb-2 text-xs font-bold uppercase tracking-widest text-yellow-500">
+                  Picked for you
+                </p>
+                <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                  You might also want
                 </h2>
               </div>
             </div>
