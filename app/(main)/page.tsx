@@ -1,6 +1,7 @@
 import BentoGridSection from "@/components/application/BentoGridSection";
 import HeroSection from "@/components/application/HeroSection";
 import NewProductsSection from "@/components/application/NewProductsSection";
+import SpecialOffersSection from "@/components/application/SpecialOffersSection";
 import TestimonialsSection from "@/components/application/TestimonialsSection";
 import { getLiveProducts } from "@/lib/products";
 import { eCommerceSchema } from "@/lib/seo-schemas";
@@ -88,6 +89,7 @@ const HomePage = async () => {
       />
 
       <HeroSection />
+      <SpecialOffersSection />
       <NewProductsSection />
       <BentoGridSection />
 

@@ -29,15 +29,11 @@ export default function DealsPage() {
     (product) => product.discount && product.discount > 0
   );
 
-  // Set target date to 3 days from now
-  const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + 3);
-
   return (
     <div className="container mx-auto px-6 sm:px-8 lg:px-12 py-12">
       <h1 className="text-3xl font-bold mb-8">Hot Deals</h1>
 
-      <FlashSaleBanner targetDate={targetDate.toISOString()} />
+      <FlashSaleBanner />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {discountedProducts.length > 0 ? (

@@ -1,62 +1,97 @@
 "use client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
+interface HeroSlide {
+  _key: string;
+  imageUrl: string;
+  alt?: string;
+  linkHref?: string;
+  active: boolean;
+}
+
+// Static fallback slides used when no API slides are configured yet
+const FALLBACK_SLIDES: HeroSlide[] = [
+  { _key: "hp",        imageUrl: "/Hero/HP.png",        alt: "HP Laptops",        active: true },
+  { _key: "dell",      imageUrl: "/Hero/dell.png",      alt: "Dell Laptops",      active: true },
+  { _key: "lenovo",    imageUrl: "/Hero/lenovo.png",    alt: "Lenovo Laptops",    active: true },
+  { _key: "microsoft", imageUrl: "/Hero/Microsoft.png", alt: "Microsoft Laptops", active: true },
+];
+
 const HeroSection = () => {
+  const [slides, setSlides] = useState<HeroSlide[]>(FALLBACK_SLIDES);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Using the same image multiple times for now
-  const slides = [
-    { id: 1, image: "/Hero/HP.png", alt: "Hero Image 1" },
-    { id: 2, image: "/Hero/dell.png", alt: "Hero Image 2" },
-    { id: 3, image: "/Hero/lenovo.png", alt: "Hero Image 3" },
-    { id: 4, image: "/Hero/Microsoft.png", alt: "Hero Image 4" },
-  ];
-
-  // Auto-play functionality
+  // Fetch from API; fall back to static if empty or error
   useEffect(() => {
+    let active = true;
+    fetch("/api/hero-banners")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!active) return;
+        const apiSlides: HeroSlide[] = data.slides ?? [];
+        if (apiSlides.length > 0) setSlides(apiSlides);
+      })
+      .catch(() => {/* keep fallback */});
+    return () => { active = false; };
+  }, []);
+
+  // Reset slide index when slides change
+  useEffect(() => {
+    setCurrentSlide(0);
+  }, [slides]);
+
+  // Auto-play
+  useEffect(() => {
+    if (slides.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000); // Change slide every 5 seconds
-
+    }, 5000);
     return () => clearInterval(interval);
   }, [slides.length]);
 
-  const goToSlide = (index: number) => {
-    setCurrentSlide(index);
-  };
-
-  const goToPrevious = () => {
+  const goToPrevious = () =>
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
-
-  const goToNext = () => {
+  const goToNext = () =>
     setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
 
   return (
     <div className="w-full h-56 px-4 sm:px-8 md:px-12 lg:px-20 sm:h-72 md:h-96 lg:h-125 bg-white relative overflow-hidden group">
       {/* Slides */}
-      {slides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentSlide ? "opacity-100" : "opacity-0"
-          }`}
-        >
+      {slides.map((slide, index) => {
+        const inner = (
           <Image
-            src={slide.image}
-            alt={slide.alt}
+            src={slide.imageUrl}
+            alt={slide.alt || `Hero slide ${index + 1}`}
             fill
-            priority={index === 0} // Only first image has priority
-            loading={index === 0 ? "eager" : "lazy"} // Lazy load non-visible images
-            quality={85} // Reduce quality slightly for better performance
+            priority={index === 0}
+            loading={index === 0 ? "eager" : "lazy"}
+            quality={85}
             sizes="100vw"
             className="object-contain"
+            unoptimized={slide.imageUrl.startsWith("http")}
           />
-        </div>
-      ))}
+        );
+
+        return (
+          <div
+            key={slide._key}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentSlide ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {slide.linkHref ? (
+              <Link href={slide.linkHref} className="block w-full h-full">
+                {inner}
+              </Link>
+            ) : (
+              inner
+            )}
+          </div>
+        );
+      })}
 
       {/* Previous Button */}
       <button
@@ -77,20 +112,20 @@ const HeroSection = () => {
       </button>
 
       {/* Navigation Dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide
-                ? "bg-primary w-8"
-                : "bg-white/50 hover:bg-white/80"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
+      {slides.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-3 rounded-full transition-all duration-300 ${
+                index === currentSlide ? "bg-primary w-8" : "w-3 bg-white/50 hover:bg-white/80"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

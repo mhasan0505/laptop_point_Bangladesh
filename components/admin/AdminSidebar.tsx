@@ -3,8 +3,11 @@
 import { cn } from "@/lib/utils";
 import {
   ChartNoAxesCombined,
+  Flame,
+  Image as ImageIcon,
   LayoutDashboard,
   PanelsTopLeft,
+  Tag,
   Truck,
   Warehouse,
 } from "lucide-react";
@@ -39,6 +42,21 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
       href: "/admin/inventory",
       label: "Inventory",
       icon: Warehouse,
+    },
+    {
+      href: "/admin/hero-banners",
+      label: "Hero Banners",
+      icon: ImageIcon,
+    },
+    {
+      href: "/admin/hot-deal",
+      label: "Hot Deal Banner",
+      icon: Flame,
+    },
+    {
+      href: "/admin/special-offers",
+      label: "Special Offers",
+      icon: Tag,
     },
     {
       href: "/admin/analytics",
