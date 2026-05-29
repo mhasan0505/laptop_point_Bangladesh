@@ -1,6 +1,6 @@
 "use client";
 
-import { navigationLinks } from "@/app/data/navigation";
+import { departmentMenuItems, navigationLinks } from "@/app/data/menu-config";
 import { Product } from "@/types/product";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import {
@@ -32,6 +32,8 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
 
+  // Department menu items are imported from @/app/data/menu-config.ts
+
   // Load admin panel products on mount for search
   useEffect(() => {
     let active = true;
@@ -54,6 +56,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
+      setOpenSubmenu(null);
     }
     return () => {
       document.body.style.overflow = "unset";
@@ -184,7 +187,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                     className="mt-2 overflow-hidden bg-white rounded-lg border border-gray-100 shadow-lg"
                   >
                     {searchResults.length > 0 ? (
-                      <div className="max-h-[200px] overflow-y-auto">
+                      <div className="max-h-50 overflow-y-auto">
                         {searchResults.map((product) => (
                           <Link
                             key={product.id}
@@ -231,31 +234,131 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             {/* Navigation Links */}
             <nav className="flex-1 overflow-y-auto py-4 px-4 scrollbar-hide">
               <div className="flex flex-col gap-1">
+                {/* Render Departments First */}
+                {departmentMenuItems.map((item) => {
+                  const menuKey = `dept-${item.name}`;
+                  const submenu = item.sub
+                    ? item.sub.flatMap((section) => section.items)
+                    : null;
+                  return (
+                    <motion.div key={menuKey} variants={itemVariants}>
+                      <motion.div
+                        whileHover={{
+                          x: 4,
+                          backgroundColor: "rgba(249, 250, 251, 1)",
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                        transition={{ duration: 0.2 }}
+                        className={`group rounded-xl transition-all ${
+                          openSubmenu === menuKey ? "bg-gray-50" : ""
+                        }`}
+                      >
+                        <div
+                          className="flex items-center justify-between p-3 cursor-pointer select-none"
+                          onClick={() =>
+                            submenu && submenu.length > 0
+                              ? toggleSubmenu(menuKey)
+                              : onClose()
+                          }
+                        >
+                          <Link
+                            href={item.href}
+                            className={`text-base font-medium flex-1 transition-colors flex items-center gap-2 ${
+                              openSubmenu === menuKey
+                                ? "text-primary"
+                                : "text-gray-700 group-hover:text-primary"
+                            }`}
+                            onClick={(e) => {
+                              if (submenu && submenu.length > 0) {
+                                e.preventDefault();
+                              }
+                            }}
+                          >
+                            {item.name}
+                            {item.badge && (
+                              <span className="text-sm ml-1">{item.badge}</span>
+                            )}
+                          </Link>
+                          {submenu && submenu.length > 0 && (
+                            <motion.div
+                              animate={{
+                                rotate: openSubmenu === menuKey ? 180 : 0,
+                              }}
+                              transition={{ duration: 0.2 }}
+                              className={`${
+                                openSubmenu === menuKey
+                                  ? "text-primary"
+                                  : "text-gray-400"
+                              }`}
+                            >
+                              <ChevronDown className="w-4 h-4" />
+                            </motion.div>
+                          )}
+                        </div>
+
+                        {/* Submenu */}
+                        <AnimatePresence>
+                          {openSubmenu === menuKey && submenu && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 30,
+                              }}
+                              className="overflow-hidden"
+                            >
+                              <div className="flex flex-col gap-1 pb-3 px-3 ml-2 border-l-2 border-primary/10">
+                                {submenu.map((subItem) => (
+                                  <Link
+                                    key={subItem.name}
+                                    href={subItem.href}
+                                    className="text-sm text-gray-500 hover:text-primary hover:bg-white py-2 px-3 rounded-lg transition-colors"
+                                    onClick={onClose}
+                                  >
+                                    {subItem.name}
+                                  </Link>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    </motion.div>
+                  );
+                })}
+
+                {/* Divider */}
+                <div className="my-2 h-px bg-gray-100" />
+
+                {/* Render Navigation Links */}
                 {navigationLinks.map((item) => (
-                  <motion.div key={item.name} variants={itemVariants}>
+                  <motion.div key={`nav-${item.name}`} variants={itemVariants}>
                     <motion.div
+                      className={`group rounded-xl transition-all ${
+                        openSubmenu === `nav-${item.name}` ? "bg-gray-50" : ""
+                      }`}
                       whileHover={{
                         x: 4,
                         backgroundColor: "rgba(249, 250, 251, 1)",
                       }}
                       whileTap={{ scale: 0.98 }}
                       transition={{ duration: 0.2 }}
-                      className={`group rounded-xl transition-all ${
-                        openSubmenu === item.name ? "bg-gray-50" : ""
-                      }`}
                     >
                       <div
                         className="flex items-center justify-between p-3 cursor-pointer select-none"
                         onClick={() =>
                           item.submenu && item.submenu.length > 0
-                            ? toggleSubmenu(item.name)
+                            ? toggleSubmenu(`nav-${item.name}`)
                             : onClose()
                         }
                       >
                         <Link
                           href={item.href}
                           className={`text-base font-medium flex-1 transition-colors flex items-center gap-2 ${
-                            openSubmenu === item.name
+                            openSubmenu === `nav-${item.name}`
                               ? "text-primary"
                               : "text-gray-700 group-hover:text-primary"
                           }`}
@@ -275,11 +378,12 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                         {item.submenu && item.submenu.length > 0 && (
                           <motion.div
                             animate={{
-                              rotate: openSubmenu === item.name ? 180 : 0,
+                              rotate:
+                                openSubmenu === `nav-${item.name}` ? 180 : 0,
                             }}
                             transition={{ duration: 0.2 }}
                             className={`${
-                              openSubmenu === item.name
+                              openSubmenu === `nav-${item.name}`
                                 ? "text-primary"
                                 : "text-gray-400"
                             }`}
@@ -291,7 +395,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
 
                       {/* Submenu */}
                       <AnimatePresence>
-                        {openSubmenu === item.name && item.submenu && (
+                        {openSubmenu === `nav-${item.name}` && item.submenu && (
                           <motion.div
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
