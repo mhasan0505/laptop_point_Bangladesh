@@ -19,6 +19,7 @@ export interface BankEMIRate {
 export interface SupportedBank {
   id: string;
   name: string;
+  logoPath?: string;
   visa: boolean;
   mastercard: boolean;
   amex: boolean;
@@ -82,6 +83,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "scb",
     name: "Standard Chartered Bank (SCB)",
+    logoPath: "/bank_logo/standard_chartert.png",
     visa: true,
     mastercard: true,
     amex: false,
@@ -90,6 +92,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "brac",
     name: "BRAC Bank Limited",
+    logoPath: "/bank_logo/brack_bank.png",
     visa: true,
     mastercard: true,
     amex: false,
@@ -98,6 +101,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "citybank",
     name: "City Bank Limited",
+    logoPath: "/bank_logo/city_bank.png",
     visa: false,
     mastercard: false,
     amex: true,
@@ -106,6 +110,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "dbbl",
     name: "Dutch Bangla Bank Limited",
+    logoPath: "/bank_logo/dutch_bangla_bank.png",
     visa: true,
     mastercard: true,
     amex: false,
@@ -114,6 +119,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "sebl",
     name: "Southeast Bank Limited",
+    logoPath: "/bank_logo/south_east_bank.png",
     visa: true,
     mastercard: true,
     amex: false,
@@ -122,6 +128,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "sbl",
     name: "Standard Bank Limited",
+    logoPath: "/bank_logo/standard_bank.png",
     visa: true,
     mastercard: true,
     amex: false,
@@ -130,6 +137,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "mtb",
     name: "Mutual Trust Bank Limited",
+    logoPath: "/bank_logo/mutual_trust_bank.png",
     visa: true,
     mastercard: true,
     amex: false,
@@ -138,6 +146,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "ebl",
     name: "Eastern Bank Limited",
+    logoPath: "/bank_logo/eastern_bank.png",
     visa: true,
     mastercard: true,
     amex: false,
@@ -146,6 +155,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "lankabangla",
     name: "Lanka Bangla",
+    logoPath: "/bank_logo/lanka_bangla.png",
     visa: true,
     mastercard: true,
     amex: false,
@@ -154,6 +164,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "bankasia",
     name: "Bank Asia Limited",
+    logoPath: "/bank_logo/bank_asia.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -162,6 +173,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "dhakabank",
     name: "Dhaka Bank Limited",
+    logoPath: "/bank_logo/dhaka_bank.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -170,6 +182,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "meghnabank",
     name: "Meghana Bank Limited",
+    logoPath: "/bank_logo/meghna_bank.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -178,6 +191,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "jamunabank",
     name: "Jamuna Bank Limited",
+    logoPath: "/bank_logo/jamuna_bank.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -186,6 +200,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "ncc",
     name: "National Credit & Commerce (NCC) Bank Limited",
+    logoPath: "/bank_logo/ncc_bank.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -194,6 +209,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "nrb",
     name: "NRB Bank Limited",
+    logoPath: "/bank_logo/NRB_bank.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -202,6 +218,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "nrbc",
     name: "NRBC Bank Limited",
+    logoPath: "/bank_logo/NRBC_bank.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -210,6 +227,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "sbac",
     name: "South Bangla Agriculture Bank (SBAC)",
+    logoPath: "/bank_logo/SBAC_bank.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -218,6 +236,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "midland",
     name: "Midland Bank Limited",
+    logoPath: "/bank_logo/midland_bank.png",
     visa: true,
     mastercard: false,
     amex: false,
@@ -226,6 +245,7 @@ export const supportedBanks: SupportedBank[] = [
   {
     id: "shahjalal",
     name: "Shahjalal Islami Bank Limited",
+    logoPath: "/bank_logo/shahjalal_bank.png",
     visa: true,
     mastercard: false,
     amex: false,

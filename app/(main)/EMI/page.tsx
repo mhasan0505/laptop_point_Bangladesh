@@ -7,6 +7,7 @@ import {
   supportedBanks,
 } from "@/app/data/emi-config";
 import { Calculator, ChevronDown, Lock, TrendingDown, Zap } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 
 const EMIPage = () => {
@@ -47,6 +48,12 @@ const EMIPage = () => {
   };
 
   const emiDetails = calculateEMI();
+  const selectedBankDetails = supportedBanks.find(
+    (bank) => bank.id === selectedBank,
+  );
+  const featuredBanks = supportedBanks.filter((bank) =>
+    ["scb", "lankabangla", "citybank", "brac", "dbbl", "ebl"].includes(bank.id),
+  );
 
   const faqs = [
     {
@@ -130,6 +137,34 @@ const EMIPage = () => {
                 </div>
               </div>
             </div>
+
+            <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                Supported banking partners
+              </p>
+              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+                {featuredBanks.map((bank) => (
+                  <div
+                    key={bank.id}
+                    className="flex h-20 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 shadow-sm"
+                  >
+                    {bank.logoPath ? (
+                      <Image
+                        src={bank.logoPath}
+                        alt={bank.name}
+                        width={140}
+                        height={48}
+                        className="max-h-10 w-auto object-contain"
+                      />
+                    ) : (
+                      <span className="text-center text-xs font-semibold text-slate-500">
+                        {bank.name}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -191,6 +226,17 @@ const EMIPage = () => {
                 <label className="mb-3 block text-sm font-semibold text-gray-700">
                   Which bank do you prefer?
                 </label>
+                {selectedBankDetails?.logoPath && (
+                  <div className="mb-3 flex h-20 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 shadow-sm">
+                    <Image
+                      src={selectedBankDetails.logoPath}
+                      alt={selectedBankDetails.name}
+                      width={170}
+                      height={56}
+                      className="max-h-12 w-auto object-contain"
+                    />
+                  </div>
+                )}
                 <select
                   value={selectedBank}
                   onChange={(e) => setSelectedBank(e.target.value)}
@@ -356,8 +402,14 @@ const EMIPage = () => {
             {/* Standard Chartered */}
             <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
               <div className="flex items-center gap-3 border-b border-slate-100 bg-linear-to-r from-blue-50 to-transparent px-8 py-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-200 text-lg">
-                  🏦
+                <div className="flex h-12 w-20 items-center justify-center rounded-xl bg-white px-3 ring-1 ring-blue-100">
+                  <Image
+                    src="/bank_logo/standard_chartert.png"
+                    alt="Standard Chartered Bank"
+                    width={96}
+                    height={32}
+                    className="max-h-7 w-auto object-contain"
+                  />
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900">
@@ -404,8 +456,14 @@ const EMIPage = () => {
             {/* Lanka Bangla */}
             <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
               <div className="flex items-center gap-3 border-b border-slate-100 bg-linear-to-r from-green-50 to-transparent px-8 py-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-200 text-lg">
-                  🌱
+                <div className="flex h-12 w-20 items-center justify-center rounded-xl bg-white px-3 ring-1 ring-green-100">
+                  <Image
+                    src="/bank_logo/lanka_bangla.png"
+                    alt="Lanka Bangla Bank"
+                    width={96}
+                    height={32}
+                    className="max-h-7 w-auto object-contain"
+                  />
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900">Lanka Bangla Bank</h3>
@@ -450,8 +508,27 @@ const EMIPage = () => {
             {/* For All Banks */}
             <div className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
               <div className="flex items-center gap-3 border-b border-slate-100 bg-linear-to-r from-purple-50 to-transparent px-8 py-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-200 text-lg">
-                  🏛️
+                <div className="flex -space-x-3">
+                  {supportedBanks
+                    .filter(
+                      (bank) =>
+                        ["citybank", "brac", "dbbl"].includes(bank.id) &&
+                        bank.logoPath,
+                    )
+                    .map((bank) => (
+                      <div
+                        key={bank.id}
+                        className="flex h-12 w-16 items-center justify-center rounded-xl border border-white bg-white px-2 shadow-sm"
+                      >
+                        <Image
+                          src={bank.logoPath!}
+                          alt={bank.name}
+                          width={72}
+                          height={24}
+                          className="max-h-6 w-auto object-contain"
+                        />
+                      </div>
+                    ))}
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900">All Other Banks</h3>
@@ -514,7 +591,28 @@ const EMIPage = () => {
                   className="group rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition-all hover:shadow-md hover:ring-yellow-200"
                 >
                   <div className="mb-4 flex items-start justify-between">
-                    <h3 className="font-bold text-gray-900">{bank.name}</h3>
+                    <div className="flex min-w-0 items-start gap-4">
+                      <div className="flex h-16 w-24 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 shadow-sm">
+                        {bank.logoPath ? (
+                          <Image
+                            src={bank.logoPath}
+                            alt={bank.name}
+                            width={112}
+                            height={44}
+                            className="max-h-10 w-auto object-contain"
+                          />
+                        ) : (
+                          <span className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                            {bank.name
+                              .split(" ")
+                              .slice(0, 2)
+                              .map((part) => part[0])
+                              .join("")}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="font-bold text-gray-900">{bank.name}</h3>
+                    </div>
                     <span className="inline-block rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
                       {bank.status}
                     </span>
@@ -522,46 +620,82 @@ const EMIPage = () => {
 
                   {/* Payment Methods */}
                   <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={`flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold ${
+                    <div className="flex items-center justify-between gap-3">
+                      <div
+                        className={`flex h-10 w-24 items-center justify-center rounded-lg border bg-white px-3 ${
                           bank.visa
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-slate-100 text-slate-300"
+                            ? "border-slate-200"
+                            : "border-slate-100 opacity-45 saturate-0"
                         }`}
                       >
-                        ✓
-                      </span>
-                      <span className="text-sm font-medium text-gray-700">
-                        Visa
+                        <Image
+                          src="/bank_logo/visa_logo.png"
+                          alt="Visa"
+                          width={70}
+                          height={22}
+                          className="h-auto w-auto max-h-5 object-contain"
+                        />
+                      </div>
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          bank.visa
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {bank.visa ? "Available" : "Not available"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={`flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold ${
+                    <div className="flex items-center justify-between gap-3">
+                      <div
+                        className={`flex h-10 w-24 items-center justify-center rounded-lg border bg-white px-3 ${
                           bank.mastercard
-                            ? "bg-orange-100 text-orange-700"
-                            : "bg-slate-100 text-slate-300"
+                            ? "border-slate-200"
+                            : "border-slate-100 opacity-45 saturate-0"
                         }`}
                       >
-                        ✓
-                      </span>
-                      <span className="text-sm font-medium text-gray-700">
-                        Mastercard
+                        <Image
+                          src="/bank_logo/mastercard_logo.png"
+                          alt="Mastercard"
+                          width={70}
+                          height={22}
+                          className="h-auto w-auto max-h-5 object-contain"
+                        />
+                      </div>
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          bank.mastercard
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {bank.mastercard ? "Available" : "Not available"}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={`flex h-6 w-6 items-center justify-center rounded-full text-sm font-bold ${
+                    <div className="flex items-center justify-between gap-3">
+                      <div
+                        className={`flex h-10 w-24 items-center justify-center rounded-lg border bg-white px-3 ${
                           bank.amex
-                            ? "bg-green-100 text-green-700"
-                            : "bg-slate-100 text-slate-300"
+                            ? "border-slate-200"
+                            : "border-slate-100 opacity-45 saturate-0"
                         }`}
                       >
-                        ✓
-                      </span>
-                      <span className="text-sm font-medium text-gray-700">
-                        American Express
+                        <Image
+                          src="/bank_logo/american_express_logo.png"
+                          alt="American Express"
+                          width={70}
+                          height={22}
+                          className="h-auto w-auto max-h-5 object-contain"
+                        />
+                      </div>
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                          bank.amex
+                            ? "bg-emerald-100 text-emerald-700"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {bank.amex ? "Available" : "Not available"}
                       </span>
                     </div>
                   </div>
