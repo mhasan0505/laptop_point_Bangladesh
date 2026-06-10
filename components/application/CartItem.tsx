@@ -116,8 +116,16 @@ export default function CartItem({ item }: CartItemProps) {
           )}
 
           {/* Options */}
-          {(item.condition || item.color) && (
-            <div className="flex gap-3 mb-3 text-sm">
+          {(item.condition || item.color || item.variantName) && (
+            <div className="flex flex-wrap gap-3 mb-3 text-sm">
+              {item.variantName && (
+                <span className="text-muted-foreground">
+                  Variant:{" "}
+                  <span className="font-medium text-foreground bg-primary/10 text-primary px-2 py-0.5 rounded-md">
+                    {item.variantName}
+                  </span>
+                </span>
+              )}
               {item.condition && (
                 <span className="text-muted-foreground">
                   Condition:{" "}

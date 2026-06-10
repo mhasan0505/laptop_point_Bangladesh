@@ -291,6 +291,44 @@ export const productSchema = defineType({
       ],
     }),
     defineField({
+      name: "variants",
+      title: "Product Variants (Optional)",
+      description: "E.g. 8GB RAM / 256GB SSD vs 16GB RAM / 512GB SSD",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          fields: [
+            {
+              name: "name",
+              title: "Variant Name",
+              description: "E.g. 8GB RAM / 256GB Storage",
+              type: "string",
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: "price",
+              title: "Variant Price (BDT)",
+              type: "number",
+              validation: (Rule) => Rule.required().min(0),
+            },
+            {
+              name: "originalPrice",
+              title: "Variant Original Price (BDT)",
+              description: "Optional market price to show discount",
+              type: "number",
+              validation: (Rule) => Rule.min(0),
+            },
+            {
+              name: "sku",
+              title: "Variant SKU",
+              type: "string",
+            },
+          ],
+        },
+      ],
+    }),
+    defineField({
       name: "warranty",
       title: "Warranty Information",
       description: "Product warranty details",

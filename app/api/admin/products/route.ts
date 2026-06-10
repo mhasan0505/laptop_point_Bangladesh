@@ -192,6 +192,17 @@ export async function POST(request: NextRequest) {
             }
           : undefined,
       images: Array.isArray(body?.images) ? body.images : [],
+      variants: Array.isArray(body?.variants)
+        ? body.variants.map((v: any) => ({
+            name: String(v.name || "").trim(),
+            price: Number(v.price),
+            originalPrice:
+              v.originalPrice === undefined || v.originalPrice === ""
+                ? undefined
+                : Number(v.originalPrice),
+            sku: v.sku ? String(v.sku).trim() : undefined,
+          }))
+        : undefined,
     };
 
     if (!payload.name || !payload.brand || !payload.category || !payload.sku) {

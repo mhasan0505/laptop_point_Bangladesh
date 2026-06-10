@@ -3,6 +3,8 @@
 import { Heart, Minus, Plus, Share2, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/contexts/ToastContext";
 
 interface ProductDetailsProps {
   product: {
@@ -16,15 +18,30 @@ interface ProductDetailsProps {
     reviewCount: number;
     images: string[];
     specifications?: Array<{ label: string; value: string; category?: string }>;
+    variants?: Array<{
+      _key?: string;
+      name: string;
+      price: number;
+      originalPrice?: number;
+      sku?: string;
+    }>;
+    id?: string | number;
+    brand?: string;
   };
 }
 
 const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
-  const savings = product.originalPrice
-    ? product.originalPrice - product.price
+  const [selectedVariant, setSelectedVariant] = useState(
+    product.variants && product.variants.length > 0 ? product.variants[0] : null
+  );
+
+  const displayPrice = selectedVariant ? selectedVariant.price : product.price;
+  const displayOriginalPrice = selectedVariant ? (selectedVariant.originalPrice || undefined) : product.originalPrice;
+  const savings = displayOriginalPrice
+    ? displayOriginalPrice - displayPrice
     : 0;
-  const discountPercentage = product.originalPrice
-    ? Math.round((savings / product.originalPrice) * 100)
+  const discountPercentage = displayOriginalPrice
+    ? Math.round((savings / displayOriginalPrice) * 100)
     : 0;
 
   const [selectedImage, setSelectedImage] = useState(0);
@@ -34,6 +51,28 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
   const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({});
   const [isZoomed, setIsZoomed] = useState(false);
   const [activeSpecTab, setActiveSpecTab] = useState("Specification");
+  const { addToCart } = useCart();
+  const { success } = useToast();
+
+  const handleAddToCart = () => {
+    if (!product.inStock) return;
+    
+    addToCart(
+      {
+        id: product.id?.toString() || product.name,
+        name: product.name,
+        brand: product.brand || "Unknown",
+        price: displayPrice,
+        originalPrice: displayOriginalPrice,
+        image: product.images[0] || "/placeholder.jpg",
+        variantId: selectedVariant?._key || selectedVariant?.name,
+        variantName: selectedVariant?.name,
+      },
+      quantity
+    );
+    
+    success(`Added ${quantity} ${product.name} to cart`);
+  };
 
   // Group specifications by category
   const specCategories = Array.from(
@@ -213,21 +252,45 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             {/* Price Section */}
             <div className="bg-linear-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 rounded-2xl p-6 border border-primary/20">
               <div className="space-y-2">
-                {product.originalPrice && (
+                {displayOriginalPrice && (
                   <div className="flex items-center gap-3">
                     <span className="text-lg text-muted-foreground line-through">
-                      ${product.originalPrice.toFixed(2)}
+                      ৳{displayOriginalPrice.toLocaleString()}
                     </span>
                     <span className="px-3 py-1 bg-emerald-500 text-white text-sm font-semibold rounded-full">
-                      Save ${savings.toFixed(2)}
+                      Save ৳{savings.toLocaleString()}
                     </span>
                   </div>
                 )}
                 <div className="text-4xl md:text-5xl font-bold text-primary">
-                  ${product.price.toFixed(2)}
+                  ৳{displayPrice.toLocaleString()}
                 </div>
               </div>
             </div>
+
+            {/* Variants Selector */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-foreground">
+                  Available Options
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {product.variants.map((variant, idx) => (
+                    <button
+                      key={variant._key || idx}
+                      onClick={() => setSelectedVariant(variant)}
+                      className={`px-4 py-2 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
+                        selectedVariant?.name === variant.name
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {variant.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Stock Status */}
             <div className="flex items-center gap-2">
@@ -285,6 +348,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
               <button
+                onClick={handleAddToCart}
                 disabled={!product.inStock}
                 className="flex-1 flex items-center justify-center gap-2 bg-linear-to-r from-primary to-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >

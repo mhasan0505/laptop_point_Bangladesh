@@ -85,6 +85,12 @@ export async function updateAdminProduct(
     specs: ProductSpecs;
     warranty: ProductWarranty;
     images: string[];
+    variants: {
+      name: string;
+      price: number;
+      originalPrice?: number;
+      sku?: string;
+    }[];
   }>,
 ): Promise<void> {
   const response = await fetch(`/api/admin/products/${id}`, {

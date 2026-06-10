@@ -14,6 +14,8 @@ export interface CartItem {
     storage?: string;
     display?: string;
   };
+  variantName?: string;
+  variantId?: string;
 }
 
 export interface CartContextType {

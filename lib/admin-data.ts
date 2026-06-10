@@ -46,6 +46,12 @@ export interface AdminProduct {
     type?: string;
     details?: string;
   };
+  variants?: {
+    name: string;
+    price: number;
+    originalPrice?: number;
+    sku?: string;
+  }[];
 }
 
 export interface AdminStats {

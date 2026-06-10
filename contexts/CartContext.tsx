@@ -40,12 +40,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = (item: Omit<CartItem, "quantity">, quantity = 1) => {
     setItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
+      const existingItem = prevItems.find(
+        (i) => i.id === item.id && i.variantId === item.variantId
+      );
 
       if (existingItem) {
         // Update quantity if item already exists
         return prevItems.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
+          i.id === item.id && i.variantId === item.variantId 
+            ? { ...i, quantity: i.quantity + quantity } 
+            : i
         );
       } else {
         // Add new item

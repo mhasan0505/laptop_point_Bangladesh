@@ -160,6 +160,12 @@ export async function PATCH(
         details?: string;
       };
       images: string[];
+      variants: {
+        name: string;
+        price: number;
+        originalPrice?: number;
+        sku?: string;
+      }[];
     }> = {};
 
     if (typeof body?.name === "string") updates.name = body.name.trim();
@@ -205,6 +211,17 @@ export async function PATCH(
       updates.images = body.images
         .map((u: unknown) => String(u).trim())
         .filter(Boolean);
+    }
+    if (Array.isArray(body?.variants)) {
+      updates.variants = body.variants.map((v: any) => ({
+        name: String(v.name || "").trim(),
+        price: Number(v.price),
+        originalPrice:
+          v.originalPrice === undefined || v.originalPrice === ""
+            ? undefined
+            : Number(v.originalPrice),
+        sku: v.sku ? String(v.sku).trim() : undefined,
+      }));
     }
     if (body?.specs && typeof body.specs === "object") {
       updates.specs = normalizeSpecs(body.specs);

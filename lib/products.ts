@@ -25,7 +25,9 @@ export async function getLiveProducts(): Promise<Product[]> {
       rating,
       reviews,
       slug,
+      variants,
       specs,
+      warranty,
       description,
       fullDescriptionText,
       features,
@@ -102,6 +104,8 @@ export async function getLiveProducts(): Promise<Product[]> {
         },
         category: p.category || "Laptop",
         features: p.features || [],
+        variants: p.variants,
+        warranty: p.warranty,
         condition: p.condition,
         sku: p.sku,
         description: {

@@ -70,6 +70,12 @@ type ProductFormState = {
     type: string;
     details: string;
   };
+  variants: {
+    name: string;
+    price: string;
+    originalPrice: string;
+    sku: string;
+  }[];
 };
 
 type CreateOptionModalState = {
@@ -217,6 +223,12 @@ function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
       type: initialProduct?.warranty?.type || "",
       details: initialProduct?.warranty?.details || "",
     },
+    variants: (initialProduct?.variants || []).map((v) => ({
+      name: v.name || "",
+      price: v.price !== undefined ? String(v.price) : "",
+      originalPrice: v.originalPrice !== undefined ? String(v.originalPrice) : "",
+      sku: v.sku || "",
+    })),
   };
 }
 
@@ -411,6 +423,20 @@ export function ProductEditorForm({
     if (imageUrls.length === 0) {
       nextErrors.images = "At least one product image is required";
     }
+
+    form.variants.forEach((v, index) => {
+      if (!v.name.trim()) nextErrors[`variant_${index}_name`] = "Variant name is required";
+      const vPrice = Number(v.price);
+      if (!v.price || Number.isNaN(vPrice) || vPrice < 0) {
+        nextErrors[`variant_${index}_price`] = "Variant price must be a valid non-negative number";
+      }
+      if (v.originalPrice) {
+        const vOrg = Number(v.originalPrice);
+        if (Number.isNaN(vOrg) || vOrg < 0) {
+          nextErrors[`variant_${index}_originalPrice`] = "Original price must be a valid non-negative number";
+        }
+      }
+    });
 
     return nextErrors;
   };
@@ -729,6 +755,12 @@ export function ProductEditorForm({
           details: form.warranty.details.trim() || undefined,
         },
         images: imageUrls,
+        variants: form.variants.length > 0 ? form.variants.map((v) => ({
+          name: v.name.trim(),
+          price: Number(v.price),
+          originalPrice: v.originalPrice ? Number(v.originalPrice) : undefined,
+          sku: v.sku.trim() || undefined,
+        })) : undefined,
       });
 
       showSuccessToast(
@@ -1523,6 +1555,146 @@ export function ProductEditorForm({
                       className={inputCls}
                     />
                   </div>
+                </div>
+              </div>
+              
+              <div className="md:col-span-2 mt-8">
+                <div className="border-b border-gray-200 pb-4 mb-6 flex items-center justify-between">
+                  <h2 className="text-xl font-medium text-gray-900">Product Variants</h2>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setForm((current) => ({
+                        ...current,
+                        variants: [
+                          ...current.variants,
+                          { name: "", price: "", originalPrice: "", sku: "" },
+                        ],
+                      }));
+                    }}
+                    className="gap-2"
+                  >
+                    <Plus className="w-4 h-4" /> Add Variant
+                  </Button>
+                </div>
+                <div className="space-y-4">
+                  {form.variants.length === 0 ? (
+                    <div className="text-sm text-gray-500 bg-gray-50 p-4 rounded-lg text-center border border-dashed border-gray-200">
+                      No variants added. Add variants if this product comes in different configurations (e.g., 8GB/256GB vs 16GB/512GB).
+                    </div>
+                  ) : (
+                    form.variants.map((variant, index) => (
+                      <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-4 relative group">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setForm((current) => ({
+                              ...current,
+                              variants: current.variants.filter((_, i) => i !== index),
+                            }));
+                          }}
+                          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          aria-label="Remove Variant"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pr-10">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Variant Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={variant.name}
+                              onChange={(e) => {
+                                const newVariants = [...form.variants];
+                                newVariants[index].name = e.target.value;
+                                setForm((current) => ({ ...current, variants: newVariants }));
+                                setErrors((current) => {
+                                  const next = { ...current };
+                                  delete next[`variant_${index}_name`];
+                                  return next;
+                                });
+                              }}
+                              placeholder="e.g. 16GB RAM / 512GB SSD"
+                              className={inputCls}
+                            />
+                            {errors[`variant_${index}_name`] && (
+                              <p className="mt-1 text-sm text-red-500">{errors[`variant_${index}_name`]}</p>
+                            )}
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              SKU
+                            </label>
+                            <input
+                              type="text"
+                              value={variant.sku}
+                              onChange={(e) => {
+                                const newVariants = [...form.variants];
+                                newVariants[index].sku = e.target.value;
+                                setForm((current) => ({ ...current, variants: newVariants }));
+                              }}
+                              placeholder="e.g. LP-001-16G"
+                              className={inputCls}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Price (BDT) <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              value={variant.price}
+                              onChange={(e) => {
+                                const newVariants = [...form.variants];
+                                newVariants[index].price = e.target.value;
+                                setForm((current) => ({ ...current, variants: newVariants }));
+                                setErrors((current) => {
+                                  const next = { ...current };
+                                  delete next[`variant_${index}_price`];
+                                  return next;
+                                });
+                              }}
+                              placeholder="e.g. 50000"
+                              className={inputCls}
+                            />
+                            {errors[`variant_${index}_price`] && (
+                              <p className="mt-1 text-sm text-red-500">{errors[`variant_${index}_price`]}</p>
+                            )}
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Original Price (BDT)
+                            </label>
+                            <input
+                              type="number"
+                              min="0"
+                              value={variant.originalPrice}
+                              onChange={(e) => {
+                                const newVariants = [...form.variants];
+                                newVariants[index].originalPrice = e.target.value;
+                                setForm((current) => ({ ...current, variants: newVariants }));
+                                setErrors((current) => {
+                                  const next = { ...current };
+                                  delete next[`variant_${index}_originalPrice`];
+                                  return next;
+                                });
+                              }}
+                              placeholder="e.g. 55000"
+                              className={inputCls}
+                            />
+                            {errors[`variant_${index}_originalPrice`] && (
+                              <p className="mt-1 text-sm text-red-500">{errors[`variant_${index}_originalPrice`]}</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 

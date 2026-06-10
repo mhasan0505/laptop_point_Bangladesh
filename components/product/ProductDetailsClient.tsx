@@ -899,6 +899,22 @@ export default function ProductDetailsClient({
                       {product.sku || "N/A"}
                     </span>
                   </div>
+                  {product.warranty && (product.warranty.period || product.warranty.type) && (
+                    <div className="border-b border-border py-3">
+                      <span className="mb-1 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                        Warranty
+                      </span>
+                      <span className="font-medium text-foreground">
+                        {[
+                          product.warranty.period,
+                          product.warranty.type,
+                          product.warranty.details
+                        ]
+                          .filter(Boolean)
+                          .join(" - ")}
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
 

@@ -23,6 +23,18 @@ export interface Product {
     os?: string;
     ports?: string[] | string;
   };
+  warranty?: {
+    period?: string;
+    type?: string;
+    details?: string;
+  };
+  variants?: {
+    _key?: string;
+    name: string;
+    price: number;
+    originalPrice?: number;
+    sku?: string;
+  }[];
   category?: string;
   features?: string[];
   condition?: string | string[];
