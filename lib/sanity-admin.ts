@@ -32,6 +32,13 @@ const SANITY_PRODUCT_PROJECTION = `
   imageUrls,
   specs,
   warranty,
+  variants[] {
+    _type,
+    name,
+    price,
+    originalPrice,
+    sku
+  },
   images[] {
     asset-> { url }
   }
@@ -46,19 +53,64 @@ function slugifyProductName(value: string) {
 }
 
 async function ensureUniqueSlug(slug: string, excludeProductId?: string) {
+  const query = excludeProductId
+    ? `*[_type == "product" && !(_id in path("drafts.**")) && slug.current == $slug && _id != $excludeId][0]{ _id }`
+    : `*[_type == "product" && !(_id in path("drafts.**")) && slug.current == $slug][0]{ _id }`;
+
   const existingProductWithSlug = await adminReadClient.fetch<{
     _id: string;
   } | null>(
-    `*[_type == "product" && slug.current == $slug && (!defined($excludeId) || _id != $excludeId)][0]{ _id }`,
+    query,
     {
       slug,
-      excludeId: excludeProductId,
+      ...(excludeProductId ? { excludeId: excludeProductId } : {}),
     },
   );
 
   if (existingProductWithSlug?._id) {
     throw new Error(`Slug "${slug}" already exists.`);
   }
+}
+
+async function generateUniqueSlug(productName: string, excludeProductId?: string): Promise<string> {
+  const baseSlug = slugifyProductName(productName);
+
+  const buildQuery = (excludeId?: string) =>
+    excludeId
+      ? `*[_type == "product" && !(_id in path("drafts.**")) && slug.current == $slug && _id != $excludeId][0]{ _id }`
+      : `*[_type == "product" && !(_id in path("drafts.**")) && slug.current == $slug][0]{ _id }`;
+
+  const buildParams = (slugValue: string, excludeId?: string) => ({
+    slug: slugValue,
+    ...(excludeId ? { excludeId } : {}),
+  });
+
+  // Check if base slug is unique
+  const existingProductWithSlug = await adminReadClient.fetch<{
+    _id: string;
+  } | null>(
+    buildQuery(excludeProductId),
+    buildParams(baseSlug, excludeProductId),
+  );
+
+  if (!existingProductWithSlug?._id) {
+    return baseSlug;
+  }
+
+  // Auto-append incrementing number until unique
+  for (let i = 2; i <= 100; i++) {
+    const candidate = `${baseSlug}-${i}`;
+    const conflict = await adminReadClient.fetch<{ _id: string } | null>(
+      buildQuery(excludeProductId),
+      buildParams(candidate, excludeProductId),
+    );
+    if (!conflict?._id) {
+      return candidate;
+    }
+  }
+
+  // Fallback: append timestamp
+  return `${baseSlug}-${Date.now()}`;
 }
 
 function compactObject<T extends Record<string, unknown>>(value?: T) {
@@ -186,6 +238,13 @@ export interface SanityProduct {
   features?: string[];
   imageUrls?: string[];
   images?: Array<{ asset: { _ref: string; url?: string } }>;
+  variants?: Array<{
+    _type: string;
+    name: string;
+    price: number;
+    originalPrice?: number;
+    sku?: string;
+  }>;
   specs?: {
     processor?: string;
     ram?: string;
@@ -302,6 +361,12 @@ export async function fetchProducts(): Promise<AdminProduct[]> {
         features: product.features || [],
         specs: product.specs || {},
         warranty: product.warranty,
+        variants: product.variants?.map((v) => ({
+          name: v.name,
+          price: v.price,
+          originalPrice: v.originalPrice,
+          sku: v.sku,
+        })),
       };
     });
   } catch (error) {
@@ -327,8 +392,7 @@ export async function addProduct(
       throw new Error(`SKU \"${product.sku}\" already exists.`);
     }
 
-    const slug = slugifyProductName(product.name);
-    await ensureUniqueSlug(slug);
+    const slug = await generateUniqueSlug(product.name);
 
     const sanityDoc = {
       _type: "product",
@@ -362,6 +426,16 @@ export async function addProduct(
       imageUrls: product.images || [],
       specs: product.specs || undefined,
       warranty: product.warranty || undefined,
+      variants:
+        product.variants && product.variants.length > 0
+          ? product.variants.map((v) => ({
+              _type: "variant",
+              name: v.name,
+              price: v.price,
+              originalPrice: v.originalPrice,
+              sku: v.sku,
+            }))
+          : undefined,
     };
 
     const result = await writeClient.create(sanityDoc);
@@ -482,14 +556,19 @@ export async function updateProduct(
       details?: string;
     };
     images: string[];
+    variants: {
+      name: string;
+      price: number;
+      originalPrice?: number;
+      sku?: string;
+    }[];
   }>,
 ): Promise<boolean> {
   try {
     const patch: Record<string, any> = {};
 
     if (updates.name) {
-      const nextSlug = slugifyProductName(updates.name);
-      await ensureUniqueSlug(nextSlug, productId);
+      const nextSlug = await generateUniqueSlug(updates.name, productId);
       patch.name = updates.name;
       patch.slug = { _type: "slug", current: nextSlug };
     }
@@ -544,6 +623,18 @@ export async function updateProduct(
     if (updates.specs !== undefined) patch.specs = updates.specs;
     if (updates.warranty !== undefined) patch.warranty = updates.warranty;
     if (updates.images !== undefined) patch.imageUrls = updates.images;
+    if (updates.variants !== undefined) {
+      patch.variants =
+        updates.variants.length > 0
+          ? updates.variants.map((v) => ({
+              _type: "variant",
+              name: v.name,
+              price: v.price,
+              originalPrice: v.originalPrice,
+              sku: v.sku,
+            }))
+          : [];
+    }
 
     // 1. Update Sanity CMS
     await writeClient.patch(productId).set(patch).commit();

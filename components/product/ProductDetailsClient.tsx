@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import ProductsCard from "@/components/ui/ProductsCard";
+import TrustBadges from "@/components/ui/TrustBadges";
 import { useCart } from "@/contexts/CartContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -123,6 +124,20 @@ export default function ProductDetailsClient({
   const [lastManualImageActionAt, setLastManualImageActionAt] = useState(0);
   const mainImgRef = useRef<HTMLDivElement>(null);
 
+  // Variant selection
+  const hasVariants = product.variants && product.variants.length > 0;
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<number>(-1);
+  const selectedVariant =
+    hasVariants && selectedVariantIndex >= 0
+      ? product.variants![selectedVariantIndex]
+      : null;
+
+  // Use variant price when a variant is selected
+  const displayPrice = selectedVariant ? selectedVariant.price : product.price;
+  const displayOriginalPrice = selectedVariant
+    ? selectedVariant.originalPrice || product.originalPrice
+    : product.originalPrice;
+
   const galleryImages = useMemo(
     () =>
       product.images && product.images.length > 0
@@ -230,11 +245,15 @@ export default function ProductDetailsClient({
     addToCart(
       {
         id: product.id.toString(),
-        name: product.name,
+        name: selectedVariant
+          ? `${product.name} (${selectedVariant.name})`
+          : product.name,
         brand: product.brand || "",
-        price: product.price,
-        originalPrice: product.originalPrice || 0,
+        price: displayPrice,
+        originalPrice: displayOriginalPrice || 0,
         image: currentImageSrc,
+        variantName: selectedVariant?.name,
+        variantId: selectedVariant?._key || selectedVariant?.name,
       },
       quantity,
     );
@@ -242,9 +261,9 @@ export default function ProductDetailsClient({
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
-  const discountPercentage = product.originalPrice
+  const discountPercentage = displayOriginalPrice
     ? Math.round(
-        ((product.originalPrice - product.price) / product.originalPrice) * 100,
+        ((displayOriginalPrice - displayPrice) / displayOriginalPrice) * 100,
       )
     : 0;
   const avgRating = product.rating || 0;
@@ -284,17 +303,17 @@ export default function ProductDetailsClient({
   const selectedRate =
     EMI_RATES_BY_MONTH[selectedTenure]?.[selectedBankConfig.profile] ?? null;
 
-  const isEmiEligibleByAmount = product.price >= EMI_MIN_AMOUNT;
+  const isEmiEligibleByAmount = displayPrice >= EMI_MIN_AMOUNT;
   const isWithinBankMaxAmount =
     selectedBankConfig.maxAmount === undefined ||
-    product.price <= selectedBankConfig.maxAmount;
+    displayPrice <= selectedBankConfig.maxAmount;
   const isEmiEligible =
     isEmiEligibleByAmount && isWithinBankMaxAmount && selectedRate !== null;
 
   const emiCharge = isEmiEligible
-    ? (product.price * (selectedRate as number)) / 100
+    ? (displayPrice * (selectedRate as number)) / 100
     : 0;
-  const emiTotalPayable = isEmiEligible ? product.price + emiCharge : 0;
+  const emiTotalPayable = isEmiEligible ? displayPrice + emiCharge : 0;
   const emiMonthlyInstallment = isEmiEligible
     ? emiTotalPayable / selectedTenure
     : 0;
@@ -313,7 +332,7 @@ export default function ProductDetailsClient({
       "@type": "Offer",
       url: `https://laptoppointbd.com/product/${product.slug}`,
       priceCurrency: "BDT",
-      price: product.price,
+      price: displayPrice,
       itemCondition: "https://schema.org/UsedCondition",
       availability: product.inStock
         ? "https://schema.org/InStock"
@@ -585,22 +604,49 @@ export default function ProductDetailsClient({
               </div>
 
               <div className="flex flex-wrap items-baseline gap-3 mt-2">
-                {product.originalPrice &&
-                product.originalPrice > product.price ? (
+                {displayOriginalPrice &&
+                displayOriginalPrice > displayPrice ? (
                   <>
                     <span className="text-xl text-gray-400 line-through">
-                      {product.originalPrice.toLocaleString()}৳
+                      {displayOriginalPrice.toLocaleString()}৳
                     </span>
                     <span className="text-3xl font-bold text-[#f56523]">
-                      {product.price.toLocaleString()}৳
+                      {displayPrice.toLocaleString()}৳
                     </span>
                   </>
                 ) : (
                   <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                    {product.price.toLocaleString()}৳
+                    {displayPrice.toLocaleString()}৳
                   </span>
                 )}
               </div>
+
+              {/* Variant Selector */}
+              {hasVariants && (
+                <div className="mt-4">
+                  <label className="text-sm font-semibold text-foreground mb-2 block">
+                    Configuration
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {product.variants!.map((variant, index) => (
+                      <button
+                        key={variant._key || variant.name}
+                        onClick={() => setSelectedVariantIndex(index)}
+                        className={`rounded-xl border px-4 py-2.5 text-sm font-medium transition-all ${
+                          selectedVariantIndex === index
+                            ? "border-[#f56523] bg-[#f56523]/5 text-[#f56523] ring-1 ring-[#f56523]/20"
+                            : "border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50"
+                        }`}
+                      >
+                        <span className="block">{variant.name}</span>
+                        <span className="block text-xs font-semibold mt-0.5">
+                          {variant.price.toLocaleString()}৳
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
                 <div className="flex flex-wrap items-center gap-2">
@@ -832,6 +878,9 @@ export default function ProductDetailsClient({
                     Call to Buy
                   </a>
                 </div>
+
+                {/* Trust Badges with Product Warranty */}
+                <TrustBadges variant="row" warranty={product.warranty} />
               </div>
             </div>
           </div>
