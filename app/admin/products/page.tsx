@@ -56,8 +56,8 @@ const AdminProducts = () => {
         filterCategory === "All" || product.category === filterCategory;
       return matchesSearch && matchesCategory;
     })
-    // Deduplicate by id to avoid React duplicate key warnings
-    .filter((product, index, arr) => arr.findIndex((p) => p.id === product.id) === index);
+    // Deduplicate by slug to avoid duplicate product links and confusing admin edits
+    .filter((product, index, arr) => arr.findIndex((p) => p.slug === product.slug) === index);
 
   const getStatusColor = (status: string) => {
     switch (status) {

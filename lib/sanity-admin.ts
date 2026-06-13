@@ -37,6 +37,30 @@ const SANITY_PRODUCT_PROJECTION = `
   }
 `;
 
+function slugifyProductName(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+async function ensureUniqueSlug(slug: string, excludeProductId?: string) {
+  const existingProductWithSlug = await adminReadClient.fetch<{
+    _id: string;
+  } | null>(
+    `*[_type == "product" && slug.current == $slug && (!defined($excludeId) || _id != $excludeId)][0]{ _id }`,
+    {
+      slug,
+      excludeId: excludeProductId,
+    },
+  );
+
+  if (existingProductWithSlug?._id) {
+    throw new Error(`Slug "${slug}" already exists.`);
+  }
+}
+
 function compactObject<T extends Record<string, unknown>>(value?: T) {
   if (!value) {
     return undefined;
@@ -222,7 +246,7 @@ export interface SanityOrder {
  * Fetch all products from Sanity & background-sync them to PostgreSQL
  */
 export async function fetchProducts(): Promise<AdminProduct[]> {
-  const query = `*[_type == "product"] | order(_createdAt desc) {${SANITY_PRODUCT_PROJECTION}}`;
+  const query = `*[_type == "product" && !(_id in path("drafts.**"))] | order(_createdAt desc) {${SANITY_PRODUCT_PROJECTION}}`;
 
   try {
     const products = await adminReadClient.fetch<SanityProduct[]>(query);
@@ -253,6 +277,7 @@ export async function fetchProducts(): Promise<AdminProduct[]> {
 
       return {
         id: product._id,
+        slug: product.slug?.current,
         name: product.name,
         brand: product.brand || "Unknown",
         model: product.model,
@@ -302,10 +327,8 @@ export async function addProduct(
       throw new Error(`SKU \"${product.sku}\" already exists.`);
     }
 
-    const slug = product.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
+    const slug = slugifyProductName(product.name);
+    await ensureUniqueSlug(slug);
 
     const sanityDoc = {
       _type: "product",
@@ -464,8 +487,28 @@ export async function updateProduct(
   try {
     const patch: Record<string, any> = {};
 
-    if (updates.name) patch.name = updates.name;
-    if (updates.sku) patch.sku = updates.sku;
+    if (updates.name) {
+      const nextSlug = slugifyProductName(updates.name);
+      await ensureUniqueSlug(nextSlug, productId);
+      patch.name = updates.name;
+      patch.slug = { _type: "slug", current: nextSlug };
+    }
+
+    if (updates.sku) {
+      const existingProductWithSku = await adminReadClient.fetch<{
+        _id: string;
+      } | null>(`*[_type == "product" && sku == $sku && _id != $id][0]{ _id }`, {
+        sku: updates.sku,
+        id: productId,
+      });
+
+      if (existingProductWithSku?._id) {
+        throw new Error(`SKU "${updates.sku}" already exists.`);
+      }
+
+      patch.sku = updates.sku;
+    }
+
     if (updates.brand) patch.brand = updates.brand;
     if (updates.model !== undefined) patch.model = updates.model;
     if (updates.category) patch.category = updates.category;
@@ -524,7 +567,7 @@ export async function updateProduct(
     return true;
   } catch (error) {
     console.error("Error updating product:", error);
-    return false;
+    throw error;
   }
 }
 

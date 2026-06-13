@@ -12,7 +12,7 @@ export async function getLiveProducts(): Promise<Product[]> {
   }
 
   try {
-    const query = `*[_type == "product"] | order(_createdAt desc) {
+    const query = `*[_type == "product" && !(_id in path("drafts.**")) && defined(slug.current) && slug.current != ""] | order(_createdAt desc) {
       _id,
       name,
       sku,
@@ -123,7 +123,19 @@ export async function getLiveProducts(): Promise<Product[]> {
       };
     });
 
-    return mappedProducts;
+    // Guard against accidental duplicate slugs so links always resolve to one product.
+    const uniqueProducts: Product[] = [];
+    const seenSlugs = new Set<string>();
+
+    for (const product of mappedProducts) {
+      if (!product.slug || seenSlugs.has(product.slug)) {
+        continue;
+      }
+      seenSlugs.add(product.slug);
+      uniqueProducts.push(product);
+    }
+
+    return uniqueProducts;
   } catch (error) {
     console.error("Error loading products from Sanity:", error);
     return [];

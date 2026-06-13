@@ -280,6 +280,11 @@ export async function PATCH(
     console.error("[PATCH /api/admin/products/[id]]", error);
 
     const { statusCode, description } = extractErrorStatusAndMessage(error);
+
+    if (/already exists|unique sku|unique constraint|slug/i.test(description)) {
+      return NextResponse.json({ error: description }, { status: 409 });
+    }
+
     if (statusCode === 403) {
       return NextResponse.json(
         {

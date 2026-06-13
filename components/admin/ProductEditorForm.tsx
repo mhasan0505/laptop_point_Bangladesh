@@ -161,6 +161,14 @@ function buildAutoProductName(form: ProductFormState) {
     .trim();
 }
 
+function slugifyProductName(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
 function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
   const displayDetails = initialProduct?.specs?.displayDetails;
 
@@ -259,6 +267,7 @@ export function ProductEditorForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [brandOptions, setBrandOptions] = useState<string[]>([]);
   const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
+  const [existingProducts, setExistingProducts] = useState<AdminProduct[]>([]);
   const [createOptionModal, setCreateOptionModal] =
     useState<CreateOptionModalState>({
       open: false,
@@ -304,12 +313,33 @@ export function ProductEditorForm({
     ],
   );
 
+  const currentSlug = useMemo(() => slugifyProductName(form.name), [form.name]);
+
+  const duplicateSlugProduct = useMemo(() => {
+    if (!currentSlug) {
+      return null;
+    }
+
+    return (
+      existingProducts.find((product) => {
+        if (initialProduct?.id && product.id === initialProduct.id) {
+          return false;
+        }
+
+        const productSlug = slugifyProductName(product.slug || product.name || "");
+        return productSlug === currentSlug;
+      }) || null
+    );
+  }, [currentSlug, existingProducts, initialProduct?.id]);
+
   useEffect(() => {
     let active = true;
 
     fetchAdminProducts()
       .then((products) => {
         if (!active) return;
+
+        setExistingProducts(products);
 
         const loadedBrands = products
           .map((product) => product.brand?.trim())
@@ -773,11 +803,21 @@ export function ProductEditorForm({
       const message =
         error instanceof Error ? error.message : "Failed to save product";
 
-      // Detect SKU conflict (409) and highlight the SKU field
-      const isSkuConflict =
-        /already exists|duplicate|sku/i.test(message);
+      // Detect slug conflict (409) and highlight the Name field
+      const isSlugConflict = /slug/i.test(message);
 
-      if (isSkuConflict) {
+      // Detect SKU conflict (409) and highlight the SKU field
+      const isSkuConflict = !isSlugConflict && /already exists|duplicate|sku/i.test(message);
+
+      if (isSlugConflict) {
+        setErrors((current) => ({
+          ...current,
+          name: `Product name "${form.name.trim()}" creates a slug that is already taken. Please use a different name.`,
+        }));
+        const errMsg = "Slug conflict: a product with this URL slug already exists. Change the product name and try again.";
+        setSubmitError(errMsg);
+        showErrorToast(errMsg);
+      } else if (isSkuConflict) {
         setErrors((current) => ({
           ...current,
           sku: `SKU "${form.sku.trim()}" is already taken. Please use a different SKU.`,
@@ -862,6 +902,18 @@ export function ProductEditorForm({
                   Fill brand, model, category, display, processor, RAM, storage,
                   and OS to auto-generate the name.
                 </p>
+                {currentSlug && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    URL slug preview: /product/{currentSlug}
+                  </p>
+                )}
+                {duplicateSlugProduct && (
+                  <p className="mt-1 text-xs text-amber-700">
+                    Warning: this name produces a duplicate slug with &quot;
+                    {duplicateSlugProduct.name}
+                    &quot;. Consider adjusting the name to keep product URLs unique.
+                  </p>
+                )}
                 {errors.name && (
                   <p className="text-red-500 text-xs mt-1">{errors.name}</p>
                 )}

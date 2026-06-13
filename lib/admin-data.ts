@@ -1,5 +1,6 @@
 export interface AdminProduct {
   id: string;
+  slug?: string;
   name: string;
   brand: string;
   model?: string;
