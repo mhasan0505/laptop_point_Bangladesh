@@ -142,6 +142,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               } ${hoverImageLoaded ? "group-hover:opacity-0" : ""}`}
               onLoad={() => setImageLoaded(true)}
               priority={!isMobile}
+              unoptimized={typeof product.image === "string" ? product.image.startsWith("http") : false}
               loading={isMobile ? "lazy" : "eager"}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
@@ -158,6 +159,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                     : "opacity-0"
                 }`}
                 onLoad={() => setHoverImageLoaded(true)}
+                unoptimized={typeof product.images[1] === "string" ? product.images[1].startsWith("http") : false}
                 loading="eager"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
