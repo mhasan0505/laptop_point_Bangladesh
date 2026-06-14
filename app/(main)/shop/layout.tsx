@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shop Used & Refurbished Laptops in Dhaka, Bangladesh",
+  title: "Shop Used Laptops in Dhaka, Bangladesh",
   description:
     "Browse HP, Dell, Lenovo, and Surface laptops with updated prices, specs, and warranty options at Laptop Point Bangladesh, located in Mirpur, Dhaka.",
   alternates: {
     canonical: "https://laptoppointbd.com/shop",
   },
   openGraph: {
-    title: "Shop Used & Refurbished Laptops in Dhaka, Bangladesh",
+    title: "Shop Used Laptops in Dhaka, Bangladesh",
     description:
       "Browse HP, Dell, Lenovo, and Surface laptops with updated prices, specs, and warranty options at our store in Mirpur, Dhaka.",
     url: "https://laptoppointbd.com/shop",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shop Used & Refurbished Laptops in Dhaka, Bangladesh",
+    title: "Shop Used Laptops in Dhaka, Bangladesh",
     description:
       "Browse HP, Dell, Lenovo, and Surface laptops with updated prices, specs, and warranty options at our store in Mirpur, Dhaka.",
     images: ["/Hero_Image.png"],

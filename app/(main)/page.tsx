@@ -21,7 +21,7 @@ const BrandProductSection = nextDynamic(
 export const metadata: Metadata = {
   title: "Laptop Point Bangladesh | Premium Used Laptops in Dhaka",
   description:
-    "Shop the best selection of used and refurbished laptops from HP, Dell, Lenovo, and Microsoft at Laptop Point BD in Mirpur, Dhaka, Bangladesh. Official warranty, free delivery, and best prices guaranteed.",
+    "Shop the best selection of used laptops from HP, Dell, Lenovo, and Microsoft at Laptop Point BD in Mirpur, Dhaka, Bangladesh. Official warranty, free delivery, and best prices guaranteed.",
   keywords: [
     "used laptop Bangladesh",
     "used laptop Dhaka",
