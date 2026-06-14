@@ -392,7 +392,7 @@ export default function ProductDetailsClient({
                 )}
 
                 <Image
-                  src={currentImage}
+                  src={currentImageSrc}
                   alt={product.name}
                   fill
                   className="object-contain p-6 transition-all duration-500"
@@ -500,7 +500,7 @@ export default function ProductDetailsClient({
                       aria-label={`Show image ${idx + 1}`}
                     >
                       <Image
-                        src={img}
+                        src={getImageSrc(img)}
                         alt={`${product.name} view ${idx + 1}`}
                         fill
                         className="object-contain p-1.5"

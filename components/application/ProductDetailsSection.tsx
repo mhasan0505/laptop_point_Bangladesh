@@ -64,7 +64,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
         brand: product.brand || "Unknown",
         price: displayPrice,
         originalPrice: displayOriginalPrice,
-        image: product.images[0] || "/placeholder.jpg",
+        image: product.images[0] || "/Logo.webp",
         variantId: selectedVariant?._key || selectedVariant?.name,
         variantName: selectedVariant?.name,
       },

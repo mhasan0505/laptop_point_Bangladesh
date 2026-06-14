@@ -62,7 +62,7 @@ export async function getLiveProducts(): Promise<Product[]> {
         p.images?.map((img: any) => img.asset?.url).filter(Boolean) || [];
       const allImages =
         sanityImages.length > 0 ? sanityImages : p.imageUrls || [];
-      const mainImage = allImages[0] || "/placeholder.jpg";
+      const mainImage = allImages[0] || "/Logo.webp";
       const displayDetails = p.specs?.displayDetails;
       const displayText =
         typeof p.specs?.display === "string"
