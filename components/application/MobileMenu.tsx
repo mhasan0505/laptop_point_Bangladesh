@@ -257,6 +257,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                                 alt={product.name}
                                 fill
                                 className="object-contain p-1"
+                                unoptimized={typeof product.image === "string" && product.image.startsWith("http")}
                               />
                             </div>
                             <div className="min-w-0 flex-1">

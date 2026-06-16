@@ -373,6 +373,7 @@ const Header = () => {
                                     alt={product.name}
                                     fill
                                     className="object-contain p-1"
+                                    unoptimized={product.image.startsWith("http")}
                                   />
                                 </div>
                                 <div>
