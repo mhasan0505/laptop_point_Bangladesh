@@ -37,14 +37,21 @@ export default function ContactPage() {
     setSubmitStatus(null);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      console.log("Form submitted:", data);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to send message");
+      }
 
       setSubmitStatus({
         success: true,
-        message: "Message sent successfully! We will get back to you shortly.",
+        message: result.message || "Message sent successfully! We will get back to you shortly.",
       });
       reset();
     } catch {

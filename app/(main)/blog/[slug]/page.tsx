@@ -1,5 +1,6 @@
 import { BLOG_POSTS } from "@/lib/blog-posts";
 import { articleSchema } from "@/lib/seo-schemas";
+import { sanitizeHtml } from "@/lib/sanitize";
 import { Calendar, Facebook, Linkedin, Twitter } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -142,7 +143,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="max-w-3xl mx-auto">
           <div
             className="prose prose-lg prose-gray max-w-none prose-headings:font-bold prose-a:text-primary hover:prose-a:underline prose-img:rounded-xl"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
           />
 
           {/* Share & Tags */}

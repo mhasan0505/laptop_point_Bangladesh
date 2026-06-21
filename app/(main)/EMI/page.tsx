@@ -17,7 +17,7 @@ const EMIPage = () => {
   const [selectedBank, setSelectedBank] = useState<string>("scb");
   const [amount, setAmount] = useState<number>(50000);
   const [months, setMonths] = useState<number>(12);
-  const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
+  const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null);
 
   // EMI Calculation
   const calculateEMI = () => {
@@ -718,11 +718,11 @@ const EMIPage = () => {
             </div>
 
             <div className="space-y-4">
-              {faqs.map((faq, index) => (
+              {faqs.map((faq) => (
                 <button
-                  key={index}
+                  key={faq.question}
                   onClick={() =>
-                    setExpandedFAQ(expandedFAQ === index ? null : index)
+                    setExpandedFAQ(expandedFAQ === faq.question ? null : faq.question)
                   }
                   className="w-full text-left"
                 >
@@ -732,7 +732,7 @@ const EMIPage = () => {
                     </h3>
                     <ChevronDown
                       className={`h-5 w-5 shrink-0 text-gray-400 transition-transform duration-300 ${
-                        expandedFAQ === index ? "rotate-180" : ""
+                        expandedFAQ === faq.question ? "rotate-180" : ""
                       }`}
                     />
                   </div>

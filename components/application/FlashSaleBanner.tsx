@@ -63,7 +63,7 @@ export default function FlashSaleBanner() {
         setData(d);
         setTimeLeft(calcTimeLeft(d.targetDate));
       })
-      .catch(() => {});
+      .catch((err) => console.error("[FlashSale] Failed to load hot deal:", err));
     return () => {
       active = false;
     };
@@ -136,6 +136,7 @@ export default function FlashSaleBanner() {
               alt={data.headline}
               fill
               className="object-contain drop-shadow-2xl"
+              priority
               unoptimized
             />
           </div>

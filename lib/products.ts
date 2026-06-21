@@ -59,7 +59,12 @@ export async function getLiveProducts(): Promise<Product[]> {
       const inStock = quantity > 0;
 
       const sanityImages =
-        p.images?.map((img: any) => img.asset?.url).filter(Boolean) || [];
+        p.images
+          ?.map(
+            (img: { asset?: { url?: string }; url?: string }) =>
+              img.asset?.url ?? img.url,
+          )
+          .filter(Boolean) || [];
       const allImages =
         sanityImages.length > 0 ? sanityImages : p.imageUrls || [];
       const mainImage = allImages[0] || "/Logo.webp";

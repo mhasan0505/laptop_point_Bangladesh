@@ -193,10 +193,9 @@ const AdminProducts = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredProducts.length > 0 ? (
-                  filteredProducts.map((product, index) => (
+                {filteredProducts.map((product) => (
                     <tr
-                      key={product.id ? `${product.id}-${index}` : `row-${index}`}
+                      key={product.id || product.name}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                     >
                       <td className="py-4 px-4">

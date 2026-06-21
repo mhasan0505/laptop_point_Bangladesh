@@ -119,7 +119,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
       .then((data) => {
         if (active && Array.isArray(data)) setAllProducts(data);
       })
-      .catch(() => {});
+      .catch((err) => console.error("[MobileMenu] Failed to load products:", err));
     return () => { active = false; };
   }, []);
 

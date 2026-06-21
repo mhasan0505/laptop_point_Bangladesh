@@ -30,7 +30,7 @@ const MegaMenu = ({
           setLiveProducts(data);
         }
       })
-      .catch(() => {});
+      .catch((err) => console.error("[MegaMenu] Failed to load products:", err));
     return () => {
       active = false;
     };

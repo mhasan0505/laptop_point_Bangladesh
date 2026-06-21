@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { memo } from "react";
 
 interface BlogPost {
   title: string;
@@ -18,7 +19,7 @@ interface BlogPost {
   category: string;
 }
 
-export default function BlogCard({ post }: { post: BlogPost }) {
+export default memo(function BlogCard({ post }: { post: BlogPost }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -73,4 +74,4 @@ export default function BlogCard({ post }: { post: BlogPost }) {
       </div>
     </motion.article>
   );
-}
+});

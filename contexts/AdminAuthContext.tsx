@@ -51,13 +51,16 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
         return true;
       }
       return false;
-    } catch {
+    } catch (error) {
+      console.error("[AdminAuth] Login failed:", error);
       return false;
     }
   };
 
   const logout = async () => {
-    await fetch("/api/admin/auth", { method: "DELETE" }).catch(() => {});
+    await fetch("/api/admin/auth", { method: "DELETE" }).catch((err) =>
+      console.error("[AdminAuth] Logout failed:", err),
+    );
     setIsAuthenticated(false);
   };
 

@@ -1,4 +1,5 @@
 import { deleteProduct, updateProduct } from "@/lib/sanity-admin";
+import type { ApiVariantInput } from "@/types/product";
 import { createHash, timingSafeEqual } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -213,7 +214,7 @@ export async function PATCH(
         .filter(Boolean);
     }
     if (Array.isArray(body?.variants)) {
-      updates.variants = body.variants.map((v: any) => ({
+      updates.variants = body.variants.map((v: ApiVariantInput) => ({
         name: String(v.name || "").trim(),
         price: Number(v.price),
         originalPrice:

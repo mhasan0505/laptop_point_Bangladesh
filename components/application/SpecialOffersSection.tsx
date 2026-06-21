@@ -71,7 +71,7 @@ export default function SpecialOffersSection() {
         if (!active) return;
         if (d.offers?.length > 0) setData(d);
       })
-      .catch(() => {});
+      .catch((err) => console.error("[SpecialOffers] Failed to load:", err));
     return () => { active = false; };
   }, []);
 

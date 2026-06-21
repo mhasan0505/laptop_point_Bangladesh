@@ -344,9 +344,9 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent className="flex flex-col flex-1">
             <div className="space-y-4">
-              {lowStockProducts.map((product, index) => (
+              {lowStockProducts.map((product) => (
                 <div
-                  key={`${product.name}-${index}`}
+                  key={product.name}
                   className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-red-100 transition-colors group"
                 >
                   <div>

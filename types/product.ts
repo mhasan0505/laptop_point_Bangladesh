@@ -45,3 +45,11 @@ export interface Product {
   };
   slug: string;
 }
+
+// Type for variant data coming from API requests
+export interface ApiVariantInput {
+  name?: unknown;
+  price?: unknown;
+  originalPrice?: unknown;
+  sku?: unknown;
+}

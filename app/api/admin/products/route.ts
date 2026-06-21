@@ -1,4 +1,5 @@
 import { addProduct, fetchProducts } from "@/lib/sanity-admin";
+import type { ApiVariantInput } from "@/types/product";
 import { createHash, timingSafeEqual } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -193,7 +194,7 @@ export async function POST(request: NextRequest) {
           : undefined,
       images: Array.isArray(body?.images) ? body.images : [],
       variants: Array.isArray(body?.variants)
-        ? body.variants.map((v: any) => ({
+        ? body.variants.map((v: ApiVariantInput) => ({
             name: String(v.name || "").trim(),
             price: Number(v.price),
             originalPrice:

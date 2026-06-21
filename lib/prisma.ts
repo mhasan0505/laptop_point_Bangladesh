@@ -23,9 +23,10 @@ function createClient(): PrismaClient {
   }
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
+    ssl:
+      process.env.NODE_ENV === "production"
+        ? { rejectUnauthorized: true }
+        : { rejectUnauthorized: false },
   });
   // Pool type cast resolves a @types/pg version conflict between
   // @prisma/adapter-pg's bundled types and the project's @types/pg.

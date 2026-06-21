@@ -1,4 +1,5 @@
 import { CreditCard, RefreshCw, ShieldCheck, Truck, Award } from "lucide-react";
+import { memo } from "react";
 
 interface TrustBadgeProps {
   variant?: "row" | "grid";
@@ -9,7 +10,7 @@ interface TrustBadgeProps {
   };
 }
 
-const TrustBadges = ({ variant = "row", warranty }: TrustBadgeProps) => {
+const TrustBadges = memo(({ variant = "row", warranty }: TrustBadgeProps) => {
   const warrantyText = warranty
     ? [warranty.period, warranty.type, warranty.details].filter(Boolean).join(" - ") || "Full Warranty Coverage"
     : "Full Warranty Coverage";
@@ -85,6 +86,6 @@ const TrustBadges = ({ variant = "row", warranty }: TrustBadgeProps) => {
       ))}
     </div>
   );
-};
+});
 
 export default TrustBadges;
