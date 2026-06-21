@@ -176,6 +176,7 @@ const MegaMenu = ({
                               alt={product.name}
                               fill
                               className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+                              unoptimized={typeof product.image === "string" && product.image.startsWith("http")}
                             />
                           </div>
                           <h4 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-yellow-700 transition-colors">

@@ -124,6 +124,7 @@ export default function TestimonialsSection() {
                       alt={testimonial.name}
                       fill
                       className="object-cover"
+                      unoptimized={testimonial.image.startsWith("http")}
                     />
                   </div>
                   <div>

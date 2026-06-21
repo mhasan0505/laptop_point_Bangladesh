@@ -228,6 +228,7 @@ const CascadeTabsSection = () => {
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     priority
                     className="object-contain p-8 lg:p-12 transition-transform duration-700 group-hover/img:scale-[1.03]"
+                    unoptimized={typeof activeProduct.image === "string" && activeProduct.image.startsWith("http")}
                   />
                 </div>
                 {/* Price badge */}

@@ -68,6 +68,7 @@ export default function CartItem({ item }: CartItemProps) {
             alt={item.name}
             fill
             className="object-contain mix-blend-multiply p-2 transition-transform duration-300 hover:scale-110"
+            unoptimized={imageUrl.startsWith("http")}
           />
           {discount > 0 && (
             <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">

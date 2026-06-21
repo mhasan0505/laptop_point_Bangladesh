@@ -175,6 +175,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                     }`}
                     onLoad={() => setImageLoaded(true)}
                     priority
+                    unoptimized={product.images[selectedImage]?.startsWith("http")}
                   />
                 </div>
 
@@ -208,6 +209,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                     width={100}
                     height={100}
                     className="object-contain mix-blend-multiply p-2 bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900"
+                    unoptimized={typeof image === "string" && image.startsWith("http")}
                   />
                 </button>
               ))}

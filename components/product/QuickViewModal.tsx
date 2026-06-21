@@ -146,6 +146,7 @@ const QuickViewContent = ({
               className="object-contain mix-blend-multiply drop-shadow-xl"
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+              unoptimized={typeof product.image === "string" && product.image.startsWith("http")}
             />
           </motion.div>
         </div>

@@ -35,6 +35,7 @@ export default function BlogCard({ post }: { post: BlogPost }) {
           alt={post.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
+          unoptimized={post.coverImage.startsWith("http")}
         />
         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-800 uppercase tracking-wide">
           {post.category}

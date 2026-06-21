@@ -94,6 +94,7 @@ const ComparisonTable = () => {
                         width={160}
                         height={112}
                         className="w-full h-full object-contain"
+                        unoptimized={typeof product.image === "string" && product.image.startsWith("http")}
                       />
                     ) : (
                       <div className="w-full h-full bg-linear-to-br from-gray-100 to-gray-200 rounded-lg" />
