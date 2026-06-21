@@ -1,5 +1,5 @@
 "use client";
 
-import ErrorBoundary from "./error";
+import ErrorBoundary from "../error";
 
 export { ErrorBoundary as default };
