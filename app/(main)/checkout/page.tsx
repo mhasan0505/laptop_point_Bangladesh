@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   CreditCard,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -384,13 +383,10 @@ export default function CheckoutPage() {
                           }`}
                         >
                           {"imageSrc" in method && method.imageSrc ? (
-                            <Image
+                            <img
                               src={method.imageSrc}
                               alt={method.name}
-                              width={56}
-                              height={56}
-                              className="object-contain"
-                              unoptimized={method.imageSrc.startsWith("http")}
+                              className="w-7 h-7 object-contain"
                             />
                           ) : Icon ? (
                             <Icon className="w-6 h-6 text-white" />
