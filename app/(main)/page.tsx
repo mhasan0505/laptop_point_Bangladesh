@@ -1,4 +1,4 @@
-import BentoGridSection from "@/components/application/BentoGridSection";
+import CascadeTabsSection from "@/components/application/BentoGridSection";
 import HeroSection from "@/components/application/HeroSection";
 import NewProductsSection from "@/components/application/NewProductsSection";
 import SpecialOffersSection from "@/components/application/SpecialOffersSection";
@@ -93,7 +93,7 @@ const HomePage = async () => {
       <HeroSection />
       <SpecialOffersSection />
       <NewProductsSection />
-      <BentoGridSection />
+      <CascadeTabsSection />
 
       {orderedBrands.map((brand) => {
         const copy = buildBrandCopy(brand);

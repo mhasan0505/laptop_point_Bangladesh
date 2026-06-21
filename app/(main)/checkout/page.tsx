@@ -8,9 +8,8 @@ import {
   Banknote,
   CheckCircle2,
   CreditCard,
-  Smartphone,
-  Wallet,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -167,13 +166,13 @@ export default function CheckoutPage() {
     {
       id: "bkash" as PaymentMethod,
       name: "bKash",
-      icon: Smartphone,
+      imageSrc: "/bank_logo/bkash.png",
       description: "Mobile payment",
     },
     {
       id: "nagad" as PaymentMethod,
       name: "Nagad",
-      icon: Wallet,
+      imageSrc: "/bank_logo/nagad.png",
       description: "Mobile payment",
     },
     {
@@ -365,7 +364,7 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-bold mb-6">Payment Method</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   {paymentMethods.map((method) => {
-                    const Icon = method.icon;
+                    const Icon = "icon" in method ? method.icon : null;
                     return (
                       <button
                         key={method.id}
@@ -378,13 +377,23 @@ export default function CheckoutPage() {
                         }`}
                       >
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                          className={`w-12 h-12 rounded-full flex items-center justify-center overflow-hidden ${
                             selectedPayment === method.id
-                              ? "bg-primary text-white"
+                              ? "bg-primary"
                               : "bg-gray-100 dark:bg-gray-800"
                           }`}
                         >
-                          <Icon className="w-6 h-6" />
+                          {"imageSrc" in method && method.imageSrc ? (
+                            <Image
+                              src={method.imageSrc}
+                              alt={method.name}
+                              width={56}
+                              height={56}
+                              className="object-contain"
+                            />
+                          ) : Icon ? (
+                            <Icon className="w-6 h-6 text-white" />
+                          ) : null}
                         </div>
                         <div className="text-left">
                           <h3 className="font-semibold">{method.name}</h3>

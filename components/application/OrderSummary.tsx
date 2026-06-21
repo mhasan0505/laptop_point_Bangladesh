@@ -24,12 +24,13 @@ export default function OrderSummary() {
               : (item.image as { src: string }).src;
           return (
             <div key={item.id} className="flex gap-3">
-              <div className="relative w-16 h-16 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg overflow-hidden flex-shrink-0">
+              <div className="relative w-16 h-16 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg overflow-hidden shrink-0">
                 <Image
                   src={imageUrl}
                   alt={item.name}
                   fill
                   className="object-contain p-1"
+                  unoptimized={imageUrl.startsWith("http")}
                 />
               </div>
               <div className="flex-1 min-w-0">
@@ -58,10 +59,12 @@ export default function OrderSummary() {
           </span>
           <span className="font-medium">৳{subtotal.toLocaleString()}</span>
         </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Tax (5%)</span>
-          <span className="font-medium">৳{tax.toLocaleString()}</span>
-        </div>
+        {tax > 0 && (
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Tax</span>
+            <span className="font-medium">৳{tax.toLocaleString()}</span>
+          </div>
+        )}
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Shipping</span>
           {shipping === 0 ? (

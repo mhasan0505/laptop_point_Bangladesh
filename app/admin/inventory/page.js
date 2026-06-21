@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { AlertTriangle, Edit2, Package, Search, Loader2 } from "lucide-react";
+import { AlertTriangle, Edit2, Package, Search, Loader2, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/contexts/ToastContext";
 
@@ -15,6 +15,9 @@ const InventoryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [stockDialogOpen, setStockDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const { success: showSuccessToast, error: showErrorToast } = useToast();
 
   useEffect(() => {
@@ -121,6 +124,34 @@ const InventoryPage = () => {
         console.error(err);
         showErrorToast("Error updating inventory: " + err.message);
       }
+    }
+  };
+
+  const handleDeleteClick = (product) => {
+    setProductToDelete(product);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
+    setDeleting(true);
+    try {
+      const res = await fetch(`/api/inventory/${productToDelete.id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to delete inventory record");
+      }
+      setProducts((prev) => prev.filter((p) => p.id !== productToDelete.id));
+      showSuccessToast(`"${productToDelete.name}" removed from inventory.`);
+    } catch (err) {
+      console.error(err);
+      showErrorToast("Error deleting inventory: " + err.message);
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
     }
   };
 
@@ -276,15 +307,26 @@ const InventoryPage = () => {
                               <Badge className={status.color}>{status.label}</Badge>
                             </td>
                             <td className="py-4 px-4">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleOpenStockDialog(product)}
-                                className="gap-2"
-                              >
-                                <Edit2 className="w-4 h-4" />
-                                Update Stock
-                              </Button>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleOpenStockDialog(product)}
+                                  className="gap-2"
+                                >
+                                  <Edit2 className="w-4 h-4" />
+                                  Update Stock
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleDeleteClick(product)}
+                                  className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                  Delete
+                                </Button>
+                              </div>
                             </td>
                           </tr>
                         );
@@ -313,6 +355,63 @@ const InventoryPage = () => {
         product={selectedProduct}
         onSuccess={handleStockUpdateSuccess}
       />
+
+      {/* Delete Confirmation Dialog */}
+      {deleteDialogOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-black/80" onClick={() => !deleting && setDeleteDialogOpen(false)} />
+          <div className="relative z-50 w-full max-w-md bg-white rounded-lg shadow-xl p-6 mx-4">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="shrink-0 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-black">Delete Inventory Record</h3>
+                <p className="text-sm text-gray-500">This action cannot be undone.</p>
+              </div>
+            </div>
+
+            {productToDelete && (
+              <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                <p className="font-medium text-black text-sm">{productToDelete.name}</p>
+                <p className="text-xs text-gray-500 mt-0.5">SKU: {productToDelete.sku} &middot; Stock: {productToDelete.stock}</p>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setDeleteDialogOpen(false);
+                  setProductToDelete(null);
+                }}
+                disabled={deleting}
+                className="border-gray-300"
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {deleting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -11,7 +11,6 @@ import {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const TAX_RATE = 0.05; // 5% tax
 const SHIPPING_COST = 100; // 100 BDT flat shipping
 const FREE_SHIPPING_THRESHOLD = 50000; // Free shipping over 50,000 BDT
 
@@ -82,7 +81,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getTax = () => {
-    return getSubtotal() * TAX_RATE;
+    return 0; // Tax removed
   };
 
   const getShipping = () => {
@@ -91,7 +90,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getCartTotal = () => {
-    return getSubtotal() + getTax() + getShipping();
+    return getSubtotal() + getShipping();
   };
 
   const getCartCount = () => {
