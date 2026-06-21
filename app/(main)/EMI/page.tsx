@@ -736,7 +736,7 @@ const EMIPage = () => {
                       }`}
                     />
                   </div>
-                  {expandedFAQ === index && (
+                  {expandedFAQ === faq.question && (
                     <div className="mt-2 rounded-lg bg-blue-50 p-6 text-gray-700 leading-relaxed text-sm border-l-4 border-blue-400">
                       {faq.answer}
                     </div>
