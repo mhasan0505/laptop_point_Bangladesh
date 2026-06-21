@@ -193,7 +193,8 @@ const AdminProducts = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredProducts.map((product) => (
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
                     <tr
                       key={product.id || product.name}
                       className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
