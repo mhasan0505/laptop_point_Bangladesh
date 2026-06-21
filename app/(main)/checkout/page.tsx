@@ -390,6 +390,7 @@ export default function CheckoutPage() {
                               width={56}
                               height={56}
                               className="object-contain"
+                              unoptimized={method.imageSrc.startsWith("http")}
                             />
                           ) : Icon ? (
                             <Icon className="w-6 h-6 text-white" />
