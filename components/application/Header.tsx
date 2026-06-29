@@ -239,14 +239,13 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/95 shadow-[0_6px_24px_rgba(15,23,42,0.04)] backdrop-blur supports-backdrop-filter:bg-white/90">
-      <div className="border-b border-neutral-200 bg-[#f4f5f7] text-[11px] text-neutral-600 sm:text-xs">
+      <div className="border-b border-neutral-200 bg-[#002B60] text-[11px] text-white sm:text-xs">
         <div className="container mx-auto px-3 sm:px-4">
           <div className="flex min-h-9 items-center justify-between gap-3 py-1.5">
             <p className="hidden truncate lg:block">
-              Your trusted laptop shop in Mirpur Dhaka | Budget-friendly
-              verified devices
+              Your trusted laptop shop in Mirpur Dhaka | Budget-friendly verified devices
             </p>
-            <div className="flex items-center gap-3 text-neutral-700 sm:gap-5">
+            <div className="flex items-center gap-3 text-white sm:gap-5">
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-1.5 hover:text-neutral-900"
@@ -373,7 +372,9 @@ const Header = () => {
                                     alt={product.name}
                                     fill
                                     className="object-contain p-1"
-                                    unoptimized={product.image.startsWith("http")}
+                                    unoptimized={product.image.startsWith(
+                                      "http",
+                                    )}
                                   />
                                 </div>
                                 <div>
