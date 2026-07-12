@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     images: ["/Hero_Image.png"],
   },
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    google: "1sz9tJ4KKpP8LbTkmf5oQdcVCjW4pKNd5AVrZE9iyLg",
     other: {
       "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
     },
