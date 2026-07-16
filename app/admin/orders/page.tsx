@@ -1,7 +1,6 @@
 "use client";
 
 import { OrderCreateDialog } from "@/components/admin/OrderCreateDialog";
-import { OrderDetailDialog } from "@/components/admin/OrderDetailDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,8 +21,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AdminProduct, OrderData } from "@/lib/admin-data";
-import { fetchAdminProducts } from "@/lib/admin-products-api";
-import { Eye, Plus, Search } from "lucide-react";
+import { fetchProducts } from "@/lib/sanity-admin";
+import { Plus, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 // Extends OrderData with the database cuid for API calls
@@ -68,15 +67,13 @@ export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
       const [ordersRes, productsData] = await Promise.all([
         fetch("/api/orders"),
-        fetchAdminProducts(),
+        fetchProducts(),
       ]);
       if (ordersRes.ok) {
         const apiOrders = (await ordersRes.json()) as ApiOrder[];
@@ -260,39 +257,25 @@ export default function OrdersPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right pr-6 py-4">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 px-2 text-gray-600 hover:text-black hover:bg-gray-100"
-                            onClick={() => {
-                              setSelectedOrderId(order.dbId);
-                              setDetailDialogOpen(true);
-                            }}
-                          >
-                            <Eye className="w-4 h-4 mr-1" />
-                            View
-                          </Button>
-                          <Select
-                            value={order.status}
-                            onValueChange={(value) =>
-                              handleStatusChange(order, value)
-                            }
-                          >
-                            <SelectTrigger className="w-32.5 h-8 text-xs bg-white border-gray-200">
-                              <SelectValue placeholder="Update Status" />
-                            </SelectTrigger>
-                            <SelectContent align="end">
-                              <SelectItem value="Pending">Pending</SelectItem>
-                              <SelectItem value="Processing">
-                                Processing
-                              </SelectItem>
-                              <SelectItem value="Shipped">Shipped</SelectItem>
-                              <SelectItem value="Delivered">Delivered</SelectItem>
-                              <SelectItem value="Canceled">Canceled</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                        <Select
+                          value={order.status}
+                          onValueChange={(value) =>
+                            handleStatusChange(order, value)
+                          }
+                        >
+                          <SelectTrigger className="w-32.5 ml-auto h-8 text-xs bg-white border-gray-200">
+                            <SelectValue placeholder="Update Status" />
+                          </SelectTrigger>
+                          <SelectContent align="end">
+                            <SelectItem value="Pending">Pending</SelectItem>
+                            <SelectItem value="Processing">
+                              Processing
+                            </SelectItem>
+                            <SelectItem value="Shipped">Shipped</SelectItem>
+                            <SelectItem value="Delivered">Delivered</SelectItem>
+                            <SelectItem value="Canceled">Canceled</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                     </TableRow>
                   ))
@@ -317,21 +300,11 @@ export default function OrdersPage() {
         onClose={() => setCreateDialogOpen(false)}
         products={products.map((p) => ({
           id: p.id,
-          sku: p.sku,
           name: p.name,
           price: p.price,
           stock: p.stock,
         }))}
         onSuccess={loadData}
-      />
-
-      <OrderDetailDialog
-        orderId={selectedOrderId}
-        isOpen={detailDialogOpen}
-        onClose={() => {
-          setDetailDialogOpen(false);
-          setSelectedOrderId(null);
-        }}
       />
     </div>
   );

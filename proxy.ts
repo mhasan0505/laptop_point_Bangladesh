@@ -8,10 +8,8 @@ export function proxy(request: NextRequest) {
 
     if (!isLoginPage) {
       // Check for authentication cookie/header
-      const sessionSecret = process.env.ADMIN_SESSION_SECRET;
-      const sessionCookie = request.cookies.get("admin_session")?.value;
       const isAuthenticated =
-        Boolean(sessionSecret) && sessionCookie === sessionSecret;
+        request.cookies.get("admin_authenticated")?.value === "true";
 
       if (!isAuthenticated) {
         // Redirect to login page
@@ -53,11 +51,9 @@ export const config = {
     /*
      * Match all request paths except for the ones starting with:
      * - api (API routes)
-     * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - studio (Sanity Studio routes)
      */
-    "/((?!api|studio|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|_next/image|favicon.ico).*)",
   ],
 };

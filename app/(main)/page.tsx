@@ -1,32 +1,27 @@
-import CascadeTabsSection from "@/components/application/BentoGridSection";
+import BentoGridSection from "@/components/application/BentoGridSection";
 import HeroSection from "@/components/application/HeroSection";
 import NewProductsSection from "@/components/application/NewProductsSection";
-import SpecialOffersSection from "@/components/application/SpecialOffersSection";
 import TestimonialsSection from "@/components/application/TestimonialsSection";
-import { getLiveProducts } from "@/lib/products";
 import { eCommerceSchema } from "@/lib/seo-schemas";
 import { Metadata } from "next";
-import nextDynamic from "next/dynamic";
-
-export const revalidate = 300; // re-fetch from Sanity every 5 minutes
+import dynamic from "next/dynamic";
 
 // Lazy load brand sections that are below the fold for better initial load
-const BrandProductSection = nextDynamic(
+const BrandProductSection = dynamic(
   () => import("@/components/application/BrandProductSection"),
   {
     loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+
   },
 );
 
 export const metadata: Metadata = {
-  title: "Laptop Point Bangladesh | Premium Used Laptops in Dhaka",
+  title: "Laptop Point Bangladesh | Premium Used Laptops",
   description:
-    "Shop the best selection of used laptops from HP, Dell, Lenovo, and Microsoft at Laptop Point BD in Mirpur, Dhaka, Bangladesh. Official warranty, free delivery, and best prices guaranteed.",
+    "Shop the best selection of used laptops from HP, Dell, Lenovo, and Microsoft in Bangladesh. Official warranty, free delivery, and best prices guaranteed.",
   keywords: [
     "used laptop Bangladesh",
     "used laptop Dhaka",
-    "second hand laptop price in BD",
-    "used laptop Mirpur",
     "HP laptop price",
     "Dell laptop Bangladesh",
     "Lenovo ThinkPad",
@@ -34,54 +29,15 @@ export const metadata: Metadata = {
     "laptop with warranty",
   ],
   openGraph: {
-    title: "Laptop Point Bangladesh | Premium Used Laptops in Dhaka",
+    title: "Laptop Point Bangladesh | Premium Used Laptops",
     description:
-      "Shop the best selection of used laptops from HP, Dell, Lenovo, and Microsoft at Laptop Point BD in Mirpur, Dhaka.",
+      "Shop the best selection of used laptops from HP, Dell, Lenovo, and Microsoft in Bangladesh.",
     url: "https://laptoppointbd.com",
     type: "website",
   },
 };
 
-const brandThemes: Record<string, "hp" | "dell" | "lenovo" | "microsoft"> = {
-  hp: "hp",
-  dell: "dell",
-  lenovo: "lenovo",
-  microsoft: "microsoft",
-};
-
-function isAccessoryCategory(category?: string) {
-  return category?.toLowerCase().includes("accessor") ?? false;
-}
-
-function getThemeByBrand(brand: string) {
-  return brandThemes[brand.toLowerCase()] || "microsoft";
-}
-
-function buildBrandCopy(brand: string) {
-  return {
-    title: `${brand} Laptop Series`,
-    description: `Browse uploaded ${brand} products from our latest inventory with updated specs, pricing, and availability.`,
-    badgeText: `${brand} Collection`,
-  };
-}
-
-const HomePage = async () => {
-  const products = await getLiveProducts();
-  const laptopProducts = products.filter(
-    (product) => !isAccessoryCategory(product.category),
-  );
-
-  const brandCounts = new Map<string, number>();
-  laptopProducts.forEach((product) => {
-    const brand = product.brand?.trim();
-    if (!brand) return;
-    brandCounts.set(brand, (brandCounts.get(brand) || 0) + 1);
-  });
-
-  const orderedBrands = [...brandCounts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([brand]) => brand);
-
+const HomePage = () => {
   return (
     <>
       {/* Schema Markup for E-Commerce */}
@@ -91,25 +47,44 @@ const HomePage = async () => {
       />
 
       <HeroSection />
-      <SpecialOffersSection />
       <NewProductsSection />
-      <CascadeTabsSection />
+      <BentoGridSection />
 
-      {orderedBrands.map((brand) => {
-        const copy = buildBrandCopy(brand);
+      {/* HP Section */}
+      <BrandProductSection
+        brand="HP"
+        title="HP Laptop Series"
+        description="Experience power and elegance with our curated selection of HP laptops. Designed for professionals, business leaders, and creators."
+        badgeText="Premium Collection"
+        theme="hp"
+      />
 
-        return (
-          <BrandProductSection
-            key={brand}
-            brand={brand}
-            title={copy.title}
-            description={copy.description}
-            badgeText={copy.badgeText}
-            theme={getThemeByBrand(brand)}
-            products={products}
-          />
-        );
-      })}
+      {/* Dell Section */}
+      <BrandProductSection
+        brand="Dell"
+        title="Dell Latitude & XPS"
+        description="Reliability meets performance. Explore our range of Dell laptops, from the rugged Latitude series to the premium XPS lineup."
+        badgeText="Business Choice"
+        theme="dell"
+      />
+
+      {/* Lenovo Section */}
+      <BrandProductSection
+        brand="Lenovo"
+        title="Lenovo ThinkPad Series"
+        description="Built for business. The legendary ThinkPad series offers unmatched durability, keyboard comfort, and performance."
+        badgeText="Legendary Durability"
+        theme="lenovo"
+      />
+
+      {/* Microsoft Section */}
+      <BrandProductSection
+        brand="Microsoft"
+        title="Microsoft Surface"
+        description="Sleek, powerful, and versatile. Surface laptops combine premium design with the full power of Windows."
+        badgeText="Creative Studio"
+        theme="microsoft"
+      />
       <TestimonialsSection />
     </>
   );

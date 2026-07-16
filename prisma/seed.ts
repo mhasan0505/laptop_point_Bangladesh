@@ -26,10 +26,9 @@ async function main() {
 
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl:
-      process.env.NODE_ENV === "production"
-        ? { rejectUnauthorized: true }
-        : { rejectUnauthorized: false },
+    ssl: {
+      rejectUnauthorized: false,
+    },
   });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const prisma = new PrismaClient({ adapter: new PrismaPg(pool as any) });

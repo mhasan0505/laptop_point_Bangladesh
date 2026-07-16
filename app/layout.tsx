@@ -30,6 +30,10 @@ export const metadata: Metadata = {
   publisher: "Laptop Point Bangladesh",
   alternates: {
     canonical: "https://laptoppointbd.com",
+    languages: {
+      en: "https://laptoppointbd.com",
+      bn: "https://laptoppointbd.com/bn",
+    },
   },
   openGraph: {
     type: "website",
@@ -41,11 +45,11 @@ export const metadata: Metadata = {
     description: SEO_CONFIG.metaTags.defaultDescription,
     images: [
       {
-        url: "/Hero_Image.png",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Laptop Point Bangladesh - Premium Brnd New And Used Laptops",
-        type: "image/png",
+        type: "image/jpeg",
       },
     ],
   },
@@ -54,12 +58,12 @@ export const metadata: Metadata = {
     title: SEO_CONFIG.metaTags.defaultTitle,
     description: SEO_CONFIG.metaTags.defaultDescription,
     creator: SEO_CONFIG.metaTags.twitterHandle,
-    images: ["/Hero_Image.png"],
+    images: ["/og-image.jpg"],
   },
   verification: {
-    google: "1sz9tJ4KKpP8LbTkmf5oQdcVCjW4pKNd5AVrZE9iyLg",
+    google: "ljFisqvr68Zmoi6h41Y5BSMWuktGPPdHTkRCpYaeFOQ",
     other: {
-      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
+      "msvalidate.01": "add-your-bing-verification-code",
     },
   },
   icons: {
@@ -83,8 +87,8 @@ export const metadata: Metadata = {
 };
 
 const jsonLd = organizationSchema;
+
 const localBusinessJsonLd = localBusinessSchema;
-const GOOGLE_TAG_ID = "G-Y7GRYG9473";
 
 export default function RootLayout({
   children,
@@ -119,19 +123,6 @@ export default function RootLayout({
           strategy="lazyOnload"
           src="https://connect.facebook.net/en_US/fbevents.js"
         />
-        <Script
-          id="google-tag-base"
-          strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`}
-        />
-        <Script id="google-tag-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GOOGLE_TAG_ID}');
-          `}
-        </Script>
         <Script id="fb-pixel-init" strategy="lazyOnload">
           {`
             !function(f,b,e,v,n,t,s)
@@ -158,7 +149,9 @@ export default function RootLayout({
             />
           </noscript>
         )}
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+        </Providers>
         <SpeedInsights />
         <Analytics />
       </body>

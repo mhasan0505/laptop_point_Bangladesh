@@ -1,58 +1,15 @@
+import { laptopData } from "@/app/data/data";
+
 export interface AdminProduct {
   id: string;
-  slug?: string;
   name: string;
   brand: string;
-  model?: string;
   category: string;
-  condition?: string;
-  grade?: string;
   price: number;
-  salePrice?: number;
-  currency?: string;
-  taxIncluded?: boolean;
   stock: number;
-  stockStatus?: string;
-  lowStockThreshold?: number;
   status: string;
-  statusValue?: "active" | "draft" | "archived";
-  featured?: boolean;
   sku: string;
   images: string[];
-  description?: string;
-  fullDescription?: string;
-  tags?: string[];
-  features?: string[];
-  specs?: {
-    processor?: string;
-    ram?: string;
-    storage?: string;
-    display?: string;
-    displayDetails?: {
-      size?: string;
-      resolution?: string;
-      type?: string;
-      touchscreen?: boolean;
-    };
-    graphics?: string;
-    ports?: string;
-    portsList?: string[];
-    battery?: string;
-    weight?: string;
-    dimensions?: string;
-    os?: string;
-  };
-  warranty?: {
-    period?: string;
-    type?: string;
-    details?: string;
-  };
-  variants?: {
-    name: string;
-    price: number;
-    originalPrice?: number;
-    sku?: string;
-  }[];
 }
 
 export interface AdminStats {
@@ -73,13 +30,35 @@ export interface OrderData {
   paymentMethod?: string;
 }
 
+// Convert website products to admin format
+export function getAdminProducts(): AdminProduct[] {
+  return laptopData.laptops.map((product) => ({
+    id: String(product.id),
+    name: product.name,
+    brand: product.brand || "Unknown",
+    category: product.category || "Laptop",
+    price: product.price,
+    stock: product.inStock ? Math.floor(Math.random() * 50) + 5 : 0, // Random stock for now
+    status: product.inStock ? "Active" : "Out of Stock",
+    sku: String(product.sku || product.id),
+    images: (product.images || []).map((img) =>
+      typeof img === "string" ? img : img.src,
+    ),
+  }));
+}
+
 export function getAdminStats(): AdminStats {
+  const products = getAdminProducts();
+  const lowStockThreshold = 10;
+
   return {
-    totalProducts: 0,
-    totalOrders: 0,
+    totalProducts: products.length,
+    totalOrders: 0, // Will be implemented with order management
     pendingOrders: 0,
     totalRevenue: "৳0",
-    lowStockItems: 0,
+    lowStockItems: products.filter(
+      (p) => p.stock < lowStockThreshold && p.stock > 0,
+    ).length,
     deliveredToday: 0,
   };
 }

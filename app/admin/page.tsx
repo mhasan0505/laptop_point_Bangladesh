@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { AdminStats, OrderData } from "@/lib/admin-data";
-import { fetchAdminProducts } from "@/lib/admin-products-api";
+import {
+  fetchOrders,
+  fetchProducts,
+  getAdminStatsFromSanity,
+} from "@/lib/sanity-admin";
 import {
   CircleDollarSign,
   Laptop,
@@ -13,26 +17,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-interface ApiOrder {
-  id: string;
-  orderNumber: string;
-  customerName: string;
-  totalAmount: number;
-  status: string;
-  paymentMethod: string;
-  createdAt: string;
-}
-
-function paymentLabel(method: string): string {
-  const map: Record<string, string> = {
-    cod: "Cash on Delivery",
-    bkash: "bKash",
-    nagad: "Nagad",
-    card: "Card",
-  };
-  return map[method] ?? method;
-}
 
 const AdminDashboard = () => {
   const { isAuthenticated, isLoading } = useAdminAuth();
@@ -58,51 +42,14 @@ const AdminDashboard = () => {
   useEffect(() => {
     const loadDashboardData = async () => {
       try {
-        const [ordersRes, productsData] = await Promise.all([
-          fetch("/api/orders"),
-          fetchAdminProducts(),
+        const [statsData, ordersData, productsData] = await Promise.all([
+          getAdminStatsFromSanity(),
+          fetchOrders(),
+          fetchProducts(),
         ]);
 
-        let apiOrders: ApiOrder[] = [];
-        if (ordersRes.ok) {
-          apiOrders = (await ordersRes.json()) as ApiOrder[];
-        }
-
-        const recent = apiOrders.slice(0, 4).map((o) => ({
-          id: o.orderNumber,
-          customer: o.customerName,
-          amount: `৳${o.totalAmount.toLocaleString()}`,
-          status: o.status,
-          date: o.createdAt.slice(0, 10),
-          paymentMethod: paymentLabel(o.paymentMethod),
-        }));
-
-        const lowStockCount = productsData.filter(
-          (p) => p.stock > 0 && p.stock < 10,
-        ).length;
-        const pendingCount = apiOrders.filter(
-          (o) => o.status === "Pending",
-        ).length;
-        const deliveredToday = apiOrders.filter((o) => {
-          if (o.status !== "Delivered") return false;
-          return (
-            o.createdAt.slice(0, 10) === new Date().toISOString().slice(0, 10)
-          );
-        }).length;
-        const totalRevenue = apiOrders.reduce(
-          (sum, o) => sum + o.totalAmount,
-          0,
-        );
-
-        setStats({
-          totalProducts: productsData.length,
-          totalOrders: apiOrders.length,
-          pendingOrders: pendingCount,
-          totalRevenue: `৳${totalRevenue.toLocaleString()}`,
-          lowStockItems: lowStockCount,
-          deliveredToday,
-        });
-        setRecentOrders(recent);
+        setStats(statsData);
+        setRecentOrders(ordersData.slice(0, 4));
         setLowStockProducts(
           productsData
             .filter((p) => p.stock < 10 && p.stock > 0)
@@ -297,9 +244,9 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent className="flex flex-col flex-1">
             <div className="space-y-4">
-              {recentOrders.map((order) => (
+              {recentOrders.map((order, index) => (
                 <div
-                  key={order.id}
+                  key={index}
                   className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-gray-200 transition-colors"
                 >
                   <div>
@@ -344,9 +291,9 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent className="flex flex-col flex-1">
             <div className="space-y-4">
-              {lowStockProducts.map((product) => (
+              {lowStockProducts.map((product, index) => (
                 <div
-                  key={product.name}
+                  key={index}
                   className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg hover:border-red-100 transition-colors group"
                 >
                   <div>

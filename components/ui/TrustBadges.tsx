@@ -1,30 +1,15 @@
-import { CreditCard, RefreshCw, ShieldCheck, Truck, Award } from "lucide-react";
-import { memo } from "react";
+import { CreditCard, RefreshCw, ShieldCheck, Truck } from "lucide-react";
 
 interface TrustBadgeProps {
   variant?: "row" | "grid";
-  warranty?: {
-    period?: string;
-    type?: string;
-    details?: string;
-  };
 }
 
-const TrustBadges = memo(({ variant = "row", warranty }: TrustBadgeProps) => {
-  const warrantyText = warranty
-    ? [warranty.period, warranty.type, warranty.details].filter(Boolean).join(" - ") || "Full Warranty Coverage"
-    : "Full Warranty Coverage";
-
+const TrustBadges = ({ variant = "row" }: TrustBadgeProps) => {
   const badges = [
     {
       icon: ShieldCheck,
       title: "Official Warranty",
       description: "100% Authentic Products",
-    },
-    {
-      icon: Award,
-      title: "Warranty Support",
-      description: warrantyText,
     },
     {
       icon: RefreshCw,
@@ -86,6 +71,6 @@ const TrustBadges = memo(({ variant = "row", warranty }: TrustBadgeProps) => {
       ))}
     </div>
   );
-});
+};
 
 export default TrustBadges;
