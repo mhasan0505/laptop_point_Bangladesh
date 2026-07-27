@@ -29,7 +29,10 @@ const ShopContent = () => {
     rams: [],
   });
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("search");
+  const searchQuery =
+    searchParams.get("search") ||
+    searchParams.get("q") ||
+    searchParams.get("query");
 
   const normalizeBrand = (value?: string) =>
     value

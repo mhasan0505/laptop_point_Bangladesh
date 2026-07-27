@@ -37,6 +37,11 @@ const nextConfig: NextConfig = {
     return [
       // Redirect common spelling variations
       {
+        source: "/search",
+        destination: "/shop",
+        permanent: false,
+      },
+      {
         source: "/laptop-bd",
         destination: "/shop",
         permanent: true,
