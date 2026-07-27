@@ -8,6 +8,8 @@ export interface SearchItem {
   category: string;
   price: number;
   image: string;
+  sku?: string;
+  processor?: string;
 }
 
 // This will be generated from products.json but only includes search-relevant fields
@@ -24,6 +26,8 @@ export async function getSearchIndex(): Promise<SearchItem[]> {
     category: product.category || "",
     price: product.price,
     image: typeof product.image === 'string' ? product.image : product.image.src,
+    sku: product.sku || "",
+    processor: product.specs?.processor || "",
   }));
 }
 

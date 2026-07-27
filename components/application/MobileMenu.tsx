@@ -51,14 +51,16 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim()) {
+      const q = query.toLowerCase();
       const filtered = laptopData.laptops
         .filter(
           (product) =>
-            product.name.toLowerCase().includes(query.toLowerCase()) ||
-            (product.brand &&
-              product.brand.toLowerCase().includes(query.toLowerCase())) ||
-            (product.category &&
-              product.category.toLowerCase().includes(query.toLowerCase())),
+            product.name.toLowerCase().includes(q) ||
+            (product.brand && product.brand.toLowerCase().includes(q)) ||
+            (product.category && product.category.toLowerCase().includes(q)) ||
+            (product.sku && product.sku.toLowerCase().includes(q)) ||
+            (product.specs?.processor &&
+              product.specs.processor.toLowerCase().includes(q)),
         )
         .slice(0, 5);
       setSearchResults(filtered);

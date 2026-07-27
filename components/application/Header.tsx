@@ -58,21 +58,33 @@ const Header = () => {
     }
   }, [searchIndex]);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (query.trim() && searchIndex) {
+  // Pre-load search index on component mount in background
+  useEffect(() => {
+    loadSearchIndex();
+  }, [loadSearchIndex]);
+
+  // Update search results whenever searchQuery or searchIndex updates
+  useEffect(() => {
+    if (searchQuery.trim() && searchIndex) {
+      const q = searchQuery.toLowerCase();
       const filtered = searchIndex
         .filter(
           (product) =>
-            product.name.toLowerCase().includes(query.toLowerCase()) ||
-            product.brand.toLowerCase().includes(query.toLowerCase()) ||
-            product.category.toLowerCase().includes(query.toLowerCase()),
+            product.name.toLowerCase().includes(q) ||
+            product.brand.toLowerCase().includes(q) ||
+            product.category.toLowerCase().includes(q) ||
+            (product.sku && product.sku.toLowerCase().includes(q)) ||
+            (product.processor && product.processor.toLowerCase().includes(q)),
         )
         .slice(0, 5);
       setSearchResults(filtered);
     } else {
       setSearchResults([]);
     }
+  }, [searchQuery, searchIndex]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
