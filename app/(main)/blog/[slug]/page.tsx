@@ -63,6 +63,12 @@ interface BlogPostPageProps {
   }>;
 }
 
+export async function generateStaticParams() {
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
+
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = posts.find((p) => p.slug === slug);

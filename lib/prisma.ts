@@ -21,6 +21,11 @@ function createClient(): PrismaClient {
     ssl: {
       rejectUnauthorized: false,
     },
+    // Serverless optimizations to allow Neon compute to auto-suspend:
+    max: 1, // Only 1 connection per serverless function instance
+    idleTimeoutMillis: 1000, // Close idle connection after 1s so Neon compute can sleep
+    connectionTimeoutMillis: 5000, // Fail fast if connection hangs
+    allowExitOnIdle: true, // Allow Node.js event loop to exit without waiting on connections
   });
   // Pool type cast resolves a @types/pg version conflict between
   // @prisma/adapter-pg's bundled types and the project's @types/pg.

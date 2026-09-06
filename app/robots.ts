@@ -1,34 +1,38 @@
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
+  const disallow = [
+    "/admin/",
+    "/api/",
+    "/cart/",
+    "/checkout/",
+    "/wishlist/",
+    "/compare/",
+    "/products/",
+    "/vi/",
+    "/*.json$",
+    "/*?*sort=",
+    "/*?*filter=",
+  ];
+
   return {
     rules: [
       {
         userAgent: "Googlebot",
         allow: "/",
+        disallow,
         crawlDelay: 0,
       },
       {
         userAgent: "Bingbot",
         allow: "/",
+        disallow,
         crawlDelay: 1,
       },
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/admin/",
-          "/api/",
-          "/cart/",
-          "/checkout/",
-          "/wishlist/",
-          "/compare/",
-          "/products/",
-          "/vi/",
-          "/*.json$",
-          "/*?*sort=",
-          "/*?*filter=",
-        ],
+        disallow,
         crawlDelay: 1,
       },
     ],

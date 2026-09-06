@@ -2,58 +2,53 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
-  // Check if the request is for an admin route (but not login)
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    const isLoginPage = request.nextUrl.pathname === "/admin/login";
+  const { pathname } = request.nextUrl;
+
+  // 1. Protect Admin Pages
+  if (pathname.startsWith("/admin")) {
+    const isLoginPage = pathname === "/admin/login";
 
     if (!isLoginPage) {
-      // Check for authentication cookie/header
       const isAuthenticated =
         request.cookies.get("admin_authenticated")?.value === "true";
 
       if (!isAuthenticated) {
-        // Redirect to login page
         return NextResponse.redirect(new URL("/admin/login", request.url));
       }
     }
   }
 
-  const response = NextResponse.next();
+  // 2. Protect Admin / Internal API endpoints from bots, scrapers, and unauthorized queries
+  // POST /api/orders remains open for public customer checkout.
+  // GET /api/orders, PATCH /api/orders/[id], and /api/inventory require admin authentication.
+  const isProtectedOrdersRoute =
+    pathname.startsWith("/api/orders") && request.method !== "POST";
+  const isProtectedInventoryRoute = pathname.startsWith("/api/inventory");
 
-  // Enable compression headers
-  response.headers.set("Accept-Encoding", "gzip, deflate, br");
+  if (isProtectedOrdersRoute || isProtectedInventoryRoute) {
+    const isAuthenticated =
+      request.cookies.get("admin_authenticated")?.value === "true";
 
-  // Add performance headers for caching
-  if (request.nextUrl.pathname.startsWith("/_next/static")) {
-    response.headers.set(
-      "Cache-Control",
-      "public, max-age=31536000, immutable",
-    );
+    if (!isAuthenticated) {
+      return NextResponse.json(
+        { error: "Unauthorized access to internal API" },
+        { status: 401 },
+      );
+    }
   }
 
-  // Cache images from public folder
-  if (
-    request.nextUrl.pathname.startsWith("/products") ||
-    request.nextUrl.pathname.startsWith("/Hero") ||
-    request.nextUrl.pathname.startsWith("/brand_logo")
-  ) {
-    response.headers.set(
-      "Cache-Control",
-      "public, max-age=31536000, immutable",
-    );
-  }
-
-  return response;
+  return NextResponse.next();
 }
 
+// Strictly match only admin and sensitive API routes to eliminate Edge Middleware
+// invocations on public pages, images, and static assets.
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api|_next/image|favicon.ico).*)",
+    "/admin",
+    "/admin/:path*",
+    "/api/orders",
+    "/api/orders/:path*",
+    "/api/inventory",
+    "/api/inventory/:path*",
   ],
 };

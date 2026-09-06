@@ -1,4 +1,11 @@
 User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /compare/
+Disallow: /wishlist/
 Allow: /
 
 Sitemap: https://laptoppointbd.com/sitemap.xml
+Host: https://laptoppointbd.com
