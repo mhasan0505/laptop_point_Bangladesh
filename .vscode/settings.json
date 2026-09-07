@@ -17,5 +17,6 @@
   "terminal.integrated.cwd": "${workspaceFolder}",
   "terminal.integrated.tabs.enabled": true,
   "terminal.integrated.inheritEnv": true,
-  "terminal.integrated.confirmOnExit": "hasChildProcesses"
+  "terminal.integrated.confirmOnExit": "hasChildProcesses",
+  "git.ignoreLimitWarning": true
 }

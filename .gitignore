@@ -27,6 +27,9 @@ pnpm-debug.log*
 .env*
 !.env.example
 
+# google credentials
+google-credential.json
+
 # vercel
 .vercel
 
