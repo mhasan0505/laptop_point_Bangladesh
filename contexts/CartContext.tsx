@@ -11,6 +11,7 @@ import {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const TAX_RATE = 0.05; // 5% tax
 const SHIPPING_COST = 100; // 100 BDT flat shipping
 const FREE_SHIPPING_THRESHOLD = 50000; // Free shipping over 50,000 BDT
 
@@ -39,16 +40,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addToCart = (item: Omit<CartItem, "quantity">, quantity = 1) => {
     setItems((prevItems) => {
-      const existingItem = prevItems.find(
-        (i) => i.id === item.id && i.variantId === item.variantId
-      );
+      const existingItem = prevItems.find((i) => i.id === item.id);
 
       if (existingItem) {
         // Update quantity if item already exists
         return prevItems.map((i) =>
-          i.id === item.id && i.variantId === item.variantId 
-            ? { ...i, quantity: i.quantity + quantity } 
-            : i
+          i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
         );
       } else {
         // Add new item
@@ -81,7 +78,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getTax = () => {
-    return 0; // Tax removed
+    return getSubtotal() * TAX_RATE;
   };
 
   const getShipping = () => {
@@ -90,7 +87,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const getCartTotal = () => {
-    return getSubtotal() + getShipping();
+    return getSubtotal() + getTax() + getShipping();
   };
 
   const getCartCount = () => {

@@ -1,11 +1,11 @@
 "use client";
 
-import { Product } from "@/types/product";
+import { laptopData } from "@/app/data/data";
 import { motion } from "framer-motion";
 import { ChevronRight, Laptop } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const MegaMenu = ({
   isOpen,
@@ -19,22 +19,6 @@ const MegaMenu = ({
   onMouseLeave?: () => void;
 }) => {
   const [hoveredCategory, setHoveredCategory] = useState<string>("Business");
-  const [liveProducts, setLiveProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    let active = true;
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => {
-        if (active && Array.isArray(data)) {
-          setLiveProducts(data);
-        }
-      })
-      .catch((err) => console.error("[MegaMenu] Failed to load products:", err));
-    return () => {
-      active = false;
-    };
-  }, []);
 
   // Get unique categories from laptop data
   const categories = [
@@ -44,6 +28,7 @@ const MegaMenu = ({
     { name: "Budget", icon: "💰" },
   ];
 
+  // Get featured products for each category based on product names/brands
   const getFeaturedProducts = (category: string) => {
     const categoryMap: { [key: string]: string[] } = {
       Business: ["HP", "Dell", "Lenovo"],
@@ -53,7 +38,7 @@ const MegaMenu = ({
     };
 
     const brands = categoryMap[category] || [];
-    return liveProducts
+    return laptopData.laptops
       .filter((laptop) =>
         brands.some((brand) =>
           laptop.name.toUpperCase().includes(brand.toUpperCase()),
@@ -156,52 +141,43 @@ const MegaMenu = ({
                   </div>
 
                   <div className="grid grid-cols-3 gap-6">
-                    {getFeaturedProducts(hoveredCategory).map((product) => {
-                      const discountPercentage = product.discount || (
-                        product.originalPrice && product.originalPrice > product.price
-                          ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-                          : 0
-                      );
-
-                      return (
-                        <Link
-                          key={product.id}
-                          href={`/product/${product.slug}`}
-                          onClick={onClose}
-                          className="group bg-white border border-gray-100 rounded-xl p-4 hover:shadow-lg hover:border-yellow-200 transition-all"
-                        >
-                          <div className="aspect-square relative mb-3 bg-gray-50 rounded-lg overflow-hidden">
-                            <Image
-                              src={product.image}
-                              alt={product.name}
-                              fill
-                              className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
-                              unoptimized={typeof product.image === "string" && product.image.startsWith("http")}
-                            />
-                          </div>
-                          <h4 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-yellow-700 transition-colors">
-                            {product.name}
-                          </h4>
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg font-bold text-gray-900">
-                              ৳{product.price.toLocaleString()}
+                    {getFeaturedProducts(hoveredCategory).map((product) => (
+                      <Link
+                        key={product.id}
+                        href={`/product/${product.slug}`}
+                        onClick={onClose}
+                        className="group bg-white border border-gray-100 rounded-xl p-4 hover:shadow-lg hover:border-yellow-200 transition-all"
+                      >
+                        <div className="aspect-square relative mb-3 bg-gray-50 rounded-lg overflow-hidden">
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+                          />
+                        </div>
+                        <h4 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-yellow-700 transition-colors">
+                          {product.name}
+                        </h4>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-bold text-gray-900">
+                            ৳{product.price.toLocaleString()}
+                          </span>
+                          {product.originalPrice && (
+                            <span className="text-sm text-gray-400 line-through">
+                              ৳{product.originalPrice.toLocaleString()}
                             </span>
-                            {product.originalPrice && (
-                              <span className="text-sm text-gray-400 line-through">
-                                ৳{product.originalPrice.toLocaleString()}
-                              </span>
-                            )}
-                          </div>
-                          {discountPercentage > 0 && (
-                            <div className="mt-2">
-                              <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">
-                                {discountPercentage}% OFF
-                              </span>
-                            </div>
                           )}
-                        </Link>
-                      );
-                    })}
+                        </div>
+                        {product.discount && (
+                          <div className="mt-2">
+                            <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded">
+                              {product.discount}% OFF
+                            </span>
+                          </div>
+                        )}
+                      </Link>
+                    ))}
                   </div>
                 </motion.div>
               ) : (

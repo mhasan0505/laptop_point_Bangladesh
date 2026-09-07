@@ -36,12 +36,6 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
-  const discountPercentage = product.discount || (
-    product.originalPrice && product.originalPrice > product.price
-      ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-      : 0
-  );
-
 
   const handleAddToCart = () => {
     addToCart({
@@ -86,9 +80,9 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
         <div className="relative aspect-4/5 bg-gray-50 dark:bg-gray-800/50 p-6 overflow-hidden">
           {/* Badges */}
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
-            {discountPercentage > 0 && (
+            {product.discount && (
               <span className="px-2 py-1 text-[10px] font-bold tracking-wider text-white bg-black dark:bg-white dark:text-black rounded-sm uppercase">
-                -{discountPercentage}%
+                -{product.discount}%
               </span>
             )}
           </div>
@@ -142,7 +136,6 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               } ${hoverImageLoaded ? "group-hover:opacity-0" : ""}`}
               onLoad={() => setImageLoaded(true)}
               priority={!isMobile}
-              unoptimized={typeof product.image === "string" ? product.image.startsWith("http") : false}
               loading={isMobile ? "lazy" : "eager"}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
@@ -159,7 +152,6 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                     : "opacity-0"
                 }`}
                 onLoad={() => setHoverImageLoaded(true)}
-                unoptimized={typeof product.images[1] === "string" ? product.images[1].startsWith("http") : false}
                 loading="eager"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
@@ -232,16 +224,9 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
           <div className="flex items-end justify-between mt-2">
             <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-gray-900 dark:text-white">
-                  ৳{product.price.toLocaleString()}
-                </span>
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <span className="text-xs text-gray-400 line-through">
-                    ৳{product.originalPrice.toLocaleString()}
-                  </span>
-                )}
-              </div>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">
+                ৳{product.price.toLocaleString()}
+              </span>
             </div>
 
             <div className="flex items-center gap-1 text-amber-600 font-bold">

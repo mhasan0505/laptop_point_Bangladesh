@@ -9,11 +9,6 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-// Force clear cached PrismaClient on hot reload to ensure it picks up the latest schema
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = undefined;
-}
-
 function createClient(): PrismaClient {
   if (!process.env.DATABASE_URL) {
     throw new Error(
@@ -23,10 +18,14 @@ function createClient(): PrismaClient {
   }
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl:
-      process.env.NODE_ENV === "production"
-        ? { rejectUnauthorized: true }
-        : { rejectUnauthorized: false },
+    ssl: {
+      rejectUnauthorized: false,
+    },
+    // Serverless optimizations to allow Neon compute to auto-suspend:
+    max: 1, // Only 1 connection per serverless function instance
+    idleTimeoutMillis: 1000, // Close idle connection after 1s so Neon compute can sleep
+    connectionTimeoutMillis: 5000, // Fail fast if connection hangs
+    allowExitOnIdle: true, // Allow Node.js event loop to exit without waiting on connections
   });
   // Pool type cast resolves a @types/pg version conflict between
   // @prisma/adapter-pg's bundled types and the project's @types/pg.

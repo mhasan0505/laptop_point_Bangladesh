@@ -3,8 +3,6 @@
 import { Heart, Minus, Plus, Share2, ShoppingCart, Star } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { useCart } from "@/contexts/CartContext";
-import { useToast } from "@/contexts/ToastContext";
 
 interface ProductDetailsProps {
   product: {
@@ -18,30 +16,15 @@ interface ProductDetailsProps {
     reviewCount: number;
     images: string[];
     specifications?: Array<{ label: string; value: string; category?: string }>;
-    variants?: Array<{
-      _key?: string;
-      name: string;
-      price: number;
-      originalPrice?: number;
-      sku?: string;
-    }>;
-    id?: string | number;
-    brand?: string;
   };
 }
 
 const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
-  const [selectedVariant, setSelectedVariant] = useState(
-    product.variants && product.variants.length > 0 ? product.variants[0] : null
-  );
-
-  const displayPrice = selectedVariant ? selectedVariant.price : product.price;
-  const displayOriginalPrice = selectedVariant ? (selectedVariant.originalPrice || undefined) : product.originalPrice;
-  const savings = displayOriginalPrice
-    ? displayOriginalPrice - displayPrice
+  const savings = product.originalPrice
+    ? product.originalPrice - product.price
     : 0;
-  const discountPercentage = displayOriginalPrice
-    ? Math.round((savings / displayOriginalPrice) * 100)
+  const discountPercentage = product.originalPrice
+    ? Math.round((savings / product.originalPrice) * 100)
     : 0;
 
   const [selectedImage, setSelectedImage] = useState(0);
@@ -51,28 +34,6 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
   const [zoomStyle, setZoomStyle] = useState<React.CSSProperties>({});
   const [isZoomed, setIsZoomed] = useState(false);
   const [activeSpecTab, setActiveSpecTab] = useState("Specification");
-  const { addToCart } = useCart();
-  const { success } = useToast();
-
-  const handleAddToCart = () => {
-    if (!product.inStock) return;
-    
-    addToCart(
-      {
-        id: product.id?.toString() || product.name,
-        name: product.name,
-        brand: product.brand || "Unknown",
-        price: displayPrice,
-        originalPrice: displayOriginalPrice,
-        image: product.images[0] || "/Logo.webp",
-        variantId: selectedVariant?._key || selectedVariant?.name,
-        variantName: selectedVariant?.name,
-      },
-      quantity
-    );
-    
-    success(`Added ${quantity} ${product.name} to cart`);
-  };
 
   // Group specifications by category
   const specCategories = Array.from(
@@ -175,7 +136,6 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                     }`}
                     onLoad={() => setImageLoaded(true)}
                     priority
-                    unoptimized={product.images[selectedImage]?.startsWith("http")}
                   />
                 </div>
 
@@ -192,7 +152,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             <div className="grid grid-cols-4 gap-3">
               {product.images.map((image, index) => (
                 <button
-                  key={image || index}
+                  key={index}
                   onClick={() => {
                     setSelectedImage(index);
                     setImageLoaded(false);
@@ -209,7 +169,6 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                     width={100}
                     height={100}
                     className="object-contain mix-blend-multiply p-2 bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900"
-                    unoptimized={typeof image === "string" && image.startsWith("http")}
                   />
                 </button>
               ))}
@@ -254,45 +213,21 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             {/* Price Section */}
             <div className="bg-linear-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 rounded-2xl p-6 border border-primary/20">
               <div className="space-y-2">
-                {displayOriginalPrice && (
+                {product.originalPrice && (
                   <div className="flex items-center gap-3">
                     <span className="text-lg text-muted-foreground line-through">
-                      ৳{displayOriginalPrice.toLocaleString()}
+                      ${product.originalPrice.toFixed(2)}
                     </span>
                     <span className="px-3 py-1 bg-emerald-500 text-white text-sm font-semibold rounded-full">
-                      Save ৳{savings.toLocaleString()}
+                      Save ${savings.toFixed(2)}
                     </span>
                   </div>
                 )}
                 <div className="text-4xl md:text-5xl font-bold text-primary">
-                  ৳{displayPrice.toLocaleString()}
+                  ${product.price.toFixed(2)}
                 </div>
               </div>
             </div>
-
-            {/* Variants Selector */}
-            {product.variants && product.variants.length > 0 && (
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">
-                  Available Options
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {product.variants.map((variant, idx) => (
-                    <button
-                      key={variant._key || idx}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-4 py-2 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
-                        selectedVariant?.name === variant.name
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      {variant.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {/* Stock Status */}
             <div className="flex items-center gap-2">
@@ -333,7 +268,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-6 py-3 font-semibold min-w-15 text-center">
+                  <span className="px-6 py-3 font-semibold min-w-[60px] text-center">
                     {quantity}
                   </span>
                   <button
@@ -350,7 +285,6 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
               <button
-                onClick={handleAddToCart}
                 disabled={!product.inStock}
                 className="flex-1 flex items-center justify-center gap-2 bg-linear-to-r from-primary to-primary/90 text-primary-foreground px-8 py-4 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
@@ -423,7 +357,7 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
                         <div className="space-y-0">
                           {getSpecsByCategory(category).map((spec, index) => (
                             <div
-                              key={spec.label || index}
+                              key={index}
                               className={`grid grid-cols-2 gap-4 p-4 hover:bg-muted/30 transition-colors ${
                                 index !==
                                 getSpecsByCategory(category).length - 1

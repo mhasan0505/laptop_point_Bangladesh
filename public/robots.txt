@@ -1,9 +1,11 @@
 User-agent: *
-Allow: /
 Disallow: /admin/
 Disallow: /api/
-Disallow: /*.json$
-Disallow: /*?*sort=
-Disallow: /*?*filter=
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /compare/
+Disallow: /wishlist/
+Allow: /
 
 Sitemap: https://laptoppointbd.com/sitemap.xml
+Host: https://laptoppointbd.com

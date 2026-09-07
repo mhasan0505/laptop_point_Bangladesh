@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { memo } from "react";
 
 interface BlogPost {
   title: string;
@@ -19,7 +18,7 @@ interface BlogPost {
   category: string;
 }
 
-export default memo(function BlogCard({ post }: { post: BlogPost }) {
+export default function BlogCard({ post }: { post: BlogPost }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -36,7 +35,6 @@ export default memo(function BlogCard({ post }: { post: BlogPost }) {
           alt={post.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
-          unoptimized={post.coverImage.startsWith("http")}
         />
         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-gray-800 uppercase tracking-wide">
           {post.category}
@@ -74,4 +72,4 @@ export default memo(function BlogCard({ post }: { post: BlogPost }) {
       </div>
     </motion.article>
   );
-});
+}

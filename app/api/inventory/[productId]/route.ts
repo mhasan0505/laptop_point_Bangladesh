@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-
 // ─── GET /api/inventory/[productId] ──────────────────────────────────────────
 export async function GET(
   _req: NextRequest,
@@ -96,50 +94,6 @@ export async function PATCH(
     console.error("[PATCH /api/inventory/[productId]]", error);
     return NextResponse.json(
       { error: "Failed to update inventory" },
-      { status: 500 },
-    );
-  }
-}
-
-// ─── DELETE /api/inventory/[productId] ───────────────────────────────────────
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ productId: string }> },
-) {
-  try {
-    const { productId } = await params;
-
-    const existing = await prisma.inventory.findUnique({
-      where: { productId },
-    });
-    if (!existing) {
-      return NextResponse.json(
-        { error: "Inventory record not found" },
-        { status: 404 },
-      );
-    }
-
-    // Log the deletion before removing
-    await prisma.$transaction([
-      prisma.inventoryLog.create({
-        data: {
-          productId,
-          sku: existing.sku,
-          delta: -existing.quantity,
-          reason: "adjustment",
-          note: `Inventory record deleted for "${existing.name}" (SKU: ${existing.sku}). Remaining stock: ${existing.quantity} written off.`,
-        },
-      }),
-      prisma.inventory.delete({
-        where: { productId },
-      }),
-    ]);
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("[DELETE /api/inventory/[productId]]", error);
-    return NextResponse.json(
-      { error: "Failed to delete inventory record" },
       { status: 500 },
     );
   }

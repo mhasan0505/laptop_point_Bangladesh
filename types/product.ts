@@ -20,36 +20,14 @@ export interface Product {
     graphics?: string;
     battery?: string;
     weight?: string;
-    os?: string;
-    ports?: string[] | string;
   };
-  warranty?: {
-    period?: string;
-    type?: string;
-    details?: string;
-  };
-  variants?: {
-    _key?: string;
-    name: string;
-    price: number;
-    originalPrice?: number;
-    sku?: string;
-  }[];
   category?: string;
   features?: string[];
-  condition?: string | string[];
+  condition?: string[];
   sku?: string;
   description?: {
     short: string;
     full: string;
   };
   slug: string;
-}
-
-// Type for variant data coming from API requests
-export interface ApiVariantInput {
-  name?: unknown;
-  price?: unknown;
-  originalPrice?: unknown;
-  sku?: unknown;
 }

@@ -8,9 +8,6 @@
     "start": "next start",
     "postinstall": "prisma generate",
     "lint": "eslint",
-    "sanity": "sanity",
-    "sanity:deploy-schema": "sanity schema deploy",
-    "sanity:validate": "node scripts/validate-sanity-setup.mjs",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:prod": "prisma migrate deploy",
@@ -20,7 +17,6 @@
     "validate:images": "node scripts/validate-product-images.mjs"
   },
   "dependencies": {
-    "@google-analytics/data": "^6.1.0",
     "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -42,7 +38,6 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-hook-form": "^7.71.2",
-    "recharts": "^3.9.2",
     "sanity": "^5.14.1",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.5.0"
