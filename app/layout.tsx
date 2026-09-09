@@ -30,10 +30,6 @@ export const metadata: Metadata = {
   publisher: "Laptop Point Bangladesh",
   alternates: {
     canonical: "https://laptoppointbd.com",
-    languages: {
-      en: "https://laptoppointbd.com",
-      bn: "https://laptoppointbd.com/bn",
-    },
   },
   openGraph: {
     type: "website",
@@ -45,11 +41,11 @@ export const metadata: Metadata = {
     description: SEO_CONFIG.metaTags.defaultDescription,
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/Hero_Image.png",
         width: 1200,
         height: 630,
-        alt: "Laptop Point Bangladesh - Premium Brnd New And Used Laptops",
-        type: "image/jpeg",
+        alt: "Laptop Point Bangladesh - Premium Brand New And Used Laptops",
+        type: "image/png",
       },
     ],
   },
@@ -58,12 +54,15 @@ export const metadata: Metadata = {
     title: SEO_CONFIG.metaTags.defaultTitle,
     description: SEO_CONFIG.metaTags.defaultDescription,
     creator: SEO_CONFIG.metaTags.twitterHandle,
-    images: ["/og-image.jpg"],
+    images: ["/Hero_Image.png"],
   },
   verification: {
-    google: "ljFisqvr68Zmoi6h41Y5BSMWuktGPPdHTkRCpYaeFOQ",
+    google: [
+      "ljFisqvr68Zmoi6h41Y5BSMWuktGPPdHTkRCpYaeFOQ",
+      "1sz9tJ4KKpP8LbTkmf5oQdcVCjW4pKNd5AVrZE9iyLg",
+    ],
     other: {
-      "msvalidate.01": "add-your-bing-verification-code",
+      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
     },
   },
   icons: {
@@ -89,6 +88,7 @@ export const metadata: Metadata = {
 const jsonLd = organizationSchema;
 
 const localBusinessJsonLd = localBusinessSchema;
+const GOOGLE_TAG_ID = "G-Y7GRYG9473";
 
 export default function RootLayout({
   children,
@@ -103,6 +103,21 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.facebook.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+        {/* Google Analytics */}
+        <Script
+          id="google-tag-base"
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`}
+        />
+        <Script id="google-tag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GOOGLE_TAG_ID}');
+          `}
+        </Script>
 
         {/* Multiple JSON-LD Schemas for Rich Results */}
         <script
