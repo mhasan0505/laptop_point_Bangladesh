@@ -6,7 +6,6 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { Providers } from "./providers";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -88,7 +87,7 @@ export const metadata: Metadata = {
 const jsonLd = organizationSchema;
 
 const localBusinessJsonLd = localBusinessSchema;
-const GOOGLE_TAG_ID = "G-Y7GRYG9473";
+const GOOGLE_TAG_ID = process.env.NEXT_PUBLIC_GA_ID || "G-NSPLFEW71H";
 
 export default function RootLayout({
   children,
@@ -104,7 +103,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        {/* Google Analytics */}
+        {/* Google Analytics (gtag.js) */}
         <Script
           id="google-tag-base"
           strategy="afterInteractive"
@@ -164,9 +163,7 @@ export default function RootLayout({
             />
           </noscript>
         )}
-        <Providers>
-          {children}
-        </Providers>
+        {children}
         <SpeedInsights />
         <Analytics />
       </body>

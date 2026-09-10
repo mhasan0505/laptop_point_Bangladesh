@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/table";
 import { AdminProduct, OrderData } from "@/lib/admin-data";
 import { fetchProducts } from "@/lib/sanity-admin";
+import { formatBDT } from "@/lib/format";
+import { VALID_STATUSES } from "@/lib/orders";
 import { Plus, Search } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
@@ -53,7 +55,7 @@ function mapApiOrder(o: ApiOrder): OrderRow {
     dbId: o.id,
     id: o.orderNumber,
     customer: o.customerName,
-    amount: `৳${o.totalAmount.toLocaleString()}`,
+    amount: formatBDT(o.totalAmount),
     status: o.status,
     date: o.createdAt.slice(0, 10),
     paymentMethod: paymentLabel(o.paymentMethod),
@@ -105,12 +107,15 @@ export default function OrdersPage() {
         return "bg-green-100 text-green-800 hover:bg-green-200";
       case "Cancelled":
         return "bg-red-100 text-red-800 hover:bg-red-200";
+      case "Returned":
+        return "bg-orange-100 text-orange-800 hover:bg-orange-200";
       default:
         return "bg-gray-100 text-gray-800 hover:bg-gray-200";
     }
   };
 
   const handleStatusChange = async (order: OrderRow, newStatus: string) => {
+    const previousStatus = order.status;
     // Optimistic update
     setOrders((prev) =>
       prev.map((o) =>
@@ -118,16 +123,25 @@ export default function OrdersPage() {
       ),
     );
     try {
-      await fetch(`/api/orders/${order.dbId}`, {
+      const res = await fetch(`/api/orders/${order.dbId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
+      if (!res.ok) {
+        // Roll back on server rejection (e.g. invalid transition).
+        setOrders((prev) =>
+          prev.map((o) =>
+            o.dbId === order.dbId ? { ...o, status: previousStatus } : o,
+          ),
+        );
+        throw new Error(`Request failed: ${res.status}`);
+      }
     } catch {
-      // Roll back on failure
+      // Roll back on network failure.
       setOrders((prev) =>
         prev.map((o) =>
-          o.dbId === order.dbId ? { ...o, status: order.status } : o,
+          o.dbId === order.dbId ? { ...o, status: previousStatus } : o,
         ),
       );
     }
@@ -191,11 +205,11 @@ export default function OrdersPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="All">All Statuses</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Processing">Processing</SelectItem>
-                  <SelectItem value="Shipped">Shipped</SelectItem>
-                  <SelectItem value="Delivered">Delivered</SelectItem>
-                  <SelectItem value="Canceled">Canceled</SelectItem>
+                  {VALID_STATUSES.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -267,13 +281,11 @@ export default function OrdersPage() {
                             <SelectValue placeholder="Update Status" />
                           </SelectTrigger>
                           <SelectContent align="end">
-                            <SelectItem value="Pending">Pending</SelectItem>
-                            <SelectItem value="Processing">
-                              Processing
-                            </SelectItem>
-                            <SelectItem value="Shipped">Shipped</SelectItem>
-                            <SelectItem value="Delivered">Delivered</SelectItem>
-                            <SelectItem value="Canceled">Canceled</SelectItem>
+                            {VALID_STATUSES.map((s) => (
+                              <SelectItem key={s} value={s}>
+                                {s}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </TableCell>

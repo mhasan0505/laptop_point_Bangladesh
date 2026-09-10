@@ -1,6 +1,8 @@
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
+import { formatBDT } from "@/lib/format";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/pricing";
 import { ArrowRight, Tag } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -22,7 +24,6 @@ export default function CartSummary() {
     }
   };
 
-  const FREE_SHIPPING_THRESHOLD = 50000;
   const remainingForFreeShipping = FREE_SHIPPING_THRESHOLD - subtotal;
 
   return (
@@ -31,21 +32,31 @@ export default function CartSummary() {
 
       {/* Free Shipping Progress */}
       {shipping > 0 && remainingForFreeShipping > 0 && (
-        <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-          <p className="text-sm text-blue-800 dark:text-blue-300 mb-2">
+        <div className="mb-6 p-4 bg-muted/40 rounded-lg border border-border">
+          <p className="text-sm text-foreground mb-2">
             Add{" "}
             <span className="font-bold">
-              ৳{remainingForFreeShipping.toLocaleString()}
+              {formatBDT(remainingForFreeShipping)}
             </span>{" "}
             more for FREE shipping!
           </p>
-          <div className="w-full bg-blue-200 dark:bg-blue-900 rounded-full h-2">
+          <div
+            role="progressbar"
+            aria-label="Progress toward free shipping"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.min(
+              Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100),
+              100,
+            )}
+            className="w-full bg-muted rounded-full h-2 overflow-hidden"
+          >
             <div
-              className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+              className="bg-primary h-2 rounded-full transition-all duration-300"
               style={{
                 width: `${Math.min(
                   (subtotal / FREE_SHIPPING_THRESHOLD) * 100,
-                  100
+                  100,
                 )}%`,
               }}
             />
@@ -89,11 +100,11 @@ export default function CartSummary() {
           <span className="text-muted-foreground">
             Subtotal ({items.length} items)
           </span>
-          <span className="font-medium">৳{subtotal.toLocaleString()}</span>
+          <span className="font-medium">{formatBDT(subtotal)}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Tax (5%)</span>
-          <span className="font-medium">৳{tax.toLocaleString()}</span>
+          <span className="font-medium">{formatBDT(tax)}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Shipping</span>
@@ -102,7 +113,7 @@ export default function CartSummary() {
               FREE
             </span>
           ) : (
-            <span className="font-medium">৳{shipping.toLocaleString()}</span>
+            <span className="font-medium">{formatBDT(shipping)}</span>
           )}
         </div>
       </div>
@@ -111,7 +122,7 @@ export default function CartSummary() {
       <div className="flex justify-between items-center mb-6">
         <span className="text-lg font-semibold">Total</span>
         <span className="text-2xl font-bold text-primary">
-          ৳{total.toLocaleString()}
+          {formatBDT(total)}
         </span>
       </div>
 

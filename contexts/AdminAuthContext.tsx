@@ -12,69 +12,63 @@ interface AdminAuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(
   undefined,
 );
 
-const ADMIN_AUTH_KEY = "admin_authenticated";
-
-// Helper functions for cookie management
-function setCookie(name: string, value: string, days: number = 7) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-}
-
-function getCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
-  const nameEQ = name + "=";
-  const ca = document.cookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === " ") c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
-
-function deleteCookie(name: string) {
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
-}
-
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
-  // Start with isLoading=true so server and client render the same initial HTML
-  // (both render a spinner), preventing hydration mismatches.
+  // Start with isLoading=true so server and client render the same initial
+  // HTML (both render a spinner), preventing hydration mismatches.
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // The session cookie is HttpOnly, so the browser can't read it — ask the
+  // server whether we have a valid session.
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAuthenticated(getCookie(ADMIN_AUTH_KEY) === "true");
-      setIsLoading(false);
-    }, 0);
-    return () => clearTimeout(timer);
+    let cancelled = false;
+
+    fetch("/api/admin/session")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { authenticated?: boolean } | null) => {
+        if (cancelled) return;
+        setIsAuthenticated(Boolean(data?.authenticated));
+      })
+      .catch(() => {
+        if (!cancelled) setIsAuthenticated(false);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Check against environment variables or hardcoded admin credentials
-    const adminEmail =
-      process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@laptoppointbd.com";
-    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin@123";
-
-    if (email === adminEmail && password === adminPassword) {
-      setCookie(ADMIN_AUTH_KEY, "true", 7); // Cookie expires in 7 days
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!res.ok) return false;
       setIsAuthenticated(true);
       return true;
+    } catch {
+      return false;
     }
-    return false;
   };
 
-  const logout = () => {
-    deleteCookie(ADMIN_AUTH_KEY);
-    setIsAuthenticated(false);
+  const logout = async (): Promise<void> => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } finally {
+      setIsAuthenticated(false);
+    }
   };
 
   return (

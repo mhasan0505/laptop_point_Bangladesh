@@ -1,111 +1,101 @@
 "use client";
 
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { computeOrderTotals } from "@/lib/pricing";
 import { CartContextType, CartItem } from "@/types/cart";
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
-  useEffect,
-  useState,
+  useMemo,
 } from "react";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const TAX_RATE = 0.05; // 5% tax
-const SHIPPING_COST = 100; // 100 BDT flat shipping
-const FREE_SHIPPING_THRESHOLD = 50000; // Free shipping over 50,000 BDT
+const STORAGE_KEY = "cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    // Lazy initialization from localStorage
-    if (typeof window !== "undefined") {
-      const savedCart = localStorage.getItem("cart");
-      if (savedCart) {
-        try {
-          return JSON.parse(savedCart);
-        } catch {
-          return [];
+  const [items, setItems] = useLocalStorage<CartItem[]>(STORAGE_KEY, []);
+
+  const addToCart = useCallback(
+    (item: Omit<CartItem, "quantity">, quantity = 1) => {
+      setItems((prevItems) => {
+        const existingItem = prevItems.find((i) => i.id === item.id);
+
+        if (existingItem) {
+          return prevItems.map((i) =>
+            i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i,
+          );
         }
-      }
-    }
-    return [];
-  });
-
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("cart", JSON.stringify(items));
-    }
-  }, [items]);
-
-  const addToCart = (item: Omit<CartItem, "quantity">, quantity = 1) => {
-    setItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-
-      if (existingItem) {
-        // Update quantity if item already exists
-        return prevItems.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
-        );
-      } else {
-        // Add new item
         return [...prevItems, { ...item, quantity }];
+      });
+    },
+    [setItems],
+  );
+
+  const removeFromCart = useCallback(
+    (id: string) => {
+      setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    },
+    [setItems],
+  );
+
+  const updateQuantity = useCallback(
+    (id: string, quantity: number) => {
+      if (quantity <= 0) {
+        setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+        return;
       }
-    });
-  };
+      setItems((prevItems) =>
+        prevItems.map((item) => (item.id === id ? { ...item, quantity } : item)),
+      );
+    },
+    [setItems],
+  );
 
-  const removeFromCart = (id: string) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
-
-  const updateQuantity = (id: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
-      return;
-    }
-
-    setItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
-  };
-
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setItems([]);
-  };
+  }, [setItems]);
 
-  const getSubtotal = () => {
-    return items.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
+  const totals = useMemo(() => computeOrderTotals(items), [items]);
 
-  const getTax = () => {
-    return getSubtotal() * TAX_RATE;
-  };
+  // Stable function identities so context consumers don't re-render in loops.
+  const getSubtotal = useCallback(() => totals.subtotal, [totals]);
+  const getTax = useCallback(() => totals.tax, [totals]);
+  const getShipping = useCallback(() => totals.shipping, [totals]);
+  const getCartTotal = useCallback(() => totals.total, [totals]);
+  const getCartCount = useCallback(
+    () => items.reduce((count, item) => count + item.quantity, 0),
+    [items],
+  );
 
-  const getShipping = () => {
-    const subtotal = getSubtotal();
-    return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  };
-
-  const getCartTotal = () => {
-    return getSubtotal() + getTax() + getShipping();
-  };
-
-  const getCartCount = () => {
-    return items.reduce((count, item) => count + item.quantity, 0);
-  };
-
-  const value: CartContextType = {
-    items,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-    getCartTotal,
-    getCartCount,
-    getSubtotal,
-    getTax,
-    getShipping,
-  };
+  const value = useMemo<CartContextType>(
+    () => ({
+      items,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      getCartTotal,
+      getCartCount,
+      getSubtotal,
+      getTax,
+      getShipping,
+    }),
+    [
+      items,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      getCartTotal,
+      getCartCount,
+      getSubtotal,
+      getTax,
+      getShipping,
+    ],
+  );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

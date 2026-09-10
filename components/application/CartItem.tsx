@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
+import { formatBDT } from "@/lib/format";
 import { CartItem as CartItemType } from "@/types/cart";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -169,15 +170,15 @@ export default function CartItem({ item }: CartItemProps) {
             <div className="flex flex-col items-end">
               {item.originalPrice && item.originalPrice > item.price && (
                 <span className="text-sm text-muted-foreground line-through">
-                  ৳{item.originalPrice.toLocaleString()}
+                  {formatBDT(item.originalPrice)}
                 </span>
               )}
               <div className="flex items-baseline gap-2">
                 <span className="text-xl font-bold text-primary">
-                  ৳{(item.price * item.quantity).toLocaleString()}
+                  {formatBDT(item.price * item.quantity)}
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  (৳{item.price.toLocaleString()} each)
+                  ({formatBDT(item.price)} each)
                 </span>
               </div>
             </div>

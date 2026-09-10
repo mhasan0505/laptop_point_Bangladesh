@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "powershell",
+      "Shell(pnpm:*)",
+      "Shell(set:*)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

@@ -1,7 +1,8 @@
 "use client";
 
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Product } from "@/types/product";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 
 interface WishlistContextType {
   wishlistItems: Product[];
@@ -12,8 +13,10 @@ interface WishlistContextType {
   clearWishlist: () => void;
 }
 
+const STORAGE_KEY = "wishlist";
+
 const WishlistContext = createContext<WishlistContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const WishlistProvider = ({
@@ -21,31 +24,13 @@ export const WishlistProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [wishlistItems, setWishlistItems] = useState<Product[]>(() => {
-    if (typeof window === "undefined") return [];
-
-    const saved = localStorage.getItem("wishlist");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Failed to parse wishlist", e);
-        return [];
-      }
-    }
-    return [];
-  });
-
-  // Persist to localStorage whenever wishlist changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
-    }
-  }, [wishlistItems]);
+  const [wishlistItems, setWishlistItems] = useLocalStorage<Product[]>(
+    STORAGE_KEY,
+    [],
+  );
 
   const addToWishlist = (product: Product) => {
     setWishlistItems((prev) => {
-      // Check if already in wishlist
       if (prev.some((item) => item.id === product.id)) {
         return prev;
       }

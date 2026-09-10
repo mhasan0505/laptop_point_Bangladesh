@@ -1,0 +1,3 @@
+- Standardizes UI on a monochromatic dark design system: zinc-950 backgrounds/surfaces, zinc-800 borders, and blue-600/blue-500 for primary accents and positive/upward trend indicators. Confidence: 0.9
+- Treats accessibility and typography as first-class audit concerns: evaluates text sizes/typescale for readability and hierarchy (flagging sub-11px text and WCAG contrast risks), and checks color/spacing consistency across flows. Confidence: 0.9
+- Defines design tokens (colors, radius, typescale) in Tailwind's CSS-first `@theme` and expects components to consume those tokens uniformly rather than scattering raw per-file arbitrary values. Confidence: 0.8

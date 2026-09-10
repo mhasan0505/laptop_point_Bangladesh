@@ -35,7 +35,7 @@ const StickyMobileBar = () => {
                 <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-lg shadow-primary/30 active:scale-95 transition-transform">
                   <Icon className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-medium text-gray-600 mt-1">
+                <span className="text-xs font-medium text-gray-600 mt-1">
                   {item.name}
                 </span>
               </a>
@@ -53,12 +53,12 @@ const StickyMobileBar = () => {
               <div className="relative">
                 <Icon className={`w-5 h-5 ${isActive ? "fill-current" : ""}`} />
                 {item.count !== undefined && item.count > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {item.count}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] font-medium">{item.name}</span>
+              <span className="text-xs font-medium">{item.name}</span>
             </Link>
           );
         })}

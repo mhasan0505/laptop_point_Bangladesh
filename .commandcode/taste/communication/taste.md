@@ -1,0 +1,5 @@
+- Prefers the assistant to adopt a named expert persona (e.g., "Senior Full-Stack Web Architect and UI/UX Expert") when performing audits or consultations. Confidence: 0.7
+- For code reviews/audits, wants each issue reported as: state the problem → explain the reasoning → provide the exact refactored TypeScript/React code. Confidence: 0.9
+- Prefers user-paced, incremental reviews: acknowledge the brief first, then wait for each specific file or module to be provided, rather than auditing the whole codebase in one pass. Confidence: 0.8
+- For new feature builds (not just audits), wants the work delivered step-by-step with explicit confirmation gates — e.g., deliver one module (Step 1), then wait for the user's go-ahead before proceeding to the next (UI, then the dataLayer snippet). Confidence: 0.7
+- Once an audit/design review is done and the user approves, wants all recommended fixes implemented immediately in a single pass (e.g., "implement now all fixes") rather than continuing item-by-item pacing. Confidence: 0.8

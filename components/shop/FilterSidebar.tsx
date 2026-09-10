@@ -1,18 +1,11 @@
 "use client";
 
+import { EMPTY_FILTERS, ProductFilters } from "@/lib/product-filter";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 
-interface Filters {
-  priceMin: string;
-  priceMax: string;
-  brands: string[];
-  processors: string[];
-  rams: string[];
-}
-
 interface FilterSidebarProps {
-  onFilterChange: (filters: Filters) => void;
+  onFilterChange: (filters: ProductFilters) => void;
 }
 
 export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
@@ -23,20 +16,14 @@ export default function FilterSidebar({ onFilterChange }: FilterSidebarProps) {
     ram: true,
   });
 
-  const [filters, setFilters] = useState<Filters>({
-    priceMin: "",
-    priceMax: "",
-    brands: [],
-    processors: [],
-    rams: [],
-  });
+  const [filters, setFilters] = useState<ProductFilters>(EMPTY_FILTERS);
 
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
   const updateFilter = (
-    key: keyof Filters,
+    key: keyof ProductFilters,
     value: string | string[]
   ) => {
     const newFilters = { ...filters, [key]: value };

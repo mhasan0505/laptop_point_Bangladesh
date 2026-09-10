@@ -4,11 +4,12 @@ import QuickViewModal from "@/components/product/QuickViewModal";
 import { useCart } from "@/contexts/CartContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { formatBDT } from "@/lib/format";
 import { Product } from "@/types/product";
-import { Eye, Heart, Plus, ShoppingBag, Star } from "lucide-react";
+import { Check, Eye, Heart, Plus, ShoppingBag, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ProductsCardProps {
   product: Product;
@@ -23,16 +24,6 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
   const [hoverImageLoaded, setHoverImageLoaded] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
   const [showQuickView, setShowQuickView] = useState(false);
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== "undefined" ? window.innerWidth < 1024 : false,
-  );
-
-  // Detect mobile on component mount
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
@@ -64,24 +55,20 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
   const toggleComparison = () => {
     if (isCompared) {
       removeFromComparison(product.id);
-    } else {
-      if (canAddMore()) {
-        addToComparison(product);
-      } else {
-        alert("You can compare up to 3 products at a time");
-      }
+    } else if (canAddMore()) {
+      addToComparison(product);
     }
   };
 
   return (
-    <div className="group relative w-full max-w-70 bg-white dark:bg-gray-900 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-gray-200/50 dark:hover:shadow-black/50">
+    <div className="group relative w-full max-w-70 bg-card dark:bg-card rounded-2xl overflow-hidden border border-border/50 transition-all duration-300 hover:shadow-xl hover:shadow-slate-900/10 dark:hover:shadow-black/50">
       <Link href={`/product/${product.slug}`} className="block h-full">
         {/* Image Container with Hover Actions */}
-        <div className="relative aspect-4/5 bg-gray-50 dark:bg-gray-800/50 p-6 overflow-hidden">
+        <div className="relative aspect-4/5 bg-muted/50 dark:bg-zinc-900 p-6 overflow-hidden">
           {/* Badges */}
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
             {product.discount && (
-              <span className="px-2 py-1 text-[10px] font-bold tracking-wider text-white bg-black dark:bg-white dark:text-black rounded-sm uppercase">
+              <span className="px-2 py-1 text-xs font-bold tracking-wider text-white bg-primary rounded-sm uppercase">
                 -{product.discount}%
               </span>
             )}
@@ -98,19 +85,20 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               className={`p-2 rounded-full shadow-md transition-colors duration-200 ${
                 isWishlisted
                   ? "bg-red-500 text-white"
-                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                  : "bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white"
               }`}
               title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
               aria-label={
                 isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"
               }
+              aria-pressed={isWishlisted}
             >
               <Heart
                 className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`}
               />
             </button>
             <button
-              className="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 shadow-md hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-200"
+              className="p-2 rounded-full bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 shadow-md hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-colors duration-200"
               title="Quick View"
               aria-label="Quick View"
               onClick={(e) => {
@@ -125,7 +113,8 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
           {/* Product Image */}
           <div className="relative w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
-            {/* Main image — fades out on hover only after hover image is ready */}
+            {/* Main image — lazy by default. Cards sit below the fold in
+                carousels/grids; only the hero is priority-loaded. */}
             <Image
               src={product.image}
               alt={product.name}
@@ -135,11 +124,9 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                 imageLoaded ? "opacity-100" : "opacity-0"
               } ${hoverImageLoaded ? "group-hover:opacity-0" : ""}`}
               onLoad={() => setImageLoaded(true)}
-              priority={!isMobile}
-              loading={isMobile ? "lazy" : "eager"}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
-            {/* Hover image — preloads silently, crossfade activates once loaded */}
+            {/* Hover image — fetched lazily only when scrolled into view */}
             {product.images && product.images.length > 1 && (
               <Image
                 src={product.images[1]}
@@ -152,7 +139,6 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
                     : "opacity-0"
                 }`}
                 onLoad={() => setHoverImageLoaded(true)}
-                loading="eager"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
             )}
@@ -168,7 +154,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
             className={`absolute bottom-3 right-3 p-3 rounded-full shadow-lg opacity-100 translate-y-0 lg:translate-y-4 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-300 flex items-center justify-center hover:scale-110 active:scale-95 ${
               addedToCart
                 ? "bg-emerald-500 text-white"
-                : "bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200"
+                : "bg-primary text-white hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/90"
             }`}
             title="Add to Cart"
             aria-label="Add to Cart"
@@ -177,6 +163,11 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               <ShoppingBag className="w-4 h-4" />
             ) : (
               <Plus className="w-4 h-4" />
+            )}
+            {addedToCart && (
+              <span className="sr-only" aria-live="polite">
+                Added to cart
+              </span>
             )}
           </button>
 
@@ -188,35 +179,32 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               toggleComparison();
             }}
             disabled={!canAddMore() && !isCompared}
+            aria-pressed={isCompared}
             className={`absolute bottom-3 left-3 px-3 py-2 rounded-full shadow-lg opacity-100 translate-y-0 lg:translate-y-4 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-300 text-xs font-semibold flex items-center gap-1 ${
               isCompared
-                ? "bg-yellow-500 text-white"
+                ? "bg-primary text-white"
                 : !canAddMore()
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-white text-gray-700 hover:bg-gray-100"
+                  ? "bg-zinc-200 text-zinc-500 cursor-not-allowed"
+                  : "bg-white text-gray-700 hover:bg-zinc-100"
             }`}
             title="Add to Compare"
             aria-label={`${isCompared ? "Remove from" : "Add to"} comparison: ${product.name}`}
           >
-            <input
-              type="checkbox"
-              checked={isCompared}
-              onChange={() => {}}
-              className="w-3 h-3 pointer-events-none"
-              aria-label={`Compare ${product.name}`}
-            />
-            Compare
+            <span className="inline-flex items-center gap-1">
+              {isCompared && <Check className="w-3 h-3" aria-hidden="true" />}
+              {isCompared ? "Compared" : "Compare"}
+            </span>
           </button>
         </div>
 
         {/* Product Info - Minimalist Layout */}
         <div className="p-4">
-          <div className="mb-1 text-xs text-gray-500 dark:text-gray-400 font-medium tracking-wide">
+          <div className="mb-1 text-xs text-muted-foreground font-medium tracking-wide">
             {product.category || "Laptop"}
           </div>
 
           <h3
-            className="text-sm font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 min-h-10"
+            className="text-sm font-medium text-foreground mb-2 line-clamp-2 min-h-10"
             title={product.name}
           >
             {product.name}
@@ -224,12 +212,15 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
 
           <div className="flex items-end justify-between mt-2">
             <div className="flex flex-col">
-              <span className="text-lg font-bold text-gray-900 dark:text-white">
-                ৳{product.price.toLocaleString()}
+              <span className="text-lg font-bold text-foreground">
+                {formatBDT(product.price)}
               </span>
             </div>
 
-            <div className="flex items-center gap-1 text-amber-600 font-bold">
+            <div
+              className="flex items-center gap-1 font-bold text-amber-600"
+              aria-label={`Rated ${product.rating?.toFixed(1)} out of 5`}
+            >
               <Star className="w-3.5 h-3.5 fill-amber-600" />
               <span suppressHydrationWarning>{product.rating?.toFixed(1)}</span>
             </div>

@@ -1,7 +1,8 @@
 "use client";
 
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Product } from "@/types/product";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 
 interface ComparisonContextType {
   comparisonItems: Product[];
@@ -14,6 +15,7 @@ interface ComparisonContextType {
 }
 
 const MAX_COMPARISON_ITEMS = 3;
+const STORAGE_KEY = "comparison";
 
 const ComparisonContext = createContext<ComparisonContextType | undefined>(
   undefined,
@@ -24,35 +26,16 @@ export const ComparisonProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [comparisonItems, setComparisonItems] = useState<Product[]>(() => {
-    if (typeof window === "undefined") return [];
-
-    const saved = localStorage.getItem("comparison");
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Failed to parse comparison", e);
-        return [];
-      }
-    }
-    return [];
-  });
-
-  // Persist to localStorage whenever comparison changes
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("comparison", JSON.stringify(comparisonItems));
-    }
-  }, [comparisonItems]);
+  const [comparisonItems, setComparisonItems] = useLocalStorage<Product[]>(
+    STORAGE_KEY,
+    [],
+  );
 
   const addToComparison = (product: Product) => {
     setComparisonItems((prev) => {
-      // Check if already in comparison
       if (prev.some((item) => item.id === product.id)) {
         return prev;
       }
-      // Check max limit
       if (prev.length >= MAX_COMPARISON_ITEMS) {
         console.warn(
           `Maximum ${MAX_COMPARISON_ITEMS} products can be compared`,

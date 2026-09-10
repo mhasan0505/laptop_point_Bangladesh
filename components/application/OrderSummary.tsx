@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
+import { formatBDT } from "@/lib/format";
 import Image from "next/image";
 
 export default function OrderSummary() {
@@ -41,7 +42,7 @@ export default function OrderSummary() {
                     Qty: {item.quantity}
                   </span>
                   <span className="text-sm font-semibold">
-                    ৳{(item.price * item.quantity).toLocaleString()}
+                    {formatBDT(item.price * item.quantity)}
                   </span>
                 </div>
               </div>
@@ -56,11 +57,11 @@ export default function OrderSummary() {
           <span className="text-muted-foreground">
             Subtotal ({items.length} items)
           </span>
-          <span className="font-medium">৳{subtotal.toLocaleString()}</span>
+          <span className="font-medium">{formatBDT(subtotal)}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Tax (5%)</span>
-          <span className="font-medium">৳{tax.toLocaleString()}</span>
+          <span className="font-medium">{formatBDT(tax)}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Shipping</span>
@@ -69,7 +70,7 @@ export default function OrderSummary() {
               FREE
             </span>
           ) : (
-            <span className="font-medium">৳{shipping.toLocaleString()}</span>
+            <span className="font-medium">{formatBDT(shipping)}</span>
           )}
         </div>
       </div>
@@ -78,7 +79,7 @@ export default function OrderSummary() {
       <div className="flex justify-between items-center">
         <span className="text-lg font-semibold">Total</span>
         <span className="text-2xl font-bold text-primary">
-          ৳{total.toLocaleString()}
+          {formatBDT(total)}
         </span>
       </div>
     </div>

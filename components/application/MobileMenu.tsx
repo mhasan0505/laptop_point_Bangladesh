@@ -1,7 +1,8 @@
 "use client";
 
 import { departmentMenuItems, navigationLinks } from "@/app/data/menu-config";
-import { Product } from "@/types/product";
+import { formatBDT } from "@/lib/format";
+import type { SearchItem } from "@/lib/search-index";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import {
   ChevronRight,
@@ -20,7 +21,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -108,51 +109,63 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
   const router = useRouter();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Product[]>([]);
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
+  const [searchIndex, setSearchIndex] = useState<SearchItem[] | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    let active = true;
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => {
-        if (active && Array.isArray(data)) setAllProducts(data);
-      })
-      .catch((err) => console.error("[MobileMenu] Failed to load products:", err));
-    return () => { active = false; };
-  }, []);
+  // Lazy-load the lightweight search index the first time the menu opens —
+  // mirrors the Header. The old implementation fetched "/api/products", an
+  // endpoint that does not exist, on every page load.
+  const loadSearchIndex = useCallback(async () => {
+    if (searchIndex) return;
+    try {
+      const { getSearchIndex } = await import("@/lib/search-index");
+      const index = await getSearchIndex();
+      setSearchIndex(index);
+      setSearchResults([]);
+    } catch (error) {
+      console.error("[MobileMenu] Failed to load search index:", error);
+    }
+  }, [searchIndex]);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      void loadSearchIndex();
     } else {
       document.body.style.overflow = "unset";
-      setOpenSubmenu(null);
-      setSearchQuery("");
-      setSearchResults([]);
+      // Reset transient state after paint (not synchronously inside the
+      // effect) to avoid cascading renders.
+      requestAnimationFrame(() => {
+        setOpenSubmenu(null);
+        setSearchQuery("");
+        setSearchResults([]);
+      });
     }
-    return () => { document.body.style.overflow = "unset"; };
-  }, [isOpen]);
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen, loadSearchIndex]);
 
   const toggleSubmenu = (key: string) =>
     setOpenSubmenu(openSubmenu === key ? null : key);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (query.trim()) {
-      const filtered = allProducts
-        .filter(
-          (p) =>
-            p.name.toLowerCase().includes(query.toLowerCase()) ||
-            (p.brand && p.brand.toLowerCase().includes(query.toLowerCase())) ||
-            (p.category && p.category.toLowerCase().includes(query.toLowerCase()))
-        )
-        .slice(0, 5);
-      setSearchResults(filtered);
-    } else {
+    if (!query.trim() || !searchIndex) {
       setSearchResults([]);
+      return;
     }
+    const q = query.toLowerCase();
+    const filtered = searchIndex
+      .filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.brand.toLowerCase().includes(q) ||
+          p.category.toLowerCase().includes(q),
+      )
+      .slice(0, 5);
+    setSearchResults(filtered);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -265,7 +278,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                                 {product.name}
                               </p>
                               <p className="text-xs text-slate-500">
-                                ৳{product.price.toLocaleString()}
+                                {formatBDT(product.price)}
                               </p>
                             </div>
                           </Link>
@@ -305,7 +318,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             {/* ── Scrollable Nav ── */}
             <nav className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 scrollbar-hide">
               {/* Departments section */}
-              <p className="mb-2 px-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+              <p className="mb-2 px-1 text-xs font-bold uppercase tracking-widest text-slate-400">
                 Departments
               </p>
 
@@ -423,7 +436,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               {/* Divider + navigation links */}
               <div className="my-3 flex items-center gap-2">
                 <div className="h-px flex-1 bg-slate-100" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
                   Pages
                 </span>
                 <div className="h-px flex-1 bg-slate-100" />
@@ -466,7 +479,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                           >
                             {item.name}
                             {item.badge && (
-                              <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                              <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
                                 <Flame className="h-2.5 w-2.5 fill-current" />
                                 {item.badge}
                               </span>

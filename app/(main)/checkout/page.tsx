@@ -2,6 +2,7 @@
 
 import OrderSummary from "@/components/application/OrderSummary";
 import { useCart } from "@/contexts/CartContext";
+import { formatBDT } from "@/lib/format";
 import { CheckoutFormData, PaymentMethod } from "@/types/cart";
 import {
   ArrowLeft,
@@ -209,44 +210,61 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-bold mb-6">Customer Information</h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label htmlFor="firstName" className="block text-sm font-medium mb-2">
                       First Name <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="firstName"
                       {...register("firstName", {
                         required: "First name is required",
                       })}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      aria-invalid={errors.firstName ? true : undefined}
+                      aria-describedby={
+                        errors.firstName ? "firstName-error" : undefined
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                        errors.firstName
+                          ? "border-red-500"
+                          : "border-border"
+                      }`}
                       placeholder="John"
                     />
                     {errors.firstName && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="firstName-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.firstName.message}
                       </p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label htmlFor="lastName" className="block text-sm font-medium mb-2">
                       Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="lastName"
                       {...register("lastName", {
                         required: "Last name is required",
                       })}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      aria-invalid={errors.lastName ? true : undefined}
+                      aria-describedby={
+                        errors.lastName ? "lastName-error" : undefined
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                        errors.lastName ? "border-red-500" : "border-border"
+                      }`}
                       placeholder="Doe"
                     />
                     {errors.lastName && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="lastName-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.lastName.message}
                       </p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium mb-2">
                       Email <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="email"
                       type="email"
                       {...register("email", {
                         required: "Email is required",
@@ -255,29 +273,44 @@ export default function CheckoutPage() {
                           message: "Invalid email address",
                         },
                       })}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      autoComplete="email"
+                      aria-invalid={errors.email ? true : undefined}
+                      aria-describedby={
+                        errors.email ? "email-error" : undefined
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                        errors.email ? "border-red-500" : "border-border"
+                      }`}
                       placeholder="john@example.com"
                     />
                     {errors.email && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="email-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.email.message}
                       </p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label htmlFor="phone" className="block text-sm font-medium mb-2">
                       Phone <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="phone"
                       type="tel"
                       {...register("phone", {
                         required: "Phone number is required",
                       })}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      autoComplete="tel"
+                      aria-invalid={errors.phone ? true : undefined}
+                      aria-describedby={
+                        errors.phone ? "phone-error" : undefined
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                        errors.phone ? "border-red-500" : "border-border"
+                      }`}
                       placeholder="+880 1XXX XXXXXX"
                     />
                     {errors.phone && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="phone-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.phone.message}
                       </p>
                     )}
@@ -290,68 +323,98 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-bold mb-6">Shipping Address</h2>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">
+                    <label htmlFor="address" className="block text-sm font-medium mb-2">
                       Address <span className="text-red-500">*</span>
                     </label>
                     <input
+                      id="address"
                       {...register("address", {
                         required: "Address is required",
                       })}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                      autoComplete="street-address"
+                      aria-invalid={errors.address ? true : undefined}
+                      aria-describedby={
+                        errors.address ? "address-error" : undefined
+                      }
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                        errors.address ? "border-red-500" : "border-border"
+                      }`}
                       placeholder="House/Flat, Street, Area"
                     />
                     {errors.address && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p id="address-error" className="text-red-500 text-sm mt-1" role="alert">
                         {errors.address.message}
                       </p>
                     )}
                   </div>
                   <div className="grid sm:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">
+                      <label htmlFor="city" className="block text-sm font-medium mb-2">
                         City <span className="text-red-500">*</span>
                       </label>
                       <input
+                        id="city"
                         {...register("city", { required: "City is required" })}
-                        className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                        autoComplete="address-level2"
+                        aria-invalid={errors.city ? true : undefined}
+                        aria-describedby={errors.city ? "city-error" : undefined}
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                          errors.city ? "border-red-500" : "border-border"
+                        }`}
                         placeholder="Dhaka"
                       />
                       {errors.city && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <p id="city-error" className="text-red-500 text-sm mt-1" role="alert">
                           {errors.city.message}
                         </p>
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">
+                      <label htmlFor="district" className="block text-sm font-medium mb-2">
                         District <span className="text-red-500">*</span>
                       </label>
                       <input
+                        id="district"
                         {...register("district", {
                           required: "District is required",
                         })}
-                        className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                        autoComplete="address-level1"
+                        aria-invalid={errors.district ? true : undefined}
+                        aria-describedby={
+                          errors.district ? "district-error" : undefined
+                        }
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                          errors.district ? "border-red-500" : "border-border"
+                        }`}
                         placeholder="Dhaka"
                       />
                       {errors.district && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <p id="district-error" className="text-red-500 text-sm mt-1" role="alert">
                           {errors.district.message}
                         </p>
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">
+                      <label htmlFor="postalCode" className="block text-sm font-medium mb-2">
                         Postal Code <span className="text-red-500">*</span>
                       </label>
                       <input
+                        id="postalCode"
                         {...register("postalCode", {
                           required: "Postal code is required",
                         })}
-                        className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                        autoComplete="postal-code"
+                        aria-invalid={errors.postalCode ? true : undefined}
+                        aria-describedby={
+                          errors.postalCode ? "postalCode-error" : undefined
+                        }
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                          errors.postalCode ? "border-red-500" : "border-border"
+                        }`}
                         placeholder="1207"
                       />
                       {errors.postalCode && (
-                        <p className="text-red-500 text-sm mt-1">
+                        <p id="postalCode-error" className="text-red-500 text-sm mt-1" role="alert">
                           {errors.postalCode.message}
                         </p>
                       )}
@@ -371,6 +434,7 @@ export default function CheckoutPage() {
                         key={method.id}
                         type="button"
                         onClick={() => setSelectedPayment(method.id)}
+                        aria-pressed={selectedPayment === method.id}
                         className={`flex items-center gap-4 p-4 border-2 rounded-lg transition-all ${
                           selectedPayment === method.id
                             ? "border-primary bg-primary/5"
@@ -378,13 +442,18 @@ export default function CheckoutPage() {
                         }`}
                       >
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                          className={`w-12 h-12 rounded-full flex items-center justify-center relative ${
                             selectedPayment === method.id
                               ? "bg-primary text-white"
                               : "bg-gray-100 dark:bg-gray-800"
                           }`}
                         >
-                          <Icon className="w-6 h-6" />
+                          <Icon className="w-6 h-6" aria-hidden="true" />
+                          {selectedPayment === method.id && (
+                            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center">
+                              <CheckCircle2 className="w-3 h-3" aria-hidden="true" />
+                            </span>
+                          )}
                         </div>
                         <div className="text-left">
                           <h3 className="font-semibold">{method.name}</h3>
@@ -404,8 +473,10 @@ export default function CheckoutPage() {
                   Order Notes (Optional)
                 </h2>
                 <textarea
+                  id="orderNotes"
                   {...register("orderNotes")}
                   rows={4}
+                  aria-label="Order notes (optional)"
                   className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
                   placeholder="Any special instructions for your order..."
                 />
@@ -419,6 +490,10 @@ export default function CheckoutPage() {
                     {...register("agreeToTerms", {
                       required: "You must agree to the terms",
                     })}
+                    aria-invalid={errors.agreeToTerms ? true : undefined}
+                    aria-describedby={
+                      errors.agreeToTerms ? "terms-error" : undefined
+                    }
                     className="mt-1 w-4 h-4 text-primary border-border rounded focus:ring-2 focus:ring-primary"
                   />
                   <span className="text-sm">
@@ -439,7 +514,7 @@ export default function CheckoutPage() {
                   </span>
                 </label>
                 {errors.agreeToTerms && (
-                  <p className="text-red-500 text-sm mb-4">
+                  <p id="terms-error" className="text-red-500 text-sm mb-4" role="alert">
                     {errors.agreeToTerms.message}
                   </p>
                 )}
@@ -474,7 +549,7 @@ export default function CheckoutPage() {
                       Processing...
                     </span>
                   ) : (
-                    `Place Order - ৳${getCartTotal().toLocaleString()}`
+                    `Place Order - ${formatBDT(getCartTotal())}`
                   )}
                 </button>
               </div>

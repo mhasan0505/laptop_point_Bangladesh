@@ -1,12 +1,36 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Facebook, Instagram, Linkedin, Music, Youtube } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Linkedin,
+  Music,
+  ShieldCheck,
+  Youtube,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+
+  const paymentMethods = [
+    { src: "/payment_logo/bkash.png", alt: "bKash", name: "bKash" },
+    { src: "/payment_logo/nagad.png", alt: "Nagad", name: "Nagad" },
+    {
+      src: "/payment_logo/mastercard.png",
+      alt: "Mastercard",
+      name: "Mastercard",
+    },
+    { src: "/payment_logo/visa.png", alt: "Visa", name: "Visa" },
+    {
+      src: "/payment_logo/amex.png",
+      alt: "American Express",
+      name: "American Express",
+    },
+    { src: "/payment_logo/dgepay.png", alt: "DGE Pay", name: "DGE Pay" },
+  ];
 
   return (
     <footer className="w-full">
@@ -37,15 +61,15 @@ export default function Footer() {
                     label: "Visit us on Facebook",
                   },
                   {
-                    Icon: Music,
-                    href: "#",
-                    color: "hover:text-sky-500",
-                    label: "Visit us on TikTok",
+                    Icon: Instagram,
+                    href: "https://www.instagram.com/laptop_point.bd/",
+                    color: "hover:text-pink-600",
+                    label: "Visit us on Instagram",
                   },
                   {
-                    Icon: Instagram,
+                    Icon: Music,
                     href: "https://www.tiktok.com/@laptop.point.bd",
-                    color: "hover:text-pink-600",
+                    color: "hover:text-sky-500",
                     label: "Visit us on TikTok",
                   },
                   {
@@ -321,16 +345,48 @@ export default function Footer() {
           </div>
 
           <div className="border-t border-gray-800 pt-8 mt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-gray-300 text-sm">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+              <p className="text-gray-300 text-sm text-center lg:text-left">
                 © {currentYear} Laptop Point BD. All rights reserved. Powered by{" "}
-                <span className="text-yellow-400">Creative Artix </span>
+                <a
+                  href="https://artyx.digital"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                >
+                  <span className="text-yellow-400">Artyx Digital</span>
+                </a>
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                {/* Payment Methods (Placeholder) */}
-                <div className="h-6 w-10 bg-gray-800 rounded"></div>
-                <div className="h-6 w-10 bg-gray-800 rounded"></div>
-                <div className="h-6 w-10 bg-gray-800 rounded"></div>
+              <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                <span className="inline-flex items-center gap-2 text-sm text-gray-400">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  100% Secure Payments
+                </span>
+                <span
+                  className="hidden sm:block w-px h-5 bg-gray-700"
+                  aria-hidden="true"
+                />
+                <div
+                  className="flex items-center gap-2 flex-wrap justify-center"
+                  aria-label="We accept the following payment methods"
+                >
+                  <span className="sr-only">We accept:</span>
+                  {paymentMethods.map(({ src, alt, name }) => (
+                    <div
+                      key={name}
+                      title={`We accept ${name}`}
+                      className="flex h-9 items-center justify-center rounded-md bg-white px-2.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                    >
+                      <Image
+                        src={src}
+                        alt={alt}
+                        width={48}
+                        height={20}
+                        className="h-auto w-auto max-h-5 object-contain"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

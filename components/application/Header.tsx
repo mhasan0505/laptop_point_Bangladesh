@@ -239,7 +239,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/95 shadow-[0_6px_24px_rgba(15,23,42,0.04)] backdrop-blur supports-backdrop-filter:bg-white/90">
-      <div className="border-b border-neutral-200 bg-[#002B60] text-[11px] text-white sm:text-xs">
+      <div className="border-b border-neutral-200 bg-primary text-xs text-white">
         <div className="container mx-auto px-3 sm:px-4">
           <div className="flex min-h-9 items-center justify-between gap-3 py-1.5">
             <p className="hidden truncate lg:block">
@@ -248,21 +248,21 @@ const Header = () => {
             <div className="flex items-center gap-3 text-white sm:gap-5">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1.5 hover:text-neutral-900"
+                className="inline-flex items-center gap-1.5 hover:text-neutral-100"
               >
                 <MapPin className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Store Locator</span>
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1.5 hover:text-neutral-900"
+                className="inline-flex items-center gap-1.5 hover:text-neutral-100"
               >
                 <Truck className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Track Your Order</span>
               </Link>
               <a
                 href="tel:+8801612182408"
-                className="inline-flex items-center gap-1.5 hover:text-neutral-900"
+                className="inline-flex items-center gap-1.5 hover:text-neutral-100"
               >
                 <Phone className="h-3.5 w-3.5" />
                 <span className="hidden md:inline">+880 1612-182408</span>
@@ -270,7 +270,7 @@ const Header = () => {
               <Link
                 href="https://www.facebook.com/laptoppointbd"
                 target="_blank"
-                className="hover:text-neutral-900"
+                className="hover:text-neutral-100"
                 aria-label="Facebook"
               >
                 <Facebook className="h-3.5 w-3.5" />
@@ -278,7 +278,7 @@ const Header = () => {
               <Link
                 href="https://www.youtube.com/@LaptopPointBD"
                 target="_blank"
-                className="hover:text-neutral-900"
+                className="hover:text-neutral-100"
                 aria-label="Youtube"
               >
                 <Youtube className="h-3.5 w-3.5" />
@@ -667,7 +667,7 @@ const Header = () => {
                       <DropdownMenuSubTrigger className="flex cursor-pointer items-center justify-between rounded-none px-4 py-3 text-sm font-medium text-neutral-700 focus:bg-neutral-50 focus:text-neutral-900 data-[state=open]:bg-neutral-50">
                         <span>{item.name}</span>
                         {item.badge && (
-                          <span className="ml-2 rounded bg-yellow-400 px-1.5 py-0.5 text-[10px] font-bold text-neutral-900">
+                          <span className="ml-2 rounded bg-yellow-400 px-1.5 py-0.5 text-xs font-bold text-neutral-900">
                             {item.badge}
                           </span>
                         )}
@@ -681,7 +681,7 @@ const Header = () => {
                             {si > 0 && (
                               <DropdownMenuSeparator className="my-0" />
                             )}
-                            <DropdownMenuLabel className="px-4 pb-1 pt-3 text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+                            <DropdownMenuLabel className="px-4 pb-1 pt-3 text-xs font-bold uppercase tracking-wider text-neutral-400">
                               {section.title}
                             </DropdownMenuLabel>
                             {section.items.map((subItem) => (
@@ -710,7 +710,7 @@ const Header = () => {
                       >
                         <span>{item.name}</span>
                         {item.badge && (
-                          <span className="rounded bg-yellow-400 px-1.5 py-0.5 text-[10px] font-bold text-neutral-900">
+                          <span className="rounded bg-yellow-400 px-1.5 py-0.5 text-xs font-bold text-neutral-900">
                             {item.badge}
                           </span>
                         )}
@@ -813,8 +813,8 @@ const NavItem = ({
     >
       <Link
         href={link.href}
-        className={`flex items-center rounded-md px-3 py-2 text-[13px] font-semibold tracking-[0.01em] transition-colors hover:bg-neutral-50 ${
-          isHovered ? "text-yellow-700" : "text-neutral-700"
+        className={`flex items-center rounded-md px-3 py-2 text-sm font-semibold tracking-[0.01em] transition-colors hover:bg-neutral-50 ${
+          isHovered ? "text-primary" : "text-neutral-700"
         }`}
       >
         {link.name}
@@ -826,7 +826,7 @@ const NavItem = ({
           />
         )}
         {link.badge && (
-          <span className="ml-2 px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-red-500 text-white leading-none">
+          <span className="ml-2 px-1.5 py-0.5 text-xs font-bold rounded-full bg-red-500 text-white leading-none">
             {link.badge}
           </span>
         )}
