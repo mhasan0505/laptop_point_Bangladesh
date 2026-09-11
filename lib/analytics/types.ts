@@ -11,7 +11,7 @@ export interface Trend {
 
 export type MetricUnit = "currency" | "count" | "percentage" | "ratio";
 
-/** A single metric paired with its period-over-period trend. */
+/** A single metric paired with its period-over-period trend and optional sparkline. */
 export interface UnifiedMetric {
   key: string;
   label: string;
@@ -20,6 +20,7 @@ export interface UnifiedMetric {
   unit?: MetricUnit;
   source?: "store" | "google-analytics" | "search-console" | "meta-ads";
   trend: Trend;
+  sparkline?: number[];
 }
 
 /** One daily data point for time-series charts. */
@@ -29,12 +30,13 @@ export interface DailyPoint {
   value: number;
 }
 
-/** One line series for the recharts line chart. */
+/** One line/area series for recharts. */
 export interface Series {
   key: string;
   label: string;
   unit: "currency" | "count";
   points: DailyPoint[];
+  color?: string;
 }
 
 export interface AnalyticsSummary {
@@ -50,6 +52,7 @@ export interface SourceStatus {
   configured: boolean;
   status: "connected" | "not_configured" | "error";
   error?: string;
+  details?: string;
 }
 
 export interface TopSellingProduct {
@@ -87,6 +90,28 @@ export interface StoreAnalyticsSummary {
   series: Series[];
 }
 
+export interface FunnelStage {
+  id: string;
+  label: string;
+  subtitle: string;
+  count: number;
+  rate: number; // percentage vs first stage
+  stageRate: number; // step-to-step conversion rate %
+  source: "search-console" | "google-analytics" | "store" | "meta-ads";
+  color: string;
+}
+
+export interface ChannelBreakdown {
+  id: string;
+  label: string;
+  visitors: number;
+  orders: number;
+  revenue: number;
+  percentage: number;
+  color: string;
+  source: "search-console" | "google-analytics" | "store" | "meta-ads";
+}
+
 export interface UnifiedDashboard {
   period: { start: string; end: string; days: number };
   fetchedAt: string;
@@ -94,4 +119,7 @@ export interface UnifiedDashboard {
   series: Series[];
   sources: SourceStatus[];
   storeSummary: StoreAnalyticsSummary;
+  funnel: FunnelStage[];
+  channelBreakdown: ChannelBreakdown[];
+  isSimulated: boolean;
 }

@@ -143,6 +143,102 @@ export function resolveGoogleCredentials(
   return null;
 }
 
+export interface CredentialDiagnostics {
+  configured: boolean;
+  valid: boolean;
+  type?: "inline_json" | "file";
+  clientEmail?: string;
+  projectId?: string;
+  error?: string;
+}
+
+export function checkGoogleCredentialsStatus(
+  dedicatedInlineEnv?: string,
+): CredentialDiagnostics {
+  const inline =
+    dedicatedInlineEnv ??
+    process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON ??
+    process.env.GA_SERVICE_ACCOUNT ??
+    process.env.GSC_SERVICE_ACCOUNT;
+
+  if (inline && inline.trim().length > 0) {
+    try {
+      const parsed = JSON.parse(inline) as GoogleServiceAccount;
+      if (parsed.client_email && parsed.private_key) {
+        return {
+          configured: true,
+          valid: true,
+          type: "inline_json",
+          clientEmail: parsed.client_email,
+          projectId: parsed.project_id,
+        };
+      }
+      return {
+        configured: true,
+        valid: false,
+        type: "inline_json",
+        error: "JSON is missing client_email or private_key",
+      };
+    } catch {
+      return {
+        configured: true,
+        valid: false,
+        type: "inline_json",
+        error: "Malformed JSON string in credentials environment variable",
+      };
+    }
+  }
+
+  const filePath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  if (filePath && typeof filePath === "string") {
+    const resolvedPath = path.isAbsolute(filePath)
+      ? filePath
+      : path.resolve(process.cwd(), filePath);
+
+    if (!fs.existsSync(resolvedPath)) {
+      return {
+        configured: true,
+        valid: false,
+        type: "file",
+        error: `Credential file not found at: ${filePath}`,
+      };
+    }
+
+    try {
+      const content = fs.readFileSync(resolvedPath, "utf8");
+      const parsed = JSON.parse(content) as GoogleServiceAccount;
+      if (parsed.client_email && parsed.private_key) {
+        return {
+          configured: true,
+          valid: true,
+          type: "file",
+          clientEmail: parsed.client_email,
+          projectId: parsed.project_id,
+        };
+      }
+      return {
+        configured: true,
+        valid: false,
+        type: "file",
+        error: "JSON file is missing client_email or private_key",
+      };
+    } catch {
+      return {
+        configured: true,
+        valid: false,
+        type: "file",
+        error: "Credential file does not contain valid JSON",
+      };
+    }
+  }
+
+  return {
+    configured: false,
+    valid: false,
+    error: "No Google Service Account credentials configured",
+  };
+}
+
 function sanitizeServiceAccount(account: GoogleServiceAccount): GoogleServiceAccount {
   if (typeof account.private_key === "string") {
     // Replace escaped \n with actual newline characters

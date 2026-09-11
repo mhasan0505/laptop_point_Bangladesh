@@ -5,18 +5,19 @@ import { fetchUnifiedAnalytics, type UnifiedDashboard } from "@/lib/analytics";
 export const revalidate = 1800;
 
 interface PageProps {
-  searchParams: Promise<{ days?: string; range?: string }>;
+  searchParams: Promise<{ days?: string; range?: string; simulate?: string }>;
 }
 
 export default async function AnalyticsPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
   const daysParam = resolvedParams?.days || resolvedParams?.range || "30";
+  const simulateParam = resolvedParams?.simulate === "true";
 
   let data: UnifiedDashboard | null = null;
   let fetchError: unknown = null;
 
   try {
-    data = await fetchUnifiedAnalytics(daysParam);
+    data = await fetchUnifiedAnalytics(daysParam, simulateParam);
   } catch (error) {
     console.error("[AnalyticsPage] Error loading dashboard:", error);
     fetchError = error;

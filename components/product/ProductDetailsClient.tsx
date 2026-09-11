@@ -1,5 +1,6 @@
 "use client";
 
+import { trackAddToCart, trackViewItem } from "@/lib/analytics/tracker";
 import { Button } from "@/components/ui/button";
 import ProductsCard from "@/components/ui/ProductsCard";
 import { useCart } from "@/contexts/CartContext";
@@ -117,6 +118,14 @@ export default function ProductDetailsClient({
     recent = recent.slice(0, 10);
 
     localStorage.setItem("recentlyViewed", JSON.stringify(recent));
+
+    // Track product view in GA4 & Meta Pixel
+    trackViewItem({
+      id: product.id.toString(),
+      name: product.name,
+      price: product.price,
+      category: product.category || product.brand || "Laptop",
+    });
   }, [product]);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -150,6 +159,15 @@ export default function ProductDetailsClient({
       },
       quantity,
     );
+
+    // Track add to cart event in GA4 & Meta Pixel
+    trackAddToCart({
+      id: product.id.toString(),
+      name: product.name,
+      price: product.price,
+      quantity,
+      category: product.category || product.brand || "Laptop",
+    });
   };
 
   const isWishlisted = isInWishlist(product.id);

@@ -1,0 +1,338 @@
+/* ==========================================================================
+   ADMIN HIGH-DENSITY SAAS TYPOGRAPHY SYSTEM
+   Scoped exclusively to the Admin Dashboard (.admin-high-density)
+   Modeled after Google Search Console, Google Analytics 4 & Meta Ads Manager
+
+   Architecture:
+   1. Base Setup: 14px base typography container with system font stack / Inter.
+   2. Numerical Alignment: Enforces tabular numbers (tnum / tabular-nums) globally
+      across all admin tables, cards, metrics, and inputs.
+   3. Scale: Minor Second custom scale (~1.067 - 1.125) emphasizing weight,
+      tabular alignment, and alpha contrast over large size leaps.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS VARIABLES (SCOPED DESIGN TOKENS)
+   -------------------------------------------------------------------------- */
+.admin-high-density {
+  /* High-Performance Font Stacks */
+  --admin-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --admin-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Global Numeric Alignment: Tabular Numerals & Discretionary Legibility */
+  --font-feature-settings: "tnum" 1, "cv05" 1, "cv11" 1, "ss01" 1, "calt" 1;
+  --font-variant-numeric: tabular-nums;
+
+  /* 
+   * Minor Second High-Density Scale (Base: 14px)
+   * Prevents large vertical jumps, optimizing for compact dashboard density
+   */
+  --font-size-2xs: 10px;       /* 10px / Micro labels */
+  --font-size-xs:  11px;       /* 11px / Captions & table headers */
+  --font-size-sm:  12px;       /* 12px / Secondary body & metadata */
+  --font-size-base: 14px;      /* 14px / Root standard text */
+  --font-size-md:  15px;       /* 15px / Sub-section titles */
+  --font-size-lg:  16px;       /* 16px / Section headers */
+  --font-size-xl:  18px;       /* 18px / Page headers */
+  --font-size-2xl: 20px;       /* 20px / Standard KPI metrics */
+  --font-size-3xl: 24px;       /* 24px / Display hero metrics */
+
+  /* Line Heights (Tightly bounded for high-density tables & cards) */
+  --line-height-none: 1;
+  --line-height-tight: 1.15;
+  --line-height-compact: 1.25;
+  --line-height-snug: 1.35;
+  --line-height-normal: 1.43;  /* 20px line on 14px text */
+  --line-height-relaxed: 1.5;
+
+  /* Tracking (Letter Spacing) */
+  --tracking-tighter: -0.025em;
+  --tracking-tight:   -0.015em;
+  --tracking-normal:   0em;
+  --tracking-wide:     0.015em;
+  --tracking-wider:    0.035em;
+  --tracking-widest:   0.06em;
+
+  /* Hierarchy Colors (Preserves contrast across light and dark modes) */
+  --text-primary:   rgba(15, 23, 42, 0.95);
+  --text-secondary: rgba(15, 23, 42, 0.75);
+  --text-tertiary:  rgba(15, 23, 42, 0.55);
+  --text-disabled:  rgba(15, 23, 42, 0.35);
+
+  /* Container Reset */
+  font-family: var(--admin-font-sans);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-normal);
+  color: var(--text-primary);
+  font-feature-settings: var(--font-feature-settings);
+  font-variant-numeric: var(--font-variant-numeric);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark Mode Token Adaptations */
+@media (prefers-color-scheme: dark) {
+  .admin-high-density {
+    --text-primary:   rgba(248, 250, 252, 0.96);
+    --text-secondary: rgba(248, 250, 252, 0.72);
+    --text-tertiary:  rgba(248, 250, 252, 0.48);
+    --text-disabled:  rgba(248, 250, 252, 0.28);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. ELEMENT OVERRIDES (AUTOMATIC INHERITANCE INSIDE ADMIN)
+   -------------------------------------------------------------------------- */
+
+/* Headings: Tight vertical rhythm, constrained scale */
+.admin-high-density h1,
+.admin-high-density h2,
+.admin-high-density h3,
+.admin-high-density h4,
+.admin-high-density h5,
+.admin-high-density h6 {
+  margin: 0;
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.admin-high-density h1 {
+  font-size: var(--font-size-2xl); /* 20px */
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+.admin-high-density h2 {
+  font-size: var(--font-size-xl);  /* 18px */
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-compact);
+}
+
+.admin-high-density h3 {
+  font-size: var(--font-size-lg);  /* 16px */
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+}
+
+.admin-high-density h4 {
+  font-size: var(--font-size-md);  /* 15px */
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-snug);
+}
+
+.admin-high-density h5 {
+  font-size: var(--font-size-base);/* 14px */
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-normal);
+}
+
+.admin-high-density h6 {
+  font-size: var(--font-size-sm);  /* 12px */
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  color: var(--text-tertiary);
+}
+
+/* Tables: High-density rows & strict tabular numeral alignment */
+.admin-high-density table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.admin-high-density th {
+  font-size: var(--font-size-xs);  /* 11px */
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-compact);
+  color: var(--text-tertiary);
+  text-align: left;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.admin-high-density td {
+  font-size: var(--font-size-base);/* 14px */
+  line-height: var(--line-height-compact);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-high-density td[data-numeric="true"],
+.admin-high-density th[data-numeric="true"],
+.admin-high-density .cell-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Form Controls & Inputs */
+.admin-high-density input,
+.admin-high-density select,
+.admin-high-density textarea,
+.admin-high-density button {
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-compact);
+  font-feature-settings: var(--font-feature-settings);
+  font-variant-numeric: var(--font-variant-numeric);
+}
+
+.admin-high-density input[type="number"],
+.admin-high-density input[type="text"],
+.admin-high-density input[type="date"],
+.admin-high-density input[type="datetime-local"] {
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-high-density input::placeholder,
+.admin-high-density textarea::placeholder {
+  color: var(--text-disabled);
+}
+
+/* Code, Monospace, and Debugger Tokens */
+.admin-high-density code,
+.admin-high-density kbd,
+.admin-high-density samp,
+.admin-high-density pre {
+  font-family: var(--admin-font-mono);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-normal);
+}
+
+/* --------------------------------------------------------------------------
+   3. SEMANTIC UTILITY CLASSES (HIGH-DENSITY DASHBOARD TOKENS)
+   -------------------------------------------------------------------------- */
+
+/* Metric Displays */
+.admin-high-density .text-display {
+  font-size: var(--font-size-3xl) !important; /* 24px */
+  font-weight: var(--font-weight-bold) !important;
+  line-height: var(--line-height-none) !important;
+  letter-spacing: var(--tracking-tighter) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.admin-high-density .text-metric {
+  font-size: var(--font-size-2xl) !important; /* 20px */
+  font-weight: var(--font-weight-bold) !important;
+  line-height: var(--line-height-tight) !important;
+  letter-spacing: var(--tracking-tight) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.admin-high-density .text-metric-sm {
+  font-size: var(--font-size-lg) !important;  /* 16px */
+  font-weight: var(--font-weight-semibold) !important;
+  line-height: var(--line-height-tight) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* Page & Section Headers */
+.admin-high-density .text-page-title {
+  font-size: var(--font-size-xl) !important;  /* 18px */
+  font-weight: var(--font-weight-bold) !important;
+  line-height: var(--line-height-tight) !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-high-density .text-section-title {
+  font-size: var(--font-size-md) !important;  /* 15px */
+  font-weight: var(--font-weight-semibold) !important;
+  line-height: var(--line-height-snug) !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-high-density .text-widget-header {
+  font-size: var(--font-size-base) !important;/* 14px */
+  font-weight: var(--font-weight-semibold) !important;
+  line-height: var(--line-height-snug) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Body Scales */
+.admin-high-density .text-body {
+  font-size: var(--font-size-base) !important;/* 14px */
+  font-weight: var(--font-weight-regular) !important;
+  line-height: var(--line-height-normal) !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-high-density .text-body-secondary {
+  font-size: var(--font-size-base) !important;
+  font-weight: var(--font-weight-regular) !important;
+  line-height: var(--line-height-normal) !important;
+  color: var(--text-secondary) !important;
+}
+
+.admin-high-density .text-body-sm {
+  font-size: var(--font-size-sm) !important;  /* 12px */
+  font-weight: var(--font-weight-regular) !important;
+  line-height: var(--line-height-compact) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Metadata & Micro-Copy */
+.admin-high-density .text-caption {
+  font-size: var(--font-size-xs) !important;  /* 11px */
+  font-weight: var(--font-weight-medium) !important;
+  line-height: var(--line-height-compact) !important;
+  color: var(--text-tertiary) !important;
+}
+
+.admin-high-density .text-micro {
+  font-size: var(--font-size-2xs) !important; /* 10px */
+  font-weight: var(--font-weight-medium) !important;
+  line-height: var(--line-height-compact) !important;
+  color: var(--text-tertiary) !important;
+}
+
+/* Dense Column & Header Utility */
+.admin-high-density .text-table-header {
+  font-size: var(--font-size-xs) !important;  /* 11px */
+  font-weight: var(--font-weight-semibold) !important;
+  line-height: var(--line-height-compact) !important;
+  color: var(--text-tertiary) !important;
+  text-transform: uppercase !important;
+  letter-spacing: var(--tracking-wider) !important;
+}
+
+.admin-high-density .text-badge {
+  font-size: var(--font-size-2xs) !important; /* 10px */
+  font-weight: var(--font-weight-bold) !important;
+  line-height: var(--line-height-none) !important;
+  letter-spacing: var(--tracking-wide) !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. NUMERICAL ALIGNMENT & HELPERS
+   -------------------------------------------------------------------------- */
+.admin-high-density .tabular-nums,
+.admin-high-density [data-tabular="true"] {
+  font-variant-numeric: tabular-nums !important;
+  font-feature-settings: "tnum" 1 !important;
+}
+
+.admin-high-density .proportional-nums {
+  font-variant-numeric: proportional-nums !important;
+  font-feature-settings: "tnum" 0 !important;
+}
+
+.admin-high-density .truncate-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

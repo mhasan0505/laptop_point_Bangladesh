@@ -6,11 +6,9 @@ event. Mirrors the codebase's existing `lib/fpixel.js` conventions.
 
 ---
 
-## 1. Load GTM (once, in `<head>`)
+## 1. Load GTM (Loaded in `app/layout.tsx`)
 
-This storefront currently ships GA4 (`gtag.js`) and the Meta Pixel directly in
-`app/layout.tsx`. To route events through GTM, add the container snippet in the
-`<head>` of `app/layout.tsx`. Replace `GTM-XXXXXXX` with your container ID.
+The container `GTM-KXKXGWF6` is now integrated directly into `app/layout.tsx` (via `NEXT_PUBLIC_GTM_ID`), with `<Script>` in `<head>` and `<noscript><iframe ... /></noscript>` in `<body>`:
 
 ```html
 <!-- Google Tag Manager -->
@@ -24,9 +22,13 @@ This storefront currently ships GA4 (`gtag.js`) and the Meta Pixel directly in
     j.async = true;
     j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
     f.parentNode.insertBefore(j, f);
-  })(window, document, "script", "dataLayer", "GTM-XXXXXXX");
+  })(window, document, "script", "dataLayer", "GTM-KXKXGWF6");
 </script>
 <!-- End Google Tag Manager -->
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KXKXGWF6"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 ```
 
 > **Heads-up:** if you keep the existing `gtag('config', ...)` and `fbq('init',

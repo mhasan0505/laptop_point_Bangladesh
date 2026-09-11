@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
     const rangeParam = searchParams.get("range") || searchParams.get("days") || "30";
     const days = rangeParam.replace("d", "");
     const shouldRefresh = searchParams.get("refresh") === "true";
+    const shouldSimulate = searchParams.get("simulate") === "true";
 
     if (shouldRefresh) {
       try {
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const data = await fetchUnifiedAnalytics(days);
+    const data = await fetchUnifiedAnalytics(days, shouldSimulate);
     return NextResponse.json(data, {
       headers: {
         "Cache-Control": shouldRefresh

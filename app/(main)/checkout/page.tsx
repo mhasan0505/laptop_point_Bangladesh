@@ -2,6 +2,7 @@
 
 import OrderSummary from "@/components/application/OrderSummary";
 import { useCart } from "@/contexts/CartContext";
+import { trackInitiateCheckout, trackPurchase } from "@/lib/analytics/tracker";
 import { formatBDT } from "@/lib/format";
 import { CheckoutFormData, PaymentMethod } from "@/types/cart";
 import {
@@ -14,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function CheckoutPage() {
@@ -26,6 +27,20 @@ export default function CheckoutPage() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      trackInitiateCheckout({
+        items: items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        totalValue: getCartTotal(),
+      });
+    }
+  }, []);
 
   const {
     register,
@@ -78,6 +93,19 @@ export default function CheckoutPage() {
 
       setOrderNumber(result.orderNumber ?? null);
       setOrderPlaced(true);
+
+      // Track successful purchase to GA4 & Meta Pixel
+      trackPurchase({
+        orderId: result.orderNumber || `LP-${Date.now()}`,
+        items: items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        totalValue: getCartTotal(),
+      });
+
       clearCart();
 
       // Redirect to home after 5 seconds

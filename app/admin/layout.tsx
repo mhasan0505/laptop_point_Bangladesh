@@ -8,6 +8,7 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
+import "./admin-density.css";
 
 function AdminBrandLink({
   onClick,
@@ -49,15 +50,15 @@ function AdminShell({ children }: { children: ReactNode }) {
     }
   }, [isLoginPage, isLoading, isAuthenticated, router]);
 
-  // Login page renders without the shell
+  // Login page renders with high-density scope
   if (isLoginPage) {
-    return <>{children}</>;
+    return <div className="admin-high-density min-h-screen">{children}</div>;
   }
 
   // Still checking auth state or not yet authenticated — show spinner
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="admin-high-density min-h-screen flex items-center justify-center bg-gray-50">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
       </div>
     );
@@ -69,7 +70,7 @@ function AdminShell({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+    <div className="admin-high-density min-h-screen bg-gray-50 flex flex-col font-sans">
       {/* Admin Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">

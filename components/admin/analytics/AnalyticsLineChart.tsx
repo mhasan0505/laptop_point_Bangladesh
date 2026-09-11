@@ -1,16 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import type { Series } from "@/lib/analytics/types";
+import { formatBDT } from "@/lib/format";
 import {
+  Area,
+  AreaChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import type { Series } from "@/lib/analytics/types";
+import { useId, useMemo, useState } from "react";
 
 function formatCurrencyAxis(value: number): string {
   if (value >= 1_000_000) return `৳${(value / 1_000_000).toFixed(1)}M`;
@@ -26,33 +27,90 @@ function formatCountAxis(value: number): string {
 
 const SERIES_COLORS: Record<string, string> = {
   store_revenue: "#2563eb", // blue
-  store_orders: "#8b5cf6", // violet
+  store_orders_count: "#8b5cf6", // violet
+  store_orders: "#8b5cf6",
   ga_revenue: "#10b981", // emerald
   activeUsers: "#f59e0b", // amber
   organic_clicks: "#06b6d4", // cyan
   ad_spend: "#ec4899", // pink
 };
 
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+  isCurrency: boolean;
+}
+
+function CustomTooltip({
+  active,
+  payload,
+  label,
+  isCurrency,
+}: CustomTooltipProps) {
+  if (!active || !payload || !payload.length) return null;
+
+  return (
+    <div className="rounded-xl border border-gray-100 bg-white/95 p-3.5 shadow-xl backdrop-blur-md text-xs space-y-2 min-w-[170px]">
+      <p className="font-bold text-gray-900 border-b border-gray-100 pb-1.5">
+        {label}
+      </p>
+      <div className="space-y-1.5">
+        {payload.map((entry: any) => {
+          const color = entry.color || entry.stroke || "#3b82f6";
+          const isCurr =
+            entry.name?.toLowerCase().includes("revenue") ||
+            entry.name?.toLowerCase().includes("spend");
+          const formattedVal = isCurr
+            ? formatBDT(entry.value)
+            : entry.value.toLocaleString();
+
+          return (
+            <div
+              key={entry.dataKey}
+              className="flex items-center justify-between gap-3"
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className="h-2 w-2 rounded-full shrink-0"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="text-gray-600 font-medium truncate max-w-[130px]">
+                  {entry.name}
+                </span>
+              </div>
+              <span className="font-bold text-gray-900 font-mono">
+                {formattedVal}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function AnalyticsLineChart({
   series,
-  height = 300,
+  height = 320,
 }: {
   series: Series[];
   height?: number;
 }) {
+  const chartId = useId();
   const hasCurrencySeries = series.some((s) => s.unit === "currency");
   const hasCountSeries = series.some((s) => s.unit === "count");
 
-  // View mode: "financial" | "volume" | "all"
-  const [viewMode, setViewMode] = useState<"financial" | "volume" | "all">(
-    hasCurrencySeries ? "financial" : "volume",
+  // View mode: "financial" | "traffic" | "all"
+  const [viewMode, setViewMode] = useState<"financial" | "traffic" | "all">(
+    hasCurrencySeries ? "financial" : "traffic",
   );
 
   const filteredSeries = useMemo(() => {
     if (viewMode === "financial") {
       return series.filter((s) => s.unit === "currency");
     }
-    if (viewMode === "volume") {
+    if (viewMode === "traffic") {
       return series.filter((s) => s.unit === "count");
     }
     return series;
@@ -60,6 +118,15 @@ export default function AnalyticsLineChart({
 
   const [hiddenKeys, setHiddenKeys] = useState<Set<string>>(new Set());
   const activeSeries = filteredSeries.filter((s) => !hiddenKeys.has(s.key));
+
+  const toggleSeries = (key: string) => {
+    setHiddenKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
 
   const mergedData = useMemo(() => {
     const byLabel = new Map<string, Record<string, number>>();
@@ -85,150 +152,152 @@ export default function AnalyticsLineChart({
     <div className="space-y-4">
       {/* Category View Mode Selector */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
-        <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 text-xs font-medium text-gray-600">
+        <div className="flex items-center gap-1 rounded-xl bg-gray-100/80 p-1 text-xs font-semibold text-gray-600">
           {hasCurrencySeries && (
             <button
               type="button"
               onClick={() => setViewMode("financial")}
-              className={`rounded-md px-3 py-1 transition-all ${
+              className={`rounded-lg px-3.5 py-1.5 transition-all ${
                 viewMode === "financial"
-                  ? "bg-white text-gray-900 shadow-sm"
+                  ? "bg-white text-gray-900 shadow-sm font-bold"
                   : "hover:text-gray-900"
               }`}
             >
-              Financial (Revenue &amp; Spend)
+              Revenue &amp; Ad Spend
             </button>
           )}
           {hasCountSeries && (
             <button
               type="button"
-              onClick={() => setViewMode("volume")}
-              className={`rounded-md px-3 py-1 transition-all ${
-                viewMode === "volume"
-                  ? "bg-white text-gray-900 shadow-sm"
+              onClick={() => setViewMode("traffic")}
+              className={`rounded-lg px-3.5 py-1.5 transition-all ${
+                viewMode === "traffic"
+                  ? "bg-white text-gray-900 shadow-sm font-bold"
                   : "hover:text-gray-900"
               }`}
             >
-              Traffic &amp; Order Volume
+              Traffic &amp; User Volume
             </button>
           )}
           {hasCurrencySeries && hasCountSeries && (
             <button
               type="button"
               onClick={() => setViewMode("all")}
-              className={`rounded-md px-3 py-1 transition-all ${
+              className={`rounded-lg px-3.5 py-1.5 transition-all ${
                 viewMode === "all"
-                  ? "bg-white text-gray-900 shadow-sm"
+                  ? "bg-white text-gray-900 shadow-sm font-bold"
                   : "hover:text-gray-900"
               }`}
             >
-              All Series
+              All Signals
             </button>
           )}
         </div>
 
         <span className="text-xs text-gray-400">
-          Showing {activeSeries.length} of {filteredSeries.length} series
+          Interactive multi-series telemetry
         </span>
       </div>
 
       {activeSeries.length === 0 ? (
         <div className="flex h-64 items-center justify-center text-sm text-gray-400">
-          No series selected. Click the buttons below to toggle lines on.
+          All series are toggled off. Click below to enable.
         </div>
       ) : (
         <div className="w-full" style={{ height }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={mergedData} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
-              <CartesianGrid stroke="#f1f5f9" strokeDasharray="3 3" vertical={false} />
+            <AreaChart
+              data={mergedData}
+              margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+            >
+              <defs>
+                {activeSeries.map((s) => {
+                  const color =
+                    s.color || SERIES_COLORS[s.key] || "#2563eb";
+                  return (
+                    <linearGradient
+                      key={s.key}
+                      id={`gradient-${s.key}-${chartId}`}
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop offset="5%" stopColor={color} stopOpacity={0.25} />
+                      <stop offset="95%" stopColor={color} stopOpacity={0.0} />
+                    </linearGradient>
+                  );
+                })}
+              </defs>
+
+              <CartesianGrid
+                strokeDasharray="3 3"
+                vertical={false}
+                stroke="#f1f5f9"
+              />
+
               <XAxis
                 dataKey="label"
-                tick={{ fill: "#64748b", fontSize: 11 }}
+                tick={{ fontSize: 11, fill: "#64748b" }}
+                tickLine={false}
                 axisLine={{ stroke: "#e2e8f0" }}
-                tickLine={false}
-                minTickGap={28}
               />
+
               <YAxis
-                tick={{ fill: "#64748b", fontSize: 11 }}
-                axisLine={false}
-                tickLine={false}
                 tickFormatter={axisFormatter}
-                width={56}
+                tick={{ fontSize: 11, fill: "#64748b" }}
+                tickLine={false}
+                axisLine={{ stroke: "#e2e8f0" }}
               />
+
               <Tooltip
-                contentStyle={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "0.75rem",
-                  boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
-                  fontSize: "0.8125rem",
-                  padding: "0.5rem 0.75rem",
-                }}
-                labelStyle={{ fontWeight: 600, color: "#0f172a", marginBottom: "0.25rem" }}
-                formatter={(value, name) => {
-                  const val = Number(value || 0);
-                  const matchedSeries = series.find((s) => s.label === name || s.key === name);
-                  const formatted =
-                    matchedSeries?.unit === "currency"
-                      ? `৳${Math.round(val).toLocaleString()}`
-                      : Math.round(val).toLocaleString();
-                  return [formatted, matchedSeries?.label ?? name];
-                }}
+                content={<CustomTooltip isCurrency={isCurrencyMode} />}
               />
+
               {activeSeries.map((s) => {
-                const color = SERIES_COLORS[s.key] || "#2563eb";
+                const color =
+                  s.color || SERIES_COLORS[s.key] || "#2563eb";
                 return (
-                  <Line
+                  <Area
                     key={s.key}
                     type="monotone"
                     dataKey={s.key}
                     name={s.label}
                     stroke={color}
-                    strokeWidth={2.5}
-                    dot={false}
-                    activeDot={{ r: 5, fill: color, stroke: "#ffffff", strokeWidth: 2 }}
-                    animationDuration={500}
+                    strokeWidth={2.2}
+                    fillOpacity={1}
+                    fill={`url(#gradient-${s.key}-${chartId})`}
+                    activeDot={{ r: 5, strokeWidth: 2, stroke: "#fff" }}
                   />
                 );
               })}
-            </LineChart>
+            </AreaChart>
           </ResponsiveContainer>
         </div>
       )}
 
-      {/* Interactive Legend Toggles */}
-      <div className="flex flex-wrap items-center gap-2 pt-1">
+      {/* Series Toggle Controls */}
+      <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-100">
         {filteredSeries.map((s) => {
-          const isVisible = !hiddenKeys.has(s.key);
-          const color = SERIES_COLORS[s.key] || "#2563eb";
+          const isHidden = hiddenKeys.has(s.key);
+          const color = s.color || SERIES_COLORS[s.key] || "#2563eb";
 
           return (
             <button
               key={s.key}
               type="button"
-              onClick={() =>
-                setHiddenKeys((prev) => {
-                  const next = new Set(prev);
-                  if (next.has(s.key)) next.delete(s.key);
-                  else next.add(s.key);
-                  return next;
-                })
-              }
-              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-all ${
-                isVisible
-                  ? "border-gray-200 bg-white text-gray-800 shadow-sm hover:border-gray-300"
-                  : "border-gray-200 bg-gray-50 text-gray-400 opacity-60 hover:opacity-100"
+              onClick={() => toggleSeries(s.key)}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold transition-all ${
+                isHidden
+                  ? "border-gray-200 bg-gray-100/60 text-gray-400 opacity-60"
+                  : "border-gray-200 bg-white text-gray-800 shadow-xs hover:border-gray-300"
               }`}
-              aria-pressed={isVisible}
             >
               <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: isVisible ? color : "#cbd5e1" }}
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: isHidden ? "#94a3b8" : color }}
               />
-              {s.label}
-              <span className="text-[10px] text-gray-400">
-                ({s.unit === "currency" ? "BDT" : "Count"})
-              </span>
+              <span>{s.label}</span>
             </button>
           );
         })}
