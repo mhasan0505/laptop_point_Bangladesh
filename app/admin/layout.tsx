@@ -4,6 +4,7 @@ import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AdminAuthProvider, useAdminAuth } from "@/contexts/AdminAuthContext";
+import { ToastProvider } from "@/contexts/ToastContext";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -79,7 +80,11 @@ function AdminShell({ children }: { children: ReactNode }) {
               {/* Mobile Menu Trigger */}
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="md:hidden">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="md:hidden text-gray-700 hover:text-black"
+                  >
                     <Menu className="w-5 h-5" />
                     <span className="sr-only">Toggle menu</span>
                   </Button>
@@ -100,14 +105,27 @@ function AdminShell({ children }: { children: ReactNode }) {
 
             <div className="flex items-center space-x-2 md:space-x-4">
               <Link href="/">
-                <Button variant="outline" size="sm" className="hidden md:flex">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hidden md:flex text-gray-700 hover:text-black hover:bg-gray-100 border-gray-300 bg-white font-medium"
+                >
                   View Website
                 </Button>
-                <Button variant="outline" size="sm" className="md:hidden">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="md:hidden text-gray-700 hover:text-black hover:bg-gray-100 border-gray-300 bg-white font-medium"
+                >
                   Site
                 </Button>
               </Link>
-              <Button variant="outline" size="sm" onClick={handleLogout}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleLogout}
+                className="text-gray-700 hover:text-black hover:bg-gray-100 border-gray-300 bg-white font-medium"
+              >
                 Logout
               </Button>
             </div>
@@ -138,7 +156,9 @@ function AdminShell({ children }: { children: ReactNode }) {
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <AdminAuthProvider>
-      <AdminShell>{children}</AdminShell>
+      <ToastProvider>
+        <AdminShell>{children}</AdminShell>
+      </ToastProvider>
     </AdminAuthProvider>
   );
 }

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "pnpm validate:images && prisma generate && next build",
+    "build": "pnpm validate:images && prisma generate && cross-env NODE_OPTIONS=--max-old-space-size=4096 next build",
     "start": "next start",
     "postinstall": "prisma generate",
     "lint": "eslint",
@@ -53,6 +53,7 @@
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.27",
     "baseline-browser-mapping": "^2.10.0",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.3.1",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.1.6",

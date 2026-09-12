@@ -57,11 +57,10 @@ const ratingFor = (name: string): number =>
 const reviewsFor = (name: string): number =>
   60 + (hashString(`${name}:reviews`) % 440); // 60 – 499
 
-// Map each product
-const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
+function mapRawToProduct(p: RawProduct): Product {
   const description = p.description;
   const mappedImages = resolveProductImages(p);
-  const mainImage = mappedImages[0] ?? "/placeholder.png";
+  const mainImage = mappedImages[0] ?? "/Hero_Image.png";
 
   return {
     id: p.id,
@@ -78,7 +77,6 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
     reviews: reviewsFor(p.name),
     inStock: p.stock.quantity > 0,
     condition: p.condition ? [p.condition] : [],
-    color: ["Silver", "Black"], // Default colors
     image: mainImage,
     images: mappedImages,
     specs: {
@@ -95,8 +93,30 @@ const laptops: Product[] = (productsRaw as RawProduct[]).map((p) => {
     description: description,
     sku: p.sku,
   };
-});
+}
+
+function getLaptops(): Product[] {
+  if (typeof window === "undefined") {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const fs = require("fs");
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const path = require("path");
+      const filePath = path.join(process.cwd(), "app", "data", "products.json");
+      if (fs.existsSync(filePath)) {
+        const raw = fs.readFileSync(filePath, "utf-8");
+        const parsed = JSON.parse(raw) as RawProduct[];
+        return parsed.map(mapRawToProduct);
+      }
+    } catch {
+      // fallback
+    }
+  }
+  return (productsRaw as RawProduct[]).map(mapRawToProduct);
+}
 
 export const laptopData = {
-  laptops,
+  get laptops(): Product[] {
+    return getLaptops();
+  },
 };

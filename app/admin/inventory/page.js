@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { AlertTriangle, Edit2, Package, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function mapProducts() {
   return productsRaw.map((product) => {
@@ -36,6 +36,17 @@ const InventoryPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [stockDialogOpen, setStockDialogOpen] = useState(false);
 
+  useEffect(() => {
+    fetch("/api/admin/products")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && Array.isArray(data)) {
+          setProducts(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -63,8 +74,18 @@ const InventoryPage = () => {
     setStockDialogOpen(true);
   };
 
-  const handleStockUpdateSuccess = (newStock) => {
+  const handleStockUpdateSuccess = async (newStock) => {
     if (selectedProduct) {
+      try {
+        await fetch(`/api/admin/products/${encodeURIComponent(selectedProduct.id)}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ stock: newStock }),
+        });
+      } catch (err) {
+        console.error("Failed to persist stock update:", err);
+      }
+
       setProducts((prev) =>
         prev.map((p) =>
           p.id === selectedProduct.id

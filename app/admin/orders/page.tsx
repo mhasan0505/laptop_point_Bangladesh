@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AdminProduct, OrderData } from "@/lib/admin-data";
-import { fetchProducts } from "@/lib/sanity-admin";
+import { fetchAdminProducts } from "@/lib/admin-products-api";
 import { formatBDT } from "@/lib/format";
 import { VALID_STATUSES } from "@/lib/orders";
 import { Plus, Search } from "lucide-react";
@@ -75,7 +75,7 @@ export default function OrdersPage() {
     try {
       const [ordersRes, productsData] = await Promise.all([
         fetch("/api/orders"),
-        fetchProducts(),
+        fetchAdminProducts(),
       ]);
       if (ordersRes.ok) {
         const apiOrders = (await ordersRes.json()) as ApiOrder[];

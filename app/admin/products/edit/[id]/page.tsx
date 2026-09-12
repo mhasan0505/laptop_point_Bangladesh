@@ -1,20 +1,13 @@
 "use client";
 
+import { ProductEditorForm } from "@/components/admin/ProductEditorForm";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchProducts, updateProduct } from "@/lib/sanity-admin";
+import { Card, CardContent } from "@/components/ui/card";
+import { AdminProduct } from "@/lib/admin-data";
+import { fetchAdminProductById, updateAdminProduct } from "@/lib/admin-products-api";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
-
-const CATEGORIES = [
-  "Business Laptops",
-  "Premium Laptops",
-  "Gaming Laptops",
-  "Apple",
-  "Accessories",
-];
 
 export default function EditProductPage({
   params,
@@ -22,120 +15,64 @@ export default function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const router = useRouter();
+  const [product, setProduct] = useState<AdminProduct | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const [form, setFormState] = useState({
-    name: "",
-    brand: "",
-    category: "Business Laptops",
-    sku: "",
-    price: "",
-    stock: "",
-    status: "Active",
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    fetchProducts().then((products) => {
-      const product = products.find((p) => p.id === id);
-      if (!product) {
+    let active = true;
+    fetchAdminProductById(id)
+      .then((data) => {
+        if (!active) return;
+        setProduct(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load product:", err);
+        if (!active) return;
         setNotFound(true);
-      } else {
-        setFormState({
-          name: product.name,
-          brand: product.brand,
-          category: product.category,
-          sku: product.sku,
-          price: String(product.price),
-          stock: String(product.stock),
-          status:
-            product.status === "Active" || product.status === "Inactive"
-              ? product.status
-              : "Active",
-        });
-      }
-      setLoading(false);
-    });
+        setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [id]);
-
-  const validate = () => {
-    const errs: Record<string, string> = {};
-    if (!form.name.trim()) errs.name = "Name is required";
-    if (!form.brand.trim()) errs.brand = "Brand is required";
-    if (!form.sku.trim()) errs.sku = "SKU is required";
-    if (!form.price || isNaN(Number(form.price)) || Number(form.price) < 0)
-      errs.price = "Valid price is required";
-    if (!form.stock || isNaN(Number(form.stock)) || Number(form.stock) < 0)
-      errs.stock = "Valid stock quantity is required";
-    return errs;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const errs = validate();
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
-    }
-    setSaving(true);
-    try {
-      await updateProduct(id, {
-        name: form.name.trim(),
-        brand: form.brand.trim(),
-        category: form.category,
-        sku: form.sku.trim(),
-        price: Number(form.price),
-        stock: Number(form.stock),
-        status: form.status,
-      });
-      router.push("/admin/products");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const setField = (field: string, value: string) => {
-    setFormState((f) => ({ ...f, [field]: value }));
-    if (errors[field])
-      setErrors((e) => {
-        const copy = { ...e };
-        delete copy[field];
-        return copy;
-      });
-  };
-
-  const inputCls =
-    "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none";
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
+      <div className="flex flex-col items-center justify-center min-h-96 gap-3">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary/20 border-t-primary" />
+        <p className="text-xs text-muted-foreground font-semibold">
+          Loading product specifications...
+        </p>
       </div>
     );
   }
 
-  if (notFound) {
+  if (notFound || !product) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 max-w-3xl mx-auto py-8">
         <div className="flex items-center gap-4">
           <Link href="/admin/products">
             <Button variant="outline" size="icon">
               <ChevronLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-black">Product Not Found</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Product Not Found</h1>
         </div>
         <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-gray-500 mb-4">
-              Product with ID <code>{id}</code> was not found.
+          <CardContent className="py-12 text-center space-y-4">
+            <p className="text-gray-500 text-sm">
+              Product with ID <code className="bg-gray-100 px-2 py-0.5 rounded text-black font-semibold">{id}</code> could not be found or has been removed.
             </p>
-            <Link href="/admin/products">
-              <Button>Return to Products</Button>
-            </Link>
+            <div>
+              <Link href="/admin/products">
+                <Button className="bg-black text-white hover:bg-gray-800">
+                  Return to Products List
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -143,159 +80,12 @@ export default function EditProductPage({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Link href="/admin/products">
-          <Button variant="outline" size="icon">
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-black">Edit Product</h1>
-          <p className="text-gray-500">Update product details</p>
-        </div>
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        <Card>
-          <CardHeader>
-            <CardTitle>Product Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Name */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Product Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => setField("name", e.target.value)}
-                  className={inputCls}
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
-                )}
-              </div>
-
-              {/* Brand */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Brand <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={form.brand}
-                  onChange={(e) => setField("brand", e.target.value)}
-                  className={inputCls}
-                />
-                {errors.brand && (
-                  <p className="text-red-500 text-xs mt-1">{errors.brand}</p>
-                )}
-              </div>
-
-              {/* SKU */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  SKU <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={form.sku}
-                  onChange={(e) => setField("sku", e.target.value)}
-                  className={inputCls}
-                />
-                {errors.sku && (
-                  <p className="text-red-500 text-xs mt-1">{errors.sku}</p>
-                )}
-              </div>
-
-              {/* Category */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={form.category}
-                  onChange={(e) => setField("category", e.target.value)}
-                  className={inputCls}
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Status */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={form.status}
-                  onChange={(e) => setField("status", e.target.value)}
-                  className={inputCls}
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-
-              {/* Price */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price (৳) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  value={form.price}
-                  onChange={(e) => setField("price", e.target.value)}
-                  className={inputCls}
-                />
-                {errors.price && (
-                  <p className="text-red-500 text-xs mt-1">{errors.price}</p>
-                )}
-              </div>
-
-              {/* Stock */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Stock Quantity <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  value={form.stock}
-                  onChange={(e) => setField("stock", e.target.value)}
-                  className={inputCls}
-                />
-                {errors.stock && (
-                  <p className="text-red-500 text-xs mt-1">{errors.stock}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <Link href="/admin/products">
-                <Button type="button" variant="outline">
-                  Cancel
-                </Button>
-              </Link>
-              <Button
-                type="submit"
-                className="bg-black hover:bg-gray-800 text-white"
-                disabled={saving}
-              >
-                {saving ? "Saving..." : "Save Changes"}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </form>
-    </div>
+    <ProductEditorForm
+      title={`Edit Product: ${product.name}`}
+      subtitle="Update specifications, stock levels, variants, pricing, and media"
+      submitLabel="Save Changes"
+      initialProduct={product}
+      onSubmitProductAction={(updated) => updateAdminProduct(id, updated)}
+    />
   );
 }
