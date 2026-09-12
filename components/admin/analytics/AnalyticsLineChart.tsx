@@ -35,18 +35,25 @@ const SERIES_COLORS: Record<string, string> = {
   ad_spend: "#ec4899", // pink
 };
 
+interface TooltipPayloadEntry {
+  dataKey?: string;
+  name?: string;
+  value?: number;
+  color?: string;
+  stroke?: string;
+}
+
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: TooltipPayloadEntry[];
   label?: string;
-  isCurrency: boolean;
+  isCurrency?: boolean;
 }
 
 function CustomTooltip({
   active,
   payload,
   label,
-  isCurrency,
 }: CustomTooltipProps) {
   if (!active || !payload || !payload.length) return null;
 
@@ -56,14 +63,15 @@ function CustomTooltip({
         {label}
       </p>
       <div className="space-y-1.5">
-        {payload.map((entry: any) => {
+        {payload.map((entry) => {
           const color = entry.color || entry.stroke || "#3b82f6";
           const isCurr =
             entry.name?.toLowerCase().includes("revenue") ||
             entry.name?.toLowerCase().includes("spend");
+          const val = entry.value ?? 0;
           const formattedVal = isCurr
-            ? formatBDT(entry.value)
-            : entry.value.toLocaleString();
+            ? formatBDT(val)
+            : val.toLocaleString();
 
           return (
             <div

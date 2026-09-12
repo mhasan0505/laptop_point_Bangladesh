@@ -16,24 +16,28 @@ const AdminProducts = () => {
   const [filterCategory, setFilterCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadProducts = () => {
-    setIsLoading(true);
+  useEffect(() => {
+    let active = true;
+
     fetchAdminProducts()
       .then((data) => {
+        if (!active) return;
         setProducts(data);
       })
       .catch((err) => {
+        if (!active) return;
         console.error("Failed to load products:", err);
         showErrorToast("Failed to load products from server");
       })
       .finally(() => {
+        if (!active) return;
         setIsLoading(false);
       });
-  };
 
-  useEffect(() => {
-    loadProducts();
-  }, []);
+    return () => {
+      active = false;
+    };
+  }, [showErrorToast]);
 
   const categories = useMemo(() => {
     const set = new Set<string>();
