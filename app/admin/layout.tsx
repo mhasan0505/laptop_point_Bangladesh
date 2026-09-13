@@ -51,9 +51,9 @@ function AdminShell({ children }: { children: ReactNode }) {
     }
   }, [isLoginPage, isLoading, isAuthenticated, router]);
 
-  // Login page renders with high-density scope
+  // Login page renders without high-density table overrides
   if (isLoginPage) {
-    return <div className="admin-high-density min-h-screen">{children}</div>;
+    return <div className="min-h-screen">{children}</div>;
   }
 
   // Still checking auth state or not yet authenticated — show spinner
