@@ -78,6 +78,14 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
 
   const merged = Array.from(productMap.values());
   setCachedRawProducts(merged);
+
+  // Sync to local products.json if writable (local dev environment)
+  try {
+    await fs.writeFile(productsFilePath, JSON.stringify(merged, null, 2), "utf-8");
+  } catch {
+    // Read-only filesystem in serverless / production - ignore
+  }
+
   return merged;
 }
 
@@ -183,8 +191,20 @@ export async function saveRawProduct(raw: RawProduct): Promise<void> {
   // 4. Update manifest if possible
   await safeSyncManifest(raw.sku, raw.images);
 
-  // 5. Invalidate in-memory cache so next read fetches fresh data
-  _memoryCachedRawProducts = null;
+  // 5. Immediately re-prime in-memory cache with the fresh merged list
+  await loadMergedRawProducts();
+
+  // 6. Trigger Next.js revalidation so static/cached routes update instantly
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { revalidatePath } = require("next/cache");
+    revalidatePath("/");
+    revalidatePath("/shop");
+    revalidatePath("/deals");
+    revalidatePath("/api/products");
+  } catch {
+    // Ignore in non-request contexts
+  }
 }
 
 
@@ -239,7 +259,21 @@ export async function deleteRawProduct(idOrSku: string): Promise<boolean> {
     }
   }
 
-  _memoryCachedRawProducts = null;
+  // Re-prime in-memory cache
+  await loadMergedRawProducts();
+
+  // Trigger Next.js revalidation so static/cached routes update instantly
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { revalidatePath } = require("next/cache");
+    revalidatePath("/");
+    revalidatePath("/shop");
+    revalidatePath("/deals");
+    revalidatePath("/api/products");
+  } catch {
+    // Ignore in non-request contexts
+  }
+
   return true;
 }
 

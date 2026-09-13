@@ -1,7 +1,8 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
+import { laptopData, Product } from "@/app/data/data";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
@@ -10,9 +11,32 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProductsCard from "../ui/ProductsCard";
 
-const NewProductsSection = () => {
-  // Use first 8 products as "New" for now, or filter by a 'new' flag if it existed
-  const newProducts = laptopData.laptops.slice(0, 8);
+interface NewProductsSectionProps {
+  initialProducts?: Product[];
+}
+
+const NewProductsSection = ({ initialProducts }: NewProductsSectionProps) => {
+  const [products, setProducts] = useState<Product[]>(
+    initialProducts && initialProducts.length > 0
+      ? initialProducts
+      : laptopData.laptops || [],
+  );
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Show newest products first (sorted by ID descending)
+  const newProducts = [...products]
+    .sort((a, b) => Number(b.id) - Number(a.id))
+    .slice(0, 8);
 
   return (
     <div className="w-full bg-linear-to-b from-gray-50/50 to-white dark:from-gray-900/50 dark:to-gray-950 py-8 md:py-12 lg:py-16">

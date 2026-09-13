@@ -1,6 +1,6 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
+import { laptopData, Product } from "@/app/data/data";
 import RecentlyViewed from "@/components/product/RecentlyViewed";
 import FilterSidebar from "@/components/shop/FilterSidebar";
 import { Button } from "@/components/ui/button";
@@ -14,18 +14,32 @@ import {
 } from "@/lib/product-filter";
 import { SlidersHorizontal } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 const ShopContent = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [filters, setFilters] = useState<ProductFilters>(EMPTY_FILTERS);
+  const [allProducts, setAllProducts] = useState<Product[]>(
+    laptopData.laptops || [],
+  );
   const searchParams = useSearchParams();
   const searchQuery =
     searchParams.get("search") ||
     searchParams.get("q") ||
     searchParams.get("query");
 
-  let products = [...(laptopData.laptops || [])].sort(
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setAllProducts(data);
+        }
+      })
+      .catch((err) => console.error("Failed to load products:", err));
+  }, []);
+
+  let products = [...allProducts].sort(
     (a, b) => Number(b.id) - Number(a.id),
   );
 

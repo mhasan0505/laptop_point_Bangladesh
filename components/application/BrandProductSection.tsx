@@ -1,6 +1,6 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
+import { laptopData, Product } from "@/app/data/data";
 import { motion } from "framer-motion";
 import {
   Briefcase,
@@ -12,7 +12,7 @@ import {
   LayoutGrid,
   Wallet,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
@@ -27,6 +27,7 @@ interface BrandProductSectionProps {
   description: string;
   badgeText: string;
   theme: "hp" | "dell" | "lenovo" | "microsoft";
+  initialProducts?: Product[];
 }
 
 const BrandProductSection = ({
@@ -35,11 +36,28 @@ const BrandProductSection = ({
   description,
   badgeText,
   theme,
+  initialProducts,
 }: BrandProductSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("All Series");
+  const [allProducts, setAllProducts] = useState<Product[]>(
+    initialProducts && initialProducts.length > 0
+      ? initialProducts
+      : laptopData.laptops || [],
+  );
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setAllProducts(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Filter for brand laptops
-  const brandProducts = laptopData.laptops.filter(
+  const brandProducts = allProducts.filter(
     (product) => product.brand?.toLowerCase() === brand.toLowerCase()
   );
 

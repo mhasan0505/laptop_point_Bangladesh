@@ -1,10 +1,13 @@
-import { laptopData } from "@/app/data/data";
+import { getLiveLaptops } from "@/app/data/data";
 import FlashSaleBanner from "@/components/application/FlashSaleBanner";
 import ProductsCard from "@/components/ui/ProductsCard";
 
-export default function DealsPage() {
-  // Simulate discounted products
-  const discountedProducts = laptopData.laptops.filter(
+export const dynamic = "force-dynamic";
+
+export default async function DealsPage() {
+  const laptops = await getLiveLaptops();
+  // Filter live discounted products
+  const discountedProducts = laptops.filter(
     (product) => product.discount && product.discount > 0
   );
 

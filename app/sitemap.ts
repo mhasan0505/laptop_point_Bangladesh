@@ -1,12 +1,13 @@
-import { laptopData } from "@/app/data/data";
+import { getLiveLaptops } from "@/app/data/data";
 import { SEO_CONFIG } from "@/lib/seo-config";
 import { MetadataRoute } from "next";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://laptoppointbd.com";
+  const laptops = await getLiveLaptops();
 
   // Product pages
-  const products = laptopData.laptops.map((product) => ({
+  const products = laptops.map((product) => ({
     url: `${baseUrl}/product/${product.slug}`,
     lastModified: new Date(),
     changeFrequency: "weekly" as const,

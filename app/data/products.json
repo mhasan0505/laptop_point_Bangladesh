@@ -982,65 +982,6 @@
     ]
   },
   {
-    "id": 18,
-    "sku": "LEN-T14G2-018",
-    "name": "Lenovo ThinkPad T14 Gen 2",
-    "brand": "Lenovo",
-    "model": "ThinkPad T14 Gen 2",
-    "category": "Laptop",
-    "condition": "Used",
-    "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 40500,
-      "market_price": 50000,
-      "discount_percentage": 19,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 5
-    },
-    "specs": {
-      "processor": "Intel Core i5-1135G7 (11th Gen)",
-      "ram": "16GB DDR4",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS High Brightness",
-        "touchscreen": false
-      },
-      "graphics": "Intel Iris Xe Graphics",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0",
-        "Ethernet"
-      ],
-      "weight": "1.47 kg",
-      "os": "Windows 11 Pro"
-    },
-    "description": {
-      "short": "Modern successor to the T490 with 11th Gen speed.",
-      "full": "**What are the main upgrades from the T490/T14 Gen 1?**\n The T14 Gen 2 upgrades the engine with powerful 11th Gen Intel processors and advanced Intel Iris Xe graphics, delivering a significant boost in performance for demanding tasks and creative work. \n\n**How is it 'future-proofed'?**\n It includes modern connectivity standards like two Thunderbolt 4 ports and faster Wi-Fi 6, ensuring compatibility with the latest high-speed peripherals and networks. \n\n**Does it still have the classic ThinkPad features?**\n Yes, it maintains the iconic classic black ThinkPad aesthetic, the legendary keyboard, and the rugged, Mil-Spec tested build quality that the T-series is famous for."
-    },
-    "features": [
-      "11th Gen Intel",
-      "WiFi 6",
-      "Thunderbolt 4",
-      "Rugged Design"
-    ],
-    "images": [
-      "/products/lenovo/Lenovo-Thinkpad-T14/main.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T14/front.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T14/fullSize.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T14/side.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T14/side1.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T14/side2.jpg"
-    ]
-  },
-  {
     "id": 19,
     "sku": "LEN-T14G2-018",
     "name": "Lenovo Thinkpad T14 Gen 1 Ryzen 5 Pro 4650U 16/256",
@@ -1924,32 +1865,11 @@
     "sku": "LEN-T14SG2-R5-033",
     "name": "Lenovo ThinkPad T14s Gen 2 Ryzen 5 Pro 16/256",
     "brand": "Lenovo",
-    "model": "ThinkPad T14s Gen 2",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 36900,
-      "market_price": 43500,
-      "discount_percentage": 15,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 3
-    },
+    "model": "ThinkPad T14s Gen 2",
     "specs": {
-      "processor": "AMD Ryzen 5 PRO 4650U (6C/12T)",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "AMD Radeon Pro (1GB Dedicated)",
       "ports": [
         "2x Thunderbolt 4",
         "2x USB-A",
@@ -1957,18 +1877,20 @@
         "Audio Combo"
       ],
       "weight": "1.43 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB NVMe SSD",
+      "graphics": "AMD Radeon Pro (1GB Dedicated)",
+      "processor": "AMD Ryzen 5 PRO 4650U (6C/12T)"
     },
-    "description": {
-      "short": "Ryzen Pro ultrabook with dedicated graphics and modern performance.",
-      "full": "**What makes the T14s Gen 2 unique?**\nCombining AMD Ryzen Pro efficiency with dedicated graphics, this ultrabook delivers strong multi-core performance ideal for creative professionals and developers.\n\n**What does Ryzen Pro offer?**\nRyzen Pro processors include professional-grade security, system management, and excellent battery efficiency—making it perfect for business users.\n\n**Who should consider this?**\nFreelancers, content creators, and business professionals who need extra graphics performance and thermal efficiency in a portable ThinkPad."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
     },
-    "features": [
-      "Ryzen 5 Pro 6C/12T",
-      "1GB Dedicated Graphics",
-      "16GB DDR4 RAM",
-      "Thunderbolt 4"
-    ],
     "images": [
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/main.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/front.jpg",
@@ -1976,7 +1898,26 @@
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/side.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/side1.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-5-pro-4650U-16-256/side2.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 37900,
+      "market_price": 43500,
+      "tax_included": true,
+      "discount_percentage": 13
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Ryzen 5 Pro 6C/12T",
+      "1GB Dedicated Graphics",
+      "16GB DDR4 RAM",
+      "Thunderbolt 4"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What makes the T14s Gen 2 unique?**\nCombining AMD Ryzen Pro efficiency with dedicated graphics, this ultrabook delivers strong multi-core performance ideal for creative professionals and developers.\n\n**What does Ryzen Pro offer?**\nRyzen Pro processors include professional-grade security, system management, and excellent battery efficiency—making it perfect for business users.\n\n**Who should consider this?**\nFreelancers, content creators, and business professionals who need extra graphics performance and thermal efficiency in a portable ThinkPad.",
+      "short": "Ryzen Pro ultrabook with dedicated graphics and modern performance."
+    }
   },
   {
     "id": 34,
@@ -2151,5 +2092,62 @@
       "/products/dell/Dell-latitude-5580-Core-i7-7TH-Gen-8-256-Full-HD-IPS-Display/front.png",
       "/products/dell/Dell-latitude-5580-Core-i7-7TH-Gen-8-256-Full-HD-IPS-Display/side.png"
     ]
+  },
+  {
+    "id": 37,
+    "sku": "DELL-PRO-15-ESSENTIAL-PV15250",
+    "name": "Dell Pro 15 Essential PV15250 Laptop, 15.6\" FHD IPS, Intel Core 3 100U, 8GB DDR5 4400 MHz RAM, 512GB M.2 PCIe NVMe SSD, Windows 11 Pro",
+    "brand": "Dell",
+    "grade": "Premium",
+    "model": "Pro 15 Essential PV15250",
+    "specs": {
+      "os": "Windows 11 Pro",
+      "ram": "8GB  DDR5  4400 MHz",
+      "ports": [
+        "USB 3.2 Gen 1 (5 Gbps) Type-C® data only port (only for computers with 13th Gen Intel® Core™ processors) 1 USB 3.2 Gen 1 (5 Gbps) Type-C® port with displayport 1.4 and power Delivery (only for computers with aluminum chassis)"
+      ],
+      "weight": "1.90 kg",
+      "display": {
+        "size": "15.6\"",
+        "type": "IPS",
+        "resolution": "FHD",
+        "touchscreen": false
+      },
+      "storage": "512GB  M.2 PCIe NVMe SSD",
+      "graphics": "Intel UHD Graphics",
+      "processor": "Intel Core 3 100U"
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
+    },
+    "images": [
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/pro-15-essential-pv15250-01-500x500_vCwZkW0oo.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/pro-15-essential-pv15250-02-500x500_xk1sSmB7u.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/pro-15-essential-pv15250-03-500x500__KqDY0txL.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/pro-15-essential-pv15250-04-500x500_EqWeyu4ce.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/pro-15-essential-pv15250-05-500x500_NkyH5FhrO.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/pro-15-essential-pv15250-06-500x500_UMyZquNmt.webp"
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 73000,
+      "market_price": 75000,
+      "tax_included": true,
+      "discount_percentage": 3
+    },
+    "category": "Laptop",
+    "features": [
+      "Model: Pro 15 Essential PV15250",
+      "Processor: Intel Core 3 100U (6 cores, up to 4.7 GHz)",
+      "RAM: 8GB DDR5, Storage: 512GB M.2 PCIe NVMe SSD",
+      "Display: 15.6\", FHD, 120Hz, WVA, IPS, Anti-Glare, 250 nits",
+      "Features: HD RGB Camera, SD Card Slot, Type-C, Wi-Fi 6"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop\nThe Dell Pro 15 Essential PV15250 15.6\" FHD Laptop with a modern Intel Core 3 100U processor featuring six cores. The Laptop reaches up to 4.7GHz boost speed, ensuring smooth multitasking and efficient handling of office tasks. This Dell Laptop runs on free dos, offering enhanced productivity, advanced security, and a user-friendly professional environment. The Dell Pro 15 Essential PV15250 Laptop features Intel UHD Graphics, providing stable visuals for browsing, document editing, streaming, and light multimedia use. The 15.6-inch Full HD display offers 120Hz refresh rate, IPS WVA panel, and anti-glare coating with 250 nits brightness. With 8GB DDR5 memory at 4400 MT/s, the Dell Laptop ensures responsive multitasking and smooth application performance for daily workflows. The 512GB PCIe NVMe SSD delivers fast boot times, quick file access, and sufficient storage capacity for essential software and data. The Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop includes an English US non-backlit keyboard for comfortable typing. It offers versatile connectivity with USB 3.2 Type-A, USB 2.0, and USB Type-C ports supporting data transfer, DisplayPort, and power delivery depending on configuration. Additional ports include HDMI 1.4, universal audio jack, power jack, and an SD card slot for expanded usability. The Dell Pro 15 Essential PV15250 Core 3 100U Laptop includes a 720p HD camera with integrated microphone for video calls. Dual tuned speakers enhance audio clarity for meetings and entertainment. Built with a durable plastic chassis, the Dell Pro 15 Essential PV15250 Laptop ensures long-term reliability. Realtek Wi-Fi 6 and Bluetooth provide fast wireless connectivity, while the 41WHr battery and 65W adapter support dependable daily usage.",
+      "short": "Buy Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop from Laptop Point BD\nIn Bangladesh, you can get original Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop From Laptop Point BD. We have a large collection of latest Dell Laptop to purchase. Order Online Or Visit your Nearest Laptop Point BD Shop to get yours at lowest price. The Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop comes with 2 years warranty."
+    }
   }
 ]

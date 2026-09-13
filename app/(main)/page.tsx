@@ -4,14 +4,13 @@ import NewProductsSection from "@/components/application/NewProductsSection";
 import TestimonialsSection from "@/components/application/TestimonialsSection";
 import { eCommerceSchema } from "@/lib/seo-schemas";
 import { Metadata } from "next";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 
 // Lazy load brand sections that are below the fold for better initial load
-const BrandProductSection = dynamic(
+const BrandProductSection = nextDynamic(
   () => import("@/components/application/BrandProductSection"),
   {
     loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
-
   },
 );
 
@@ -37,7 +36,13 @@ export const metadata: Metadata = {
   },
 };
 
-const HomePage = () => {
+import { getLiveLaptops } from "@/app/data/data";
+
+export const dynamic = "force-dynamic";
+
+const HomePage = async () => {
+  const products = await getLiveLaptops();
+
   return (
     <>
       {/* Schema Markup for E-Commerce */}
@@ -47,7 +52,7 @@ const HomePage = () => {
       />
 
       <HeroSection />
-      <NewProductsSection />
+      <NewProductsSection initialProducts={products} />
       <BentoGridSection />
 
       {/* HP Section */}
@@ -57,6 +62,7 @@ const HomePage = () => {
         description="Experience power and elegance with our curated selection of HP laptops. Designed for professionals, business leaders, and creators."
         badgeText="Premium Collection"
         theme="hp"
+        initialProducts={products}
       />
 
       {/* Dell Section */}
@@ -66,6 +72,7 @@ const HomePage = () => {
         description="Reliability meets performance. Explore our range of Dell laptops, from the rugged Latitude series to the premium XPS lineup."
         badgeText="Business Choice"
         theme="dell"
+        initialProducts={products}
       />
 
       {/* Lenovo Section */}
@@ -75,6 +82,7 @@ const HomePage = () => {
         description="Built for business. The legendary ThinkPad series offers unmatched durability, keyboard comfort, and performance."
         badgeText="Legendary Durability"
         theme="lenovo"
+        initialProducts={products}
       />
 
       {/* Microsoft Section */}
@@ -84,6 +92,7 @@ const HomePage = () => {
         description="Sleek, powerful, and versatile. Surface laptops combine premium design with the full power of Windows."
         badgeText="Creative Studio"
         theme="microsoft"
+        initialProducts={products}
       />
       <TestimonialsSection />
     </>

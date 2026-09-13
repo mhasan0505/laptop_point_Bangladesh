@@ -1,4 +1,5 @@
 import { Product } from "@/types/product";
+export type { Product } from "@/types/product";
 import { RawProduct } from "@/types/raw-product";
 import productsRaw from "./products.json";
 import imageManifest from "./product-image-manifest.json";
@@ -57,7 +58,7 @@ const ratingFor = (name: string): number =>
 const reviewsFor = (name: string): number =>
   60 + (hashString(`${name}:reviews`) % 440); // 60 – 499
 
-function mapRawToProduct(p: RawProduct): Product {
+export function mapRawToProduct(p: RawProduct): Product {
   const description = p.description;
   const mappedImages = resolveProductImages(p);
   const mainImage = mappedImages[0] ?? "/Hero_Image.png";
@@ -145,6 +146,19 @@ function getLaptops(): Product[] {
   return (productsRaw as RawProduct[]).map(mapRawToProduct);
 }
 
+
+export async function getLiveLaptops(): Promise<Product[]> {
+  if (typeof window === "undefined") {
+    try {
+      const { loadMergedRawProducts } = await import("@/lib/products-storage");
+      const raw = await loadMergedRawProducts();
+      return raw.map(mapRawToProduct);
+    } catch (err) {
+      console.warn("[getLiveLaptops] Database load fallback:", err);
+    }
+  }
+  return getLaptops();
+}
 
 export const laptopData = {
   get laptops(): Product[] {

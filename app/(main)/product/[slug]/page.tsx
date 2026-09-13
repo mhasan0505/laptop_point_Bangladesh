@@ -1,14 +1,17 @@
-import { laptopData } from "@/app/data/data";
+import { getLiveLaptops } from "@/app/data/data";
 import ProductDetailsClient from "@/components/product/ProductDetailsClient";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return laptopData.laptops.map((product) => ({
+  const laptops = await getLiveLaptops();
+  return laptops.map((product) => ({
     slug: product.slug,
   }));
 }
@@ -17,7 +20,8 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = laptopData.laptops.find((p) => p.slug === slug);
+  const laptops = await getLiveLaptops();
+  const product = laptops.find((p) => p.slug === slug);
 
   if (!product) {
     return {
@@ -51,14 +55,15 @@ export async function generateMetadata({
 
 export default async function ProductDetailsPage({ params }: PageProps) {
   const { slug } = await params;
-  const product = laptopData.laptops.find((p) => p.slug === slug);
+  const laptops = await getLiveLaptops();
+  const product = laptops.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();
   }
 
   // Related products (same brand or category)
-  const relatedProducts = laptopData.laptops
+  const relatedProducts = laptops
     .filter(
       (p) =>
         p.id !== product.id &&
