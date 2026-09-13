@@ -227,8 +227,11 @@ const AdminProducts = () => {
                           ৳{product.price.toLocaleString()}
                         </td>
                         <td className="py-3 px-4 text-gray-800 text-xs font-semibold">
-                          {product.stock}
+                          {typeof product.stock === "object" && product.stock !== null
+                            ? (product.stock as any).quantity ?? 0
+                            : product.stock}
                         </td>
+
                         <td className="py-3 px-4">
                           <span
                             className={`inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full ${getStatusColor(

@@ -1,27 +1,12 @@
 import { AdminProduct } from "@/lib/admin-data";
-import { prisma } from "@/lib/prisma";
-import { RawProduct } from "@/types/raw-product";
-import { promises as fs } from "fs";
+import {
+  deleteRawProduct,
+  findRawProductByIdOrSku,
+  loadMergedRawProducts,
+  saveRawProduct,
+} from "@/lib/products-storage";
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import { adminToRawProduct, rawToAdminProduct, syncSkuToManifest } from "../route";
-
-const productsFilePath = path.join(process.cwd(), "app", "data", "products.json");
-
-async function loadProductsJson(): Promise<RawProduct[]> {
-  try {
-    const raw = await fs.readFile(productsFilePath, "utf-8");
-    return JSON.parse(raw) as RawProduct[];
-  } catch (error) {
-    console.error("[loadProductsJson error]", error);
-    return [];
-  }
-}
-
-async function saveProductsJson(products: RawProduct[]): Promise<void> {
-  const json = JSON.stringify(products, null, 2);
-  await fs.writeFile(productsFilePath, json, "utf-8");
-}
+import { adminToRawProduct, rawToAdminProduct } from "../route";
 
 // ─── GET /api/admin/products/[id] ─────────────────────────────────────────────
 export async function GET(
@@ -30,11 +15,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const rawProducts = await loadProductsJson();
-
-    const product = rawProducts.find(
-      (p) => String(p.id) === id || p.sku.toLowerCase() === id.toLowerCase(),
-    );
+    const product = await findRawProductByIdOrSku(id);
 
     if (!product) {
       return NextResponse.json(
@@ -43,20 +24,7 @@ export async function GET(
       );
     }
 
-    // Check if Postgres inventory has current stock
-    let currentStock = product.stock?.quantity;
-    try {
-      const inv = await prisma.inventory.findFirst({
-        where: { OR: [{ productId: String(product.id) }, { sku: product.sku }] },
-      });
-      if (inv) {
-        currentStock = inv.quantity;
-      }
-    } catch {
-      // Ignore DB error
-    }
-
-    return NextResponse.json(rawToAdminProduct(product, currentStock));
+    return NextResponse.json(rawToAdminProduct(product, product.stock?.quantity));
   } catch (error) {
     console.error("[GET /api/admin/products/[id]]", error);
     return NextResponse.json(
@@ -75,7 +43,7 @@ export async function PUT(
     const { id } = await params;
     const body = (await request.json()) as Partial<AdminProduct>;
 
-    const rawProducts = await loadProductsJson();
+    const rawProducts = await loadMergedRawProducts();
     const index = rawProducts.findIndex(
       (p) => String(p.id) === id || p.sku.toLowerCase() === id.toLowerCase(),
     );
@@ -123,29 +91,9 @@ export async function PUT(
     };
 
     const updatedRaw = adminToRawProduct(mergedAdmin, numericId);
-    rawProducts[index] = updatedRaw;
 
-    await saveProductsJson(rawProducts);
-    await syncSkuToManifest(updatedRaw.sku, updatedRaw.images);
-
-    // Sync into Postgres inventory table
-    try {
-      await prisma.inventory.upsert({
-        where: { sku: updatedRaw.sku },
-        update: {
-          name: updatedRaw.name,
-          quantity: updatedRaw.stock.quantity,
-        },
-        create: {
-          productId: String(numericId),
-          sku: updatedRaw.sku,
-          name: updatedRaw.name,
-          quantity: updatedRaw.stock.quantity,
-        },
-      });
-    } catch (dbErr) {
-      console.warn("[Prisma inventory update warning]", dbErr);
-    }
+    // Save to PostgreSQL (ProductOverride and Inventory) + safe local sync
+    await saveRawProduct(updatedRaw);
 
     return NextResponse.json(rawToAdminProduct(updatedRaw));
   } catch (error) {
@@ -164,29 +112,13 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const rawProducts = await loadProductsJson();
+    const deleted = await deleteRawProduct(id);
 
-    const index = rawProducts.findIndex(
-      (p) => String(p.id) === id || p.sku.toLowerCase() === id.toLowerCase(),
-    );
-
-    if (index === -1) {
+    if (!deleted) {
       return NextResponse.json(
         { error: `Product with ID ${id} not found` },
         { status: 404 },
       );
-    }
-
-    const deleted = rawProducts.splice(index, 1)[0];
-    await saveProductsJson(rawProducts);
-
-    // Clean up inventory if desired
-    try {
-      await prisma.inventory.deleteMany({
-        where: { OR: [{ productId: String(deleted.id) }, { sku: deleted.sku }] },
-      });
-    } catch {
-      // Ignore if not present
     }
 
     return NextResponse.json({ success: true, deletedId: id });

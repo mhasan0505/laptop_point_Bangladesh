@@ -49,15 +49,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Fallback: save to local public/products/uploads
-    const uploadDir = path.join(process.cwd(), "public", "products", "uploads");
-    await fs.mkdir(uploadDir, { recursive: true });
+    try {
+      const uploadDir = path.join(process.cwd(), "public", "products", "uploads");
+      await fs.mkdir(uploadDir, { recursive: true });
 
-    const safeName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
-    const targetPath = path.join(uploadDir, safeName);
-    await fs.writeFile(targetPath, buffer);
+      const safeName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+      const targetPath = path.join(uploadDir, safeName);
+      await fs.writeFile(targetPath, buffer);
 
-    const publicUrl = `/products/uploads/${safeName}`;
-    return NextResponse.json({ url: publicUrl, name: safeName });
+      const publicUrl = `/products/uploads/${safeName}`;
+      return NextResponse.json({ url: publicUrl, name: safeName });
+    } catch (fsErr: any) {
+      if (fsErr.code === "EROFS" || fsErr.message?.includes("read-only file system")) {
+        return NextResponse.json(
+          {
+            error:
+              "Cannot save image to local disk on serverless platform (EROFS). Please configure IMAGEKIT_PRIVATE_KEY in your deployment environment variables.",
+          },
+          { status: 500 },
+        );
+      }
+      throw fsErr;
+    }
   } catch (error) {
     console.error("[ImageKit Upload Route Error]", error);
     return NextResponse.json(

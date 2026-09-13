@@ -123,3 +123,18 @@ model InventoryLog {
   @@index([productId])
   @@index([createdAt])
 }
+
+// ─────────────────────────────────────────────────────────────
+// PRODUCT OVERRIDES (Dynamic catalog updates in serverless runtime)
+// ─────────────────────────────────────────────────────────────
+
+model ProductOverride {
+  id        String   @id
+  sku       String   @unique
+  data      Json
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sku])
+}

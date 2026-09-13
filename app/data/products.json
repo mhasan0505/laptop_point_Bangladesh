@@ -10,14 +10,14 @@
     "grade": "A",
     "pricing": {
       "currency": "BDT",
-      "sale_price": 19990,
+      "sale_price": 20000,
       "market_price": 24500,
       "discount_percentage": 18,
       "tax_included": true
     },
     "stock": {
       "status": "In Stock",
-      "quantity": 5
+      "quantity": 7
     },
     "specs": {
       "processor": "Intel Core i5-6200U (6th Gen)",

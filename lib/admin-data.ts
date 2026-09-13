@@ -10,11 +10,19 @@ export interface AdminProduct {
   grade?: string;
   price: number;
   salePrice?: number;
+  pricing?: {
+    currency?: string;
+    sale_price: number;
+    market_price: number;
+    discount_percentage?: number;
+    tax_included?: boolean;
+  };
   currency?: string;
   taxIncluded?: boolean;
   stock: number;
   stockStatus?: string;
   lowStockThreshold?: number;
+
   status: string;
   statusValue?: "active" | "draft" | "archived";
   featured?: boolean;
