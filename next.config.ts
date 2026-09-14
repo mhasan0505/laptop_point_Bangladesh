@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["@neondatabase/serverless", "ws"],
   transpilePackages: ["@tailwindcss/postcss"],
   images: {
     formats: ["image/avif", "image/webp"],

@@ -1,9 +1,11 @@
-// Prisma singleton — shared across all hot-reload module instances in dev.
-// See: https://www.prisma.io/docs/guides/performance-and-optimization/connection-management
 
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@prisma/client";
-import { Pool } from "pg";
+import { neonConfig } from "@neondatabase/serverless";
+import ws from "ws";
+
+// Use ws constructor for robust Node.js WebSocket communication
+neonConfig.webSocketConstructor = ws;
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -16,21 +18,11 @@ function createClient(): PrismaClient {
         "Copy .env.example → .env.local and supply your PostgreSQL connection string.",
     );
   }
-  const pool = new Pool({
+
+  const adapter = new PrismaNeon({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    // Serverless optimizations to allow Neon compute to auto-suspend:
-    max: 1, // Only 1 connection per serverless function instance
-    idleTimeoutMillis: 1000, // Close idle connection after 1s so Neon compute can sleep
-    connectionTimeoutMillis: 5000, // Fail fast if connection hangs
-    allowExitOnIdle: true, // Allow Node.js event loop to exit without waiting on connections
   });
-  // Pool type cast resolves a @types/pg version conflict between
-  // @prisma/adapter-pg's bundled types and the project's @types/pg.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const adapter = new PrismaPg(pool as any);
+
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],

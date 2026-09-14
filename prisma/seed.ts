@@ -4,13 +4,11 @@
  *   pnpm prisma:seed
  */
 
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
-import { Pool } from "pg";
-import productsRaw from "../app/data/products.json";
-
 dotenv.config({ path: ".env.local" });
+
+import { prisma } from "../lib/prisma";
+import productsRaw from "../app/data/products.json";
 
 interface RawProduct {
   id: number;
@@ -20,19 +18,6 @@ interface RawProduct {
 }
 
 async function main() {
-  if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is not set");
-  }
-
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const prisma = new PrismaClient({ adapter: new PrismaPg(pool as any) });
-
   const products = productsRaw as RawProduct[];
   const seenSkus = new Set<string>();
   let skippedDuplicates = 0;
@@ -68,7 +53,6 @@ async function main() {
     );
   }
   await prisma.$disconnect();
-  await pool.end();
 }
 
 main().catch((err) => {
