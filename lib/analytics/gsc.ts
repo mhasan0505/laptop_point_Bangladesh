@@ -1,5 +1,6 @@
 import "server-only";
-import { google } from "googleapis";
+import { searchconsole, type searchconsole_v1 } from "@googleapis/searchconsole";
+import { JWT } from "google-auth-library";
 import { unstable_cache as cache } from "next/cache";
 import type { AnalyticsSummary, DailyPoint, Series, UnifiedMetric } from "./types";
 import {
@@ -25,12 +26,12 @@ async function createClient() {
   if (!creds || !creds.client_email || !creds.private_key) return null;
 
   try {
-    const auth = new google.auth.JWT({
+    const auth = new JWT({
       email: creds.client_email,
       key: creds.private_key,
       scopes: ["https://www.googleapis.com/auth/webmasters.readonly"],
     });
-    return google.webmasters({ version: "v3", auth });
+    return searchconsole({ version: "v1", auth });
   } catch (err) {
     console.error("[gsc:createClient] Failed to initialize JWT auth:", err);
     return null;
@@ -39,14 +40,14 @@ async function createClient() {
 
 /** Daily (clicks, impressions, position) rows for a date range. */
 async function fetchDailyRows(
-  webmasters: ReturnType<typeof google["webmasters"]>,
+  sc: searchconsole_v1.Searchconsole,
   site: string,
   start: string,
   end: string,
   days: number,
 ): Promise<DailyPoint[]> {
   try {
-    const res = await webmasters.searchanalytics.query({
+    const res = await sc.searchanalytics.query({
       siteUrl: site,
       requestBody: {
         startDate: start,
@@ -97,14 +98,14 @@ async function querySearchConsole(days = DEFAULT_WINDOW_DAYS): Promise<Analytics
   if (!site || !creds) return null;
 
   try {
-    const webmasters = await createClient();
-    if (!webmasters) return null;
+    const sc = await createClient();
+    if (!sc) return null;
 
     const { current, previous } = gscWindows(days);
 
     const [cur, prev] = await Promise.all([
-      fetchDailyRows(webmasters, site, current.start, current.end, days),
-      fetchDailyRows(webmasters, site, previous.start, previous.end, days),
+      fetchDailyRows(sc, site, current.start, current.end, days),
+      fetchDailyRows(sc, site, previous.start, previous.end, days),
     ]);
 
     const sum = (rows: DailyPoint[]) => rows.reduce((s, r) => s + r.value, 0);
