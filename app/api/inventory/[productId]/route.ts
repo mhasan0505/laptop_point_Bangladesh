@@ -1,4 +1,6 @@
+import { requireAdminSession } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 // ─── GET /api/inventory/[productId] ──────────────────────────────────────────
@@ -34,6 +36,10 @@ export async function PATCH(
   { params }: { params: Promise<{ productId: string }> },
 ) {
   try {
+    if (!(await requireAdminSession(request))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { productId } = await params;
     const body = (await request.json()) as {
       quantity?: number;
@@ -88,6 +94,33 @@ export async function PATCH(
         },
       }),
     ]);
+
+    // Next.js 16+ requires a second profile argument for revalidateTag in route handlers.
+    // Passing { expire: 0 } signals immediate cache eviction rather than SWR background refresh.
+    // See official migration guide: https://nextjs.org/docs/messages/revalidate-tag-single-arg
+    try {
+      revalidateTag("products", { expire: 0 });
+    } catch {
+      // Tag revalidation may not be available in all contexts
+    }
+
+    try {
+      const { findRawProductByIdOrSku } = await import("@/lib/products-storage");
+      const { mapRawToProduct } = await import("@/app/data/data");
+      const rawProd = await findRawProductByIdOrSku(productId);
+      if (rawProd) {
+        const mapped = mapRawToProduct(rawProd);
+        if (mapped.slug) {
+          revalidatePath(`/product/${mapped.slug}`);
+        }
+      }
+    } catch {
+      // Ignore if dynamic import fails
+    }
+
+    revalidatePath("/product/[slug]", "page");
+    revalidatePath("/shop");
+    revalidatePath("/");
 
     return NextResponse.json(updated);
   } catch (error) {

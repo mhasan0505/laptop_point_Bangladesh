@@ -3,7 +3,7 @@ import ProductDetailsClient from "@/components/product/ProductDetailsClient";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 interface PageProps {
   params: Promise<{ slug: string }>;

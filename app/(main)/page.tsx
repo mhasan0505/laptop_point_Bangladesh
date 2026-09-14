@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 import { getLiveLaptops } from "@/app/data/data";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 const HomePage = async () => {
   const products = await getLiveLaptops();

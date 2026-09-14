@@ -109,7 +109,25 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: "/api/:path*",
+        source: "/api/orders/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, max-age=0",
+          },
+        ],
+      },
+      {
+        source: "/api/admin/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, max-age=0",
+          },
+        ],
+      },
+      {
+        source: "/api/inventory/:path*",
         headers: [
           {
             key: "Cache-Control",

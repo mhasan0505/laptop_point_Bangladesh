@@ -2,7 +2,7 @@ import { getLiveLaptops } from "@/app/data/data";
 import FlashSaleBanner from "@/components/application/FlashSaleBanner";
 import ProductsCard from "@/components/ui/ProductsCard";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function DealsPage() {
   const laptops = await getLiveLaptops();

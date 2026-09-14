@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { VALID_STATUSES } from "@/lib/orders";
 import { computeOrderTotals } from "@/lib/pricing";
 import { Prisma } from "@prisma/client";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 // Business rules imported from lib/pricing.ts (single source of truth,
@@ -317,6 +318,38 @@ export async function POST(request: NextRequest) {
 
         return newOrder;
       });
+
+      // Next.js 16+ requires a second profile argument for revalidateTag in route handlers.
+      // Passing { expire: 0 } signals immediate cache eviction rather than SWR background refresh.
+      // See official migration guide: https://nextjs.org/docs/messages/revalidate-tag-single-arg
+      try {
+        revalidateTag("products", { expire: 0 });
+      } catch {
+        // Tag revalidation may not be available in all contexts
+      }
+
+      try {
+        const { findRawProductByIdOrSku } = await import("@/lib/products-storage");
+        const { mapRawToProduct } = await import("@/app/data/data");
+        for (const item of orderInput.items) {
+          const idOrSku = item.sku || item.productId;
+          if (idOrSku) {
+            const rawProd = await findRawProductByIdOrSku(idOrSku);
+            if (rawProd) {
+              const mapped = mapRawToProduct(rawProd);
+              if (mapped.slug) {
+                revalidatePath(`/product/${mapped.slug}`);
+              }
+            }
+          }
+        }
+      } catch {
+        // Ignore if lookup fails
+      }
+
+      revalidatePath("/product/[slug]", "page");
+      revalidatePath("/shop");
+      revalidatePath("/");
 
       return NextResponse.json(
         { success: true, orderNumber: order.orderNumber, id: order.id },
