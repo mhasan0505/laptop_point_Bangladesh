@@ -148,9 +148,17 @@ export default function OrdersPage() {
   };
 
   const filteredOrders = orders.filter((order) => {
+    const q = searchQuery.trim().toLowerCase();
+    const cleanQ = q.replace(/^#/, "");
+    const cleanId = order.id.toLowerCase().replace(/^#/, "");
+
     const matchesSearch =
-      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.customer.toLowerCase().includes(searchQuery.toLowerCase());
+      !q ||
+      cleanId.includes(cleanQ) ||
+      order.id.toLowerCase().includes(q) ||
+      order.customer.toLowerCase().includes(q) ||
+      (order.paymentMethod && order.paymentMethod.toLowerCase().includes(q));
+
     const matchesStatus =
       statusFilter === "All" || order.status === statusFilter;
     return matchesSearch && matchesStatus;

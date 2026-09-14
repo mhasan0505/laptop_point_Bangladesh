@@ -22,12 +22,22 @@ function mapJsonToAdminProducts(): AdminProduct[] {
       id: String(product.id),
       name: product.name,
       brand: product.brand || "Unknown",
+      model: product.model || "",
       category: product.category || "Laptop",
       price: product.pricing?.sale_price ?? 0,
       stock,
       status,
       sku: product.sku || String(product.id),
       images: product.images || [],
+      description: product.description?.short || "",
+      specs: {
+        processor: product.specs?.processor || "",
+        ram: product.specs?.ram || "",
+        storage: product.specs?.storage || "",
+        display: product.specs?.display?.size
+          ? `${product.specs.display.size} ${product.specs.display.resolution || ""}`.trim()
+          : "",
+      },
     };
   });
 }

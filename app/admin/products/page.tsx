@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/contexts/ToastContext";
 import { AdminProduct } from "@/lib/admin-data";
 import { deleteAdminProduct, fetchAdminProducts } from "@/lib/admin-products-api";
-import { Edit, Laptop, Plus, Trash2 } from "lucide-react";
+import { searchAdminProducts } from "@/lib/admin-search";
+import { Edit, Laptop, Plus, Search, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
@@ -43,15 +44,9 @@ const AdminProducts = () => {
     return ["All", ...Array.from(set).sort()];
   }, [products]);
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      filterCategory === "All" || product.category === filterCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredProducts = useMemo(() => {
+    return searchAdminProducts(products, searchTerm, filterCategory);
+  }, [products, searchTerm, filterCategory]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -118,20 +113,31 @@ const AdminProducts = () => {
       <Card className="mb-6 bg-white border border-gray-200 shadow-xs">
         <CardContent className="p-4">
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
               <input
                 type="text"
-                placeholder="Search products by name, brand, or SKU..."
+                placeholder="Search products by name, model, brand, SKU, processor, or ID (e.g. 840 G3, #1, 7490)..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-black focus:border-transparent outline-none text-sm"
+                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-black focus:border-transparent outline-none text-sm"
               />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 p-1"
+                  title="Clear search"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
             <div>
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline-none pr-8 text-sm cursor-pointer"
+                className="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent outline-none pr-8 text-sm cursor-pointer"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
@@ -275,7 +281,28 @@ const AdminProducts = () => {
                       className="py-12 px-4 text-center text-gray-500 text-sm"
                       colSpan={7}
                     >
-                      No products found matching your search and category filter.
+                      <p className="font-medium text-gray-700 mb-1">
+                        {searchTerm
+                          ? `No products found matching "${searchTerm}"${
+                              filterCategory !== "All" ? ` in ${filterCategory}` : ""
+                            }`
+                          : "No products found in this category."}
+                      </p>
+                      <p className="text-xs text-gray-400 mb-3">
+                        Try searching by model (e.g. 840 G3, 7490), brand, SKU, processor, or product ID (#1).
+                      </p>
+                      {(searchTerm || filterCategory !== "All") && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchTerm("");
+                            setFilterCategory("All");
+                          }}
+                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors cursor-pointer"
+                        >
+                          Clear Filters
+                        </button>
+                      )}
                     </td>
                   </tr>
                 )}

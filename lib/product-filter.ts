@@ -65,16 +65,48 @@ export function filterProducts(
   let result = [...products];
 
   if (searchQuery) {
-    const query = searchQuery.toLowerCase();
-    result = result.filter(
-      (product) =>
-        product.name.toLowerCase().includes(query) ||
-        (product.brand && product.brand.toLowerCase().includes(query)) ||
-        (product.category && product.category.toLowerCase().includes(query)) ||
-        (product.sku && product.sku.toLowerCase().includes(query)) ||
-        (product.specs?.processor &&
-          product.specs.processor.toLowerCase().includes(query)),
-    );
+    const rawTerm = searchQuery.trim().toLowerCase();
+    const tokens = rawTerm.split(/\s+/).filter(Boolean);
+
+    if (tokens.length > 0) {
+      const scored: Array<{ product: Product; score: number }> = [];
+
+      for (const product of result) {
+        const pId = String(product.id || "");
+        const pName = (product.name || "").toLowerCase();
+        const pBrand = (product.brand || "").toLowerCase();
+        const pCat = (product.category || "").toLowerCase();
+        const pSku = (product.sku || "").toLowerCase();
+        const pProc = (product.specs?.processor || "").toLowerCase();
+        const searchable = `${pId} ${pName} ${pBrand} ${pCat} ${pSku} ${pProc}`;
+
+        const allMatch = tokens.every((t) => {
+          if (t.length <= 2) {
+            if (pId === t) return true;
+            const rx = new RegExp(`\\b${t}\\b`, "i");
+            return rx.test(pName) || rx.test(pBrand) || rx.test(pSku) || rx.test(pProc);
+          }
+          return searchable.includes(t);
+        });
+
+        if (allMatch) {
+          let score = 0;
+          if (pId === rawTerm) score += 3000;
+          if (pSku === rawTerm) score += 2500;
+          if (pName === rawTerm) score += 2000;
+          else if (pName.startsWith(rawTerm)) score += 1000;
+          else if (pName.includes(rawTerm)) score += 500;
+
+          const tokensInName = tokens.filter((t) => pName.includes(t));
+          score += (tokensInName.length / tokens.length) * 300;
+
+          scored.push({ product, score });
+        }
+      }
+
+      scored.sort((a, b) => b.score - a.score);
+      result = scored.map((s) => s.product);
+    }
   }
 
   if (filters.priceMin) {

@@ -156,14 +156,23 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
       setSearchResults([]);
       return;
     }
-    const q = query.toLowerCase();
+    const q = query.toLowerCase().trim();
+    const tokens = q.split(/\s+/).filter(Boolean);
     const filtered = searchIndex
-      .filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.brand.toLowerCase().includes(q) ||
-          p.category.toLowerCase().includes(q),
-      )
+      .filter((p) => {
+        const pName = p.name.toLowerCase();
+        const pBrand = p.brand.toLowerCase();
+        const pCat = p.category.toLowerCase();
+        const searchable = `${pName} ${pBrand} ${pCat}`;
+
+        return tokens.every((token) => {
+          if (token.length <= 2) {
+            const rx = new RegExp(`\\b${token}\\b`, "i");
+            return rx.test(pName) || rx.test(pBrand);
+          }
+          return searchable.includes(token);
+        });
+      })
       .slice(0, 5);
     setSearchResults(filtered);
   };

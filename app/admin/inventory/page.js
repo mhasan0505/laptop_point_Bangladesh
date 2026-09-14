@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { AlertTriangle, Edit2, Package, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { searchAdminProducts } from "@/lib/admin-search";
 
 function mapProducts() {
   return productsRaw.map((product) => {
@@ -20,12 +21,18 @@ function mapProducts() {
       id: String(product.id),
       name: product.name,
       brand: product.brand || "Unknown",
+      model: product.model || "",
       category: product.category || "Laptop",
       price: product.pricing?.sale_price ?? 0,
       stock,
       status,
       sku: product.sku || String(product.id),
       images: product.images || [],
+      specs: {
+        processor: product.specs?.processor || "",
+        ram: product.specs?.ram || "",
+        storage: product.specs?.storage || "",
+      },
     };
   });
 }
@@ -47,11 +54,9 @@ const InventoryPage = () => {
       .catch(() => {});
   }, []);
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredProducts = useMemo(() => {
+    return searchAdminProducts(products, searchTerm);
+  }, [products, searchTerm]);
 
   const lowStockProducts = products.filter((p) => p.stock < 10 && p.stock > 0);
   const outOfStockProducts = products.filter((p) => p.stock === 0);

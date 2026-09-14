@@ -99,17 +99,30 @@ const Header = () => {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim() && searchIndex) {
-      const normalizedQuery = query.toLowerCase();
+      const normalizedQuery = query.toLowerCase().trim();
+      const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
       const normalizedCategory = selectedSearchCategory.toLowerCase();
+
       const filtered = searchIndex
-        .filter(
-          (product) =>
-            (product.name.toLowerCase().includes(normalizedQuery) ||
-              product.brand.toLowerCase().includes(normalizedQuery) ||
-              product.category.toLowerCase().includes(normalizedQuery)) &&
-            (selectedSearchCategory === "all" ||
-              product.category.toLowerCase().includes(normalizedCategory)),
-        )
+        .filter((product) => {
+          const categoryMatches =
+            selectedSearchCategory === "all" ||
+            product.category.toLowerCase().includes(normalizedCategory);
+          if (!categoryMatches) return false;
+
+          const pName = product.name.toLowerCase();
+          const pBrand = product.brand.toLowerCase();
+          const pCat = product.category.toLowerCase();
+          const searchable = `${pName} ${pBrand} ${pCat}`;
+
+          return tokens.every((token) => {
+            if (token.length <= 2) {
+              const rx = new RegExp(`\\b${token}\\b`, "i");
+              return rx.test(pName) || rx.test(pBrand);
+            }
+            return searchable.includes(token);
+          });
+        })
         .slice(0, 5);
       setSearchResults(filtered);
     } else {
