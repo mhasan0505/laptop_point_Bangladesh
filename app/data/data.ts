@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { Product } from "@/types/product";
 export type { Product } from "@/types/product";
 import { RawProduct } from "@/types/raw-product";
@@ -147,7 +148,7 @@ function getLaptops(): Product[] {
 }
 
 
-export async function getLiveLaptops(): Promise<Product[]> {
+export const getLiveLaptops = cache(async (): Promise<Product[]> => {
   if (typeof window === "undefined") {
     try {
       const { loadMergedRawProducts } = await import("@/lib/products-storage");
@@ -158,7 +159,7 @@ export async function getLiveLaptops(): Promise<Product[]> {
     }
   }
   return getLaptops();
-}
+});
 
 export const laptopData = {
   get laptops(): Product[] {

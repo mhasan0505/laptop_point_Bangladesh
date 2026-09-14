@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { RawProduct } from "@/types/raw-product";
 import { promises as fs } from "fs";
 import path from "path";
+import { cache } from "react";
 
 const productsFilePath = path.join(process.cwd(), "app", "data", "products.json");
 const manifestFilePath = path.join(process.cwd(), "app", "data", "product-image-manifest.json");
@@ -33,8 +34,9 @@ export function setCachedRawProducts(products: RawProduct[]): void {
 
 /**
  * Load products with PostgreSQL overrides applied (merged with live Inventory stock).
+ * Wrapped in React cache() to deduplicate requests within the same render cycle.
  */
-export async function loadMergedRawProducts(): Promise<RawProduct[]> {
+export const loadMergedRawProducts = cache(async (): Promise<RawProduct[]> => {
   const baseProducts = await loadBaseProductsJson();
   const productMap = new Map<string, RawProduct>();
 
@@ -43,9 +45,11 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
     productMap.set(product.sku.toLowerCase(), { ...product });
   }
 
-  // Fetch overrides from PostgreSQL
+  // Fetch overrides from PostgreSQL with minimal field selection
   try {
-    const overrides = await prisma.productOverride.findMany();
+    const overrides = await prisma.productOverride.findMany({
+      select: { sku: true, isDeleted: true, data: true },
+    });
     for (const item of overrides) {
       const key = item.sku.toLowerCase();
       if (item.isDeleted) {
@@ -58,12 +62,18 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
     console.warn("[loadMergedRawProducts] Database override fetch warning:", dbErr);
   }
 
-  // Fetch live inventory overrides from PostgreSQL
+  // Fetch live inventory overrides from PostgreSQL with minimal field selection
   try {
-    const invRecords = await prisma.inventory.findMany();
+    const invRecords = await prisma.inventory.findMany({
+      select: { productId: true, sku: true, quantity: true },
+    });
     for (const inv of invRecords) {
-      const key = inv.sku.toLowerCase();
-      const existing = productMap.get(key);
+      const key = inv.sku ? inv.sku.toLowerCase() : "";
+      const existing =
+        productMap.get(key) ||
+        (inv.productId
+          ? Array.from(productMap.values()).find((p) => String(p.id) === inv.productId)
+          : undefined);
       if (existing) {
         existing.stock = {
           ...existing.stock,
@@ -87,11 +97,11 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
   }
 
   return merged;
-}
-
+});
 
 /**
  * Find a specific product by its ID or SKU with live stock.
+ * Stock is already merged by loadMergedRawProducts(), eliminating the redundant findFirst() query.
  */
 export async function findRawProductByIdOrSku(idOrSku: string): Promise<RawProduct | null> {
   const products = await loadMergedRawProducts();
@@ -99,24 +109,7 @@ export async function findRawProductByIdOrSku(idOrSku: string): Promise<RawProdu
     (p) => String(p.id) === idOrSku || p.sku.toLowerCase() === idOrSku.toLowerCase(),
   );
 
-  if (!target) return null;
-
-  try {
-    const inv = await prisma.inventory.findFirst({
-      where: { OR: [{ productId: String(target.id) }, { sku: target.sku }] },
-    });
-    if (inv) {
-      target.stock = {
-        ...target.stock,
-        quantity: inv.quantity,
-        status: inv.quantity > 0 ? "In Stock" : "Out of Stock",
-      };
-    }
-  } catch {
-    // Ignore DB error
-  }
-
-  return target;
+  return target ?? null;
 }
 
 /**
