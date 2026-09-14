@@ -495,14 +495,37 @@ export default function ProductDetailsClient({
                         </strong>
                       </span>
                     </div>
-                    <span className="font-semibold text-primary inline-flex items-center gap-1 text-[0.72rem]">
-                      {isEMIOpen ? "Hide EMI" : "Calculate EMI"}{" "}
-                      {isEMIOpen ? (
-                        <ChevronUp className="h-3.5 w-3.5" />
-                      ) : (
-                        <ChevronDown className="h-3.5 w-3.5" />
-                      )}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <div className="hidden sm:flex items-center -space-x-1 overflow-hidden">
+                        {[
+                          { name: "SCB", src: "/bank_logo/standard_chartert.png" },
+                          { name: "City Bank", src: "/bank_logo/city_bank.png" },
+                          { name: "BRAC Bank", src: "/bank_logo/brack_bank.png" },
+                        ].map((b) => (
+                          <div
+                            key={b.name}
+                            className="relative flex h-5 w-6 shrink-0 items-center justify-center rounded border border-border/80 bg-white p-0.5 shadow-2xs"
+                          >
+                            <Image
+                              src={b.src}
+                              alt={b.name}
+                              width={20}
+                              height={12}
+                              unoptimized
+                              className="max-h-3 w-auto object-contain"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <span className="font-semibold text-primary inline-flex items-center gap-1 text-[0.72rem]">
+                        {isEMIOpen ? "Hide EMI" : "Calculate EMI"}{" "}
+                        {isEMIOpen ? (
+                          <ChevronUp className="h-3.5 w-3.5" />
+                        ) : (
+                          <ChevronDown className="h-3.5 w-3.5" />
+                        )}
+                      </span>
+                    </div>
                   </button>
                 )}
               </div>

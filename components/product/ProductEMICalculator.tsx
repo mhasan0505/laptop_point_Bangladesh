@@ -107,6 +107,11 @@ export default function ProductEMICalculator({
   const [selectedBankId, setSelectedBankId] = useState<string>("citybank");
   const [selectedMonths, setSelectedMonths] = useState<number>(12);
   const [showAllTenures, setShowAllTenures] = useState<boolean>(false);
+  const [failedLogos, setFailedLogos] = useState<Record<string, boolean>>({});
+
+  const handleLogoError = (id: string) => {
+    setFailedLogos((prev) => ({ ...prev, [id]: true }));
+  };
 
   const isEligible = price >= 5000;
 
@@ -257,17 +262,21 @@ export default function ProductEMICalculator({
                         : "border-border/80 bg-card hover:border-primary/40 hover:bg-secondary/40"
                     }`}
                   >
-                    <div className="relative h-6 w-full max-w-16">
-                      {b.logoPath ? (
-                        <Image
-                          src={b.logoPath}
-                          alt={b.name}
-                          fill
-                          className="object-contain"
-                          sizes="64px"
-                        />
+                    <div className="flex h-7 w-full max-w-16 items-center justify-center rounded-md bg-white p-1 shadow-2xs">
+                      {b.logoPath && !failedLogos[b.id] ? (
+                        <div className="relative h-full w-full">
+                          <Image
+                            src={b.logoPath}
+                            alt={b.name}
+                            fill
+                            unoptimized
+                            className="object-contain"
+                            sizes="64px"
+                            onError={() => handleLogoError(b.id)}
+                          />
+                        </div>
                       ) : (
-                        <Building2 className="mx-auto h-5 w-5 text-muted-foreground" />
+                        <Building2 className="mx-auto h-4 w-4 text-muted-foreground" />
                       )}
                     </div>
                     <span
@@ -287,6 +296,19 @@ export default function ProductEMICalculator({
             {/* Selected bank info & supported card types */}
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-secondary/30 px-3.5 py-2 text-xs">
               <div className="flex items-center gap-2">
+                {selectedBank.logoPath && !failedLogos[selectedBank.id] && (
+                  <div className="relative flex h-6 w-10 shrink-0 items-center justify-center rounded bg-white p-0.5 shadow-2xs">
+                    <Image
+                      src={selectedBank.logoPath}
+                      alt={selectedBank.name}
+                      width={40}
+                      height={20}
+                      unoptimized
+                      className="max-h-5 w-auto object-contain"
+                      onError={() => handleLogoError(selectedBank.id)}
+                    />
+                  </div>
+                )}
                 <span className="font-semibold text-foreground">
                   {selectedBank.name}
                 </span>

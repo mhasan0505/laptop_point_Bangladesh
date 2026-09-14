@@ -382,6 +382,7 @@ export default function Footer() {
                         alt={alt}
                         width={48}
                         height={20}
+                        unoptimized
                         className="h-auto w-auto max-h-5 object-contain"
                       />
                     </div>

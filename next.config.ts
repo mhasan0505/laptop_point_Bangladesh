@@ -26,8 +26,8 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000,
-    // Now optimized since paths use dashes instead of spaces
-    unoptimized: false,
+    // Disable Next.js image proxy to prevent Vercel 402 payment required limit on Hobby plan
+    unoptimized: true,
     dangerouslyAllowSVG: true,
   },
   compress: true,
@@ -128,6 +128,24 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/products/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/bank_logo/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/payment_logo/:path*",
         headers: [
           {
             key: "Cache-Control",

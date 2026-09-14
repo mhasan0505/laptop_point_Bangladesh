@@ -408,6 +408,7 @@ const EMIPage = () => {
                     alt="Standard Chartered Bank"
                     width={96}
                     height={32}
+                    unoptimized
                     className="max-h-7 w-auto object-contain"
                   />
                 </div>
@@ -462,6 +463,7 @@ const EMIPage = () => {
                     alt="Lanka Bangla Bank"
                     width={96}
                     height={32}
+                    unoptimized
                     className="max-h-7 w-auto object-contain"
                   />
                 </div>
@@ -633,6 +635,7 @@ const EMIPage = () => {
                           alt="Visa"
                           width={70}
                           height={22}
+                          unoptimized
                           className="h-auto w-auto max-h-5 object-contain"
                         />
                       </div>
@@ -659,6 +662,7 @@ const EMIPage = () => {
                           alt="Mastercard"
                           width={70}
                           height={22}
+                          unoptimized
                           className="h-auto w-auto max-h-5 object-contain"
                         />
                       </div>
@@ -685,6 +689,7 @@ const EMIPage = () => {
                           alt="American Express"
                           width={70}
                           height={22}
+                          unoptimized
                           className="h-auto w-auto max-h-5 object-contain"
                         />
                       </div>
