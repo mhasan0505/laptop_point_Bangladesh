@@ -4,32 +4,11 @@
     "sku": "HP-440G3-001",
     "name": "HP ProBook 440 G3 Business Laptop",
     "brand": "HP",
-    "model": "ProBook 440 G3",
-    "category": "Laptop",
-    "condition": "Used",
     "grade": "A",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 20000,
-      "market_price": 24500,
-      "discount_percentage": 18,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 7
-    },
+    "model": "ProBook 440 G3",
     "specs": {
-      "processor": "Intel Core i5-6200U (6th Gen)",
+      "os": "Windows 10 Pro",
       "ram": "8GB DDR3L",
-      "storage": "256GB SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1366 x 768 (HD)",
-        "type": "Anti-Glare LED",
-        "touchscreen": false
-      },
-      "graphics": "Intel HD Graphics 520",
       "ports": [
         "HDMI",
         "VGA",
@@ -38,23 +17,44 @@
         "RJ-45"
       ],
       "weight": "1.68 kg",
-      "os": "Windows 10 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "Anti-Glare LED",
+        "resolution": "1366 x 768 (HD)",
+        "touchscreen": false
+      },
+      "storage": "256GB SSD",
+      "graphics": "Intel HD Graphics 520",
+      "processor": "Intel Core i5-6200U (6th Gen)"
     },
-    "description": {
-      "short": "Reliable 14-inch business laptop with legacy ports and durable build.",
-      "full": "**Who is this laptop for?**\nThis laptop is ideally suited for students and office administration tasks who need a reliable workhorse for productivity.\n\n**What makes it durable?**\nThe HP ProBook 440 G3 features a durable chassis that has passed extensive testing and includes a spill-resistant keyboard.\n\n**What are its key connectivity features?**\nIt offers a comprehensive set of ports including legacy options like VGA and HDMI, making it perfect for connecting to older projectors and monitors without needing dongles."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 7
     },
-    "features": [
-      "Durable Chassis",
-      "Spill-resistant Keyboard",
-      "Legacy VGA Port"
-    ],
     "images": [
       "/products/hp/HP-Probook-440-G3-Core-i5-6TH-Gen-8-256/main.jpg",
       "/products/hp/HP-Probook-440-G3-Core-i5-6TH-Gen-8-256/front.jpg",
       "/products/hp/HP-Probook-440-G3-Core-i5-6TH-Gen-8-256/back.jpg",
       "/products/hp/HP-Probook-440-G3-Core-i5-6TH-Gen-8-256/keyborad.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 21000,
+      "market_price": 25000,
+      "tax_included": true,
+      "discount_percentage": 16
+    },
+    "category": "Laptop",
+    "features": [
+      "Durable Chassis",
+      "Spill-resistant Keyboard",
+      "Legacy VGA Port"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**Who is this laptop for?**\nThis laptop is ideally suited for students and office administration tasks who need a reliable workhorse for productivity.\n\n**What makes it durable?**\nThe HP ProBook 440 G3 features a durable chassis that has passed extensive testing and includes a spill-resistant keyboard.\n\n**What are its key connectivity features?**\nIt offers a comprehensive set of ports including legacy options like VGA and HDMI, making it perfect for connecting to older projectors and monitors without needing dongles.",
+      "short": "Reliable 14-inch business laptop with legacy ports and durable build."
+    }
   },
   {
     "id": 2,
@@ -234,32 +234,11 @@
     "sku": "HP-840G7-005",
     "name": "HP EliteBook 840 G7 Premium",
     "brand": "HP",
-    "model": "EliteBook 840 G7",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 35500,
-      "market_price": 44000,
-      "discount_percentage": 17,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 6
-    },
+    "model": "EliteBook 840 G7",
     "specs": {
-      "processor": "Intel Core i5-10310U (10th Gen)",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Narrow Bezel",
-        "touchscreen": false
-      },
-      "graphics": "Intel UHD Graphics",
       "ports": [
         "2x Thunderbolt 3",
         "2x USB 3.1",
@@ -267,57 +246,57 @@
         "Audio Combo"
       ],
       "weight": "1.33 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Narrow Bezel",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB NVMe SSD",
+      "graphics": "Intel UHD Graphics",
+      "processor": "Intel Core i5-10310U (10th Gen)"
     },
-    "description": {
-      "short": "Redesigned 10th Gen lightweight ultrabook with narrow bezels.",
-      "full": "**What are the main design improvements in the G7?**\n The G7 features a major design overhaul, resulting in a lighter chassis (1.33kg) and significantly thinner screen bezels, giving it a more modern and compact footprint. \n\n**How does it handle multitasking?**\n With 16GB of RAM as a standard configuration, this laptop is built to handle heavy multitasking with ease, allowing you to run multiple applications smoothly. \n\n**What are the user experience upgrades?**\n The keyboard has been redesigned to be quieter and more comfortable for long typing sessions, and it offers around 3 hours of battery life for typical use."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 6
     },
-    "features": [
-      "Lightweight (1.33kg)",
-      "Narrow Bezels",
-      "16GB RAM Standard",
-      "Quiet Keyboard"
-    ],
     "images": [
       "/products/hp/HP-Elitebook-840-G7-Core-i5-10TH-Gen-16-512/main.jpg",
       "/products/hp/HP-Elitebook-840-G7-Core-i5-10TH-Gen-16-512/front.jpg",
       "/products/hp/HP-Elitebook-840-G7-Core-i5-10TH-Gen-16-512/back.jpg",
       "/products/hp/HP-Elitebook-840-G7-Core-i5-10TH-Gen-16-512/side.jpg",
       "/products/hp/HP-Elitebook-840-G7-Core-i5-10TH-Gen-16-512/side1.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 38500,
+      "market_price": 44000,
+      "tax_included": true,
+      "discount_percentage": 13
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Lightweight (1.33kg)",
+      "Narrow Bezels",
+      "16GB RAM Standard",
+      "Quiet Keyboard"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What are the main design improvements in the G7?**\n The G7 features a major design overhaul, resulting in a lighter chassis (1.33kg) and significantly thinner screen bezels, giving it a more modern and compact footprint. \n\n**How does it handle multitasking?**\n With 16GB of RAM as a standard configuration, this laptop is built to handle heavy multitasking with ease, allowing you to run multiple applications smoothly. \n\n**What are the user experience upgrades?**\n The keyboard has been redesigned to be quieter and more comfortable for long typing sessions, and it offers around 3 hours of battery life for typical use.",
+      "short": "Redesigned 10th Gen lightweight ultrabook with narrow bezels."
+    }
   },
   {
     "id": 6,
     "sku": "HP-840G8-I5-006",
     "name": "HP EliteBook 840 G8 (i5)",
     "brand": "HP",
-    "model": "EliteBook 840 G8",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 41500,
-      "market_price": 48000,
-      "discount_percentage": 16,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 4
-    },
+    "model": "EliteBook 840 G8",
     "specs": {
-      "processor": "Intel Core i5-1135G7 (11th Gen)",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4 (3200MHz)",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS High Brightness",
-        "touchscreen": false
-      },
-      "graphics": "Intel Iris Xe Graphics",
       "ports": [
         "2x Thunderbolt 4",
         "2x USB-A",
@@ -325,18 +304,20 @@
         "Audio Combo"
       ],
       "weight": "1.32 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS High Brightness",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "Intel Iris Xe Graphics",
+      "processor": "Intel Core i5-1135G7 (11th Gen)"
     },
-    "description": {
-      "short": "Current-gen performance with 11th Gen i5 and Iris Xe Graphics.",
-      "full": "**What is the biggest upgrade in the G8 model?**\n The G8 is a powerhouse, featuring Intel's 11th Gen Tiger Lake processor and the formidable Iris Xe integrated graphics, which deliver a huge boost in graphical performance for creative tasks and even light gaming. \n\n**What future-proof connectivity does it offer?**\n It comes equipped with two Thunderbolt 4 ports, providing the fastest, most versatile connection for modern docks, displays, and external storage. \n\n**How does it improve remote collaboration?**\n The G8 includes AI-based noise cancellation, which filters out background noise during video calls, ensuring your voice is heard with crystal clarity."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
     },
-    "features": [
-      "Intel Iris Xe Graphics",
-      "Thunderbolt 4",
-      "AI Noise Cancellation",
-      "WiFi 6"
-    ],
     "images": [
       "/products/hp/HP-Elitebook-840-G8-Core-i5-11TH-Gen-16-512/main.jpg",
       "/products/hp/HP-Elitebook-840-G8-Core-i5-11TH-Gen-16-512/front.jpg",
@@ -344,56 +325,57 @@
       "/products/hp/HP-Elitebook-840-G8-Core-i5-11TH-Gen-16-512/side.jpg",
       "/products/hp/HP-Elitebook-840-G8-Core-i5-11TH-Gen-16-512/side1.jpg",
       "/products/hp/HP-Elitebook-840-G8-Core-i5-11TH-Gen-16-512/port.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 45500,
+      "market_price": 48000,
+      "tax_included": true,
+      "discount_percentage": 5
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Intel Iris Xe Graphics",
+      "Thunderbolt 4",
+      "AI Noise Cancellation",
+      "WiFi 6"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What is the biggest upgrade in the G8 model?**\n The G8 is a powerhouse, featuring Intel's 11th Gen Tiger Lake processor and the formidable Iris Xe integrated graphics, which deliver a huge boost in graphical performance for creative tasks and even light gaming. \n\n**What future-proof connectivity does it offer?**\n It comes equipped with two Thunderbolt 4 ports, providing the fastest, most versatile connection for modern docks, displays, and external storage. \n\n**How does it improve remote collaboration?**\n The G8 includes AI-based noise cancellation, which filters out background noise during video calls, ensuring your voice is heard with crystal clarity.",
+      "short": "Current-gen performance with 11th Gen i5 and Iris Xe Graphics."
+    }
   },
   {
     "id": 7,
     "sku": "HP-840G8-I7-007",
     "name": "HP EliteBook 840 G8 (i7 Edition)",
     "brand": "HP",
-    "model": "EliteBook 840 G8",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 46000,
-      "market_price": 55000,
-      "discount_percentage": 16,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 3
-    },
+    "model": "EliteBook 840 G8",
     "specs": {
-      "processor": "Intel Core i7-1165G7 (11th Gen)",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4 (3200MHz)",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS 400 nits",
-        "touchscreen": false
-      },
-      "graphics": "Intel Iris Xe Graphics",
       "ports": [
         "2x Thunderbolt 4",
         "2x USB-A",
         "HDMI 2.0b"
       ],
       "weight": "1.32 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS 300 nits",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "Intel Iris Xe Graphics",
+      "processor": "Intel Core i7-1165G7 (11th Gen)"
     },
-    "description": {
-      "short": "Top-tier 11th Gen i7 performance for demanding professionals.",
-      "full": "**What is the difference between the i5 and i7 versions of the 840 G8?**\n While identical in build, this version is supercharged with the Core i7-1165G7 processor, which offers higher clock speeds and a larger cache for better performance. \n\n**Who should choose the i7 version?**\n This model is ideal for developers, data analysts, video editors, and power users who frequently run demanding applications and need the extra processing headroom to avoid slowdowns. \n\n**Does it have a better display?**\n Yes, this model often comes with a higher-quality, 400-nit high-brightness display, making it easier to see in bright environments and providing more vibrant colors."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
     },
-    "features": [
-      "Core i7 Performance",
-      "High Brightness Display",
-      "Thunderbolt 4"
-    ],
     "images": [
       "/products/hp/HP-Elitebook-840-G8-Core-I7-11TH-Gen-16-512/main.jpg",
       "/products/hp/HP-Elitebook-840-G8-Core-I7-11TH-Gen-16-512/front.jpg",
@@ -401,57 +383,56 @@
       "/products/hp/HP-Elitebook-840-G8-Core-I7-11TH-Gen-16-512/side1.jpg",
       "/products/hp/HP-Elitebook-840-G8-Core-I7-11TH-Gen-16-512/port.jpg",
       "/products/hp/HP-Elitebook-840-G8-Core-I7-11TH-Gen-16-512/port1.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 49500,
+      "market_price": 55000,
+      "tax_included": true,
+      "discount_percentage": 10
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Core i7 Performance",
+      "High Brightness Display",
+      "Thunderbolt 4"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What is the difference between the i5 and i7 versions of the 840 G8?**\n While identical in build, this version is supercharged with the Core i7-1165G7 processor, which offers higher clock speeds and a larger cache for better performance. \n\n**Who should choose the i7 version?**\n This model is ideal for developers, data analysts, video editors, and power users who frequently run demanding applications and need the extra processing headroom to avoid slowdowns. \n\n**Does it have a better display?**\n Yes, this model often comes with a higher-quality, 400-nit high-brightness display, making it easier to see in bright environments and providing more vibrant colors.",
+      "short": "Top-tier 11th Gen i7 performance for demanding professionals."
+    }
   },
   {
     "id": 8,
     "sku": "HP-1040G8-008",
     "name": "HP EliteBook x360 1040 G8",
     "brand": "HP",
-    "model": "EliteBook x360 1040 G8",
-    "category": "Convertible 2-in-1",
-    "condition": "Used",
     "grade": "Premium",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 67000,
-      "market_price": 85000,
-      "discount_percentage": 21,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "Limited Stock",
-      "quantity": 1
-    },
+    "model": "EliteBook x360 1040 G8",
     "specs": {
-      "processor": "Intel Core i7-1165G7 (11th Gen)",
+      "os": "Windows 11 Pro",
       "ram": "16GB LPDDR4x (Soldered)",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "Touchscreen IPS 360-Hinge",
-        "touchscreen": true
-      },
-      "graphics": "Intel Iris Xe Graphics",
       "ports": [
         "2x Thunderbolt 4",
         "2x USB-A",
         "HDMI 2.0"
       ],
       "weight": "1.32 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "Touchscreen IPS 360-Hinge",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": true
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "Intel Iris Xe Graphics",
+      "processor": "Intel Core i7-1165G7 (11th Gen)"
     },
-    "description": {
-      "short": "Premium 2-in-1 convertible with tablet mode and touch.",
-      "full": "**What does 'x360' mean?**\n The 'x360' signifies that this is a convertible laptop with a 360-degree hinge. You can use it as a traditional powerful laptop, or flip the screen all the way around to use it as a responsive tablet. \n\n**What makes it a 'flagship' model?**\n The x360 1040 G8 is crafted from premium CNC aluminum for a stunning look and feel, features a powerful Core i7 processor, and offers around 3 hours of battery life for typical use. \n\n**Who is the ideal user for this device?**\n It's the ultimate device for executives, creatives, and sales professionals who need the flexibility of a tablet and the power of a laptop in a single, premium package."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 1
     },
-    "features": [
-      "360 Degree Hinge",
-      "Touchscreen",
-      "CNC Aluminum Body",
-      "Premium Audio"
-    ],
     "images": [
       "/products/hp/HP-Elitebook-X360-1040-G8-Core-I7-11TH-Gen-16-512/main.jpg",
       "/products/hp/HP-Elitebook-X360-1040-G8-Core-I7-11TH-Gen-16-512/back.jpg",
@@ -459,118 +440,137 @@
       "/products/hp/HP-Elitebook-X360-1040-G8-Core-I7-11TH-Gen-16-512/front2.jpg",
       "/products/hp/HP-Elitebook-X360-1040-G8-Core-I7-11TH-Gen-16-512/side.jpg",
       "/products/hp/HP-Elitebook-X360-1040-G8-Core-I7-11TH-Gen-16-512/port.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 68000,
+      "market_price": 85000,
+      "tax_included": true,
+      "discount_percentage": 20
+    },
+    "category": "Convertible 2-in-1",
+    "features": [
+      "360 Degree Hinge",
+      "Touchscreen",
+      "CNC Aluminum Body",
+      "Premium Audio"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What does 'x360' mean?**\n The 'x360' signifies that this is a convertible laptop with a 360-degree hinge. You can use it as a traditional powerful laptop, or flip the screen all the way around to use it as a responsive tablet. \n\n**What makes it a 'flagship' model?**\n The x360 1040 G8 is crafted from premium CNC aluminum for a stunning look and feel, features a powerful Core i7 processor, and offers around 3 hours of battery life for typical use. \n\n**Who is the ideal user for this device?**\n It's the ultimate device for executives, creatives, and sales professionals who need the flexibility of a tablet and the power of a laptop in a single, premium package.",
+      "short": "Premium 2-in-1 convertible with tablet mode and touch."
+    }
   },
   {
     "id": 9,
     "sku": "HP-845G7-009",
     "name": "HP EliteBook 845 G7 (Ryzen)",
     "brand": "HP",
-    "model": "EliteBook 845 G7",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "A+",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 37000,
-      "market_price": 40000,
-      "discount_percentage": 10,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 5
-    },
+    "model": "EliteBook 845 G7",
     "specs": {
-      "processor": "AMD Ryzen 5 PRO 4650U",
+      "os": "Windows 10/11 Pro",
       "ram": "16GB DDR4",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS",
-        "touchscreen": false
-      },
-      "graphics": "AMD Radeon Graphics",
       "ports": [
         "2x USB-C",
         "2x USB-A",
         "HDMI 2.0"
       ],
       "weight": "1.35 kg",
-      "os": "Windows 10/11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "AMD Radeon Graphics",
+      "processor": "AMD Ryzen 5 PRO 4650U"
     },
-    "description": {
-      "short": "Ryzen Pro power offering superior multi-core performance.",
-      "full": "**What is the main advantage of the AMD Ryzen processor in this model?**\n The AMD Ryzen 5 Pro processor in the 845 G7 often outperforms its Intel equivalents in multi-core tasks, making it faster for applications that can use multiple processor cores simultaneously. \n\n**How is the user experience?**\n This laptop typically runs cooler and quieter than many competitors while offering around 3 hours of battery life, making it comfortable to use for extended periods. \n\n**Who should buy this laptop?**\n It is a fantastic choice for users who do heavy multitasking, such as running virtual machines, coding, or having many browser tabs and applications open at once."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
     },
-    "features": [
-      "AMD Ryzen Pro CPU",
-      "High Efficiency",
-      "HDMI 2.0"
-    ],
     "images": [
       "/products/hp/HP-Elitebook-845-G7-Ryzen-5-Pro-16-512/main.jpg",
       "/products/hp/HP-Elitebook-845-G7-Ryzen-5-Pro-16-512/side.jpg",
       "/products/hp/HP-Elitebook-845-G7-Ryzen-5-Pro-16-512/side1.jpg",
       "/products/hp/HP-Elitebook-845-G7-Ryzen-5-Pro-16-512/back.jpg",
       "/products/hp/HP-Elitebook-845-G7-Ryzen-5-Pro-16-512/fullSize.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 41000,
+      "market_price": 46000,
+      "tax_included": true,
+      "discount_percentage": 11
+    },
+    "category": "Ultrabook",
+    "features": [
+      "AMD Ryzen Pro CPU",
+      "High Efficiency",
+      "HDMI 2.0"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What is the main advantage of the AMD Ryzen processor in this model?**\n The AMD Ryzen 5 Pro processor in the 845 G7 often outperforms its Intel equivalents in multi-core tasks, making it faster for applications that can use multiple processor cores simultaneously. \n\n**How is the user experience?**\n This laptop typically runs cooler and quieter than many competitors while offering around 3 hours of battery life, making it comfortable to use for extended periods. \n\n**Who should buy this laptop?**\n It is a fantastic choice for users who do heavy multitasking, such as running virtual machines, coding, or having many browser tabs and applications open at once.",
+      "short": "Ryzen Pro power offering superior multi-core performance."
+    }
   },
   {
     "id": 10,
     "sku": "HP-845G8-010",
     "name": "HP EliteBook 845 G8 (Ryzen)",
     "brand": "HP",
-    "model": "EliteBook 845 G8",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 39500,
-      "market_price": 45000,
-      "discount_percentage": 17,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 4
-    },
+    "model": "EliteBook 845 G8",
     "specs": {
-      "processor": "AMD Ryzen 5 PRO 5650U",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS",
-        "touchscreen": false
-      },
-      "graphics": "AMD Radeon Graphics",
       "ports": [
         "2x USB-C",
         "2x USB-A",
         "HDMI 2.0"
       ],
       "weight": "1.37 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "AMD Radeon Graphics",
+      "processor": "AMD Ryzen 5 PRO 5650U"
     },
-    "description": {
-      "short": "Updated Ryzen 5000 series performance in a premium chassis.",
-      "full": "**What's new in the 845 G8 model?**\n The G8 model gets a significant performance boost by upgrading the processor to the Ryzen 5000 series, which is based on the highly efficient 'Zen 3' architecture. \n\n**What does this upgrade mean for performance?**\n This results in blazing-fast speeds for both single-core and multi-core tasks, along with some of the best integrated graphics performance you can find in a business laptop. \n\n**Is it still a premium device?**\n Absolutely. It features the same high-quality premium build as the rest of the EliteBook 800 series, combining top-tier performance with a durable and professional design."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
     },
-    "features": [
-      "Ryzen 5000 Series",
-      "Zen 3 Architecture",
-      "Premium Build"
-    ],
     "images": [
       "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/main.png",
       "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/back.png",
       "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/side.png",
       "/products/hp/HP-Elitebook-845-G8-Ryzen-5-pro-16-512/port.png"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 45000,
+      "market_price": 50000,
+      "tax_included": true,
+      "discount_percentage": 10
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Ryzen 5000 Series",
+      "Zen 3 Architecture",
+      "Premium Build"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What's new in the 845 G8 model?**\n The G8 model gets a significant performance boost by upgrading the processor to the Ryzen 5000 series, which is based on the highly efficient 'Zen 3' architecture. \n\n**What does this upgrade mean for performance?**\n This results in blazing-fast speeds for both single-core and multi-core tasks, along with some of the best integrated graphics performance you can find in a business laptop. \n\n**Is it still a premium device?**\n Absolutely. It features the same high-quality premium build as the rest of the EliteBook 800 series, combining top-tier performance with a durable and professional design.",
+      "short": "Updated Ryzen 5000 series performance in a premium chassis."
+    }
   },
   {
     "id": 11,
@@ -633,32 +633,11 @@
     "sku": "DELL-3310-012",
     "name": "Dell Latitude 3310 Business",
     "brand": "Dell",
-    "model": "Latitude 3310",
-    "category": "Laptop",
-    "condition": "Used",
     "grade": "A",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 23500,
-      "market_price": 27000,
-      "discount_percentage": 15,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 6
-    },
+    "model": "Latitude 3310",
     "specs": {
-      "processor": "Intel Core i5-8265U (8th Gen)",
+      "os": "Windows 10 Pro",
       "ram": "8GB DDR4",
-      "storage": "256GB SSD",
-      "display": {
-        "size": "13.3 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "Intel UHD Graphics 620",
       "ports": [
         "USB-C",
         "2x USB 3.1",
@@ -666,17 +645,20 @@
         "RJ-45"
       ],
       "weight": "1.56 kg",
-      "os": "Windows 10 Pro"
+      "display": {
+        "size": "13.3 inch",
+        "type": "Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB SSD",
+      "graphics": "Intel UHD Graphics 620",
+      "processor": "Intel Core i5-8265U (8th Gen)"
     },
-    "description": {
-      "short": "Compact 13-inch laptop balancing durability and performance.",
-      "full": "**What is the main advantage of this model?**\n The Latitude 3310 packs the solid performance of an 8th Gen Core i5 processor into a very compact and portable 13.3-inch form factor, making it easy to carry around. \n\n**How durable is it?**\n Like many Latitude models, it is tested against military standards (MIL-STD-810G) for durability, ensuring it can handle the rigors of daily commutes and business travel. \n\n**Who is the ideal user?**\n It’s a reliable choice for business users, students, or anyone who needs a balance of performance, portability, and durability for everyday tasks."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 6
     },
-    "features": [
-      "Compact 13.3\"",
-      "Durable Build",
-      "Full Ports"
-    ],
     "images": [
       "/products/dell/Dell-latitude-3310-Core-i5-8TH-Gen-8-256/main.png",
       "/products/dell/Dell-latitude-3310-Core-i5-8TH-Gen-8-256/front.png",
@@ -684,7 +666,25 @@
       "/products/dell/Dell-latitude-3310-Core-i5-8TH-Gen-8-256/side.png",
       "/products/dell/Dell-latitude-3310-Core-i5-8TH-Gen-8-256/port1.png",
       "/products/dell/Dell-latitude-3310-Core-i5-8TH-Gen-8-256/port2.png"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 25000,
+      "market_price": 29000,
+      "tax_included": true,
+      "discount_percentage": 14
+    },
+    "category": "Laptop",
+    "features": [
+      "Compact 13.3\"",
+      "Durable Build",
+      "Full Ports"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What is the main advantage of this model?**\n The Latitude 3310 packs the solid performance of an 8th Gen Core i5 processor into a very compact and portable 13.3-inch form factor, making it easy to carry around. \n\n**How durable is it?**\n Like many Latitude models, it is tested against military standards (MIL-STD-810G) for durability, ensuring it can handle the rigors of daily commutes and business travel. \n\n**Who is the ideal user?**\n It’s a reliable choice for business users, students, or anyone who needs a balance of performance, portability, and durability for everyday tasks.",
+      "short": "Compact 13-inch laptop balancing durability and performance."
+    }
   },
   {
     "id": 13,
@@ -747,32 +747,11 @@
     "sku": "DELL-3410-014",
     "name": "Dell Latitude 3410",
     "brand": "Dell",
-    "model": "Latitude 3410",
-    "category": "Laptop",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 30900,
-      "market_price": 36000,
-      "discount_percentage": 14,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 5
-    },
+    "model": "Latitude 3410",
     "specs": {
-      "processor": "Intel Core i5-10210U (10th Gen)",
+      "os": "Windows 10/11 Pro",
       "ram": "16GB DDR4",
-      "storage": "512GB SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "Intel UHD Graphics",
       "ports": [
         "USB-C",
         "USB 3.2",
@@ -780,24 +759,45 @@
         "RJ-45"
       ],
       "weight": "1.6 kg",
-      "os": "Windows 10/11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "512GB SSD",
+      "graphics": "Intel UHD Graphics",
+      "processor": "Intel Core i5-10210U (10th Gen)"
     },
-    "description": {
-      "short": "Modern 10th Gen essential business laptop.",
-      "full": "**What is the Latitude 3410's main selling point?**\n It provides modern performance with a 10th Gen Intel processor and a generous 16GB of RAM, offering a cost-effective solution for users who need up-to-date specs without the premium price of Dell's 7000 series. \n\n**How has the design changed?**\n The Latitude 3410 features a more modern, thinner, and lighter design compared to its predecessors, making it more portable and stylish. \n\n**Is it ready for heavy multitasking?**\n Yes, with 16GB of RAM and a capable 10th Gen Core i5 processor, it is well-equipped to handle everyday business tasks and heavy multitasking with many applications open."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
     },
-    "features": [
-      "Modern Design",
-      "10th Gen CPU",
-      "16GB RAM"
-    ],
     "images": [
       "/products/dell/Dell-latitude-3410-Core-i5-10TH-Gen-16-512/main.jpg",
       "/products/dell/Dell-latitude-3410-Core-i5-10TH-Gen-16-512/front.jpg",
       "/products/dell/Dell-latitude-3410-Core-i5-10TH-Gen-16-512/fullSize.jpg",
       "/products/dell/Dell-latitude-3410-Core-i5-10TH-Gen-16-512/dual.jpg",
       "/products/dell/Dell-latitude-3410-Core-i5-10TH-Gen-16-512/rotate.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 33000,
+      "market_price": 37500,
+      "tax_included": true,
+      "discount_percentage": 12
+    },
+    "category": "Laptop",
+    "features": [
+      "Modern Design",
+      "10th Gen CPU",
+      "16GB RAM"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What is the Latitude 3410's main selling point?**\n It provides modern performance with a 10th Gen Intel processor and a generous 16GB of RAM, offering a cost-effective solution for users who need up-to-date specs without the premium price of Dell's 7000 series. \n\n**How has the design changed?**\n The Latitude 3410 features a more modern, thinner, and lighter design compared to its predecessors, making it more portable and stylish. \n\n**Is it ready for heavy multitasking?**\n Yes, with 16GB of RAM and a capable 10th Gen Core i5 processor, it is well-equipped to handle everyday business tasks and heavy multitasking with many applications open.",
+      "short": "Modern 10th Gen essential business laptop."
+    }
   },
   {
     "id": 15,
@@ -924,32 +924,11 @@
     "sku": "LEN-T490-017",
     "name": "Lenovo ThinkPad T490",
     "brand": "Lenovo",
-    "model": "ThinkPad T490",
-    "category": "Laptop",
-    "condition": "Used",
     "grade": "A",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 26900,
-      "market_price": 32000,
-      "discount_percentage": 19,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 8
-    },
+    "model": "ThinkPad T490",
     "specs": {
-      "processor": "Intel Core i5-8365U (8th Gen)",
+      "os": "Windows 10/11 Pro",
       "ram": "8GB DDR4 (Soldered + 1 Slot)",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "Intel UHD Graphics 620",
       "ports": [
         "Thunderbolt 3",
         "USB-C",
@@ -958,17 +937,20 @@
         "Ethernet"
       ],
       "weight": "1.46 kg",
-      "os": "Windows 10/11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB NVMe SSD",
+      "graphics": "Intel UHD Graphics 620",
+      "processor": "Intel Core i5-8365U (8th Gen)"
     },
-    "description": {
-      "short": "The classic business standard for typing and durability.",
-      "full": "**Why is the ThinkPad keyboard so famous?**\n ThinkPad keyboards are legendary for their comfortable, ergonomic design, deep key travel, and precise feel, making them the gold standard for anyone who types a lot, such as writers and coders. \n\n**How durable is the T490?**\n It's built to military specifications (Mil-Spec), meaning it has been tested to withstand extreme conditions like high altitudes, humidity, temperature shocks, and vibrations. It's designed to be incredibly reliable. \n\n**Is it well-connected?**\n Yes, the T490 offers a comprehensive selection of ports, including modern options like Thunderbolt 3 and traditional ports like HDMI and Ethernet, so you can connect to almost anything without needing dongles."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 8
     },
-    "features": [
-      "Legendary Keyboard",
-      "Mil-Spec Durability",
-      "Great Port Selection"
-    ],
     "images": [
       "/products/lenovo/Lenovo-Thinkpad-T490-code-i5/main.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T490-code-i5/front.jpg",
@@ -979,39 +961,36 @@
       "/products/lenovo/Lenovo-Thinkpad-T490-code-i5/port.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T490-code-i5/port2.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T490-code-i5/port3.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 27500,
+      "market_price": 31000,
+      "tax_included": true,
+      "discount_percentage": 11
+    },
+    "category": "Laptop",
+    "features": [
+      "Legendary Keyboard",
+      "Mil-Spec Durability",
+      "Great Port Selection"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**Why is the ThinkPad keyboard so famous?**\n ThinkPad keyboards are legendary for their comfortable, ergonomic design, deep key travel, and precise feel, making them the gold standard for anyone who types a lot, such as writers and coders. \n\n**How durable is the T490?**\n It's built to military specifications (Mil-Spec), meaning it has been tested to withstand extreme conditions like high altitudes, humidity, temperature shocks, and vibrations. It's designed to be incredibly reliable. \n\n**Is it well-connected?**\n Yes, the T490 offers a comprehensive selection of ports, including modern options like Thunderbolt 3 and traditional ports like HDMI and Ethernet, so you can connect to almost anything without needing dongles.",
+      "short": "The classic business standard for typing and durability."
+    }
   },
   {
     "id": 19,
     "sku": "LEN-T14G2-018",
     "name": "Lenovo Thinkpad T14 Gen 1 Ryzen 5 Pro 4650U 16/256",
     "brand": "Lenovo",
-    "model": "ThinkPad T14 Gen 2",
-    "category": "Laptop",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 33000,
-      "market_price": 50000,
-      "discount_percentage": 19,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 5
-    },
+    "model": "ThinkPad T14 Gen 2",
     "specs": {
-      "processor": "AMD Ryzen 5 PRO 4650U (6C/12T, up to 4.0GHz)",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS High Brightness , Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "Integrated AMD Radeon Graphics",
       "ports": [
         "2x Thunderbolt 4",
         "2x USB-A",
@@ -1019,18 +998,20 @@
         "Ethernet"
       ],
       "weight": "1.47 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS High Brightness , Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB NVMe SSD",
+      "graphics": "Integrated AMD Radeon Graphics",
+      "processor": "AMD Ryzen 5 PRO 4650U (6C/12T, up to 4.0GHz)"
     },
-    "description": {
-      "short": "Modern successor to the T490 with 11th Gen speed.",
-      "full": "**What are the main upgrades from the T490/T14 Gen 1?**\n The T14 Gen 2 upgrades the engine with powerful 11th Gen Intel processors and advanced Intel Iris Xe graphics, delivering a significant boost in performance for demanding tasks and creative work. \n\n**How is it 'future-proofed'?**\n It includes modern connectivity standards like two Thunderbolt 4 ports and faster Wi-Fi 6, ensuring compatibility with the latest high-speed peripherals and networks. \n\n**Does it still have the classic ThinkPad features?**\n Yes, it maintains the iconic classic black ThinkPad aesthetic, the legendary keyboard, and the rugged, Mil-Spec tested build quality that the T-series is famous for."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
     },
-    "features": [
-      "AMD Ryzen 5 PRO 4650U",
-      "WiFi 6",
-      "Thunderbolt 4",
-      "Rugged Design"
-    ],
     "images": [
       "/products/lenovo/Lenovo-Thinkpad-T14/main.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14/front.jpg",
@@ -1038,56 +1019,57 @@
       "/products/lenovo/Lenovo-Thinkpad-T14/side.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14/side1.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14/side2.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 34900,
+      "market_price": 410000,
+      "tax_included": true,
+      "discount_percentage": 91
+    },
+    "category": "Laptop",
+    "features": [
+      "AMD Ryzen 5 PRO 4650U",
+      "WiFi 6",
+      "Thunderbolt 4",
+      "Rugged Design"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What are the main upgrades from the T490/T14 Gen 1?**\n The T14 Gen 2 upgrades the engine with powerful 11th Gen Intel processors and advanced Intel Iris Xe graphics, delivering a significant boost in performance for demanding tasks and creative work. \n\n**How is it 'future-proofed'?**\n It includes modern connectivity standards like two Thunderbolt 4 ports and faster Wi-Fi 6, ensuring compatibility with the latest high-speed peripherals and networks. \n\n**Does it still have the classic ThinkPad features?**\n Yes, it maintains the iconic classic black ThinkPad aesthetic, the legendary keyboard, and the rugged, Mil-Spec tested build quality that the T-series is famous for.",
+      "short": "Modern successor to the T490 with 11th Gen speed."
+    }
   },
   {
     "id": 20,
     "sku": "LEN-X1C-10TH-019",
-    "name": "Lenovo ThinkPad X1 Carbon (Gen 8) i5-10310U (10th Gen) ",
+    "name": "Lenovo ThinkPad X1 Carbon (Gen 8) i5-10310U (10th Gen)",
     "brand": "Lenovo",
-    "model": "ThinkPad X1 Carbon Gen 8",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Premium",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 45500,
-      "market_price": 55000,
-      "discount_percentage": 17,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 3
-    },
+    "model": "ThinkPad X1 Carbon Gen 8",
     "specs": {
-      "processor": "Intel Core i5-10310U (10th Gen)",
+      "os": "Windows 11 Pro",
       "ram": "16GB LPDDR3",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "Touchscreen IPS",
-        "touchscreen": true
-      },
-      "graphics": "Intel UHD Graphics",
       "ports": [
         "2x Thunderbolt 3",
         "2x USB-A",
         "HDMI 1.4"
       ],
       "weight": "1.09 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "Touchscreen IPS",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": true
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "Intel UHD Graphics",
+      "processor": "Intel Core i5-10310U (10th Gen)"
     },
-    "description": {
-      "short": "Featherlight 1kg ultrabook with carbon fiber chassis.",
-      "full": "**What makes the X1 Carbon so special?**\n The X1 Carbon is the jewel in the ThinkPad crown. It's incredibly lightweight at just over 1kg, making it astonishingly portable, yet it's also incredibly durable thanks to its carbon fiber and magnesium alloy chassis. \n\n**What are the key features of this Gen 8 model?**\n This model features a premium, responsive touchscreen display, a powerful 10th Gen Intel processor, and what many consider the best keyboard in any ultra-portable laptop. \n\n**Who is the ideal user for an X1 Carbon?**\n It's perfect for executives, frequent travelers, and anyone who needs maximum portability without sacrificing durability or typing comfort."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
     },
-    "features": [
-      "Ultra-Light (1.09kg)",
-      "Carbon Fiber",
-      "Premium Touchscreen"
-    ],
     "images": [
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-i5-10TH-Gen-16512-Touchscreen/main.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-i5-10TH-Gen-16512-Touchscreen/front.jpg",
@@ -1098,7 +1080,25 @@
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-i5-10TH-Gen-16512-Touchscreen/imageg.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-i5-10TH-Gen-16512-Touchscreen/keyborad.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-i5-10TH-Gen-16512-Touchscreen/keyborad1.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 47500,
+      "market_price": 55000,
+      "tax_included": true,
+      "discount_percentage": 14
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Ultra-Light (1.09kg)",
+      "Carbon Fiber",
+      "Premium Touchscreen"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What makes the X1 Carbon so special?**\n The X1 Carbon is the jewel in the ThinkPad crown. It's incredibly lightweight at just over 1kg, making it astonishingly portable, yet it's also incredibly durable thanks to its carbon fiber and magnesium alloy chassis. \n\n**What are the key features of this Gen 8 model?**\n This model features a premium, responsive touchscreen display, a powerful 10th Gen Intel processor, and what many consider the best keyboard in any ultra-portable laptop. \n\n**Who is the ideal user for an X1 Carbon?**\n It's perfect for executives, frequent travelers, and anyone who needs maximum portability without sacrificing durability or typing comfort.",
+      "short": "Featherlight 1kg ultrabook with carbon fiber chassis."
+    }
   },
   {
     "id": 21,
@@ -1166,32 +1166,11 @@
     "sku": "MS-SL3-I5-021",
     "name": "Microsoft Surface Laptop 3 (i5)",
     "brand": "Microsoft",
-    "model": "Surface Laptop 3",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "A+",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 42700,
-      "market_price": 48000,
-      "discount_percentage": 16,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 6
-    },
+    "model": "Surface Laptop 3",
     "specs": {
-      "processor": "Intel Core i5-1035G7 (10th Gen)",
+      "os": "Windows 11 Home/Pro",
       "ram": "8GB LPDDR4x",
-      "storage": "256GB SSD",
-      "display": {
-        "size": "13.5 inch",
-        "resolution": "2256 x 1504 (2K)",
-        "type": "PixelSense Touch",
-        "touchscreen": true
-      },
-      "graphics": "Intel Iris Plus Graphics",
       "ports": [
         "1x USB-C",
         "1x USB-A",
@@ -1199,18 +1178,20 @@
         "Headphone Jack"
       ],
       "weight": "1.25 kg",
-      "os": "Windows 11 Home/Pro"
+      "display": {
+        "size": "13.5 inch",
+        "type": "PixelSense Touch",
+        "resolution": "2256 x 1504 (2K)",
+        "touchscreen": true
+      },
+      "storage": "256GB SSD",
+      "graphics": "Intel Iris Plus Graphics",
+      "processor": "Intel Core i5-1035G7 (10th Gen)"
     },
-    "description": {
-      "short": "Sleek, minimalist design with a stunning 2K touchscreen.",
-      "full": "**What is the standout feature of the Surface Laptop 3?**\n The display. It features a stunningly sharp, high-resolution 2K PixelSense touchscreen with a 3:2 aspect ratio, which is taller than typical laptop screens and perfect for documents, web browsing, and creative work. \n\n**How is the build quality and design?**\n The design is minimalist and incredibly sleek, with a premium aluminum finish that rivals the build quality of a MacBook Air. It also has one of the best trackpads on a Windows laptop. \n\n**Who is this laptop for?**\n It's for users who value premium design, a superior screen, and a great user experience for everyday tasks. It’s a stylish and portable choice for students and professionals."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 6
     },
-    "features": [
-      "2K PixelSense Display",
-      "3:2 Aspect Ratio",
-      "Premium Aluminum",
-      "Touchscreen"
-    ],
     "images": [
       "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/main.png",
       "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/front.png",
@@ -1218,7 +1199,26 @@
       "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/port.png",
       "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/back.png",
       "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/keyborad.png"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 41500,
+      "market_price": 48000,
+      "tax_included": true,
+      "discount_percentage": 14
+    },
+    "category": "Ultrabook",
+    "features": [
+      "2K PixelSense Display",
+      "3:2 Aspect Ratio",
+      "Premium Aluminum",
+      "Touchscreen"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What is the standout feature of the Surface Laptop 3?**\n The display. It features a stunningly sharp, high-resolution 2K PixelSense touchscreen with a 3:2 aspect ratio, which is taller than typical laptop screens and perfect for documents, web browsing, and creative work. \n\n**How is the build quality and design?**\n The design is minimalist and incredibly sleek, with a premium aluminum finish that rivals the build quality of a MacBook Air. It also has one of the best trackpads on a Windows laptop. \n\n**Who is this laptop for?**\n It's for users who value premium design, a superior screen, and a great user experience for everyday tasks. It’s a stylish and portable choice for students and professionals.",
+      "short": "Sleek, minimalist design with a stunning 2K touchscreen."
+    }
   },
   {
     "id": 22,
@@ -1283,50 +1283,31 @@
     "sku": "MS-SL4-I5-023",
     "name": "Microsoft Surface Laptop 4 (i5)",
     "brand": "Microsoft",
-    "model": "Surface Laptop 4",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 48900,
-      "market_price": 58000,
-      "discount_percentage": 17,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 5
-    },
+    "model": "Surface Laptop 4",
     "specs": {
-      "processor": "Intel Core i5-1135G7 (11th Gen)",
+      "os": "Windows 11 Home/Pro",
       "ram": "8GB LPDDR4x",
-      "storage": "512GB SSD",
-      "display": {
-        "size": "13.5 inch",
-        "resolution": "2256 x 1504 (2K)",
-        "type": "PixelSense Touch",
-        "touchscreen": true
-      },
-      "graphics": "Intel Iris Xe Graphics",
       "ports": [
         "1x USB-C",
         "1x USB-A",
         "Surface Connect"
       ],
       "weight": "1.27 kg",
-      "os": "Windows 11 Home/Pro"
+      "display": {
+        "size": "13.5 inch",
+        "type": "PixelSense Touch",
+        "resolution": "2256 x 1504 (2K)",
+        "touchscreen": true
+      },
+      "storage": "512GB SSD",
+      "graphics": "Intel Iris Xe Graphics",
+      "processor": "Intel Core i5-1135G7 (11th Gen)"
     },
-    "description": {
-      "short": "Around 3 hours of battery life with the classic Surface design.",
-      "full": "**What are the main improvements in the Surface Laptop 4?**\n The Laptop 4 refines the successful formula of its predecessor by using more efficient 11th Gen Intel processors. It offers around 3 hours of battery life with improved performance. \n\n**What's the user experience like?**\n It runs cooler and delivers around 3 hours of battery life, making it a solid daily driver. It retains the same beloved high-resolution touchscreen, comfortable keyboard, and premium design. \n\n**What kind of performance can I expect from the graphics?**\n The 11th Gen processor includes the much-improved Intel Iris Xe graphics, which provides a noticeable boost for graphically intensive tasks, light gaming, and creative applications."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
     },
-    "features": [
-      "11th Gen Intel",
-      "Battery Life ~3 Hours",
-      "2K Touchscreen",
-      "Iris Xe Graphics"
-    ],
     "images": [
       "/products/microsoft/Microsoft-Surface-laptop-4/main.png",
       "/products/microsoft/Microsoft-Surface-laptop-4/front.png",
@@ -1334,7 +1315,26 @@
       "/products/microsoft/Microsoft-Surface-laptop-4/side.png",
       "/products/microsoft/Microsoft-Surface-laptop-4/side2.png",
       "/products/microsoft/Microsoft-Surface-laptop-4/back.png"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 51500,
+      "market_price": 58000,
+      "tax_included": true,
+      "discount_percentage": 11
+    },
+    "category": "Ultrabook",
+    "features": [
+      "11th Gen Intel",
+      "Battery Life ~3 Hours",
+      "2K Touchscreen",
+      "Iris Xe Graphics"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What are the main improvements in the Surface Laptop 4?**\n The Laptop 4 refines the successful formula of its predecessor by using more efficient 11th Gen Intel processors. It offers around 3 hours of battery life with improved performance. \n\n**What's the user experience like?**\n It runs cooler and delivers around 3 hours of battery life, making it a solid daily driver. It retains the same beloved high-resolution touchscreen, comfortable keyboard, and premium design. \n\n**What kind of performance can I expect from the graphics?**\n The 11th Gen processor includes the much-improved Intel Iris Xe graphics, which provides a noticeable boost for graphically intensive tasks, light gaming, and creative applications.",
+      "short": "Around 3 hours of battery life with the classic Surface design."
+    }
   },
   {
     "id": 24,
@@ -1397,32 +1397,11 @@
     "sku": "LEN-X1C-G7-I5-025",
     "name": "Lenovo ThinkPad X1 Carbon Gen 7 i5 8th Gen 16/256",
     "brand": "Lenovo",
-    "model": "ThinkPad X1 Carbon Gen 7",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "A",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 33500,
-      "market_price": 31700,
-      "discount_percentage": 0,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 4
-    },
+    "model": "ThinkPad X1 Carbon Gen 7",
     "specs": {
-      "processor": "Intel Core i5-8365U (8th Gen)",
+      "os": "Windows 10/11 Pro",
       "ram": "16GB LPDDR3",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "Intel UHD Graphics 620",
       "ports": [
         "2x Thunderbolt 3",
         "2x USB-A 3.1",
@@ -1430,25 +1409,46 @@
         "Headphone/Mic Combo"
       ],
       "weight": "1.09 kg",
-      "os": "Windows 10/11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB NVMe SSD",
+      "graphics": "Intel UHD Graphics 620",
+      "processor": "Intel Core i5-8365U (8th Gen)"
     },
-    "description": {
-      "short": "Ultra-light ThinkPad with 16GB RAM and 8th Gen Intel performance.",
-      "full": "**Who is this model best for?**\nThis X1 Carbon Gen 7 is ideal for professionals who want premium build quality, portability, and strong day-to-day performance with 16GB RAM for multitasking.\n\n**What are the key strengths?**\nIt combines the classic ThinkPad keyboard, durable carbon-fiber chassis, and reliable 8th Gen Core i5 efficiency in a very lightweight form factor.\n\n**Why choose this configuration?**\nWith 16GB RAM and 256GB SSD, it offers a balanced setup for office work, browsing, coding, and remote productivity tasks."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
     },
-    "features": [
-      "16GB RAM",
-      "Ultra-light Chassis",
-      "ThinkPad Keyboard",
-      "Business Grade Build"
-    ],
     "images": [
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/main.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/front.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/back.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/keyboard.jpg",
       "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-7-i5-8TH-Gen-16-256/close.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 35000,
+      "market_price": 40000,
+      "tax_included": true,
+      "discount_percentage": 13
+    },
+    "category": "Ultrabook",
+    "features": [
+      "16GB RAM",
+      "Ultra-light Chassis",
+      "ThinkPad Keyboard",
+      "Business Grade Build"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**Who is this model best for?**\nThis X1 Carbon Gen 7 is ideal for professionals who want premium build quality, portability, and strong day-to-day performance with 16GB RAM for multitasking.\n\n**What are the key strengths?**\nIt combines the classic ThinkPad keyboard, durable carbon-fiber chassis, and reliable 8th Gen Core i5 efficiency in a very lightweight form factor.\n\n**Why choose this configuration?**\nWith 16GB RAM and 256GB SSD, it offers a balanced setup for office work, browsing, coding, and remote productivity tasks.",
+      "short": "Ultra-light ThinkPad with 16GB RAM and 8th Gen Intel performance."
+    }
   },
   {
     "id": 26,
@@ -1687,32 +1687,11 @@
     "sku": "HP-845G9-R5P-030",
     "name": "HP EliteBook 845 G9 Ryzen 5 Pro 16/512",
     "brand": "HP",
-    "model": "EliteBook 845 G9",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 50500,
-      "market_price": 61000,
-      "discount_percentage": 17,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 3
-    },
+    "model": "EliteBook 845 G9",
     "specs": {
-      "processor": "AMD Ryzen 5 Pro (7th Gen)",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "AMD Radeon Graphics",
       "ports": [
         "USB-C Thunderbolt",
         "2x USB-A",
@@ -1721,12 +1700,34 @@
         "Audio Combo"
       ],
       "weight": "1.42 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "AMD Radeon Graphics",
+      "processor": "AMD Ryzen 5 Pro (7th Gen)"
     },
-    "description": {
-      "short": "Next-gen AMD Ryzen 5 Pro ultrabook with 16GB RAM and 512GB SSD.",
-      "full": "**Who should buy this laptop?**\nThe HP EliteBook 845 G9 is perfect for professionals, developers, and power users who need modern Ryzen Pro performance with excellent multitasking capabilities.\n\n**What's special about Ryzen 5 Pro?**\nRyzen 5 Pro processors offer professional-grade features with enhanced security and improved thermal efficiency compared to earlier generations.\n\n**How does the 16/512 configuration perform?**\nWith 16GB DDR4 RAM and 512GB NVMe SSD, this laptop handles heavy workloads, coding, design work, and heavy multitasking with ease."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
     },
+    "images": [
+      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/main.png",
+      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/back.png",
+      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/side.png",
+      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/port.png"
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 55000,
+      "market_price": 61000,
+      "tax_included": true,
+      "discount_percentage": 10
+    },
+    "category": "Ultrabook",
     "features": [
       "AMD Ryzen 5 Pro 7th Gen",
       "16GB DDR4 RAM",
@@ -1734,12 +1735,11 @@
       "Windows 11 Pro",
       "Thunderbolt Support"
     ],
-    "images": [
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/main.png",
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/back.png",
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/side.png",
-      "/products/hp/HP-Elitebook-845-G9-Ryzen-5-pro-16-512/port.png"
-    ]
+    "condition": "Used",
+    "description": {
+      "full": "**Who should buy this laptop?**\nThe HP EliteBook 845 G9 is perfect for professionals, developers, and power users who need modern Ryzen Pro performance with excellent multitasking capabilities.\n\n**What's special about Ryzen 5 Pro?**\nRyzen 5 Pro processors offer professional-grade features with enhanced security and improved thermal efficiency compared to earlier generations.\n\n**How does the 16/512 configuration perform?**\nWith 16GB DDR4 RAM and 512GB NVMe SSD, this laptop handles heavy workloads, coding, design work, and heavy multitasking with ease.",
+      "short": "Next-gen AMD Ryzen 5 Pro ultrabook with 16GB RAM and 512GB SSD."
+    }
   },
   {
     "id": 31,
@@ -1901,10 +1901,10 @@
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 37900,
-      "market_price": 43500,
+      "sale_price": 41500,
+      "market_price": 48000,
       "tax_included": true,
-      "discount_percentage": 13
+      "discount_percentage": 14
     },
     "category": "Ultrabook",
     "features": [
@@ -1924,32 +1924,11 @@
     "sku": "LEN-T14SG2-R7-034",
     "name": "Lenovo ThinkPad T14s Gen 2 Ryzen 7 Pro 16/256",
     "brand": "Lenovo",
-    "model": "ThinkPad T14s Gen 2",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 40900,
-      "market_price": 48000,
-      "discount_percentage": 15,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 2
-    },
+    "model": "ThinkPad T14s Gen 2",
     "specs": {
-      "processor": "AMD Ryzen 7 PRO 4750U (8C/16T)",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "AMD Radeon Pro (1GB Dedicated)",
       "ports": [
         "2x Thunderbolt 4",
         "2x USB-A",
@@ -1957,18 +1936,20 @@
         "Audio Combo"
       ],
       "weight": "1.43 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB NVMe SSD",
+      "graphics": "AMD Radeon Pro (1GB Dedicated)",
+      "processor": "AMD Ryzen 7 PRO 4750U (8C/16T)"
     },
-    "description": {
-      "short": "Top-tier Ryzen 7 Pro ultrabook with 8-core performance and graphics.",
-      "full": "**How does Ryzen 7 Pro differ from Ryzen 5 Pro?**\nWith 8 cores vs 6, the Ryzen 7 Pro delivers significantly higher multi-threaded performance while maintaining the same lightweight form factor and professional features.\n\n**What's the benefit of 8-core performance?**\nIdeal for heavy multitasking, video editing, CAD, programming, and running virtual machines—all while maintaining excellent portability and battery life.\n\n**Who is this built for?**\nPower users, engineers, designers, and business professionals who need maximum performance in an ultraportable ThinkPad."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 2
     },
-    "features": [
-      "Ryzen 7 Pro 8C/16T",
-      "1GB Dedicated Graphics",
-      "16GB DDR4 RAM",
-      "Thunderbolt 4"
-    ],
     "images": [
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/main.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/front.jpg",
@@ -1976,39 +1957,37 @@
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/side.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/side1.jpg",
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/side2.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 45000,
+      "market_price": 50000,
+      "tax_included": true,
+      "discount_percentage": 10
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Ryzen 7 Pro 8C/16T",
+      "1GB Dedicated Graphics",
+      "16GB DDR4 RAM",
+      "Thunderbolt 4"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**How does Ryzen 7 Pro differ from Ryzen 5 Pro?**\nWith 8 cores vs 6, the Ryzen 7 Pro delivers significantly higher multi-threaded performance while maintaining the same lightweight form factor and professional features.\n\n**What's the benefit of 8-core performance?**\nIdeal for heavy multitasking, video editing, CAD, programming, and running virtual machines—all while maintaining excellent portability and battery life.\n\n**Who is this built for?**\nPower users, engineers, designers, and business professionals who need maximum performance in an ultraportable ThinkPad.",
+      "short": "Top-tier Ryzen 7 Pro ultrabook with 8-core performance and graphics."
+    }
   },
   {
     "id": 35,
     "sku": "HP-ZFIREFLY14G8-I5-035",
     "name": "HP ZBook Firefly 14 G8 i5 11th Gen 16/512",
     "brand": "HP",
-    "model": "ZBook Firefly 14 G8",
-    "category": "Workstation",
-    "condition": "Used",
     "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 44000,
-      "market_price": 52000,
-      "discount_percentage": 15,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 2
-    },
+    "model": "ZBook Firefly 14 G8",
     "specs": {
-      "processor": "Intel Core i5-11300H (11th Gen)",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1200 (16:10)",
-        "type": "IPS Anti-Glare High Brightness",
-        "touchscreen": false
-      },
-      "graphics": "NVIDIA GeForce RTX 3050",
       "ports": [
         "2x Thunderbolt 4",
         "2x USB-A",
@@ -2016,25 +1995,44 @@
         "SD Card"
       ],
       "weight": "1.48 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare High Brightness",
+        "resolution": "1920 x 1200 (16:10)",
+        "touchscreen": false
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "NVIDIA GeForce RTX 3050",
+      "processor": "Intel Core i5-11300H (11th Gen)"
     },
-    "description": {
-      "short": "Professional mobile workstation with RTX graphics and 11th Gen power.",
-      "full": "**What makes the Firefly 14 G8 a workstation?**\nWith NVIDIA RTX dedicated graphics, ISV certification, and robust performance, it's engineered for CAD, 3D modeling, photo/video editing, and professional applications.\n\n**What are the key upgrades?**\nThe G8 brings 11th Gen Intel, RTX graphics, and a tall 16:10 display—perfect for professional applications and timeline work.\n\n**Who is it for?**\nEngineers, architects, photographers, video editors, and creative professionals who need certified, portable workstation power."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 2
     },
-    "features": [
-      "11th Gen Intel Core i5",
-      "NVIDIA RTX 3050 Graphics",
-      "16:10 Display",
-      "ISV Certified Workstation"
-    ],
     "images": [
       "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/main.png",
       "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/front.png",
       "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/back.png",
       "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/port.png",
       "/products/hp/HP-Zbook-Firefly-14-G8-Core-i5-11TH-Gen-16-512/side.png"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 47500,
+      "market_price": 53000,
+      "tax_included": true,
+      "discount_percentage": 10
+    },
+    "category": "Workstation",
+    "features": [
+      "11th Gen Intel Core i5",
+      "ISV Certified Workstation"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What makes the Firefly 14 G8 a workstation?**\n\n\n\n**Who is it for?**\nEngineers, architects, photographers, video editors, and creative professionals who need certified, portable workstation power.",
+      "short": "Professional mobile workstation with RTX graphics and 11th Gen power."
+    }
   },
   {
     "id": 36,
@@ -2131,10 +2129,10 @@
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 73000,
+      "sale_price": 72000,
       "market_price": 75000,
       "tax_included": true,
-      "discount_percentage": 3
+      "discount_percentage": 4
     },
     "category": "Laptop",
     "features": [

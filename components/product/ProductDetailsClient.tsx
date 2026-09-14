@@ -11,8 +11,11 @@ import {
   ArrowLeft,
   Award,
   CheckCircle2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  CreditCard,
   Heart,
   MessageCircle,
   Minus,
@@ -29,6 +32,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ProductEMICalculator, {
+  getLowestMonthlyEMI,
+} from "./ProductEMICalculator";
 import {
   useEffect,
   useMemo,
@@ -56,6 +62,7 @@ export default function ProductDetailsClient({
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("specifications");
+  const [isEMIOpen, setIsEMIOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [hoverPos, setHoverPos] = useState({ x: 50, y: 50 });
   const mainImgRef = useRef<HTMLDivElement>(null);
@@ -181,6 +188,10 @@ export default function ProductDetailsClient({
   const quickSpecs = [product.specs?.processor, product.specs?.ram, product.specs?.storage]
     .filter(Boolean)
     .join(" • ");
+  const lowestEMI = useMemo(
+    () => getLowestMonthlyEMI(product.price),
+    [product.price],
+  );
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -455,6 +466,45 @@ export default function ProductDetailsClient({
                     {product.inStock ? "In Stock - Ready to Ship" : "Out of Stock"}
                   </span>
                 </div>
+
+                {lowestEMI && product.price >= 5000 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEMIOpen((prev) => {
+                        const next = !prev;
+                        if (next) {
+                          setTimeout(() => {
+                            const el = document.getElementById("emi-calculator");
+                            if (el) {
+                              el.scrollIntoView({ behavior: "smooth" });
+                            }
+                          }, 80);
+                        }
+                        return next;
+                      });
+                    }}
+                    className="mt-3 flex w-full items-center justify-between rounded-xl border border-primary/20 bg-primary/5 px-3.5 py-2.5 text-xs text-muted-foreground transition hover:border-primary/50 hover:bg-primary/10 cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-4 w-4 text-primary shrink-0" />
+                      <span className="text-foreground">
+                        EMI starts from{" "}
+                        <strong className="font-bold text-primary">
+                          ৳ {lowestEMI.monthlyEMI.toLocaleString()}/mo
+                        </strong>
+                      </span>
+                    </div>
+                    <span className="font-semibold text-primary inline-flex items-center gap-1 text-[0.72rem]">
+                      {isEMIOpen ? "Hide EMI" : "Calculate EMI"}{" "}
+                      {isEMIOpen ? (
+                        <ChevronUp className="h-3.5 w-3.5" />
+                      ) : (
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      )}
+                    </span>
+                  </button>
+                )}
               </div>
 
               {product.features && product.features.length > 0 && (
@@ -558,6 +608,20 @@ export default function ProductDetailsClient({
               </div>
             </div>
           </div>
+
+          {/* EMI Calculator Section (Toggled by "Calculate EMI") */}
+          {isEMIOpen && (
+            <div
+              id="emi-calculator"
+              className="border-t border-border px-6 py-10 sm:px-10 animate-in fade-in slide-in-from-top-4 duration-300"
+            >
+              <ProductEMICalculator
+                price={product.price}
+                productName={product.name}
+                onClose={() => setIsEMIOpen(false)}
+              />
+            </div>
+          )}
 
           <div className="border-t border-border px-6 pb-12 pt-10 sm:px-10">
             <div className="flex flex-wrap gap-2 border-b border-border pb-5">
