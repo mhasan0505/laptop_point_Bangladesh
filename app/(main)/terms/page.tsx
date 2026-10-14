@@ -1,4 +1,14 @@
 import { getStorefrontCommerce } from "@/lib/public-content";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service | Laptop Point Bangladesh",
+  description:
+    "Terms and conditions for buying products and using services from Laptop Point Bangladesh.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/terms",
+  },
+};
 
 export default async function TermsOfService() {
   const commerce = await getStorefrontCommerce();

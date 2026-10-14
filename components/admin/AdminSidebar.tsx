@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
+import { Cable,
   ChartNoAxesCombined,
   ChevronDown,
   ChevronRight,
@@ -84,6 +84,11 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
           href: "/admin/products",
           label: "Products",
           icon: PanelsTopLeft,
+        },
+        {
+          href: "/admin/accessories",
+          label: "Accessories",
+          icon: Cable,
         },
         {
           href: "/admin/orders",

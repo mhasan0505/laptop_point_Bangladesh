@@ -35,6 +35,9 @@ export const metadata: Metadata = {
     "Microsoft Surface used",
     "laptop with warranty",
   ],
+  alternates: {
+    canonical: "https://laptoppointbd.com",
+  },
   openGraph: {
     title: "Laptop Point Bangladesh | Premium Used Laptops",
     description:

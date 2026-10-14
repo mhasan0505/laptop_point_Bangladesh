@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Minus, Plus, Share2, ShoppingCart, Star } from "lucide-react";
+import { Heart, Minus, Plus, Share2, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -188,27 +188,6 @@ const ProductDetailsSection = ({ product }: ProductDetailsProps) => {
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
               {product.name}
             </h1>
-
-            {/* Rating */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`w-5 h-5 transition-all duration-200 ${
-                      star <= Math.floor(product.rating)
-                        ? "text-yellow-500 fill-yellow-500"
-                        : star - 0.5 <= product.rating
-                          ? "text-yellow-500 fill-yellow-500/50"
-                          : "text-gray-300 dark:text-gray-600"
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-sm text-muted-foreground">
-                {product.rating.toFixed(1)} ({product.reviewCount} reviews)
-              </span>
-            </div>
 
             {/* Price Section */}
             <div className="bg-linear-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 rounded-2xl p-6 border border-primary/20">

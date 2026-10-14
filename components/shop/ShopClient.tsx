@@ -30,35 +30,52 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 interface ShopClientProps {
   initialProducts?: Product[];
+  initialParams?: Record<string, string | string[] | undefined>;
 }
 
 const ShopContent = ({
   initialProducts = [],
+  initialParams,
 }: {
   initialProducts?: Product[];
+  initialParams?: Record<string, string | string[] | undefined>;
 }) => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [allProducts, setAllProducts] = useState<Product[]>(initialProducts);
   const searchParams = useSearchParams();
 
+  const getParam = (key: string): string | undefined => {
+    const fromUrl = searchParams.get(key);
+    if (fromUrl !== null) return fromUrl;
+    const fromServer = initialParams?.[key];
+    if (Array.isArray(fromServer)) return fromServer[0];
+    return fromServer;
+  };
+
   const searchQuery =
-    searchParams.get("search") ||
-    searchParams.get("q") ||
-    searchParams.get("query");
+    getParam("search") ||
+    getParam("q") ||
+    getParam("query");
 
   // Initialize filters from URL search params on mount
   const initialFiltersFromUrl = useMemo<ProductFilters>(() => {
     const parseList = (key: string) => {
-      const val = searchParams.get(key);
-      return val ? val.split(",").filter(Boolean) : [];
+      const fromUrl = searchParams.get(key);
+      if (fromUrl !== null) {
+        return fromUrl.split(",").filter(Boolean);
+      }
+      const fromServer = initialParams?.[key];
+      if (Array.isArray(fromServer)) return fromServer.filter(Boolean) as string[];
+      if (typeof fromServer === "string") return fromServer.split(",").filter(Boolean);
+      return [];
     };
 
     return {
       priceMin:
-        searchParams.get("minPrice") || searchParams.get("priceMin") || "",
+        getParam("minPrice") || getParam("priceMin") || "",
       priceMax:
-        searchParams.get("maxPrice") || searchParams.get("priceMax") || "",
+        getParam("maxPrice") || getParam("priceMax") || "",
       availability: parseList("availability"),
       series: parseList("series"),
       brands:
@@ -84,13 +101,17 @@ const ShopContent = ({
         parseList("os").length > 0
           ? parseList("os")
           : parseList("operatingSystems"),
+      categories:
+        parseList("categories").length > 0
+          ? parseList("categories")
+          : parseList("category"),
       specialFeatures: parseList("specialFeatures"),
       sortBy:
-        searchParams.get("sort") ||
-        searchParams.get("sortBy") ||
+        getParam("sort") ||
+        getParam("sortBy") ||
         "featured",
     };
-  }, [searchParams]);
+  }, [searchParams, initialParams]);
 
   const [filters, setFilters] = useState<ProductFilters>(initialFiltersFromUrl);
 
@@ -112,6 +133,7 @@ const ShopContent = ({
       };
 
       setOrDelete("brands", newFilters.brands);
+      setOrDelete("category", newFilters.categories);
       setOrDelete("availability", newFilters.availability);
       setOrDelete("series", newFilters.series);
       setOrDelete("processorTypes", newFilters.processorTypes);
@@ -358,7 +380,6 @@ const ShopContent = ({
                     <option value="price-asc">Price: Low to High</option>
                     <option value="price-desc">Price: High to Low</option>
                     <option value="discount">Highest Discount</option>
-                    <option value="rating">Top Customer Rating</option>
                     <option value="name-asc">Model: A to Z</option>
                   </select>
                 </div>
@@ -555,7 +576,10 @@ const ShopContent = ({
   );
 };
 
-export default function ShopClient({ initialProducts = [] }: ShopClientProps) {
+export default function ShopClient({
+  initialProducts = [],
+  initialParams,
+}: ShopClientProps) {
   return (
     <div className="container mx-auto px-4 py-6 space-y-8">
       {/* Trust Badges */}
@@ -563,12 +587,12 @@ export default function ShopClient({ initialProducts = [] }: ShopClientProps) {
 
       <Suspense
         fallback={
-          <div className="min-h-[400px] flex items-center justify-center">
+          <div className="min-h-100 flex items-center justify-center">
             <LoadingSpinner size="lg" />
           </div>
         }
       >
-        <ShopContent initialProducts={initialProducts} />
+        <ShopContent initialProducts={initialProducts} initialParams={initialParams} />
       </Suspense>
     </div>
   );

@@ -37,6 +37,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import ProductSpecTable from "@/components/product/ProductSpecTable";
+import ProductFaqSection from "@/components/product/ProductFaqSection";
+import { generateProductSummary } from "@/lib/product-summary";
 import { useRouter } from "next/navigation";
 import {
   useEffect,
@@ -50,6 +53,7 @@ interface ProductDetailsClientProps {
   product: Product;
   relatedProducts: Product[];
   sidebarProducts?: Product[];
+  summary?: string;
 }
 
 interface PublicQuestion {
@@ -72,8 +76,13 @@ export default function ProductDetailsClient({
   product,
   relatedProducts,
   sidebarProducts = [],
+  summary,
 }: ProductDetailsClientProps) {
   const router = useRouter();
+  const quickSummary = useMemo(
+    () => summary || generateProductSummary(product),
+    [summary, product]
+  );
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToComparison, removeFromComparison, isInComparison, canAddMore } =
@@ -744,6 +753,15 @@ export default function ProductDetailsClient({
                 )}
               </div>
 
+              {/* Quick Verdict / Product Summary */}
+              <div className="bg-slate-50 dark:bg-card border border-slate-200 dark:border-border rounded-lg p-3 text-xs leading-relaxed text-gray-700 dark:text-gray-300">
+                <div className="font-bold text-[#002b60] dark:text-primary mb-1 flex items-center gap-1.5 uppercase text-[11px] tracking-wide">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  Quick Verdict
+                </div>
+                <p>{quickSummary}</p>
+              </div>
+
               {/* Key Features Box */}
               <div className="bg-[#f0f5fc] dark:bg-card/70 border border-blue-100 dark:border-border rounded-lg p-3 text-xs">
                 <h4 className="font-bold text-[#002b60] dark:text-primary mb-2 text-xs">
@@ -1088,6 +1106,7 @@ export default function ProductDetailsClient({
             { id: "description", label: "Description" },
             { id: "specification", label: "Specification" },
             { id: "emi-plans", label: "EMI Plans" },
+            { id: "faqs", label: "FAQs" },
             {
               id: "questions",
               label: `Questions (${questions.length})`,
@@ -1123,6 +1142,17 @@ export default function ProductDetailsClient({
             <h3 className="font-bold text-gray-900 dark:text-white uppercase text-sm sm:text-base">
               {product.name}
             </h3>
+
+            {/* Quick Verdict / Verified Hardware Summary */}
+            <div className="p-4 rounded-lg bg-blue-50/60 dark:bg-muted/40 border border-blue-100 dark:border-border text-ink">
+              <span className="block font-bold text-xs uppercase tracking-wider text-[#002b60] dark:text-primary mb-1">
+                Verified Hardware Summary
+              </span>
+              <p className="font-medium text-ink leading-relaxed">
+                {quickSummary}
+              </p>
+            </div>
+
             <p>
               {product.description?.short ||
                 `The ${product.name} is engineered for performance, precision, and reliable all-day productivity. Built inside an ultra-durable precision-crafted chassis, it combines enterprise-grade computing power with high mobility.`}
@@ -1139,7 +1169,7 @@ export default function ProductDetailsClient({
           </div>
         </div>
 
-        {/* ── SECTION 2: SPECIFICATION (Star Tech Table Layout) ── */}
+        {/* ── SECTION 2: SPECIFICATION ── */}
         <div
           id="specification"
           className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-5 sm:p-7 shadow-2xs mb-6 scroll-mt-28"
@@ -1148,38 +1178,11 @@ export default function ProductDetailsClient({
             Specification
           </h2>
 
-          <div className="space-y-6">
-            {structuredSpecs.map((group) => (
-              <div
-                key={group.category}
-                className="border border-gray-200 dark:border-border rounded-lg overflow-hidden"
-              >
-                {/* Category Header with soft brand styling */}
-                <div className="bg-[#f0f5fc] dark:bg-card/90 px-4 py-2 border-b border-gray-200 dark:border-border">
-                  <h3 className="text-xs font-bold text-[#002b60] dark:text-primary uppercase tracking-wider">
-                    {group.category}
-                  </h3>
-                </div>
-
-                {/* Rows Table */}
-                <div className="divide-y divide-gray-100 dark:divide-border/50 text-xs">
-                  {group.items.map((row) => (
-                    <div
-                      key={row.label}
-                      className="grid grid-cols-1 sm:grid-cols-3 px-4 py-2.5 hover:bg-gray-50/70 dark:hover:bg-gray-800/40 transition-colors"
-                    >
-                      <span className="font-semibold text-gray-600 dark:text-gray-400 sm:col-span-1">
-                        {row.label}
-                      </span>
-                      <span className="text-gray-900 dark:text-gray-100 sm:col-span-2 font-medium">
-                        {row.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          <ProductSpecTable
+            product={product}
+            selectedRam={selectedRam}
+            selectedSsd={selectedSsd}
+          />
         </div>
 
         {/* ── SECTION 3: EMI PLANS (Minimal Design) ── */}
@@ -1247,7 +1250,12 @@ export default function ProductDetailsClient({
           </div>
         </div>
 
-        {/* ── SECTION 4: QUESTIONS ── */}
+        {/* ── SECTION 4: FAQS ── */}
+        <div id="faqs" className="scroll-mt-28">
+          <ProductFaqSection />
+        </div>
+
+        {/* ── SECTION 5: QUESTIONS ── */}
         <div
           id="questions"
           className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-5 sm:p-7 shadow-2xs mb-6 scroll-mt-28"
@@ -1313,7 +1321,7 @@ export default function ProductDetailsClient({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 dark:border-border pb-4 mb-4">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-[#002b60] dark:text-foreground uppercase">
-                Reviews ({reviewsList.length + (product.reviews || 0)})
+                Reviews ({reviewsList.length})
               </h2>
               <p className="text-xs text-gray-500 mt-0.5">
                 Get specific details about this product from verified customers who already bought it.

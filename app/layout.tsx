@@ -1,5 +1,5 @@
 import { SEO_CONFIG } from "@/lib/seo-config";
-import { localBusinessSchema, organizationSchema } from "@/lib/seo-schemas";
+import OrganizationSchemaMeta from "@/components/seo/OrganizationSchemaMeta";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
@@ -41,9 +41,6 @@ export async function generateMetadata(): Promise<Metadata> {
     authors: [{ name: "Laptop Point Bangladesh" }],
     creator: "Laptop Point Bangladesh",
     publisher: "Laptop Point Bangladesh",
-    alternates: {
-      canonical: "https://laptoppointbd.com",
-    },
     openGraph: {
       type: "website",
       locale: "en_US",
@@ -104,9 +101,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const jsonLd = organizationSchema;
-const localBusinessJsonLd = localBusinessSchema;
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -151,19 +145,8 @@ export default async function RootLayout({
           `}
         </Script>
 
-        {/* Multiple JSON-LD Schemas for Rich Results */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-          key="org-schema"
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(localBusinessJsonLd),
-          }}
-          key="local-schema"
-        />
+        {/* Organization & LocalBusiness JSON-LD Schema */}
+        <OrganizationSchemaMeta />
 
         <Script
           id="fb-pixel-base"

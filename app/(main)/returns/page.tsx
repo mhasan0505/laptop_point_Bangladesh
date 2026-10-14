@@ -1,4 +1,16 @@
 import { getStorefrontCommerce } from "@/lib/public-content";
+import ProductFaqSection from "@/components/product/ProductFaqSection";
+import { RETURN_POLICY_CONFIG } from "@/lib/return-policy-config";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Returns & Refund Policy | Laptop Point Bangladesh",
+  description:
+    "Official returns, replacement guarantee, and refund policies for laptops and accessories from Laptop Point BD.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/returns",
+  },
+};
 
 export default async function ReturnsRefund() {
   const commerce = await getStorefrontCommerce();
@@ -17,7 +29,7 @@ export default async function ReturnsRefund() {
         ) : (
           <div className="prose prose-lg max-w-none">
           <p className="text-gray-600 mb-6">
-            Last updated: {new Date().toLocaleDateString()}
+            Official Store Policy
           </p>
 
           <section className="mb-8">
@@ -27,7 +39,7 @@ export default async function ReturnsRefund() {
             <p className="text-gray-700 mb-4">
               We want you to be completely satisfied with your purchase. If you
               are not happy with your laptop or accessory, you can return it
-              within 7 days of purchase for a full refund or exchange, provided
+              within {RETURN_POLICY_CONFIG.returnPeriodDays} days of purchase for a full refund or exchange, provided
               the item is unused and in original condition.
             </p>
           </section>
@@ -41,7 +53,7 @@ export default async function ReturnsRefund() {
               conditions:
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
-              <li>Returned within 7 days of purchase</li>
+              <li>Returned within {RETURN_POLICY_CONFIG.returnPeriodDays} days of purchase</li>
               <li>Unused and in original packaging</li>
               <li>All accessories and documentation included</li>
               <li>No signs of physical damage or wear</li>
@@ -59,7 +71,7 @@ export default async function ReturnsRefund() {
               <li>Contact our support team with your order number</li>
               <li>Provide photos of the item and packaging</li>
               <li>Receive return authorization and shipping instructions</li>
-              <li>Ship the item back to us in original condition</li>
+              <li>Ship the item back to us in original condition or visit our showroom</li>
               <li>Receive refund or replacement after inspection</li>
             </ol>
           </section>
@@ -73,10 +85,10 @@ export default async function ReturnsRefund() {
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
               <li>
-                We will verify the condition of the item (2-3 business days)
+                We will verify the condition of the item ({RETURN_POLICY_CONFIG.inspectionDays})
               </li>
               <li>
-                Approve and process your refund (within 5-7 business days)
+                Approve and process your refund (within {RETURN_POLICY_CONFIG.refundProcessingDays})
               </li>
               <li>
                 The refund will be credited to your original payment method
@@ -93,7 +105,7 @@ export default async function ReturnsRefund() {
             </h2>
             <p className="text-gray-700 mb-4">
               If you receive a defective item, we will replace it free of charge
-              within 30 days of purchase. Please contact us immediately with
+              within {RETURN_POLICY_CONFIG.defectiveReplacementDays} days of purchase. Please contact us immediately with
               photos and a description of the defect.
             </p>
           </section>
@@ -140,6 +152,13 @@ export default async function ReturnsRefund() {
           </section>
         </div>
         )}
+
+        <div className="mt-12">
+          <ProductFaqSection
+            title="Warranty, Return & Service FAQs"
+            subtitle="Verified policies on testing, returns, warranty coverage, delivery, and showroom inspection."
+          />
+        </div>
       </div>
     </div>
   );

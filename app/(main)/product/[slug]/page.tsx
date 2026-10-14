@@ -1,5 +1,7 @@
 import { getLiveLaptops } from "@/app/data/data";
 import ProductDetailsClient from "@/components/product/ProductDetailsClient";
+import ProductSchemaMeta from "@/components/seo/ProductSchemaMeta";
+import { generateProductSummary } from "@/lib/product-summary";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -30,18 +32,20 @@ export async function generateMetadata({
   }
 
   const title = `${product.name} Price in BD | ${product.brand} Laptop`;
-  const description =
-    product.description?.short ||
-    `Buy ${product.name} at the best price in Bangladesh. ${product.specs?.processor}, ${product.specs?.ram}, ${product.specs?.storage}. Official Warranty.`;
+  const description = generateProductSummary(product);
   const image =
     typeof product.image === "string" ? product.image : product.image.src;
 
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://laptoppointbd.com/product/${slug}`,
+    },
     openGraph: {
       title,
       description,
+      url: `https://laptoppointbd.com/product/${slug}`,
       images: [{ url: image }],
     },
     twitter: {
@@ -62,6 +66,8 @@ export default async function ProductDetailsPage({ params }: PageProps) {
     notFound();
   }
 
+  const summary = generateProductSummary(product);
+
   // Related products (same brand or category for bottom grid)
   const relatedProducts = laptops
     .filter(
@@ -77,10 +83,14 @@ export default async function ProductDetailsPage({ params }: PageProps) {
     .slice(0, 5);
 
   return (
-    <ProductDetailsClient
-      product={product}
-      relatedProducts={relatedProducts}
-      sidebarProducts={sidebarProducts}
-    />
+    <>
+      <ProductSchemaMeta product={product} />
+      <ProductDetailsClient
+        product={product}
+        relatedProducts={relatedProducts}
+        sidebarProducts={sidebarProducts}
+        summary={summary}
+      />
+    </>
   );
 }

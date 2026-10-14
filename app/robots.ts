@@ -1,42 +1,36 @@
 import { MetadataRoute } from "next";
 
+// Toggle to disallow AI training scrapers (GPTBot, ClaudeBot, Google-Extended)
+// while allowing AI search agents (OAI-SearchBot, ChatGPT-User, PerplexityBot, Claude-SearchBot, Claude-User)
+// and standard search bots (Googlebot, Bingbot) via the single '*' rule.
+const BLOCK_AI_TRAINING = false;
+
 export default function robots(): MetadataRoute.Robots {
-  const disallow = [
+  const disallowed = [
     "/admin/",
     "/api/",
     "/cart/",
     "/checkout/",
     "/wishlist/",
-    "/compare/",
-    "/products/",
-    "/vi/",
-    "/*.json$",
-    "/*?*sort=",
-    "/*?*filter=",
   ];
 
+  const rules: MetadataRoute.Robots["rules"] = [];
+
+  if (BLOCK_AI_TRAINING) {
+    rules.push({
+      userAgent: ["GPTBot", "ClaudeBot", "Google-Extended"],
+      disallow: ["/"],
+    });
+  }
+
+  rules.push({
+    userAgent: "*",
+    allow: "/",
+    disallow: disallowed,
+  });
+
   return {
-    rules: [
-      {
-        userAgent: "Googlebot",
-        allow: "/",
-        disallow,
-        crawlDelay: 0,
-      },
-      {
-        userAgent: "Bingbot",
-        allow: "/",
-        disallow,
-        crawlDelay: 1,
-      },
-      {
-        userAgent: "*",
-        allow: "/",
-        disallow,
-        crawlDelay: 1,
-      },
-    ],
+    rules,
     sitemap: "https://laptoppointbd.com/sitemap.xml",
-    host: "https://laptoppointbd.com",
   };
 }

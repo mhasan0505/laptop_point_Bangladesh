@@ -1,7 +1,6 @@
-const page = () => {
-  return (
-    <div className="min-h-screen container ">This a Router Products Page</div>
-  );
-};
+import { permanentRedirect } from "next/navigation";
 
-export default page;
+// Legacy URL; the old page was an empty placeholder.
+export default function RoutersRedirect() {
+  permanentRedirect("/accessories?category=routers-networking");
+}

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useComparison } from "@/contexts/ComparisonContext";
 import type { Product } from "@/types/product";
 import { motion } from "framer-motion";
-import { Star, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import Image from "next/image";
 
 const getSpecValue = (
@@ -104,15 +104,6 @@ const ComparisonTable = () => {
                 <h4 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2 h-10 px-2">
                   {product.name}
                 </h4>
-
-                {typeof product.rating === "number" && (
-                  <div className="flex items-center justify-center gap-1 mb-3">
-                    <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs font-bold text-gray-700">
-                      {product.rating}
-                    </span>
-                  </div>
-                )}
 
                 <div className="font-bold text-lg text-primary mb-4">
                   ৳{product.price.toLocaleString()}

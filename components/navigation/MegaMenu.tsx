@@ -1,6 +1,7 @@
 "use client";
 
 import type { MegaMenuFeaturedProduct } from "@/lib/public-content";
+import { isCategoryHrefAvailable } from "@/lib/nav-filter";
 import { motion } from "framer-motion";
 import { ChevronRight, Laptop } from "lucide-react";
 import Image from "next/image";
@@ -22,15 +23,17 @@ const MegaMenu = ({
   onMouseLeave,
   featuredProducts,
 }: MegaMenuProps) => {
-  const [hoveredCategory, setHoveredCategory] = useState<string>("Business");
-
-  // Get unique categories from laptop data
+  // Get unique categories from laptop data matching sitemap, hiding any with 0 products
   const categories = [
-    { name: "Business", icon: "💼" },
-    { name: "Professional", icon: "🎯" },
-    { name: "Gaming", icon: "🎮" },
-    { name: "Budget", icon: "💰" },
-  ];
+    { name: "Workstations", cat: "Workstation", icon: "💼" },
+    { name: "Ultrabooks", cat: "Ultrabook", icon: "🎯" },
+    { name: "Convertibles", cat: "Convertible 2-in-1", icon: "🔄" },
+    { name: "Laptops", cat: "Laptop", icon: "💻" },
+  ].filter((c) => isCategoryHrefAvailable(`/shop?category=${encodeURIComponent(c.cat)}`));
+
+  const [hoveredCategory, setHoveredCategory] = useState<string>(
+    categories[0]?.cat ?? "Workstation"
+  );
 
   // Get featured products for each category
   const getFeaturedProducts = (category: string) => {
@@ -68,14 +71,14 @@ const MegaMenu = ({
               <div className="space-y-1">
                 {categories.map((category) => (
                   <div
-                    key={category.name}
-                    onMouseEnter={() => setHoveredCategory(category.name)}
-                    onMouseLeave={() => setHoveredCategory(categories[0].name)}
+                    key={category.cat}
+                    onMouseEnter={() => setHoveredCategory(category.cat)}
+                    onMouseLeave={() => setHoveredCategory(categories[0]?.cat ?? "Workstation")}
                   >
                     <Link
-                      href={`/shop?category=${category.name.toLowerCase()}`}
+                      href={`/shop?category=${encodeURIComponent(category.cat)}`}
                       className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all group ${
-                        hoveredCategory === category.name
+                        hoveredCategory === category.cat
                           ? "bg-[#002b60]/10 text-[#002b60] font-semibold"
                           : "hover:bg-gray-50 text-gray-700"
                       }`}
@@ -86,7 +89,7 @@ const MegaMenu = ({
                       </div>
                       <ChevronRight
                         className={`w-4 h-4 transition-transform ${
-                          hoveredCategory === category.name
+                          hoveredCategory === category.cat
                             ? "translate-x-1 text-[#002b60]"
                             : "text-gray-400"
                         }`}
@@ -118,10 +121,10 @@ const MegaMenu = ({
                 >
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-lg font-bold text-gray-900">
-                      {hoveredCategory} Laptops
+                      {categories.find((c) => c.cat === hoveredCategory)?.name ?? hoveredCategory} Laptops
                     </h3>
                     <Link
-                      href={`/shop?category=${hoveredCategory.toLowerCase()}`}
+                      href={`/shop?category=${encodeURIComponent(hoveredCategory)}`}
                       onClick={onClose}
                       className="text-sm font-medium text-[#002b60] hover:text-[#dc0303] flex items-center gap-1"
                     >

@@ -37,4 +37,8 @@ export interface Product {
     full: string;
   };
   slug: string;
+  updated_at?: string | Date;
+  updatedAt?: string | Date;
+  created_at?: string | Date;
+  createdAt?: string | Date;
 }

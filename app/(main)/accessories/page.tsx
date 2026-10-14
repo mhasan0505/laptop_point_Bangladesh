@@ -1,415 +1,310 @@
+import AccessoryCard from "@/components/accessories/AccessoryCard";
+import { listPublicAccessories } from "@/lib/accessories-storage";
+import { ACCESSORY_CATEGORIES } from "@/lib/accessory-types";
+import { normalizeToken } from "@/lib/product-filter";
+import { getStorefrontContact } from "@/lib/public-content";
+import { MessageCircle, Phone, Search } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Check, Headphones, ShieldCheck, Sparkles, Truck, Zap } from "lucide-react";
 
-const categories = [
-  {
-    title: "Chargers & Adapters",
-    description: "Original and compatible chargers for popular brands.",
-    icon: Zap,
-    href: "/accessories/charger-and-adapter",
-    accent: "from-amber-400 to-orange-500",
-  },
-  {
-    title: "Routers",
-    description: "Reliable wireless connectivity for home and office.",
-    icon: Truck,
-    href: "/accessories/routers",
-    accent: "from-sky-400 to-blue-500",
-  },
-  {
-    title: "Batteries",
-    description: "Reliable replacement batteries for everyday use.",
-    icon: Sparkles,
-    href: "#",
-    accent: "from-emerald-400 to-green-500",
-  },
-  {
-    title: "Bags & Sleeves",
-    description: "Protective bags for work, travel, and daily carry.",
-    icon: ShieldCheck,
-    href: "#",
-    accent: "from-violet-400 to-purple-500",
-  },
-  {
-    title: "Keyboards & Mice",
-    description: "Comfortable peripherals for productivity.",
-    icon: Headphones,
-    href: "#",
-    accent: "from-rose-400 to-pink-500",
-  },
-  {
-    title: "Storage",
-    description: "SSDs, HDDs, and external storage options.",
-    icon: Zap,
-    href: "#",
-    accent: "from-cyan-400 to-teal-500",
-  },
-];
+export const dynamic = "force-dynamic";
 
-const featured = [
-  {
-    name: "65W USB-C Charger",
-    price: "BDT 1,490",
-    tag: "Fast Charge",
-    image: "/products/lenovo/Lenovo-Thinkpad-X1-Carbon-Gen-6-i5-8TH-Gen-8-256/key.webp",
-  },
-  {
-    name: "Laptop Battery Replacement",
-    price: "BDT 2,690",
-    tag: "Warranty Included",
-    image: "/products/lenovo/Lenovo-Thinkpad-T14/main.jpg",
-  },
-  {
-    name: "Premium Laptop Backpack",
-    price: "BDT 1,890",
-    tag: "Water Resistant",
-    image: "/products/hp/HP-Elitebook-840-G6-Core-i5-8TH-Gen-8-256/main.jpg",
-  },
-  {
-    name: "Wireless Mouse + Keyboard",
-    price: "BDT 1,350",
-    tag: "Combo Pack",
-    image: "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/main.png",
-  },
-];
+interface AccessoriesPageProps {
+  searchParams: Promise<{
+    category?: string;
+    brand?: string;
+    q?: string;
+    sort?: string;
+    stock?: string;
+  }>;
+}
 
-const benefits = [
-  {
-    icon: ShieldCheck,
-    title: "Quality Checked",
-    description: "Every accessory is tested for performance and safety.",
-  },
-  {
-    icon: Headphones,
-    title: "Expert Support",
-    description: "Get help choosing the right accessory for your laptop.",
-  },
-  {
-    icon: Sparkles,
-    title: "Great Value",
-    description: "Affordable prices without compromising on quality.",
-  },
-  {
-    icon: Truck,
-    title: "Quick Pickup",
-    description: "Pick up at Mirpur-10 or get fast delivery in Dhaka.",
-  },
-];
+const SORTS = [
+  { id: "new", label: "Newest" },
+  { id: "price-asc", label: "Price: low to high" },
+  { id: "price-desc", label: "Price: high to low" },
+] as const;
 
-const stats = [
-  { value: "12k+", label: "Accessories Sold" },
-  { value: "6", label: "Product Categories" },
-  { value: "4.8", label: "Avg. Customer Rating" },
-  { value: "24h", label: "Avg. Delivery Time" },
-];
+export async function generateMetadata({ searchParams }: AccessoriesPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const rawCategory = typeof params.category === "string" ? params.category.trim() : undefined;
+  const cat = rawCategory
+    ? ACCESSORY_CATEGORIES.find((c) => c.slug.toLowerCase() === rawCategory.toLowerCase())
+    : undefined;
 
-const faqs = [
-  {
-    q: "Are your chargers compatible with my laptop model?",
-    a: "Yes. We stock original and verified compatible chargers for all major brands. Share your model number and we'll confirm the right fit.",
-  },
-  {
-    q: "Do accessories come with a warranty?",
-    a: "Most accessories include a warranty—batteries and chargers come with coverage so you can buy with confidence.",
-  },
-  {
-    q: "Can I pick up my order in person?",
-    a: "Absolutely. You can collect from our Mirpur-10 showroom or choose fast delivery across Dhaka.",
-  },
-];
+  let canonical = "https://laptoppointbd.com/accessories";
+  let title = "Laptop Accessories Price in BD | Laptop Point BD";
+  let description =
+    "Laptop chargers, batteries, bags, keyboards, storage and more in Bangladesh. Original and compatible options with warranty.";
 
-const page = () => {
+  if (cat) {
+    canonical = `https://laptoppointbd.com/accessories?category=${encodeURIComponent(cat.slug)}`;
+    title = `${cat.name} Price in Bangladesh | Laptop Point BD`;
+    description = cat.description;
+  }
+
+  const all = await listPublicAccessories();
+  const matchingCount = rawCategory
+    ? all.filter(
+        (a) =>
+          normalizeToken(a.category) === normalizeToken(rawCategory) ||
+          (cat && normalizeToken(a.category) === normalizeToken(cat.slug))
+      ).length
+    : all.length;
+  const isEmptyCategory = Boolean(rawCategory) && matchingCount === 0;
+
+  return {
+    title,
+    description,
+    ...(isEmptyCategory
+      ? {
+          robots: {
+            index: false,
+            follow: true,
+          },
+        }
+      : {}),
+    alternates: {
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      type: "website",
+    },
+  };
+}
+
+export default async function AccessoriesPage({ searchParams }: AccessoriesPageProps) {
+  const { category, brand, q, sort = "new", stock } = await searchParams;
+  const [all, contact] = await Promise.all([listPublicAccessories(), getStorefrontContact()]);
+
+  const rawCat = (category ?? "").trim().toLowerCase();
+  const activeCategory = rawCat
+    ? ACCESSORY_CATEGORIES.find((c) => c.slug.toLowerCase() === rawCat)
+    : undefined;
+  const query = (q ?? "").trim().toLowerCase();
+  const inStockOnly = stock === "1";
+
+  const inCategory = activeCategory
+    ? all.filter((a) => a.category.toLowerCase() === activeCategory.slug.toLowerCase())
+    : all;
+  const brands = Array.from(new Set(inCategory.map((a) => a.brand).filter(Boolean))).sort();
+
+  const items = inCategory
+    .filter((a) => !brand || a.brand.toLowerCase() === brand.toLowerCase())
+    .filter((a) => !inStockOnly || a.inStock)
+    .filter(
+      (a) =>
+        !query ||
+        a.name.toLowerCase().includes(query) ||
+        a.brand.toLowerCase().includes(query) ||
+        a.compatibility.some((c) => c.toLowerCase().includes(query)),
+    )
+    .sort((a, b) => {
+      if (sort === "price-asc") return a.price - b.price;
+      if (sort === "price-desc") return b.price - a.price;
+      return b.updatedAt.localeCompare(a.updatedAt);
+    });
+
+  const counts = new Map<string, number>();
+  for (const a of all) counts.set(a.category, (counts.get(a.category) ?? 0) + 1);
+
+  const href = (next: Record<string, string | undefined>) => {
+    const params = new URLSearchParams();
+    const merged = { category, brand, q, sort: sort === "new" ? undefined : sort, stock: inStockOnly ? "1" : undefined, ...next };
+    for (const [k, v] of Object.entries(merged)) if (v) params.set(k, v);
+    const s = params.toString();
+    return s ? `/accessories?${s}` : "/accessories";
+  };
+
+  const chip = (active: boolean) =>
+    `inline-flex h-10 items-center rounded-full border px-4 text-small font-medium transition-colors ${
+      active
+        ? "border-brand-navy bg-brand-navy text-white"
+        : "border-line bg-surface text-ink-2 hover:border-brand-navy"
+    }`;
+
+  const waNumber = contact.whatsapp.replace(/[^\d]/g, "");
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,#0f172a_0%,#1e293b_45%,#0b1220_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.25),transparent_55%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(139,92,246,0.22),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_75%)]" />
+    <div className="bg-surface pb-16">
+      {/* Header */}
+      <header className="border-b border-line bg-surface-2">
+        <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+          <p className="text-caption font-semibold uppercase tracking-[0.06em] text-brand-red">
+            Accessories
+          </p>
+          <h1 className="mt-2 text-h1 font-bold tracking-tight text-ink">
+            {activeCategory ? activeCategory.name : "Everything for your laptop"}
+          </h1>
+          <p className="mt-3 max-w-[65ch] text-body-lg text-ink-2">
+            {activeCategory
+              ? activeCategory.description
+              : "Chargers, batteries, bags and more. Tell us your laptop model and we will confirm it fits before you buy."}
+          </p>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid items-center gap-12 py-20 lg:py-28 lg:grid-cols-2">
-            <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-medium tracking-wide text-white/80 backdrop-blur">
-                <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-                Premium Accessories for Used Laptops
-              </span>
-              <h1 className="mt-6 text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
-                Upgrade, Protect &amp;{" "}
-                <span className="bg-gradient-to-r from-sky-300 via-cyan-200 to-violet-300 bg-clip-text text-transparent">
-                  Power
-                </span>{" "}
-                Your Laptop
-              </h1>
-              <p className="mt-5 max-w-xl text-lg text-gray-300">
-                Discover a curated collection of tested accessories—chargers,
-                batteries, bags, and more—designed to fit your laptop and your
-                budget.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  href="/accessories/charger-and-adapter"
-                  className="group inline-flex h-12 items-center gap-2 rounded-xl bg-white px-6 font-semibold text-slate-900 shadow-lg shadow-black/30 transition-all hover:bg-gray-100"
-                >
-                  Browse Accessories
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex h-12 items-center rounded-xl border border-white/20 px-6 font-semibold text-white/90 backdrop-blur transition-all hover:border-white/40 hover:text-white"
-                >
-                  Get Recommendations
-                </Link>
-              </div>
-
-              <dl className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4">
-                {stats.map((s) => (
-                  <div key={s.label}>
-                    <dt className="text-2xl font-bold text-white">{s.value}</dt>
-                    <dd className="mt-1 text-xs text-gray-400">{s.label}</dd>
-                  </div>
-                ))}
-              </dl>
+          <form action="/accessories" method="get" role="search" className="mt-6 flex max-w-xl gap-2">
+            {category && <input type="hidden" name="category" value={category} />}
+            <label htmlFor="acc-search" className="sr-only">
+              Search accessories
+            </label>
+            <div className="relative flex-1">
+              <Search
+                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-text"
+                aria-hidden="true"
+              />
+              <input
+                id="acc-search"
+                name="q"
+                defaultValue={q ?? ""}
+                placeholder="Search by name, brand or laptop model"
+                className="h-12 w-full rounded-[var(--radius-md)] border border-line bg-surface pl-10 pr-3 text-body text-ink outline-none focus:border-brand-navy focus:ring-2 focus:ring-brand-navy/20"
+              />
             </div>
-
-            {/* Floating showcase card */}
-            <div className="relative hidden lg:block">
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-sky-400/20 to-violet-500/20 blur-2xl" />
-              <div className="relative grid grid-cols-2 gap-4">
-                {featured.map((item, i) => (
-                  <div
-                    key={item.name}
-                    className={`group rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition-all hover:bg-white/10 ${
-                      i % 2 === 1 ? "translate-y-6" : ""
-                    }`}
-                  >
-                    <div className="aspect-square overflow-hidden rounded-xl bg-white/90">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="h-full w-full object-contain p-4 mix-blend-multiply"
-                      />
-                    </div>
-                    <p className="mt-3 text-sm font-semibold text-white">
-                      {item.name}
-                    </p>
-                    <p className="text-xs text-gray-400">{item.price}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Categories */}
-      <section className="container mx-auto px-4 py-16 md:py-20">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <span className="text-sm font-semibold uppercase tracking-wider text-sky-600">
-              Collections
-            </span>
-            <h2 className="mt-2 text-3xl font-bold text-gray-900 md:text-4xl">
-              Shop by Category
-            </h2>
-            <p className="mt-2 text-gray-600">
-              Find the right accessory for your exact laptop model.
-            </p>
-          </div>
-          <span className="inline-flex items-center rounded-full bg-gray-900 px-4 py-1.5 text-sm font-medium text-white">
-            6 Categories
-          </span>
-        </div>
-
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-gray-200/60"
-              >
-                <div
-                  className={`absolute -right-8 -top-8 h-28 w-28 rounded-full bg-gradient-to-br ${item.accent} opacity-10 transition-all duration-300 group-hover:scale-150 group-hover:opacity-20`}
-                />
-                <div className="relative flex items-center justify-between">
-                  <div
-                    className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} text-white shadow-lg`}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <span className="inline-flex items-center gap-1 text-sm font-semibold text-gray-500 transition-colors group-hover:text-sky-600">
-                    Explore
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </span>
-                </div>
-                <h3 className="relative mt-5 text-xl font-semibold text-gray-900">
-                  {item.title}
-                </h3>
-                <p className="relative mt-2 text-sm text-gray-600">
-                  {item.description}
-                </p>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Featured */}
-      <section className="container mx-auto px-4 pb-16 md:pb-20">
-        <div className="rounded-[2rem] border border-gray-100 bg-gradient-to-b from-white to-gray-50 p-8 shadow-sm md:p-12">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <span className="text-sm font-semibold uppercase tracking-wider text-violet-600">
-                Handpicked
-              </span>
-              <h2 className="mt-2 text-3xl font-bold text-gray-900 md:text-4xl">
-                Featured Accessories
-              </h2>
-              <p className="mt-2 text-gray-600">
-                Best picks for popular used laptop models.
-              </p>
-            </div>
-            <Link
-              href="/accessories/charger-and-adapter"
-              className="inline-flex h-11 items-center rounded-xl border border-gray-200 px-5 font-semibold text-gray-700 transition-all hover:border-gray-300 hover:text-gray-900"
+            <button
+              type="submit"
+              className="h-12 rounded-[var(--radius-md)] bg-brand-navy px-5 text-small font-semibold text-white hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-navy focus-visible:ring-offset-2"
             >
-              View All
-            </Link>
-          </div>
+              Search
+            </button>
+          </form>
+        </div>
+      </header>
 
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((item) => (
-              <div
-                key={item.name}
-                className="group flex flex-col rounded-3xl border border-gray-100 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-gray-200/60"
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Categories */}
+        <nav aria-label="Accessory categories" className="-mx-4 mt-6 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <ul className="flex gap-2 pb-1">
+            <li>
+              <Link href={href({ category: undefined, brand: undefined })} className={chip(!activeCategory)}>
+                All ({all.length})
+              </Link>
+            </li>
+            {ACCESSORY_CATEGORIES.filter((c) => (counts.get(c.slug) ?? 0) > 0).map((c) => (
+              <li key={c.slug}>
+                <Link
+                  href={href({ category: c.slug, brand: undefined })}
+                  className={chip(activeCategory?.slug === c.slug)}
+                  aria-current={activeCategory?.slug === c.slug ? "page" : undefined}
+                >
+                  {c.name} ({counts.get(c.slug)})
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Filters */}
+        <div className="mt-5 flex flex-col gap-4 border-b border-line pb-5 md:flex-row md:items-center md:justify-between">
+          <p className="text-small text-ink-2" aria-live="polite">
+            <span className="font-semibold text-ink">{items.length}</span>{" "}
+            {items.length === 1 ? "accessory" : "accessories"}
+            {query && (
+              <>
+                {" "}
+                for &ldquo;{q}&rdquo;
+              </>
+            )}
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href={href({ stock: inStockOnly ? undefined : "1" })} className={chip(inStockOnly)}>
+              In stock only
+            </Link>
+            {SORTS.map((s) => (
+              <Link
+                key={s.id}
+                href={href({ sort: s.id === "new" ? undefined : s.id })}
+                className={chip(sort === s.id)}
+                aria-current={sort === s.id ? "true" : undefined}
               >
-                <div className="relative aspect-square overflow-hidden rounded-2xl bg-gray-50">
-                  <span className="absolute left-3 top-3 z-10 rounded-full bg-gradient-to-r from-sky-500 to-violet-500 px-2.5 py-1 text-[11px] font-semibold text-white">
-                    {item.tag}
-                  </span>
-                  <span className="absolute right-3 top-3 z-10 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-[11px] font-medium text-emerald-600">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                    In Stock
-                  </span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="h-full w-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="mt-4 font-semibold text-gray-900">{item.name}</h3>
-                <p className="mt-1 text-lg font-bold text-gray-900">{item.price}</p>
-                <button className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-gray-900 text-sm font-semibold text-white transition-all hover:bg-black">
-                  Add to Cart
-                </button>
-              </div>
+                {s.label}
+              </Link>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Benefits */}
-      <section className="container mx-auto px-4 pb-16 md:pb-20">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {benefits.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.title}
-                className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm transition-all hover:shadow-md"
+        {brands.length > 1 && (
+          <nav aria-label="Filter by brand" className="mt-4 flex flex-wrap gap-2">
+            <Link href={href({ brand: undefined })} className={chip(!brand)}>
+              All brands
+            </Link>
+            {brands.map((b) => (
+              <Link
+                key={b}
+                href={href({ brand: b })}
+                className={chip(brand?.toLowerCase() === b.toLowerCase())}
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-900 text-white">
-                  <Icon className="h-5 w-5" />
+                {b}
+              </Link>
+            ))}
+          </nav>
+        )}
+
+        {/* Grid */}
+        {items.length > 0 ? (
+          <ul className="mt-6 grid grid-cols-2 gap-3.5 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+            {items.map((a) => (
+              <li key={a.id} className="flex">
+                <div className="flex w-full">
+                  <AccessoryCard accessory={a} />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-gray-900">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm text-gray-600">{item.description}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="container mx-auto px-4 pb-16 md:pb-20">
-        <div className="mx-auto max-w-3xl text-center">
-          <span className="text-sm font-semibold uppercase tracking-wider text-sky-600">
-            Good to Know
-          </span>
-          <h2 className="mt-2 text-3xl font-bold text-gray-900 md:text-4xl">
-            Frequently Asked Questions
-          </h2>
-        </div>
-        <div className="mx-auto mt-10 max-w-3xl space-y-4">
-          {faqs.map((item) => (
-            <details
-              key={item.q}
-              className="group rounded-2xl border border-gray-100 bg-white px-6 py-5 shadow-sm transition-all open:shadow-md"
-            >
-              <summary className="flex cursor-pointer list-none items-center justify-between font-semibold text-gray-900">
-                {item.q}
-                <span className="ml-4 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-500 transition-transform group-open:rotate-45 group-open:bg-sky-500 group-open:text-white">
-                  +
-                </span>
-              </summary>
-              <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                {item.a}
-              </p>
-            </details>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="container mx-auto px-4 pb-24">
-        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-8 text-white shadow-2xl md:p-14">
-          <div className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-sky-500/30 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-violet-500/30 blur-3xl" />
-          <div className="relative flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h2 className="text-3xl font-bold md:text-4xl">
-                Need the right accessory?
-              </h2>
-              <p className="mt-2 max-w-xl text-white/80">
-                Tell us your laptop model and we&apos;ll suggest compatible
-                options.
-              </p>
-              <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80">
-                {["Free compatibility check", "Warranty backed", "Same-day pickup"].map(
-                  (t) => (
-                    <li key={t} className="inline-flex items-center gap-2">
-                      <Check className="h-4 w-4 text-emerald-400" />
-                      {t}
-                    </li>
-                  )
-                )}
-              </ul>
-            </div>
-            <div className="flex flex-wrap gap-3">
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="mt-8 rounded-[var(--radius-lg)] border border-dashed border-line p-10 text-center">
+            <p className="text-h3 font-semibold text-ink">
+              {all.length === 0 ? "Accessories are coming soon" : "Nothing matches these filters"}
+            </p>
+            <p className="mt-2 text-body text-ink-2">
+              {all.length === 0
+                ? "We are adding accessories to the catalogue. Call us and we will find what you need."
+                : "Try a different search or clear the filters."}
+            </p>
+            {all.length > 0 && (
               <Link
-                href="/contact"
-                className="inline-flex h-12 items-center rounded-xl bg-white px-6 font-semibold text-slate-900 transition-all hover:bg-gray-100"
+                href="/accessories"
+                className="mt-5 inline-flex h-11 items-center rounded-full bg-brand-navy px-6 text-small font-semibold text-white"
               >
-                Ask on WhatsApp
+                Clear filters
               </Link>
-              <Link
-                href="/contact"
-                className="inline-flex h-12 items-center rounded-xl border border-white/30 px-6 font-semibold text-white transition-all hover:border-white/60"
-              >
-                Call Support
-              </Link>
-            </div>
+            )}
           </div>
-        </div>
-      </section>
+        )}
+
+        {/* Help */}
+        <section
+          aria-labelledby="acc-help"
+          className="mt-14 flex flex-col items-start justify-between gap-5 rounded-[var(--radius-lg)] bg-brand-navy p-6 text-white sm:flex-row sm:items-center sm:p-8"
+        >
+          <div>
+            <h2 id="acc-help" className="text-h3 font-bold">
+              Not sure what fits your laptop?
+            </h2>
+            <p className="mt-1 text-body text-white/80">
+              Send us the model number and we will confirm compatibility before you order.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href={`tel:${contact.hotline.replace(/[^\d+]/g, "")}`}
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-brand-red px-5 text-small font-semibold text-white hover:bg-brand-red-hover"
+            >
+              <Phone className="h-4 w-4" aria-hidden="true" /> {contact.hotline}
+            </a>
+            <a
+              href={`https://wa.me/${waNumber}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-white/30 px-5 text-small font-semibold text-white hover:bg-white/10"
+            >
+              <MessageCircle className="h-4 w-4" aria-hidden="true" /> WhatsApp
+            </a>
+          </div>
+        </section>
+      </div>
     </div>
   );
-};
-
-export default page;
+}

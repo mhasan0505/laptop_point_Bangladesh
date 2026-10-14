@@ -42,22 +42,6 @@ const slugify = (text: string) => {
     .replace(/\-\-+/g, "-"); // Replace multiple - with single -
 };
 
-// Deterministic rating/review counts derived from the product name so the
-// server render and the client render always agree (Math.random() previously
-// caused hydration mismatches on every listing surface).
-const hashString = (input: string): number => {
-  let hash = 0;
-  for (let i = 0; i < input.length; i++) {
-    hash = (hash * 31 + input.charCodeAt(i)) >>> 0;
-  }
-  return hash;
-};
-
-const ratingFor = (name: string): number =>
-  Math.round((4.3 + (hashString(name) % 7) / 10) * 10) / 10; // 4.3 – 4.9
-const reviewsFor = (name: string): number =>
-  60 + (hashString(`${name}:reviews`) % 440); // 60 – 499
-
 export function mapRawToProduct(p: RawProduct): Product {
   const description = p.description;
   const mappedImages = resolveProductImages(p);
@@ -91,8 +75,6 @@ export function mapRawToProduct(p: RawProduct): Product {
     price: salePrice,
     originalPrice: marketPrice,
     discount,
-    rating: ratingFor(p.name || ""),
-    reviews: reviewsFor(p.name || ""),
     inStock: stockCount > 0,
     stockQty: stockCount,
     condition: p.condition ? [p.condition] : [],

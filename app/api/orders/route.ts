@@ -5,6 +5,7 @@ import { computeOrderTotals, FREE_SHIPPING_THRESHOLD, TAX_RATE } from "@/lib/pri
 import { calculateDeliveryFee } from "@/lib/delivery";
 import { getStorefrontCommerce, type StorefrontCommerce } from "@/lib/public-content";
 import { loadMergedRawProducts } from "@/lib/products-storage";
+import { listAccessories } from "@/lib/accessories-storage";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -115,6 +116,21 @@ async function parseCreateOrderBody(
   for (const p of rawProducts) {
     if (p.sku) productLookup.set(p.sku.toLowerCase().trim(), p);
     if (p.id != null) productLookup.set(String(p.id).toLowerCase().trim(), p);
+  }
+
+  // Active accessories are sellable through the same checkout. Adapt them to
+  // the minimal shape the validator needs (price authority stays server-side).
+  const accessories = (await listAccessories().catch(() => [])).filter((a) => a.active);
+  for (const a of accessories) {
+    const adapted = {
+      id: a.id,
+      sku: a.sku,
+      name: a.name,
+      pricing: { sale_price: a.price },
+      stock: { quantity: a.stock, status: a.stock > 0 ? "In Stock" : "Out of Stock" },
+    } as unknown as (typeof rawProducts)[number];
+    productLookup.set(a.sku.toLowerCase().trim(), adapted);
+    productLookup.set(a.id.toLowerCase().trim(), adapted);
   }
 
   const items: ParsedOrderItem[] = [];
@@ -316,6 +332,9 @@ export async function POST(request: NextRequest) {
     );
   }
   const orderInput = parsed.data;
+  const accessoryList = orderInput.items.some((i) => i.productId.startsWith("acc-"))
+    ? await listAccessories().catch(() => [])
+    : [];
 
   const computedSubtotal = orderInput.subtotal;
   const computedShipping = orderInput.shippingCost;
@@ -364,6 +383,18 @@ export async function POST(request: NextRequest) {
         // 2. Conditional decrement — updateMany fails to match once stock is
         //    insufficient, closing the check-then-decrement race.
         for (const item of orderInput.items) {
+          // Accessories seeded from JSON may not have an inventory row yet.
+          // Create it from the validated stock so the guarded decrement below works.
+          if (item.productId.startsWith("acc-")) {
+            const acc = accessoryList.find((a) => a.id === item.productId);
+            if (acc) {
+              await tx.inventory.upsert({
+                where: { productId: acc.id },
+                update: {},
+                create: { productId: acc.id, sku: acc.sku, name: acc.name, quantity: acc.stock },
+              });
+            }
+          }
           const result = await tx.inventory.updateMany({
             where: {
               productId: item.productId,

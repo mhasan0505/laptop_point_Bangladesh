@@ -1,4 +1,14 @@
 import { getStorefrontCommerce } from "@/lib/public-content";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shipping Information | Laptop Point Bangladesh",
+  description:
+    "Delivery timelines, courier charges, and showroom pickup options across Dhaka and nationwide in Bangladesh.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/shipping",
+  },
+};
 
 export default async function ShippingInfo() {
   const commerce = await getStorefrontCommerce();

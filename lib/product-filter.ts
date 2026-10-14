@@ -502,6 +502,13 @@ function matchItem(
       if (!filters.specialFeatures || filters.specialFeatures.length === 0) return true;
       return filters.specialFeatures.some((sf) => matchesSpecialFeature(product, sf));
     }
+    case "categories": {
+      if (!filters.categories || filters.categories.length === 0) return true;
+      const normalizedCategories = filters.categories.map(normalizeToken).filter(Boolean);
+      if (normalizedCategories.length === 0) return true;
+      const productCategory = normalizeToken(product.category);
+      return Boolean(productCategory && normalizedCategories.includes(productCategory));
+    }
     case "inStockOnly": {
       if (!filters.inStockOnly) return true;
       return Boolean(product.inStock);
@@ -578,6 +585,7 @@ export function filterProducts(
       matchItem(product, "availability", filters) &&
       matchItem(product, "series", filters) &&
       matchItem(product, "brands", filters) &&
+      matchItem(product, "categories", filters) &&
       matchItem(product, "processorTypes", filters) &&
       matchItem(product, "processorModels", filters) &&
       matchItem(product, "generations", filters) &&

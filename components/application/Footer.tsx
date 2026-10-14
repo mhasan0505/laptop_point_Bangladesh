@@ -156,7 +156,7 @@ export default function Footer({
                     links: [
                       { label: "All Products", href: "/shop" },
                       { label: "Laptops", href: "/shop?category=laptop" },
-                      { label: "Accessories", href: "/shop?category=accessories" },
+                      { label: "Accessories", href: "/accessories" },
                       { label: "Hot Deals", href: "/deals" },
                     ],
                   },

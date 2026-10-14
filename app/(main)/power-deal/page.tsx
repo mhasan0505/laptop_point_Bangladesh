@@ -11,6 +11,9 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       config.subtitle ||
       "Explore curated commercial laptops and workstations at verified clearance prices. Official warranty guaranteed.",
+    alternates: {
+      canonical: "https://laptoppointbd.com/power-deal",
+    },
     openGraph: {
       title: `${config.title || "The Power Deal"} | Laptop Point BD`,
       description: config.subtitle,

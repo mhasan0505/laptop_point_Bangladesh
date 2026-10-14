@@ -1,3 +1,5 @@
+import { isCategoryHrefAvailable } from "@/lib/nav-filter";
+
 export interface SubMenuItem {
   name: string;
   href: string;
@@ -11,7 +13,7 @@ export interface NavItem {
   badge?: string;
 }
 
-export const navigationLinks: NavItem[] = [
+const rawNavigationLinks: NavItem[] = [
   { name: "Home", href: "/" },
   {
     name: "Shop",
@@ -29,10 +31,10 @@ export const navigationLinks: NavItem[] = [
     href: "/shop",
     hasDropdown: true,
     submenu: [
-      { name: "Business Laptops", href: "/shop?category=business" },
-      { name: "Gaming Laptops", href: "/shop?category=gaming" },
-      { name: "Professional", href: "/shop?category=professional" },
-      { name: "Budget Friendly", href: "/shop?category=budget" },
+      { name: "Business Workstations", href: "/shop?category=Workstation" },
+      { name: "Ultrabooks & Slim", href: "/shop?category=Ultrabook" },
+      { name: "2-in-1 Convertibles", href: "/shop?category=Convertible%202-in-1" },
+      { name: "All Laptops", href: "/shop?category=Laptop" },
     ],
   },
   { name: "Deals", href: "/deals", badge: "HOT" },
@@ -41,13 +43,20 @@ export const navigationLinks: NavItem[] = [
     href: "/accessories",
     hasDropdown: true,
     submenu: [
-      { name: "Chargers & Adapters", href: "/accessories/charger-and-adapter" },
-      { name: "Routers", href: "/accessories/routers" },
+      { name: "Chargers & Adapters", href: "/accessories?category=chargers-adapters" },
+      { name: "Routers", href: "/accessories?category=routers-networking" },
       { name: "All Accessories", href: "/accessories" },
-      { name: "Mouse & Keyboards", href: "/shop?category=accessories" },
-      { name: "Laptop Bags & Sleeves", href: "/shop?category=accessories" },
+      { name: "Mouse & Keyboards", href: "/accessories?category=keyboards-mice" },
+      { name: "Laptop Bags & Sleeves", href: "/accessories?category=bags-sleeves" },
     ],
   },
   { name: "Compare", href: "/compare" },
   { name: "Contact", href: "/contact" },
 ];
+
+export const navigationLinks: NavItem[] = rawNavigationLinks
+  .map((item) => ({
+    ...item,
+    submenu: item.submenu?.filter((s) => isCategoryHrefAvailable(s.href)),
+  }))
+  .filter((item) => isCategoryHrefAvailable(item.href) || (item.submenu && item.submenu.length > 0));

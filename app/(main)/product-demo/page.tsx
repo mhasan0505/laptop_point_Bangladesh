@@ -1,4 +1,16 @@
 import ProductDetailsSection from "@/components/application/ProductDetailsSection";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Product Demo | Laptop Point BD",
+  alternates: {
+    canonical: "https://laptoppointbd.com/product-demo",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const ProductDemoPage = () => {
   const demoProduct = {

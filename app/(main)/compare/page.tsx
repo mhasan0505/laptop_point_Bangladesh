@@ -1,4 +1,14 @@
 import ComparisonTable from "@/components/product/ComparisonTable";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Compare Laptops | Laptop Point Bangladesh",
+  description:
+    "Compare side-by-side specifications, prices, and features of laptops.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/compare",
+  },
+};
 
 export default function ComparePage() {
   return (

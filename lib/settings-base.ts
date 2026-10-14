@@ -170,7 +170,7 @@ const defaultCategoryChips: z.infer<typeof CategoryChipSchema>[] = [
     href:
       SHOP_CATEGORIES.find((c) => c.id === "all-laptop")?.subitems?.find((s) =>
         s.name.includes("Gaming")
-      )?.href || "/shop?category=gaming-laptops",
+      )?.href || "/shop?category=Laptop",
   },
   {
     id: "dell",

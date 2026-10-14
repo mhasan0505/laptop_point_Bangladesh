@@ -1,4 +1,14 @@
 import BlogCard from "@/components/application/BlogCard";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog & Buying Guides | Laptop Point Bangladesh",
+  description:
+    "Expert laptop buying guides, refurbished laptop comparisons, maintenance tips, and tech news in Bangladesh.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/blog",
+  },
+};
 
 // Mock Data
 const posts = [

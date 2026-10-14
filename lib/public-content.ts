@@ -151,7 +151,7 @@ const STOREFRONT_FOOTER_FALLBACK: StorefrontNavigation["footerLinks"] = [
     links: [
       { label: "All Products", href: "/shop" },
       { label: "Laptops", href: "/shop?category=laptop" },
-      { label: "Accessories", href: "/shop?category=accessories" },
+      { label: "Accessories", href: "/accessories" },
       { label: "Hot Deals", href: "/deals" },
     ],
   },
@@ -175,47 +175,66 @@ const STOREFRONT_FOOTER_FALLBACK: StorefrontNavigation["footerLinks"] = [
   },
 ];
 
+import { isCategoryHrefAvailable } from "@/lib/nav-filter";
+
 const STOREFRONT_CHIPS_FALLBACK: StorefrontNavigation["categoryChips"] = [
   { id: "deals", label: "🔥 Deals", href: "/deals" },
   { id: "new", label: "🆕 New", href: "/shop?sort=new" },
-  { id: "budget", label: "💰 Budget", href: "/shop?category=budget" },
-  { id: "gaming", label: "🎮 Gaming", href: "/shop?category=gaming" },
-  { id: "business", label: "💼 Business", href: "/shop?category=business" },
-];
+  { id: "ultrabook", label: "🎯 Ultrabooks", href: "/shop?category=Ultrabook" },
+  { id: "workstation", label: "💼 Workstations", href: "/shop?category=Workstation" },
+  { id: "convertible", label: "🔄 2-in-1 Touch", href: "/shop?category=Convertible%202-in-1" },
+].filter((item) => isCategoryHrefAvailable(item.href));
 
 export async function getStorefrontNavigation(): Promise<StorefrontNavigation> {
+  const filterSub = (items?: Array<{ name: string; href: string; icon?: string }>) =>
+    (items ?? []).filter((s) => isCategoryHrefAvailable(s.href));
+
   try {
     if (!(await hasSavedSettings("navigation"))) {
       const { navigationLinks, departmentMenuItems } = await import(
         "@/app/data/menu-config"
       );
       return {
-        topNavMenus: navigationLinks.map((item) => ({
-          id: item.name.toLowerCase().replace(/\s+/g, "-"),
-          label: item.name,
-          href: item.href,
-          badge: item.badge,
-          dropdownItems: item.submenu?.map((s) => ({
-            name: s.name,
-            href: s.href,
+        topNavMenus: navigationLinks
+          .filter((item) => isCategoryHrefAvailable(item.href))
+          .map((item) => ({
+            id: item.name.toLowerCase().replace(/\s+/g, "-"),
+            label: item.name,
+            href: item.href,
+            badge: item.badge,
+            dropdownItems: filterSub(item.submenu),
           })),
-        })),
-        shopCategories: departmentMenuItems.map((item) => ({
-          id: item.name.toLowerCase().replace(/\s+/g, "-"),
-          label: item.name,
-          href: item.href,
-          subitems: item.sub?.flatMap((s) => s.items) ?? [],
-        })),
+        shopCategories: departmentMenuItems
+          .map((item) => {
+            const activeSub = filterSub(item.sub?.flatMap((s) => s.items));
+            return {
+              id: item.name.toLowerCase().replace(/\s+/g, "-"),
+              label: item.name,
+              href: item.href,
+              subitems: activeSub,
+            };
+          })
+          .filter((item) => isCategoryHrefAvailable(item.href) || item.subitems.length > 0),
         categoryChips: STOREFRONT_CHIPS_FALLBACK,
         footerLinks: STOREFRONT_FOOTER_FALLBACK,
       };
     }
     const nav = await getSettings("navigation");
     return {
-      shopCategories: nav.shopCategories || [],
-      topNavMenus: nav.topNavMenus || [],
+      shopCategories: (nav.shopCategories || [])
+        .map((item) => ({
+          ...item,
+          subitems: filterSub(item.subitems),
+        }))
+        .filter((item) => isCategoryHrefAvailable(item.href) || (item.subitems && item.subitems.length > 0)),
+      topNavMenus: (nav.topNavMenus || [])
+        .filter((item) => isCategoryHrefAvailable(item.href))
+        .map((item) => ({
+          ...item,
+          dropdownItems: filterSub(item.dropdownItems),
+        })),
       categoryChips: nav.categoryChips && nav.categoryChips.length > 0
-        ? nav.categoryChips
+        ? nav.categoryChips.filter((c) => isCategoryHrefAvailable(c.href))
         : STOREFRONT_CHIPS_FALLBACK,
       footerLinks: nav.footerLinks && nav.footerLinks.length > 0
         ? nav.footerLinks
@@ -227,22 +246,26 @@ export async function getStorefrontNavigation(): Promise<StorefrontNavigation> {
       "@/app/data/menu-config"
     );
     return {
-      topNavMenus: navigationLinks.map((item) => ({
-        id: item.name.toLowerCase().replace(/\s+/g, "-"),
-        label: item.name,
-        href: item.href,
-        badge: item.badge,
-        dropdownItems: item.submenu?.map((s) => ({
-          name: s.name,
-          href: s.href,
+      topNavMenus: navigationLinks
+        .filter((item) => isCategoryHrefAvailable(item.href))
+        .map((item) => ({
+          id: item.name.toLowerCase().replace(/\s+/g, "-"),
+          label: item.name,
+          href: item.href,
+          badge: item.badge,
+          dropdownItems: filterSub(item.submenu),
         })),
-      })),
-      shopCategories: departmentMenuItems.map((item) => ({
-        id: item.name.toLowerCase().replace(/\s+/g, "-"),
-        label: item.name,
-        href: item.href,
-        subitems: item.sub?.flatMap((s) => s.items) ?? [],
-      })),
+      shopCategories: departmentMenuItems
+        .map((item) => {
+          const activeSub = filterSub(item.sub?.flatMap((s) => s.items));
+          return {
+            id: item.name.toLowerCase().replace(/\s+/g, "-"),
+            label: item.name,
+            href: item.href,
+            subitems: activeSub,
+          };
+        })
+        .filter((item) => isCategoryHrefAvailable(item.href) || item.subitems.length > 0),
       categoryChips: STOREFRONT_CHIPS_FALLBACK,
       footerLinks: STOREFRONT_FOOTER_FALLBACK,
     };
@@ -452,45 +475,29 @@ export async function getMegaMenuFeaturedProducts(): Promise<Record<string, Mega
     const { getLiveLaptops } = await import("@/app/data/data");
     const laptops = await getLiveLaptops();
 
-    const categoryMap: Record<string, string[]> = {
-      Business: ["HP", "Dell", "Lenovo"],
-      Professional: ["HP", "Dell", "Lenovo"],
-      Gaming: ["ASUS", "MSI", "Acer"],
-      Budget: ["Dell", "Lenovo"],
-    };
-
     const result: Record<string, MegaMenuFeaturedProduct[]> = {};
 
-    for (const [category, brands] of Object.entries(categoryMap)) {
-      result[category] = laptops
-        .filter((laptop) =>
-          brands.some(
-            (brand) =>
-              laptop.name.toUpperCase().includes(brand.toUpperCase()) ||
-              (laptop.brand && laptop.brand.toUpperCase() === brand.toUpperCase()),
-          ),
-        )
-        .slice(0, 3)
-        .map((p) => ({
-          id: p.id,
-          slug: p.slug,
-          name: p.name,
-          image: typeof p.image === "string" ? p.image : (p.image as any)?.src || "/Hero_Image.png",
-          price: p.price,
-          originalPrice: p.originalPrice,
-          discount: p.discount,
-        }));
+    for (const laptop of laptops) {
+      const cat = laptop.category?.trim();
+      if (!cat) continue;
+      if (!result[cat]) result[cat] = [];
+      if (result[cat].length < 3) {
+        result[cat].push({
+          id: laptop.id,
+          slug: laptop.slug,
+          name: laptop.name,
+          image: typeof laptop.image === "string" ? laptop.image : (laptop.image as any)?.src || "/Hero_Image.png",
+          price: laptop.price,
+          originalPrice: laptop.originalPrice,
+          discount: laptop.discount,
+        });
+      }
     }
 
     return result;
   } catch (err) {
     console.error("[public-content] mega menu products unavailable:", err);
-    return {
-      Business: [],
-      Professional: [],
-      Gaming: [],
-      Budget: [],
-    };
+    return {};
   }
 }
 

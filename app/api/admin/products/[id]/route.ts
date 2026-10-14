@@ -1,4 +1,5 @@
 import { AdminProduct } from "@/lib/admin-data";
+import { requireAdmin } from "@/lib/auth-guard";
 import {
   deleteRawProduct,
   findRawProductByIdOrSku,
@@ -39,6 +40,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = (await request.json()) as Partial<AdminProduct>;
@@ -107,9 +111,12 @@ export async function PUT(
 
 // ─── DELETE /api/admin/products/[id] ──────────────────────────────────────────
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager"] });
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const deleted = await deleteRawProduct(id);

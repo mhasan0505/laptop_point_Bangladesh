@@ -1,3 +1,4 @@
+import { isCategoryHrefAvailable } from "./nav-filter";
 // ─── Navigation & Menu Data for Laptop Point BD ─────────────────────────
 
 export type NavLink = {
@@ -23,7 +24,7 @@ export type CategoryItemData = {
 };
 
 // ─── Screenshot-Exact Category Items for "SHOP BY CATEGORIES" ───────────────
-export const SHOP_CATEGORIES: CategoryItemData[] = [
+const rawShopCategories: CategoryItemData[] = [
   {
     id: "all-laptop",
     label: "All Laptop",
@@ -31,10 +32,10 @@ export const SHOP_CATEGORIES: CategoryItemData[] = [
     hasChevron: true,
     subitems: [
       { name: "Gaming Laptops", href: "/shop?category=gaming-laptops" },
-      { name: "Ultrabooks & Slim", href: "/shop?category=ultrabook" },
-      { name: "Business Workstations", href: "/shop?category=business-workstations" },
+      { name: "Ultrabooks & Slim", href: "/shop?category=Ultrabook" },
+      { name: "Business Workstations", href: "/shop?category=Workstation" },
       { name: "Student & Everyday", href: "/shop?category=budget" },
-      { name: "2-in-1 Touch Laptops", href: "/shop" },
+      { name: "2-in-1 Touch Laptops", href: "/shop?category=Convertible%202-in-1" },
       { name: "MacBook Pro & Air", href: "/shop?brand=Apple" },
       { name: "Microsoft Surface", href: "/shop?brand=Microsoft" },
       { name: "Asus ROG & TUF", href: "/shop?brand=Asus" },
@@ -164,14 +165,14 @@ export const SHOP_CATEGORIES: CategoryItemData[] = [
     subitems: [
       { name: "Gaming Accessories", href: "/accessories" },
       { name: "Hubs and Docks", href: "/accessories" },
-      { name: "Laptop Bags", href: "/accessories?category=Laptop%20Bag" },
-      { name: "Laptop Sleeve", href: "/accessories?category=Laptop%20Bag" },
+      { name: "Laptop Bags", href: "/accessories?category=bags-sleeves" },
+      { name: "Laptop Sleeve", href: "/accessories?category=bags-sleeves" },
       { name: "Laptop Stand", href: "/accessories?category=Laptop%20Stand" },
-      { name: "Keyboards", href: "/accessories?category=Keyboard" },
+      { name: "Keyboards", href: "/accessories?category=keyboards-mice" },
       { name: "RAM", href: "/shop" },
-      { name: "Mouse", href: "/accessories?category=Mouse" },
-      { name: "Portable SSD", href: "/accessories" },
-      { name: "Router", href: "/accessories" },
+      { name: "Mouse", href: "/accessories?category=keyboards-mice" },
+      { name: "Portable SSD", href: "/accessories?category=storage" },
+      { name: "Router", href: "/accessories?category=routers-networking" },
       { name: "Headphone", href: "/accessories?category=Audio" },
       { name: "Graphics Tablet", href: "/accessories" },
       { name: "Gaming Controller", href: "/accessories" },
@@ -198,6 +199,16 @@ export const SHOP_CATEGORIES: CategoryItemData[] = [
     href: "/shop?category=budget",
   },
 ];
+
+export const SHOP_CATEGORIES: CategoryItemData[] = rawShopCategories
+  .map((item) => ({
+    ...item,
+    subitems: item.subitems?.filter((s) => isCategoryHrefAvailable(s.href)),
+  }))
+  .filter((item) => {
+    if (item.subitems && item.subitems.length > 0) return true;
+    return isCategoryHrefAvailable(item.href);
+  });
 
 // ─── Screenshot 4: Apple Dropdown Items ─────────────────────────────────────
 export const APPLE_DROPDOWN_ITEMS = [
@@ -238,17 +249,21 @@ export const MICROSOFT_DROPDOWN_ITEMS = [
 ];
 
 // ─── Accessories Dropdown Items ────────────────────────────────────────────
-export const ACCESSORIES_NAV_ITEMS = [
+const rawAccessoriesNavItems = [
   { name: "Gaming Accessories", href: "/accessories" },
   { name: "Hubs and Docks", href: "/accessories" },
-  { name: "Laptop Bags & Sleeves", href: "/accessories?category=Laptop%20Bag" },
+  { name: "Laptop Bags & Sleeves", href: "/accessories?category=bags-sleeves" },
   { name: "Laptop Stands & Cooling", href: "/accessories?category=Laptop%20Stand" },
-  { name: "Keyboards & Mouse", href: "/accessories?category=Keyboard" },
-  { name: "Fast Chargers & Adapters", href: "/accessories?category=Charger%20%26%20Adapter" },
-  { name: "Portable SSD & Storage", href: "/accessories" },
+  { name: "Keyboards & Mouse", href: "/accessories?category=keyboards-mice" },
+  { name: "Fast Chargers & Adapters", href: "/accessories?category=chargers-adapters" },
+  { name: "Portable SSD & Storage", href: "/accessories?category=storage" },
   { name: "Headphones & Audio", href: "/accessories?category=Audio" },
   { name: "Monitors & Displays", href: "/accessories?category=Monitor" },
 ];
+
+export const ACCESSORIES_NAV_ITEMS = rawAccessoriesNavItems.filter((item) =>
+  isCategoryHrefAvailable(item.href)
+);
 
 // ─── Budget Range Filter Items ─────────────────────────────────────────────
 export const BUDGET_RANGE_ITEMS = [
@@ -329,7 +344,7 @@ export type SupportItem = {
 
 // ─── All Categories 2-Level Mega Flyout Data ─────────────────────────────────
 
-export const ALL_CATEGORIES_WITH_SUBMENUS: CategoryItem[] = [
+const rawAllCategoriesWithSubmenus: CategoryItem[] = [
   {
     id: "laptops",
     label: "All Laptops",
@@ -366,10 +381,10 @@ export const ALL_CATEGORIES_WITH_SUBMENUS: CategoryItem[] = [
         title: "By Usage & Form",
         items: [
           { name: "Dedicated Gaming Laptops", href: "/shop?category=gaming-laptops" },
-          { name: "Ultra-Thin Portables", href: "/shop?category=ultrabook" },
-          { name: "Business Workstations", href: "/shop?category=business-workstations" },
+          { name: "Ultra-Thin Portables", href: "/shop?category=Ultrabook" },
+          { name: "Business Workstations", href: "/shop?category=Workstation" },
           { name: "Student & Everyday", href: "/shop?category=budget" },
-          { name: "2-in-1 Touch Convertibles", href: "/shop" },
+          { name: "2-in-1 Touch Convertibles", href: "/shop?category=Convertible%202-in-1" },
           { name: "Handheld Gaming Consoles", href: "/shop?category=Handheld%20Gaming%20PC" },
         ],
       },
@@ -691,6 +706,21 @@ export const ALL_CATEGORIES_WITH_SUBMENUS: CategoryItem[] = [
   },
 ];
 
+export const ALL_CATEGORIES_WITH_SUBMENUS: CategoryItem[] = rawAllCategoriesWithSubmenus
+  .map((cat) => ({
+    ...cat,
+    subgroups: cat.subgroups
+      .map((sg) => ({
+        ...sg,
+        items: sg.items.filter((item) => isCategoryHrefAvailable(item.href)),
+      }))
+      .filter((sg) => sg.items.length > 0),
+  }))
+  .filter((cat) => {
+    if (cat.subgroups.length > 0) return true;
+    return isCategoryHrefAvailable(cat.href);
+  });
+
 // ─── Header Search Categories ────────────────────────────────────────────────
 
 export const SEARCH_CATEGORIES = [
@@ -800,7 +830,7 @@ export const BRANDS_GRID: BrandGridItem[] = [
 
 // ─── Laptops Dropdown Data ───────────────────────────────────────────────────
 
-export const LAPTOP_CATEGORIES: LaptopCategoryGroup[] = [
+const rawLaptopCategories: LaptopCategoryGroup[] = [
   {
     title: "Flagship Brands",
     items: [
@@ -818,14 +848,21 @@ export const LAPTOP_CATEGORIES: LaptopCategoryGroup[] = [
     title: "By Form & Usage",
     items: [
       { name: "Gaming Laptops", icon: "/icons/computer-game.png", href: "/shop?category=gaming-laptops" },
-      { name: "Ultra-Thin & Portables", icon: "/icons/macbook-air.png", href: "/shop?category=ultrabook" },
-      { name: "Business & Workstations", icon: "/icons/dell-laptops.png", href: "/shop?category=business-workstations" },
+      { name: "Ultra-Thin & Portables", icon: "/icons/macbook-air.png", href: "/shop?category=Ultrabook" },
+      { name: "Business & Workstations", icon: "/icons/dell-laptops.png", href: "/shop?category=Workstation" },
       { name: "Student & Budget", icon: "/icons/hp-laptops.png", href: "/shop?category=budget" },
       { name: "Handheld Gaming PCs", icon: "/icons/computer-game.png", href: "/shop?category=Handheld%20Gaming%20PC" },
       { name: "Desktop & All-in-One", icon: "/icons/pc.png", href: "/shop?category=Desktop" },
     ],
   },
 ];
+
+export const LAPTOP_CATEGORIES: LaptopCategoryGroup[] = rawLaptopCategories
+  .map((group) => ({
+    ...group,
+    items: group.items.filter((item) => isCategoryHrefAvailable(item.href)),
+  }))
+  .filter((group) => group.items.length > 0);
 
 export const FEATURED_LAPTOPS: FeaturedLaptopItem[] = [
   {
@@ -856,13 +893,13 @@ export const FEATURED_LAPTOPS: FeaturedLaptopItem[] = [
 
 // ─── Accessories Dropdown Data ───────────────────────────────────────────────
 
-export const ACCESSORIES_SECTIONS: AccessorySectionGroup[] = [
+const rawAccessoriesSections: AccessorySectionGroup[] = [
   {
     title: "For Laptop",
     icon: "/icons/accessories.png",
     items: [
-      { name: "Laptop Bags & Sleeves", href: "/accessories?category=Laptop%20Bag" },
-      { name: "Fast Chargers & Power Adapters", href: "/accessories?category=Charger%20%26%20Adapter" },
+      { name: "Laptop Bags & Sleeves", href: "/accessories?category=bags-sleeves" },
+      { name: "Fast Chargers & Power Adapters", href: "/accessories?category=chargers-adapters" },
       { name: "Cooling Pads & Fan Stands", href: "/accessories?category=Cooling%20Pad" },
       { name: "Ergonomic Aluminum Stands", href: "/accessories?category=Laptop%20Stand" },
       { name: "Protective Skins & Covers", href: "/accessories?category=Laptop%20Skin" },
@@ -872,8 +909,8 @@ export const ACCESSORIES_SECTIONS: AccessorySectionGroup[] = [
     title: "For Desktop & Workspace",
     icon: "/icons/computer-accessories.png",
     items: [
-      { name: "Mechanical & Wireless Keyboards", href: "/accessories?category=Keyboard" },
-      { name: "Precision Gaming & Office Mice", href: "/accessories?category=Mouse" },
+      { name: "Mechanical & Wireless Keyboards", href: "/accessories?category=keyboards-mice" },
+      { name: "Precision Gaming & Office Mice", href: "/accessories?category=keyboards-mice" },
       { name: "4K UHD & Studio Monitors", href: "/accessories?category=Monitor" },
       { name: "Streaming Webcams & Microphones", href: "/accessories?category=Webcam" },
       { name: "High-Fidelity Audio & Headsets", href: "/accessories?category=Audio" },
@@ -891,6 +928,13 @@ export const ACCESSORIES_SECTIONS: AccessorySectionGroup[] = [
   },
 ];
 
+export const ACCESSORIES_SECTIONS: AccessorySectionGroup[] = rawAccessoriesSections
+  .map((sec) => ({
+    ...sec,
+    items: sec.items.filter((item) => isCategoryHrefAvailable(item.href)),
+  }))
+  .filter((sec) => sec.items.length > 0);
+
 // ─── Components Data ─────────────────────────────────────────────────────────
 
 export const COMPONENTS_LIST: ComponentItem[] = [
@@ -905,10 +949,10 @@ export const COMPONENTS_LIST: ComponentItem[] = [
 // ─── Support Data ────────────────────────────────────────────────────────────
 
 export const SUPPORT_MENU: SupportItem[] = [
-  { label: "Warranty & Return Policy", href: "/support", icon: "/icons/accessories.png" },
-  { label: "Official Service Center", href: "/support", icon: "/icons/pc.png" },
-  { label: "Live Order Tracking", href: "/support", icon: "/icons/computer-accessories.png" },
-  { label: "Direct Customer Helpline", href: "/support", icon: "/icons/computer-game.png" },
+  { label: "Warranty & Return Policy", href: "/returns", icon: "/icons/accessories.png" },
+  { label: "Official Service Center", href: "/contact", icon: "/icons/pc.png" },
+  { label: "Contact Us About Your Order", href: "/contact", icon: "/icons/computer-accessories.png" },
+  { label: "Direct Customer Helpline", href: "/contact", icon: "/icons/computer-game.png" },
 ];
 
 // ─── Announcements ───────────────────────────────────────────────────────────

@@ -63,6 +63,27 @@ interface BlogPostPageProps {
   }>;
 }
 
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps) {
+  const { slug } = await params;
+  const post = posts.find((p) => p.slug === slug);
+  if (!post) return { title: "Blog Post Not Found" };
+
+  return {
+    title: `${post.title} | Laptop Point BD Blog`,
+    description: post.excerpt,
+    alternates: {
+      canonical: `https://laptoppointbd.com/blog/${slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      images: [{ url: post.coverImage }],
+    },
+  };
+}
+
 export async function generateStaticParams() {
   return posts.map((post) => ({
     slug: post.slug,

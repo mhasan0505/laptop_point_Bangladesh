@@ -6,7 +6,7 @@ import { useComparison } from "@/contexts/ComparisonContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { formatBDT } from "@/lib/format";
 import { Product } from "@/types/product";
-import { Check, Eye, Heart, Plus, ShoppingBag, Star } from "lucide-react";
+import { Check, Eye, Heart, Plus, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -215,14 +215,6 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               <span className="text-lg font-bold text-foreground">
                 {formatBDT(product.price)}
               </span>
-            </div>
-
-            <div
-              className="flex items-center gap-1 font-bold text-amber-600"
-              aria-label={`Rated ${product.rating?.toFixed(1)} out of 5`}
-            >
-              <Star className="w-3.5 h-3.5 fill-amber-600" />
-              <span suppressHydrationWarning>{product.rating?.toFixed(1)}</span>
             </div>
           </div>
         </div>

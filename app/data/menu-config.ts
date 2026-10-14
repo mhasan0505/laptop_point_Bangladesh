@@ -28,11 +28,13 @@ export interface DepartmentMenuItem {
   sub?: DepartmentSubSection[];
 }
 
+import { isCategoryHrefAvailable } from "@/lib/nav-filter";
+
 /**
  * Main Navigation Links
  * Displayed in header and mobile menu
  */
-export const navigationLinks: NavItem[] = [
+const rawNavigationLinks: NavItem[] = [
   { name: "Home", href: "/" },
   {
     name: "Shop",
@@ -45,28 +47,17 @@ export const navigationLinks: NavItem[] = [
       { name: "Discounts", href: "/shop?sort=discount" },
     ],
   },
-  // {
-  //   name: "Categories",
-  //   href: "/shop",
-  //   hasDropdown: true,
-  //   submenu: [
-  //     { name: "Business Laptops", href: "/shop?category=business" },
-  //     { name: "Gaming Laptops", href: "/shop?category=gaming" },
-  //     { name: "Professional", href: "/shop?category=professional" },
-  //     { name: "Budget Friendly", href: "/shop?category=budget" },
-  //   ],
-  // },
   { name: "Deals", href: "/deals", badge: "HOT" },
   {
     name: "Accessories",
     href: "/accessories",
     hasDropdown: true,
     submenu: [
-      { name: "Chargers & Adapters", href: "/accessories/charger-and-adapter" },
-      { name: "Routers", href: "/accessories/routers" },
+      { name: "Chargers & Adapters", href: "/accessories?category=chargers-adapters" },
+      { name: "Routers", href: "/accessories?category=routers-networking" },
       { name: "All Accessories", href: "/accessories" },
-      { name: "Mouse & Keyboards", href: "/shop?category=accessories" },
-      { name: "Laptop Bags & Sleeves", href: "/shop?category=accessories" },
+      { name: "Mouse & Keyboards", href: "/accessories?category=keyboards-mice" },
+      { name: "Laptop Bags & Sleeves", href: "/accessories?category=bags-sleeves" },
     ],
   },
   { name: "Compare", href: "/compare" },
@@ -74,12 +65,19 @@ export const navigationLinks: NavItem[] = [
   { name: "EMI", href: "/EMI" },
 ];
 
+export const navigationLinks: NavItem[] = rawNavigationLinks
+  .map((item) => ({
+    ...item,
+    submenu: item.submenu?.filter((s) => isCategoryHrefAvailable(s.href)),
+  }))
+  .filter((item) => isCategoryHrefAvailable(item.href) || (item.submenu && item.submenu.length > 0));
+
 /**
  * Department Menu Items (All Departments Dropdown)
  * Displayed in header desktop view and mobile menu
  * Each item can have optional subsections for categorization
  */
-export const departmentMenuItems: DepartmentMenuItem[] = [
+const rawDepartmentMenuItems: DepartmentMenuItem[] = [
   {
     name: "Super Deals",
     href: "/deals",
@@ -87,30 +85,30 @@ export const departmentMenuItems: DepartmentMenuItem[] = [
   },
   {
     name: "Laptop",
-    href: "/shop?category=laptop",
+    href: "/shop?category=Laptop",
     sub: [
       {
         title: "LAPTOPS",
         items: [
-          { name: "All", href: "/shop?category=laptop" },
-          { name: "2 in 1 | 360", href: "/shop?category=2in1" },
-          { name: "Latest Collection", href: "/shop?category=latest" },
-          { name: "Low or Mid Budget", href: "/shop?category=budget" },
+          { name: "All", href: "/shop?category=Laptop" },
+          { name: "2 in 1 | 360", href: "/shop?category=Convertible%202-in-1" },
+          { name: "Ultrabooks", href: "/shop?category=Ultrabook" },
+          { name: "Workstations", href: "/shop?category=Workstation" },
         ],
       },
       {
         title: "BRANDS",
         items: [
-          { name: "HP", href: "/shop?brand=hp" },
-          { name: "Apple", href: "/shop?brand=apple" },
-          { name: "Dell", href: "/shop?brand=dell" },
-          { name: "Lenovo", href: "/shop?brand=lenovo" },
-          { name: "Acer", href: "/shop?brand=acer" },
-          { name: "Microsoft", href: "/shop?brand=microsoft" },
-          { name: "Toshiba", href: "/shop?brand=toshiba" },
-          { name: "MSI", href: "/shop?brand=msi" },
-          { name: "Asus", href: "/shop?brand=asus" },
-          { name: "Razer", href: "/shop?brand=razer" },
+          { name: "HP", href: "/shop?brand=HP" },
+          { name: "Apple", href: "/shop?brand=Apple" },
+          { name: "Dell", href: "/shop?brand=Dell" },
+          { name: "Lenovo", href: "/shop?brand=Lenovo" },
+          { name: "Acer", href: "/shop?brand=Acer" },
+          { name: "Microsoft", href: "/shop?brand=Microsoft" },
+          { name: "Toshiba", href: "/shop?brand=Toshiba" },
+          { name: "MSI", href: "/shop?brand=MSI" },
+          { name: "Asus", href: "/shop?brand=Asus" },
+          { name: "Razer", href: "/shop?brand=Razer" },
         ],
       },
     ],
@@ -137,14 +135,14 @@ export const departmentMenuItems: DepartmentMenuItem[] = [
       {
         title: "ACCESSORIES",
         items: [
-          { name: "Mouse & Keyboards", href: "/accessories/mouse-keyboards" },
-          { name: "Headphones & Audio", href: "/accessories/audio" },
-          { name: "Laptop Bags & Sleeves", href: "/accessories/bags" },
+          { name: "Mouse & Keyboards", href: "/accessories?category=keyboards-mice" },
+          { name: "Headphones & Audio", href: "/accessories?category=other" },
+          { name: "Laptop Bags & Sleeves", href: "/accessories?category=bags-sleeves" },
           {
             name: "Chargers & Adapters",
-            href: "/accessories/charger-and-adapter",
+            href: "/accessories?category=chargers-adapters",
           },
-          { name: "Routers", href: "/accessories/routers" },
+          { name: "Routers", href: "/accessories?category=routers-networking" },
         ],
       },
     ],
@@ -152,3 +150,22 @@ export const departmentMenuItems: DepartmentMenuItem[] = [
   { name: "Accessories", href: "/accessories" },
   { name: "Shop", href: "/shop" },
 ];
+
+export const departmentMenuItems: DepartmentMenuItem[] = rawDepartmentMenuItems
+  .map((item) => {
+    const filteredSub = item.sub
+      ?.map((sec) => ({
+        ...sec,
+        items: sec.items.filter((subItem) => isCategoryHrefAvailable(subItem.href)),
+      }))
+      .filter((sec) => sec.items.length > 0);
+
+    return {
+      ...item,
+      sub: filteredSub && filteredSub.length > 0 ? filteredSub : undefined,
+    };
+  })
+  .filter((item) => {
+    if (item.sub && item.sub.length > 0) return true;
+    return isCategoryHrefAvailable(item.href);
+  });

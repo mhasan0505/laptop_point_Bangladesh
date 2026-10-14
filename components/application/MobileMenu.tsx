@@ -74,13 +74,15 @@ const deptColorMap: Record<string, { bg: string; icon: string; ring: string }> =
     Shop: { bg: "bg-sky-50", icon: "text-sky-500", ring: "ring-sky-200" },
   };
 
+import { isCategoryHrefAvailable } from "@/lib/nav-filter";
+
 const quickLinks = [
   { label: "🔥 Deals", href: "/deals" },
   { label: "🆕 New", href: "/shop?sort=new" },
-  { label: "💰 Budget", href: "/shop?category=budget" },
-  { label: "🎮 Gaming", href: "/shop?category=gaming" },
-  { label: "💼 Business", href: "/shop?category=business" },
-];
+  { label: "🎯 Ultrabooks", href: "/shop?category=Ultrabook" },
+  { label: "💼 Workstations", href: "/shop?category=Workstation" },
+  { label: "🔄 2-in-1 Touch", href: "/shop?category=Convertible%202-in-1" },
+].filter((item) => isCategoryHrefAvailable(item.href));
 
 const overlayVariants: Variants = {
   closed: { opacity: 0 },
@@ -116,44 +118,56 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
   const [searchIndex, setSearchIndex] = useState<SearchItem[] | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const activeChips =
+  const activeChips = (
     navigation && navigation.categoryChips.length > 0
       ? navigation.categoryChips
-      : quickLinks;
+      : quickLinks
+  ).filter((item) => isCategoryHrefAvailable(item.href));
 
   const activeDepartmentItems =
     navigation && navigation.shopCategories.length > 0
-      ? navigation.shopCategories.map((item) => ({
-          name: item.label,
-          href: item.href,
-          badge: undefined as string | undefined,
-          sub:
-            item.subitems && item.subitems.length > 0
-              ? [
-                  {
-                    title: item.label.toUpperCase(),
-                    items: item.subitems.map((s) => ({
-                      name: s.name,
-                      href: s.href,
-                    })),
-                  },
-                ]
-              : undefined,
-        }))
+      ? navigation.shopCategories
+          .map((item) => ({
+            name: item.label,
+            href: item.href,
+            badge: undefined as string | undefined,
+            sub:
+              item.subitems && item.subitems.length > 0
+                ? [
+                    {
+                      title: item.label.toUpperCase(),
+                      items: item.subitems
+                        .filter((s) => isCategoryHrefAvailable(s.href))
+                        .map((s) => ({
+                          name: s.name,
+                          href: s.href,
+                        })),
+                    },
+                  ]
+                : undefined,
+          }))
+          .filter((item) => {
+            const hasSub = Boolean(item.sub?.[0]?.items?.length);
+            return hasSub || isCategoryHrefAvailable(item.href);
+          })
       : departmentMenuItems;
 
   const activeNavLinks =
     navigation && navigation.topNavMenus.length > 0
-      ? navigation.topNavMenus.map((item) => ({
-          name: item.label,
-          href: item.href || (item.dropdownItems?.[0]?.href ?? "#"),
-          hasDropdown: Boolean(item.dropdownItems && item.dropdownItems.length > 0),
-          submenu: item.dropdownItems?.map((s) => ({
-            name: s.name,
-            href: s.href,
-          })),
-          badge: item.badge,
-        }))
+      ? navigation.topNavMenus
+          .filter((item) => isCategoryHrefAvailable(item.href))
+          .map((item) => ({
+            name: item.label,
+            href: item.href || (item.dropdownItems?.[0]?.href ?? "#"),
+            hasDropdown: Boolean(item.dropdownItems && item.dropdownItems.length > 0),
+            submenu: item.dropdownItems
+              ?.filter((s) => isCategoryHrefAvailable(s.href))
+              .map((s) => ({
+                name: s.name,
+                href: s.href,
+              })),
+            badge: item.badge,
+          }))
       : navigationLinks;
 
   // Lazy-load the lightweight search index the first time the menu opens —

@@ -1,5 +1,7 @@
 import { AdminProduct } from "@/lib/admin-data";
+import { requireAdmin } from "@/lib/auth-guard";
 import {
+  allocateProductId,
   loadMergedRawProducts,
   resolveProductImages,
   safeSyncManifest,
@@ -168,12 +170,30 @@ export async function GET() {
 
 // ─── POST /api/admin/products ─────────────────────────────────────────────────
 export async function POST(request: NextRequest) {
-  try {
-    const body = (await request.json()) as Omit<AdminProduct, "id">;
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
 
-    if (!body.name || !body.sku || body.price === undefined) {
+  try {
+    const body = (await request.json().catch(() => null)) as Omit<AdminProduct, "id"> | null;
+
+    if (!body || !body.name || !body.sku || body.price === undefined) {
       return NextResponse.json(
         { error: "Product name, SKU, and price are required" },
+        { status: 400 },
+      );
+    }
+
+    const price = Number(body.price);
+    const stock = Number(body.stock ?? 0);
+    if (!Number.isFinite(price) || price <= 0) {
+      return NextResponse.json({ error: "Price must be a number greater than 0" }, { status: 400 });
+    }
+    if (!Number.isFinite(stock) || stock < 0 || !Number.isInteger(stock)) {
+      return NextResponse.json({ error: "Stock must be a whole number of 0 or more" }, { status: 400 });
+    }
+    if (!/^[A-Za-z0-9][A-Za-z0-9._-]{1,63}$/.test(String(body.sku).trim())) {
+      return NextResponse.json(
+        { error: "SKU must be 2–64 characters: letters, numbers, dot, dash or underscore" },
         { status: 400 },
       );
     }
@@ -191,12 +211,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Allocate next numeric ID
-    const maxId = rawProducts.reduce((max, p) => {
-      const num = typeof p.id === "number" ? p.id : Number(p.id);
-      return !isNaN(num) && num > max ? num : max;
-    }, 0);
-    const newNumericId = maxId + 1;
+    // Allocate next numeric ID (never reuses an id that was deleted earlier)
+    const newNumericId = await allocateProductId();
 
     const newRawProduct = adminToRawProduct(body, newNumericId);
 

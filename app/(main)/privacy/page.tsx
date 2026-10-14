@@ -1,4 +1,14 @@
 import { getStorefrontCommerce } from "@/lib/public-content";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy | Laptop Point Bangladesh",
+  description:
+    "Privacy and data protection policy at Laptop Point Bangladesh.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/privacy",
+  },
+};
 
 export default async function PrivacyPolicy() {
   const commerce = await getStorefrontCommerce();

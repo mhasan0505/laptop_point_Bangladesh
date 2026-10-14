@@ -101,6 +101,39 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
 
 
 /**
+ * Next free numeric product id. Considers soft-deleted overrides and inventory
+ * rows too, so an id that was once used (and may be referenced by past orders
+ * or a unique DB key) is never handed out again.
+ */
+export async function allocateProductId(): Promise<number> {
+  const toNum = (v: unknown) => {
+    const n = typeof v === "number" ? v : Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  let max = 0;
+
+  for (const p of await loadMergedRawProducts()) max = Math.max(max, toNum(p.id));
+  for (const p of await loadBaseProductsJson()) max = Math.max(max, toNum(p.id));
+
+  try {
+    const overrides = await prisma.productOverride.findMany({ select: { id: true, sku: true } });
+    for (const o of overrides) {
+      if (o.sku.startsWith("system:") || o.sku.startsWith("setting:")) continue;
+      max = Math.max(max, toNum(o.id));
+    }
+  } catch {
+    // DB unavailable: fall back to what we have
+  }
+  try {
+    const inv = await prisma.inventory.findMany({ select: { productId: true } });
+    for (const i of inv) max = Math.max(max, toNum(i.productId));
+  } catch {
+    // ignore
+  }
+  return max + 1;
+}
+
+/**
  * Find a specific product by its ID or SKU with live stock.
  */
 export async function findRawProductByIdOrSku(idOrSku: string): Promise<RawProduct | null> {
@@ -136,6 +169,9 @@ export async function findRawProductByIdOrSku(idOrSku: string): Promise<RawProdu
 export async function saveRawProduct(raw: RawProduct): Promise<void> {
   const numericId = typeof raw.id === "number" ? raw.id : Number(raw.id) || 1;
 
+  let dbPersisted = false;
+  let filePersisted = false;
+
   // 1. Persist to PostgreSQL ProductOverride table
   try {
     await prisma.productOverride.upsert({
@@ -152,6 +188,7 @@ export async function saveRawProduct(raw: RawProduct): Promise<void> {
         isDeleted: false,
       },
     });
+    dbPersisted = true;
   } catch (err) {
     console.error("[saveRawProduct] PostgreSQL ProductOverride upsert error:", err);
   }
@@ -187,6 +224,7 @@ export async function saveRawProduct(raw: RawProduct): Promise<void> {
       baseList.unshift(raw);
     }
     await writeJsonAtomic(productsFilePath, baseList);
+    filePersisted = true;
   } catch (fsErr: any) {
     // In serverless / read-only environments (e.g. Vercel / AWS Lambda), the filesystem is immutable
     if (fsErr.code === "EROFS" || fsErr.message?.includes("read-only file system")) {
@@ -196,6 +234,13 @@ export async function saveRawProduct(raw: RawProduct): Promise<void> {
     } else {
       console.warn("[saveRawProduct] Local JSON file update warning:", fsErr);
     }
+  }
+
+  // Never report success when nothing was actually saved.
+  if (!dbPersisted && !filePersisted) {
+    throw new Error(
+      "Could not save the product: the database and the local data file are both unavailable.",
+    );
   }
 
   // 4. Update manifest if possible

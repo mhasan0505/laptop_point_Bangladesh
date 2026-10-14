@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "Hot Deals | Laptop Point Bangladesh",
   description:
     "Verified clearance prices on tested laptops with warranty. Limited stock — updated by our team.",
+  alternates: {
+    canonical: "https://laptoppointbd.com/deals",
+  },
 };
 
 interface DealsPageProps {
