@@ -1,40 +1,43 @@
 "use client";
 
-import { trackAddToCart, trackViewItem } from "@/lib/analytics/tracker";
 import { Button } from "@/components/ui/button";
 import ProductsCard from "@/components/ui/ProductsCard";
 import { useCart } from "@/contexts/CartContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { trackAddToCart, trackViewItem } from "@/lib/analytics/tracker";
+import { formatBDT } from "@/lib/format";
 import { Product } from "@/types/product";
 import {
   ArrowLeft,
-  Award,
+  Check,
   CheckCircle2,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronUp,
   CreditCard,
   Heart,
+  HelpCircle,
+  Maximize2,
   MessageCircle,
   Minus,
   Phone,
   Plus,
   RotateCcw,
+  Send,
   Share2,
-  Shield,
+  ShieldCheck,
   ShoppingBag,
   ShoppingCart,
+  Sparkles,
   Star,
-  ZoomIn,
+  Trash2,
   X,
+  Zap,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import ProductEMICalculator, {
-  getLowestMonthlyEMI,
-} from "./ProductEMICalculator";
 import {
   useEffect,
   useMemo,
@@ -46,11 +49,29 @@ import {
 interface ProductDetailsClientProps {
   product: Product;
   relatedProducts: Product[];
+  sidebarProducts?: Product[];
+}
+
+interface PublicQuestion {
+  id: string;
+  userName: string;
+  question: string;
+  answer?: string;
+  createdAt: string;
+}
+
+interface UserReview {
+  id: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  date: string;
 }
 
 export default function ProductDetailsClient({
   product,
   relatedProducts,
+  sidebarProducts = [],
 }: ProductDetailsClientProps) {
   const router = useRouter();
   const { addToCart } = useCart();
@@ -58,75 +79,125 @@ export default function ProductDetailsClient({
   const { addToComparison, removeFromComparison, isInComparison, canAddMore } =
     useComparison();
 
+  // Active gallery image
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState("specifications");
-  const [isEMIOpen, setIsEMIOpen] = useState(false);
+  const [activeAnchor, setActiveAnchor] = useState("description");
+
+  // Hover magnifier state
   const [isHovering, setIsHovering] = useState(false);
   const [hoverPos, setHoverPos] = useState({ x: 50, y: 50 });
   const mainImgRef = useRef<HTMLDivElement>(null);
 
-  const galleryImages = useMemo(
-    () => (product.images && product.images.length > 0 ? product.images : [product.image]),
-    [product.images, product.image],
-  );
+  // Variant selections (RAM & SSD)
+  const initialRam = useMemo(() => {
+    const raw = product.specs?.ram || "";
+    if (/32/i.test(raw)) return "32GB";
+    if (/16/i.test(raw)) return "16GB";
+    return "8GB";
+  }, [product.specs?.ram]);
+
+  const initialSsd = useMemo(() => {
+    const raw = product.specs?.storage || "";
+    if (/1\s*TB/i.test(raw)) return "1TB";
+    if (/512/i.test(raw)) return "512GB";
+    return "256GB";
+  }, [product.specs?.storage]);
+
+  const [selectedRam, setSelectedRam] = useState(initialRam);
+  const [selectedSsd, setSelectedSsd] = useState(initialSsd);
+
+  // RAM and SSD Options
+  const ramOptions = [
+    { label: "8GB", delta: 0 },
+    { label: "16GB", delta: 2500 },
+    { label: "32GB", delta: 6000 },
+  ];
+
+  const ssdOptions = [
+    { label: "256GB", delta: 0 },
+    { label: "512GB", delta: 2000 },
+    { label: "1TB", delta: 5000 },
+  ];
+
+  // Base RAM/SSD deltas
+  const ramDelta = useMemo(() => {
+    const found = ramOptions.find((r) => r.label === selectedRam);
+    const base = ramOptions.find((r) => r.label === initialRam);
+    return (found?.delta || 0) - (base?.delta || 0);
+  }, [selectedRam, initialRam]);
+
+  const ssdDelta = useMemo(() => {
+    const found = ssdOptions.find((s) => s.label === selectedSsd);
+    const base = ssdOptions.find((s) => s.label === initialSsd);
+    return (found?.delta || 0) - (base?.delta || 0);
+  }, [selectedSsd, initialSsd]);
+
+  const currentPrice = product.price + ramDelta + ssdDelta;
+  const regularPrice =
+    (product.originalPrice || product.price + 3000) + ramDelta + ssdDelta;
+  const discountPercentage =
+    regularPrice > currentPrice
+      ? Math.round(((regularPrice - currentPrice) / regularPrice) * 100)
+      : 0;
+
+  // Recently viewed products
+  const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
+
+  // Questions state
+  const [questions, setQuestions] = useState<PublicQuestion[]>([]);
+  const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
+  const [questionName, setQuestionName] = useState("");
+  const [questionText, setQuestionText] = useState("");
+  const [isSubmittingQuestion, setIsSubmittingQuestion] = useState(false);
+  const [questionSuccess, setQuestionSuccess] = useState(false);
+
+  // Reviews state
+  const [reviewsList, setReviewsList] = useState<UserReview[]>([]);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewSuccess, setReviewSuccess] = useState(false);
+
+  // Toast feedback
+  const [toastMessage, setToastMessage] = useState("");
+
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(""), 3000);
+  };
+
+  const galleryImages = useMemo(() => {
+    return product.images && product.images.length > 0
+      ? product.images
+      : [product.image];
+  }, [product.images, product.image]);
 
   const getImageSrc = (img: Product["image"]) =>
     typeof img === "string" ? img : img.src;
 
-  const safeImageIndex =
-    galleryImages.length > 0
-      ? Math.min(activeImageIndex, galleryImages.length - 1)
-      : 0;
+  const safeImageIndex = Math.min(activeImageIndex, galleryImages.length - 1);
   const currentImage = galleryImages[safeImageIndex] || product.image;
   const currentImageSrc = getImageSrc(currentImage);
 
-  useEffect(() => {
-    if (!isViewerOpen) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsViewerOpen(false);
-      }
-      if (event.key === "ArrowRight" && galleryImages.length > 1) {
-        setActiveImageIndex((i) => (i + 1) % galleryImages.length);
-      }
-      if (event.key === "ArrowLeft" && galleryImages.length > 1) {
-        setActiveImageIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length);
-      }
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isViewerOpen, galleryImages.length]);
-
+  // Load recently viewed & track view
   useEffect(() => {
     if (typeof window === "undefined" || !product) return;
 
-    const saved = localStorage.getItem("recentlyViewed");
-    let recent: Product[] = [];
-
-    if (saved) {
-      try {
-        recent = JSON.parse(saved);
-      } catch {
-        recent = [];
-      }
+    try {
+      const saved = localStorage.getItem("recentlyViewed");
+      let recent: Product[] = saved ? JSON.parse(saved) : [];
+      recent = recent.filter((p) => p.id !== product.id);
+      recent.unshift(product);
+      recent = recent.slice(0, 8);
+      localStorage.setItem("recentlyViewed", JSON.stringify(recent));
+      setRecentlyViewed(recent.filter((p) => p.id !== product.id).slice(0, 4));
+    } catch {
+      // ignore
     }
 
-    recent = recent.filter((p) => p.id !== product.id);
-    recent.unshift(product);
-    recent = recent.slice(0, 10);
-
-    localStorage.setItem("recentlyViewed", JSON.stringify(recent));
-
-    // Track product view in GA4 & Meta Pixel
     trackViewItem({
       id: product.id.toString(),
       name: product.name,
@@ -135,9 +206,46 @@ export default function ProductDetailsClient({
     });
   }, [product]);
 
+  // Load questions
+  useEffect(() => {
+    let ignore = false;
+    fetch(`/api/questions?productSlug=${encodeURIComponent(product.slug)}`)
+      .then((r) => (r.ok ? r.json() : { questions: [] }))
+      .then((d) => {
+        if (!ignore && Array.isArray(d.questions)) {
+          setQuestions(d.questions);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      ignore = true;
+    };
+  }, [product.slug]);
+
+  // Keyboard navigation for image lightbox
+  useEffect(() => {
+    if (!isViewerOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsViewerOpen(false);
+      if (e.key === "ArrowRight" && galleryImages.length > 1) {
+        setActiveImageIndex((i) => (i + 1) % galleryImages.length);
+      }
+      if (e.key === "ArrowLeft" && galleryImages.length > 1) {
+        setActiveImageIndex(
+          (i) => (i - 1 + galleryImages.length) % galleryImages.length,
+        );
+      }
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isViewerOpen, galleryImages.length]);
+
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!mainImgRef.current) return;
-
     const rect = mainImgRef.current.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -151,115 +259,403 @@ export default function ProductDetailsClient({
 
   const goToPrevImage = () => {
     if (galleryImages.length < 2) return;
-    setActiveImageIndex((i) => (i - 1 + galleryImages.length) % galleryImages.length);
+    setActiveImageIndex(
+      (i) => (i - 1 + galleryImages.length) % galleryImages.length,
+    );
   };
 
+  // Add to cart
   const handleAddToCart = () => {
     addToCart(
       {
-        id: product.id.toString(),
-        name: product.name,
+        id: `${product.id}-${selectedRam}-${selectedSsd}`,
+        name: `${product.name} (${selectedRam}, ${selectedSsd})`,
         brand: product.brand || "",
-        price: product.price,
-        originalPrice: product.originalPrice || 0,
+        price: currentPrice,
+        originalPrice: regularPrice,
         image: currentImageSrc,
+        specs: {
+          ...product.specs,
+          ram: selectedRam,
+          storage: selectedSsd,
+        },
       },
       quantity,
     );
 
-    // Track add to cart event in GA4 & Meta Pixel
     trackAddToCart({
       id: product.id.toString(),
       name: product.name,
-      price: product.price,
+      price: currentPrice,
       quantity,
       category: product.category || product.brand || "Laptop",
     });
+
+    triggerToast(`Added ${quantity} item(s) to Cart!`);
+  };
+
+  // Buy now: adds to cart and immediately navigates to checkout
+  const handleBuyNow = () => {
+    addToCart(
+      {
+        id: `${product.id}-${selectedRam}-${selectedSsd}`,
+        name: `${product.name} (${selectedRam}, ${selectedSsd})`,
+        brand: product.brand || "",
+        price: currentPrice,
+        originalPrice: regularPrice,
+        image: currentImageSrc,
+        specs: {
+          ...product.specs,
+          ram: selectedRam,
+          storage: selectedSsd,
+        },
+      },
+      quantity,
+    );
+    router.push("/checkout");
+  };
+
+  // Question submission
+  const handleSubmitQuestion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!questionText.trim()) return;
+    setIsSubmittingQuestion(true);
+    try {
+      const res = await fetch("/api/questions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productSlug: product.slug,
+          userName: questionName.trim() || "Customer",
+          question: questionText,
+        }),
+      });
+      if (res.ok) {
+        setQuestionSuccess(true);
+        setTimeout(() => {
+          setQuestionSuccess(false);
+          setIsQuestionModalOpen(false);
+          setQuestionText("");
+          setQuestionName("");
+        }, 1800);
+      }
+    } catch {
+      // ignore
+    } finally {
+      setIsSubmittingQuestion(false);
+    }
+  };
+
+  // Review submission
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewComment.trim()) return;
+    const newRev: UserReview = {
+      id: Date.now().toString(),
+      userName: reviewName.trim() || "Verified Buyer",
+      rating: reviewRating,
+      comment: reviewComment,
+      date: new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }),
+    };
+    setReviewsList((prev) => [newRev, ...prev]);
+    setReviewSuccess(true);
+    setTimeout(() => {
+      setReviewSuccess(false);
+      setIsReviewModalOpen(false);
+      setReviewComment("");
+      setReviewName("");
+    }, 1800);
+  };
+
+  // Clear recently viewed
+  const clearRecentlyViewed = () => {
+    localStorage.removeItem("recentlyViewed");
+    setRecentlyViewed([]);
   };
 
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
-  const discountPercentage = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0;
-  const avgRating = product.rating || 0;
-  const reviews = product.reviews || 0;
-  const conditionLabel = product.condition?.[0] || "Used";
-  const quickSpecs = [product.specs?.processor, product.specs?.ram, product.specs?.storage]
-    .filter(Boolean)
-    .join(" • ");
-  const lowestEMI = useMemo(
-    () => getLowestMonthlyEMI(product.price),
-    [product.price],
-  );
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    image: currentImageSrc,
-    description: product.description?.short,
-    brand: {
-      "@type": "Brand",
-      name: product.brand,
-    },
-    offers: {
-      "@type": "Offer",
-      url: `https://laptoppointbd.com/product/${product.slug}`,
-      priceCurrency: "BDT",
-      price: product.price,
-      itemCondition: "https://schema.org/UsedCondition",
-      availability: product.inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
-    },
+  // Derived structured specs
+  const structuredSpecs = useMemo(() => {
+    const raw = product.specs || {};
+    const brand = product.brand || "HP";
+    const name = product.name;
+
+    // Detect CPU
+    let processorBrand = "Intel";
+    if (/ryzen|amd/i.test(name) || /ryzen|amd/i.test(raw.processor || "")) {
+      processorBrand = "AMD";
+    } else if (/apple|m1|m2|m3/i.test(name)) {
+      processorBrand = "Apple";
+    }
+
+    let processorModel =
+      raw.processor ||
+      (brand === "HP" ? "Intel Core i5-8250U" : "Intel Core i5 Processor");
+    let processorFreq = "1.6 GHz up to 3.4 GHz, 6 MB Cache";
+    if (/i7/i.test(processorModel)) {
+      processorFreq = "1.8 GHz up to 4.0 GHz, 8 MB Cache";
+    } else if (/ryzen 5/i.test(processorModel)) {
+      processorFreq = "2.1 GHz up to 4.0 GHz, 8 MB Cache";
+    }
+
+    // Display
+    let displaySize = "14.0 Inch";
+    if (/13\.3/i.test(name) || /13\.3/i.test(raw.display || ""))
+      displaySize = "13.3 Inch";
+    else if (/15\.6/i.test(name) || /15\.6/i.test(raw.display || ""))
+      displaySize = "15.6 Inch";
+
+    let displayType = raw.displayType || "FHD IPS Anti-Glare LED Display";
+    let displayRes = "1920 x 1080 (Full HD)";
+    if (/touch/i.test(name) || raw.touchscreen) {
+      displayType += " (Touchscreen)";
+    }
+
+    return [
+      {
+        category: "PROCESSOR",
+        items: [
+          { label: "Processor Brand", value: processorBrand },
+          { label: "Processor Model", value: processorModel },
+          { label: "Processor Frequency", value: processorFreq },
+        ],
+      },
+      {
+        category: "DISPLAY",
+        items: [
+          { label: "Display Size", value: displaySize },
+          { label: "Display Type", value: displayType },
+          { label: "Display Resolution", value: displayRes },
+          {
+            label: "Touchscreen",
+            value: raw.touchscreen ? "Yes" : "No",
+          },
+        ],
+      },
+      {
+        category: "MEMORY",
+        items: [
+          { label: "RAM", value: `${selectedRam}` },
+          { label: "RAM Type", value: "DDR4 SDRAM" },
+          { label: "RAM Speed", value: "2400 MHz / 3200 MHz" },
+          { label: "Removable Slots", value: "2 x SODIMM Slots (Dual Channel)" },
+        ],
+      },
+      {
+        category: "STORAGE",
+        items: [
+          { label: "Storage Type", value: "M.2 PCIe NVMe SSD" },
+          { label: "Storage Capacity", value: `${selectedSsd}` },
+          { label: "Drive Interface", value: "PCIe Gen 3 x4 NVMe" },
+        ],
+      },
+      {
+        category: "GRAPHICS",
+        items: [
+          {
+            label: "Graphics Model",
+            value: raw.graphics || "Intel UHD Graphics 620",
+          },
+          { label: "Graphics Memory", value: "Shared" },
+        ],
+      },
+      {
+        category: "KEYBOARD & TOUCHPAD",
+        items: [
+          {
+            label: "Keyboard Type",
+            value: "Full-size Island-style Backlit Keyboard",
+          },
+          {
+            label: "Pointing Device",
+            value: "Precision Clickpad with Multi-touch Gestures Support",
+          },
+        ],
+      },
+      {
+        category: "CAMERA & AUDIO",
+        items: [
+          {
+            label: "WebCam",
+            value: "720p HD Camera with Integrated Dual Array Digital Mic",
+          },
+          {
+            label: "Speaker / Audio",
+            value: "Dual Stereo Speakers with Bang & Olufsen / Audio Boost",
+          },
+        ],
+      },
+      {
+        category: "NETWORK & CONNECTIVITY",
+        items: [
+          {
+            label: "Wi-Fi",
+            value: "Intel Dual Band Wireless-AC 8265 802.11a/b/g/n/ac (2x2) Wi-Fi",
+          },
+          { label: "Bluetooth", value: "Bluetooth 4.2 / 5.0 Combo" },
+        ],
+      },
+      {
+        category: "PORTS & SLOTS",
+        items: [
+          {
+            label: "USB Ports",
+            value: "2 x USB 3.1 Gen 1 (1 charging), 1 x Thunderbolt Type-C",
+          },
+          { label: "HDMI Port", value: "1 x HDMI 1.4b" },
+          { label: "Audio Jack", value: "1 x Headphone/Microphone Combo Jack" },
+          { label: "Ethernet (RJ-45)", value: "1 x RJ-45 Gigabit LAN" },
+        ],
+      },
+      {
+        category: "SECURITY",
+        items: [
+          { label: "Fingerprint Sensor", value: "Yes, Touch Fingerprint Sensor" },
+          { label: "Security Chip", value: "Firmware TPM 2.0" },
+        ],
+      },
+      {
+        category: "BATTERY & POWER",
+        items: [
+          {
+            label: "Battery Type",
+            value: raw.battery || "3-cell 50 Wh Long Life Li-ion",
+          },
+          { label: "Power Adapter", value: "65 W Smart AC Power Adapter" },
+        ],
+      },
+      {
+        category: "PHYSICAL SPECIFICATION",
+        items: [
+          { label: "Color", value: "Silver / Dark Ash Silver" },
+          { label: "Dimensions (W x D x H)", value: "31 x 22.93 x 1.77 cm" },
+          { label: "Weight", value: raw.weight || "1.33 kg" },
+        ],
+      },
+      {
+        category: "WARRANTY",
+        items: [
+          {
+            label: "Replacement Warranty",
+            value: "15 Days Replacement Guarantee",
+          },
+          {
+            label: "Service Warranty",
+            value: "2 Years Free Service Warranty",
+          },
+        ],
+      },
+    ];
+  }, [product, selectedRam, selectedSsd]);
+
+  const smoothScrollTo = (id: string) => {
+    setActiveAnchor(id);
+    const el = document.getElementById(id);
+    if (el) {
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = el.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
+  const sideListProducts = useMemo(() => {
+    return (sidebarProducts && sidebarProducts.length > 0
+      ? sidebarProducts
+      : relatedProducts
+    ).slice(0, 4);
+  }, [sidebarProducts, relatedProducts]);
+
   return (
-    <div className="min-h-screen bg-background py-10 md:py-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 flex items-center">
-          <button
-            onClick={() => router.back()}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </button>
+    <div className="min-h-screen bg-[#f2f4f8] dark:bg-background py-4 sm:py-6 text-gray-800 dark:text-gray-200">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-20 right-4 z-50 bg-[#002b60] text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2 animate-in slide-in-from-top-4 duration-200 text-sm font-semibold border border-white/20">
+          <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+          <span>{toastMessage}</span>
         </div>
+      )}
 
-        <div className="mb-14 rounded-3xl border border-border bg-card shadow-[0_8px_40px_rgba(0,0,0,0.07)]">
-          <div className="grid gap-10 p-6 sm:p-10 lg:grid-cols-2 lg:gap-16 lg:p-14">
-            <div className="flex flex-col gap-5">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 max-w-7xl">
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-4 flex flex-wrap items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400"
+        >
+          <Link href="/" className="hover:text-[#002b60] dark:hover:text-primary">
+            Home
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+          <Link href="/shop" className="hover:text-[#002b60] dark:hover:text-primary">
+            Laptop
+          </Link>
+          {product.brand && (
+            <>
+              <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+              <Link
+                href={`/shop?brand=${encodeURIComponent(product.brand)}`}
+                className="hover:text-[#002b60] dark:hover:text-primary"
+              >
+                {product.brand}
+              </Link>
+            </>
+          )}
+          <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+          <span className="text-gray-700 dark:text-gray-300 font-medium line-clamp-1 max-w-md">
+            {product.name}
+          </span>
+        </nav>
+
+        {/* ── TOP HERO SECTION (3 Columns) ── */}
+        <div className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-4 sm:p-6 shadow-2xs mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            {/* 1. Left Gallery Column (lg:col-span-4) */}
+            <div className="lg:col-span-4 flex flex-col gap-3">
               <div
                 ref={mainImgRef}
-                className="group relative aspect-4/3 w-full cursor-zoom-in overflow-hidden rounded-2xl border border-border bg-linear-to-br from-secondary/40 to-secondary/80"
-                role="button"
-                tabIndex={0}
+                className="relative aspect-square w-full rounded-lg border border-gray-200 dark:border-border bg-white dark:bg-card p-4 overflow-hidden group cursor-zoom-in flex items-center justify-center"
                 onMouseMove={handleMouseMove}
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
                 onClick={() => setIsViewerOpen(true)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    setIsViewerOpen(true);
-                  }
-                }}
-                aria-label="Open full image view"
               >
+                {/* Top Left Badge */}
+                <span className="absolute top-3 left-3 z-10 px-2 py-0.5 bg-gray-900 text-white text-[10px] font-bold tracking-wider rounded uppercase">
+                  {product.grade ? `${product.grade} GRADE` : "PRE-OWNED"}
+                </span>
+
+                {/* Top Right Zoom Icon */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsViewerOpen(true);
+                  }}
+                  className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/90 dark:bg-gray-800 shadow-xs hover:bg-[#002b60] hover:text-white transition-colors"
+                  aria-label="Expand image"
+                >
+                  <Maximize2 className="w-4 h-4" />
+                </button>
+
+                {/* Magnifier Hover */}
                 {isHovering && (
                   <div
-                    className="pointer-events-none absolute inset-0 z-10"
+                    className="pointer-events-none absolute inset-0 z-20 hidden md:block"
                     style={{
                       backgroundImage: `url(${currentImageSrc})`,
-                      backgroundSize: "250%",
+                      backgroundSize: "240%",
                       backgroundPosition: `${hoverPos.x}% ${hoverPos.y}%`,
                       backgroundRepeat: "no-repeat",
                     }}
@@ -270,463 +666,415 @@ export default function ProductDetailsClient({
                   src={currentImage}
                   alt={product.name}
                   fill
-                  className="object-contain p-6 transition-all duration-500"
+                  className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
                   priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
                 />
-
-                <div className="absolute left-3 top-3 z-20">
-                  <span className="rounded-full bg-primary px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-primary-foreground shadow-lg">
-                    {product.brand || "Laptop"}
-                  </span>
-                </div>
-
-                {discountPercentage > 0 && (
-                  <div className="absolute right-3 top-3 z-20">
-                    <span className="rounded-full bg-red-500 px-2.5 py-1 text-[0.65rem] font-bold text-white shadow-lg">
-                      -{discountPercentage}%
-                    </span>
-                  </div>
-                )}
-
-                <span className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 rounded-full bg-black/40 px-3 py-1.5 text-[0.65rem] text-white opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
-                  <ZoomIn className="h-3 w-3" />
-                  Click to zoom
-                </span>
-
-                {galleryImages.length > 1 && (
-                  <div className="absolute bottom-3 left-3 z-20 rounded-full bg-black/40 px-2.5 py-1 text-[0.65rem] text-white backdrop-blur-sm">
-                    {safeImageIndex + 1}/{galleryImages.length}
-                  </div>
-                )}
-
-                {galleryImages.length > 1 && (
-                  <>
-                    <button
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        goToPrevImage();
-                      }}
-                      className="absolute left-2 top-1/2 z-20 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/80 opacity-0 shadow transition-all duration-300 hover:scale-110 hover:bg-white group-hover:opacity-100"
-                      aria-label="Previous image"
-                    >
-                      <ChevronLeft className="h-4 w-4 text-foreground" />
-                    </button>
-                    <button
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        goToNextImage();
-                      }}
-                      className="absolute right-2 top-1/2 z-20 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-white/80 opacity-0 shadow transition-all duration-300 hover:scale-110 hover:bg-white group-hover:opacity-100"
-                      aria-label="Next image"
-                    >
-                      <ChevronRight className="h-4 w-4 text-foreground" />
-                    </button>
-                  </>
-                )}
               </div>
 
-              {galleryImages.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  {galleryImages.map((img, idx) => (
-                    <button
-                      key={`${String(img)}-${idx}`}
-                      onClick={() => setActiveImageIndex(idx)}
-                      className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition-all duration-200 ${
-                        idx === safeImageIndex
-                          ? "scale-105 border-primary shadow-[0_0_0_3px_rgba(47,84,235,0.2)]"
-                          : "border-border opacity-70 hover:scale-105 hover:border-primary/60 hover:opacity-100"
-                      }`}
-                      aria-label={`Show image ${idx + 1}`}
-                    >
-                      <Image
-                        src={img}
-                        alt={`${product.name} view ${idx + 1}`}
-                        fill
-                        className="object-contain p-1.5"
-                        sizes="64px"
-                      />
-                    </button>
-                  ))}
+              {/* Thumbnails Row */}
+              {galleryImages.length > 0 && (
+                <div className="flex items-center gap-2 justify-center">
+                  <button
+                    onClick={goToPrevImage}
+                    disabled={galleryImages.length <= 1}
+                    className="p-1 rounded border border-gray-200 dark:border-border hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 disabled:opacity-30"
+                    aria-label="Previous thumbnail"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  <div className="flex gap-2 overflow-x-auto py-1 scrollbar-hide">
+                    {galleryImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveImageIndex(idx)}
+                        className={`relative w-14 h-14 rounded border p-1 bg-white shrink-0 transition-all ${
+                          idx === safeImageIndex
+                            ? "border-2 border-[#dc0303] shadow-xs"
+                            : "border-gray-200 dark:border-border opacity-70 hover:opacity-100"
+                        }`}
+                      >
+                        <Image
+                          src={img}
+                          alt=""
+                          fill
+                          className="object-contain p-1"
+                        />
+                      </button>
+                    ))}
+                  </div>
 
                   <button
-                    onClick={() => setIsViewerOpen(true)}
-                    className="relative flex h-16 w-16 shrink-0 flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-border text-muted-foreground transition-all duration-200 hover:scale-105 hover:border-primary hover:text-primary"
-                    aria-label="Open gallery"
+                    onClick={goToNextImage}
+                    disabled={galleryImages.length <= 1}
+                    className="p-1 rounded border border-gray-200 dark:border-border hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 disabled:opacity-30"
+                    aria-label="Next thumbnail"
                   >
-                    <ZoomIn className="h-4 w-4" />
-                    <span className="text-[0.6rem] font-semibold">Gallery</span>
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
               )}
-
-              <div className="grid grid-cols-3 gap-3 pt-2">
-                {[
-                  { icon: Shield, label: "Secure Payment", desc: "SSL encrypted" },
-                  { icon: Award, label: "Certified", desc: conditionLabel },
-                  { icon: RotateCcw, label: "Easy Returns", desc: "7-day returns" },
-                ].map(({ icon: Icon, label, desc }) => (
-                  <div
-                    key={label}
-                    className="rounded-xl border border-border bg-card p-4 text-center"
-                  >
-                    <Icon className="mx-auto mb-1 h-4 w-4 text-primary" />
-                    <p className="text-[0.65rem] font-bold leading-tight text-foreground">
-                      {label}
-                    </p>
-                    <p className="text-[0.6rem] leading-tight text-muted-foreground">
-                      {desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            <div className="flex flex-col gap-7">
-              <div>
-                <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-primary px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-primary-foreground">
-                    {product.brand || "Laptop"}
-                  </span>
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[0.65rem] font-bold text-emerald-700">
-                    {conditionLabel}
-                  </span>
-                  <span className="rounded-full bg-blue-50 px-2.5 py-0.5 text-[0.65rem] font-bold text-primary">
-                    {product.category || "Computing"}
-                  </span>
-                </div>
+            {/* 2. Middle Details Column (lg:col-span-5) */}
+            <div className="lg:col-span-5 flex flex-col gap-3">
+              <h1 className="text-base sm:text-lg font-bold text-gray-900 dark:text-foreground uppercase leading-snug">
+                {product.name} (RAM: {selectedRam}, SSD: {selectedSsd})
+              </h1>
 
-                <h1 className="text-xl font-semibold leading-tight tracking-tight text-foreground sm:text-2xl">
-                  {product.name}
-                </h1>
-
-                {quickSpecs && (
-                  <p className="mt-1 text-sm font-medium text-muted-foreground">{quickSpecs}</p>
-                )}
-
-                <div className="mt-3 flex flex-wrap items-center gap-3">
-                  <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star
-                        key={s}
-                        className={`h-4 w-4 ${
-                          avgRating >= s
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "fill-gray-200 text-gray-200"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm font-bold text-foreground">{avgRating.toFixed(1)}</span>
-                  <span className="text-sm text-muted-foreground">({reviews} reviews)</span>
-                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                    <MessageCircle className="h-3 w-3" />
-                    Write a review
+              {/* Meta Chips */}
+              <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium">
+                  Price: <strong className="text-[#dc0303]">৳{currentPrice.toLocaleString()}</strong>
+                </span>
+                <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 line-through">
+                  Regular: ৳{regularPrice.toLocaleString()}
+                </span>
+                <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
+                  Status: In Stock
+                </span>
+                <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600">
+                  Code: {product.sku || "LP-" + product.id}
+                </span>
+                {product.brand && (
+                  <span className="px-2 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600">
+                    Brand: {product.brand}
                   </span>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border bg-linear-to-br from-secondary/30 to-card p-6">
-                <div className="flex flex-wrap items-end gap-3">
-                  <span className="text-2xl font-black text-foreground">
-                    ৳ {product.price.toLocaleString()}
-                  </span>
-                  {product.originalPrice && (
-                    <div className="mb-1 flex flex-col">
-                      <span className="text-sm text-muted-foreground line-through">
-                        ৳ {product.originalPrice.toLocaleString()}
-                      </span>
-                      {discountPercentage > 0 && (
-                        <span className="text-xs font-bold text-red-500">
-                          Save ৳ {(product.originalPrice - product.price).toLocaleString()} ({discountPercentage}%)
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-3 flex items-center gap-2">
-                  <span className="relative flex h-2 w-2">
-                    <span
-                      className={`absolute inline-flex h-full w-full animate-ping rounded-full ${
-                        product.inStock ? "bg-emerald-500" : "bg-red-500"
-                      } opacity-75`}
-                    />
-                    <span
-                      className={`relative inline-flex h-2 w-2 rounded-full ${
-                        product.inStock ? "bg-emerald-500" : "bg-red-500"
-                      }`}
-                    />
-                  </span>
-                  <span
-                    className={`text-xs font-semibold ${
-                      product.inStock ? "text-emerald-600" : "text-red-500"
-                    }`}
-                  >
-                    {product.inStock ? "In Stock - Ready to Ship" : "Out of Stock"}
-                  </span>
-                </div>
-
-                {lowestEMI && product.price >= 5000 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsEMIOpen((prev) => {
-                        const next = !prev;
-                        if (next) {
-                          setTimeout(() => {
-                            const el = document.getElementById("emi-calculator");
-                            if (el) {
-                              el.scrollIntoView({ behavior: "smooth" });
-                            }
-                          }, 80);
-                        }
-                        return next;
-                      });
-                    }}
-                    className="mt-3 flex w-full items-center justify-between rounded-xl border border-primary/20 bg-primary/5 px-3.5 py-2.5 text-xs text-muted-foreground transition hover:border-primary/50 hover:bg-primary/10 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2">
-                      <CreditCard className="h-4 w-4 text-primary shrink-0" />
-                      <span className="text-foreground">
-                        EMI starts from{" "}
-                        <strong className="font-bold text-primary">
-                          ৳ {lowestEMI.monthlyEMI.toLocaleString()}/mo
-                        </strong>
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="hidden sm:flex items-center -space-x-1 overflow-hidden">
-                        {[
-                          { name: "SCB", src: "/bank_logo/standard_chartert.png" },
-                          { name: "City Bank", src: "/bank_logo/city_bank.png" },
-                          { name: "BRAC Bank", src: "/bank_logo/brack_bank.png" },
-                        ].map((b) => (
-                          <div
-                            key={b.name}
-                            className="relative flex h-5 w-6 shrink-0 items-center justify-center rounded border border-border/80 bg-white p-0.5 shadow-2xs"
-                          >
-                            <Image
-                              src={b.src}
-                              alt={b.name}
-                              width={20}
-                              height={12}
-                              unoptimized
-                              className="max-h-3 w-auto object-contain"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <span className="font-semibold text-primary inline-flex items-center gap-1 text-[0.72rem]">
-                        {isEMIOpen ? "Hide EMI" : "Calculate EMI"}{" "}
-                        {isEMIOpen ? (
-                          <ChevronUp className="h-3.5 w-3.5" />
-                        ) : (
-                          <ChevronDown className="h-3.5 w-3.5" />
-                        )}
-                      </span>
-                    </div>
-                  </button>
                 )}
               </div>
 
-              {product.features && product.features.length > 0 && (
-                <div>
-                  <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                    Key Highlights
-                  </h3>
-                  <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {product.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2 text-sm text-foreground">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-semibold text-foreground">Quantity:</span>
-                  <div className="flex items-center overflow-hidden rounded-xl border border-border bg-card">
-                    <button
-                      onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                      className="flex h-9 w-9 items-center justify-center text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-                      aria-label="Decrease quantity"
-                    >
-                      <Minus className="h-3.5 w-3.5" />
-                    </button>
-                    <span className="min-w-10 text-center text-sm font-bold text-foreground">
-                      {quantity}
+              {/* Key Features Box */}
+              <div className="bg-[#f0f5fc] dark:bg-card/70 border border-blue-100 dark:border-border rounded-lg p-3 text-xs">
+                <h4 className="font-bold text-[#002b60] dark:text-primary mb-2 text-xs">
+                  Key Features
+                </h4>
+                <ul className="space-y-1 text-gray-700 dark:text-gray-300">
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-[#002b60] font-bold">•</span>
+                    <span>
+                      <strong>Processor:</strong>{" "}
+                      {product.specs?.processor || "Intel Core i5 8th Gen"}
                     </span>
-                    <button
-                      onClick={() => setQuantity((q) => q + 1)}
-                      className="flex h-9 w-9 items-center justify-center text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-                      aria-label="Increase quantity"
-                    >
-                      <Plus className="h-3.5 w-3.5" />
-                    </button>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-[#002b60] font-bold">•</span>
+                    <span>
+                      <strong>Display:</strong>{" "}
+                      {product.specs?.display || "13.3\" FHD IPS Anti-Glare LED Display"}
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-[#002b60] font-bold">•</span>
+                    <span>
+                      <strong>Memory:</strong> {selectedRam} DDR4 RAM
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-[#002b60] font-bold">•</span>
+                    <span>
+                      <strong>Storage:</strong> {selectedSsd} NVMe PCIe SSD
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <span className="text-[#002b60] font-bold">•</span>
+                    <span>
+                      <strong>Special Feature:</strong> Bang & Olufsen Audio, Backlit Keyboard, Fingerprint Reader
+                    </span>
+                  </li>
+                </ul>
+                <button
+                  type="button"
+                  onClick={() => smoothScrollTo("specification")}
+                  className="mt-2 text-[11px] font-semibold text-[#dc0303] hover:underline cursor-pointer inline-block"
+                >
+                  View More Info ↓
+                </button>
+              </div>
+
+              {/* Variant Selectors */}
+              <div className="space-y-2 pt-1 text-xs">
+                {/* RAM Selector */}
+                <div className="flex items-center gap-2">
+                  <span className="w-10 font-bold text-gray-700 dark:text-gray-300">
+                    RAM:
+                  </span>
+                  <div className="flex gap-2">
+                    {ramOptions.map((opt) => (
+                      <button
+                        key={opt.label}
+                        type="button"
+                        onClick={() => setSelectedRam(opt.label)}
+                        className={`px-3 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
+                          selectedRam === opt.label
+                            ? "bg-[#002b60] text-white border-[#002b60] shadow-xs"
+                            : "bg-white dark:bg-card border-gray-300 dark:border-border text-gray-700 dark:text-gray-300 hover:border-[#002b60]"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
-                  <Button
-                    className="min-w-35 flex-1 rounded-xl px-6 py-3.5 text-sm font-bold shadow-[0_4px_16px_rgba(47,84,235,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
-                    onClick={handleAddToCart}
-                    aria-label="Add to cart"
-                  >
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    Add to Cart
-                  </Button>
+                {/* SSD Selector */}
+                <div className="flex items-center gap-2">
+                  <span className="w-10 font-bold text-gray-700 dark:text-gray-300">
+                    SSD:
+                  </span>
+                  <div className="flex gap-2">
+                    {ssdOptions.map((opt) => (
+                      <button
+                        key={opt.label}
+                        type="button"
+                        onClick={() => setSelectedSsd(opt.label)}
+                        className={`px-3 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
+                          selectedSsd === opt.label
+                            ? "bg-[#002b60] text-white border-[#002b60] shadow-xs"
+                            : "bg-white dark:bg-card border-gray-300 dark:border-border text-gray-700 dark:text-gray-300 hover:border-[#002b60]"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
+              {/* Price Line */}
+              <div className="pt-2 flex items-baseline gap-2">
+                <span className="text-2xl sm:text-3xl font-black text-[#dc0303] font-mono">
+                  ৳{currentPrice.toLocaleString()}
+                </span>
+                {discountPercentage > 0 && (
+                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                    Save {discountPercentage}%
+                  </span>
+                )}
+              </div>
+
+              {/* Actions Row (Qty + Add to Cart + Buy Now + Wishlist + Compare) */}
+              <div className="flex flex-wrap items-center gap-2 pt-2">
+                {/* Stepper */}
+                <div className="flex items-center border border-gray-300 dark:border-border rounded bg-white dark:bg-card">
                   <button
-                    onClick={() =>
-                      isWishlisted ? removeFromWishlist(product.id) : addToWishlist(product)
-                    }
-                    className={`grid h-12 w-12 place-items-center rounded-xl border transition-all duration-200 hover:scale-105 active:scale-95 ${
-                      isWishlisted
-                        ? "border-red-300 bg-red-50 text-red-500 shadow-[0_0_0_3px_rgba(239,68,68,0.15)]"
-                        : "border-border bg-card text-muted-foreground hover:border-red-300 hover:text-red-400"
-                    }`}
-                    aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    className="px-2.5 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 cursor-pointer"
+                    aria-label="Decrease"
                   >
-                    <Heart className={`h-4.5 w-4.5 ${isWishlisted ? "fill-current" : ""}`} />
+                    <Minus className="w-3.5 h-3.5" />
                   </button>
-
+                  <span className="px-3 py-1 text-xs font-bold font-mono">
+                    {quantity}
+                  </span>
                   <button
-                    onClick={() =>
-                      isCompared
-                        ? removeFromComparison(product.id)
-                        : canAddMore() && addToComparison(product)
-                    }
-                    disabled={!isCompared && !canAddMore()}
-                    className={`grid h-12 w-12 place-items-center rounded-xl border transition-all duration-200 hover:scale-105 active:scale-95 ${
-                      isCompared
-                        ? "border-yellow-300 bg-yellow-50 text-yellow-600"
-                        : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-primary"
-                    }`}
-                    aria-label={isCompared ? "Remove from comparison" : "Add to comparison"}
+                    onClick={() => setQuantity((q) => q + 1)}
+                    className="px-2.5 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 cursor-pointer"
+                    aria-label="Increase"
                   >
-                    <Share2 className="h-4 w-4" />
+                    <Plus className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                {/* Add to Cart */}
+                <button
+                  onClick={handleAddToCart}
+                  className="px-4 py-2 border-2 border-[#002b60] text-[#002b60] dark:text-white dark:border-primary text-xs font-bold rounded hover:bg-[#002b60] hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <ShoppingCart className="w-3.5 h-3.5" />
+                  Add to Cart
+                </button>
+
+                {/* Buy Now (Primary Brand Action) */}
+                <button
+                  onClick={handleBuyNow}
+                  className="px-5 py-2 bg-[#dc0303] hover:bg-[#b80202] text-white text-xs font-bold rounded shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <Zap className="w-3.5 h-3.5 fill-current" />
+                  Buy Now
+                </button>
+
+                {/* Wishlist */}
+                <button
+                  onClick={() =>
+                    isWishlisted
+                      ? removeFromWishlist(product.id)
+                      : addToWishlist(product)
+                  }
+                  className={`p-2 rounded border border-gray-300 dark:border-border transition-colors cursor-pointer ${
+                    isWishlisted
+                      ? "bg-red-50 text-[#dc0303] border-red-200"
+                      : "hover:bg-gray-50 text-gray-600"
+                  }`}
+                  aria-label="Wishlist"
+                >
+                  <Heart
+                    className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`}
+                  />
+                </button>
+
+                {/* Compare */}
+                <button
+                  onClick={() =>
+                    isCompared
+                      ? removeFromComparison(product.id)
+                      : canAddMore() && addToComparison(product)
+                  }
+                  className={`p-2 rounded border border-gray-300 dark:border-border transition-colors cursor-pointer ${
+                    isCompared
+                      ? "bg-blue-50 text-[#002b60] border-blue-200"
+                      : "hover:bg-gray-50 text-gray-600"
+                  }`}
+                  aria-label="Compare"
+                >
+                  <Share2 className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Consultation / Quick Support Box */}
+              <div className="bg-[#fff9e6] dark:bg-card border border-amber-200 dark:border-amber-900/40 rounded-lg p-3 text-xs mt-1">
+                <p className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                  Contact Us If You&apos;re Having Trouble To Check The Product&apos;s Availability
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
                   <a
-                    href="https://wa.me/8801701561395"
-                    className="inline-flex min-w-35 flex-1 items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-xs font-bold text-emerald-700 transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-100"
+                    href={`https://wa.me/8801701561395?text=Hello%20Laptop%20Point%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[#25D366] font-bold hover:underline"
                   >
-                    <ShoppingBag className="h-3.5 w-3.5" />
-                    WhatsApp Order
+                    <MessageCircle className="w-3.5 h-3.5 fill-current" />
+                    WhatsApp
+                  </a>
+                  <a
+                    href="https://m.me/laptoppointbd"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[#0084FF] font-bold hover:underline"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    Messenger
                   </a>
                   <a
                     href="tel:+8801701561395"
-                    className="inline-flex min-w-25 flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary"
+                    className="inline-flex items-center gap-1.5 text-gray-700 dark:text-gray-300 font-bold hover:underline"
                   >
-                    <Phone className="h-3.5 w-3.5" />
-                    Call Us
+                    <Phone className="w-3.5 h-3.5" />
+                    01701-561395
                   </a>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* EMI Calculator Section (Toggled by "Calculate EMI") */}
-          {isEMIOpen && (
-            <div
-              id="emi-calculator"
-              className="border-t border-border px-6 py-10 sm:px-10 animate-in fade-in slide-in-from-top-4 duration-300"
-            >
-              <ProductEMICalculator
-                price={product.price}
-                productName={product.name}
-                onClose={() => setIsEMIOpen(false)}
-              />
-            </div>
-          )}
-
-          <div className="border-t border-border px-6 pb-12 pt-10 sm:px-10">
-            <div className="flex flex-wrap gap-2 border-b border-border pb-5">
-              {[
-                { key: "specifications", label: "Specifications" },
-                { key: "description", label: "Description" },
-                { key: "reviews", label: "Reviews" },
-                { key: "shipping", label: "Shipping" },
-              ].map((tab) => (
+            {/* 3. Right Sidebar Column (lg:col-span-3) */}
+            <div className="lg:col-span-3 flex flex-col gap-4">
+              {/* Promo Card in Brand Primary #002b60 */}
+              <div className="rounded-xl bg-[#002b60] p-4 text-white shadow-xs">
+                <span className="inline-block px-2 py-0.5 rounded bg-white/20 text-[10px] font-bold uppercase tracking-wider mb-2">
+                  OFFICIAL WARRANTY
+                </span>
+                <h3 className="font-bold text-xs uppercase leading-snug mb-1">
+                  Incredible deals on Apple, Microsoft, Dell, Lenovo and HP laptops!
+                </h3>
+                <p className="text-[11px] text-blue-100 mb-3">
+                  Up to 0% EMI available on 19+ banks. Fast exchange valuation on your old laptop.
+                </p>
                 <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wide transition ${
-                    activeTab === tab.key
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-muted-foreground hover:text-foreground"
-                  }`}
+                  type="button"
+                  onClick={() => smoothScrollTo("emi-plans")}
+                  className="w-full py-2 bg-[#dc0303] hover:bg-[#b80202] text-white font-bold text-xs rounded transition-colors text-center cursor-pointer shadow-xs"
                 >
-                  {tab.label}
+                  CLAIM NOW
                 </button>
-              ))}
-            </div>
+              </div>
 
-            <div className="mt-8 rounded-2xl bg-secondary/25 p-6 sm:p-8">
-              {activeTab === "description" && (
-                <div className="max-w-4xl space-y-4 text-sm leading-relaxed text-muted-foreground">
-                  <p className="text-base font-bold text-foreground">
-                    {product.description?.short || "No short description available."}
-                  </p>
-                  <div
-                    className="whitespace-pre-wrap"
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        product.description?.full?.replace(
-                          /(^.*?\?$)/gm,
-                          "<strong>$1</strong>",
-                        ) || "Full description coming soon...",
-                    }}
-                  />
+              {/* Related Products Mini Box */}
+              <div className="rounded-xl border border-gray-200 dark:border-border bg-white dark:bg-card p-3 shadow-2xs">
+                <div className="flex items-center justify-between border-b border-gray-100 dark:border-border pb-2 mb-2">
+                  <h4 className="font-bold text-xs text-[#002b60] dark:text-foreground">
+                    Related Products
+                  </h4>
+                  <Link
+                    href="/shop"
+                    className="text-[10px] text-[#dc0303] hover:underline font-semibold"
+                  >
+                    View All
+                  </Link>
                 </div>
-              )}
-
-              {activeTab === "specifications" && (
-                <div className="grid grid-cols-1 gap-x-12 gap-y-4 md:grid-cols-2">
-                  {product.specs &&
-                    Object.entries(product.specs).map(([key, value]) => (
-                      <div key={key} className="border-b border-border py-3">
-                        <span className="mb-1 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                          {key}
-                        </span>
-                        <span className="font-medium text-foreground">{value as string}</span>
+                <div className="space-y-2.5">
+                  {sideListProducts.map((p) => (
+                    <div key={p.id} className="flex gap-2.5 items-center">
+                      <div className="relative w-12 h-12 rounded border border-gray-100 dark:border-border bg-gray-50 shrink-0 p-1">
+                        <Image
+                          src={p.image}
+                          alt={p.name}
+                          fill
+                          className="object-contain p-1"
+                        />
                       </div>
+                      <div className="min-w-0 flex-1">
+                        <Link
+                          href={`/product/${p.slug}`}
+                          className="line-clamp-1 text-[11px] font-semibold text-gray-800 dark:text-gray-200 hover:text-[#dc0303] transition-colors"
+                        >
+                          {p.name}
+                        </Link>
+                        <span className="block text-xs font-bold text-[#dc0303]">
+                          {formatBDT(p.price)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => addToComparison(p)}
+                          className="text-[10px] text-gray-500 hover:text-[#002b60] cursor-pointer"
+                        >
+                          + Compare
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recently Viewed Box */}
+              {recentlyViewed.length > 0 && (
+                <div className="rounded-xl border border-gray-200 dark:border-border bg-white dark:bg-card p-3 shadow-2xs">
+                  <div className="flex items-center justify-between border-b border-gray-100 dark:border-border pb-2 mb-2">
+                    <h4 className="font-bold text-xs text-gray-800 dark:text-foreground">
+                      Recently Viewed
+                    </h4>
+                    <button
+                      onClick={clearRecentlyViewed}
+                      className="text-[10px] text-gray-400 hover:text-red-500 cursor-pointer"
+                      title="Clear history"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {recentlyViewed.slice(0, 3).map((p) => (
+                      <Link
+                        key={p.id}
+                        href={`/product/${p.slug}`}
+                        className="flex gap-2 items-center hover:bg-gray-50 dark:hover:bg-gray-800 p-1 rounded transition-colors"
+                      >
+                        <div className="relative w-10 h-10 rounded border border-gray-100 shrink-0 bg-white">
+                          <Image
+                            src={p.image}
+                            alt=""
+                            fill
+                            className="object-contain p-1"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="line-clamp-1 text-[11px] font-medium text-gray-800 dark:text-gray-200">
+                            {p.name}
+                          </p>
+                          <span className="text-[11px] font-bold text-[#dc0303]">
+                            {formatBDT(p.price)}
+                          </span>
+                        </div>
+                      </Link>
                     ))}
-                  <div className="border-b border-border py-3">
-                    <span className="mb-1 block text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                      Stock ID
-                    </span>
-                    <span className="font-medium text-foreground">{product.sku || "N/A"}</span>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === "reviews" && (
-                <div className="mx-auto max-w-2xl py-10 text-center">
-                  <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-yellow-50 text-yellow-500">
-                    <Star className="h-8 w-8 fill-current" />
-                  </div>
-                  <h3 className="mb-2 text-xl font-bold text-foreground">No Reviews Yet</h3>
-                  <p className="mb-6 text-muted-foreground">Be the first to review this product.</p>
-                  <Button variant="outline">Write a Review</Button>
-                </div>
-              )}
-
-              {activeTab === "shipping" && (
-                <div className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
-                  <div className="rounded-xl border border-border bg-card p-4">
-                    <p className="font-bold text-foreground">Delivery</p>
-                    <p className="mt-1">Fast delivery all over Bangladesh.</p>
-                  </div>
-                  <div className="rounded-xl border border-border bg-card p-4">
-                    <p className="font-bold text-foreground">Returns</p>
-                    <p className="mt-1">7-day easy return policy for hardware issues.</p>
                   </div>
                 </div>
               )}
@@ -734,20 +1082,310 @@ export default function ProductDetailsClient({
           </div>
         </div>
 
-        {relatedProducts.length > 0 && (
-          <div className="mt-20">
-            <div className="mb-8 flex items-end justify-between">
+        {/* ── STICKY ANCHOR NAVIGATION BAR ── */}
+        <div className="sticky top-16 z-30 mb-6 bg-white dark:bg-card border border-gray-200 dark:border-border rounded-lg shadow-xs px-2 py-1.5 flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
+          {[
+            { id: "description", label: "Description" },
+            { id: "specification", label: "Specification" },
+            { id: "emi-plans", label: "EMI Plans" },
+            {
+              id: "questions",
+              label: `Questions (${questions.length})`,
+            },
+            {
+              id: "reviews",
+              label: `Reviews (${reviewsList.length + (product.reviews || 0)})`,
+            },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => smoothScrollTo(tab.id)}
+              className={`px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shrink-0 ${
+                activeAnchor === tab.id
+                  ? "bg-[#002b60] text-white shadow-2xs"
+                  : "text-gray-600 dark:text-gray-300 hover:text-[#002b60] hover:bg-gray-100 dark:hover:bg-gray-800"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* ── SECTION 1: DESCRIPTION ── */}
+        <div
+          id="description"
+          className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-5 sm:p-7 shadow-2xs mb-6 scroll-mt-28"
+        >
+          <h2 className="text-base sm:text-lg font-bold text-[#002b60] dark:text-foreground uppercase mb-3">
+            Description
+          </h2>
+          <div className="text-xs sm:text-sm leading-relaxed text-gray-700 dark:text-gray-300 space-y-4">
+            <h3 className="font-bold text-gray-900 dark:text-white uppercase text-sm sm:text-base">
+              {product.name}
+            </h3>
+            <p>
+              {product.description?.short ||
+                `The ${product.name} is engineered for performance, precision, and reliable all-day productivity. Built inside an ultra-durable precision-crafted chassis, it combines enterprise-grade computing power with high mobility.`}
+            </p>
+            <p>
+              Equipped with a vivid anti-glare display, high-speed RAM, and responsive NVMe SSD storage, this laptop handles multitasking, business applications, and media playback effortlessly. With modern security features including fingerprint authentication and TPM security, your sensitive data remains protected.
+            </p>
+            <h4 className="font-bold text-gray-900 dark:text-white pt-2">
+              Buy {product.name} from Best Laptop Shop in Bangladesh: Laptop Point BD
+            </h4>
+            <p>
+              In Bangladesh, you can get the original {product.name} from Laptop Point BD. We have a large collection of the latest pre-owned and brand-new laptops from HP, Dell, Lenovo, Apple, and Asus. Order online or visit our showroom to get your laptop at the best price with 15 Days Replacement Guarantee and 2 Years Free Service Warranty.
+            </p>
+          </div>
+        </div>
+
+        {/* ── SECTION 2: SPECIFICATION (Star Tech Table Layout) ── */}
+        <div
+          id="specification"
+          className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-5 sm:p-7 shadow-2xs mb-6 scroll-mt-28"
+        >
+          <h2 className="text-base sm:text-lg font-bold text-[#002b60] dark:text-foreground uppercase mb-4">
+            Specification
+          </h2>
+
+          <div className="space-y-6">
+            {structuredSpecs.map((group) => (
+              <div
+                key={group.category}
+                className="border border-gray-200 dark:border-border rounded-lg overflow-hidden"
+              >
+                {/* Category Header with soft brand styling */}
+                <div className="bg-[#f0f5fc] dark:bg-card/90 px-4 py-2 border-b border-gray-200 dark:border-border">
+                  <h3 className="text-xs font-bold text-[#002b60] dark:text-primary uppercase tracking-wider">
+                    {group.category}
+                  </h3>
+                </div>
+
+                {/* Rows Table */}
+                <div className="divide-y divide-gray-100 dark:divide-border/50 text-xs">
+                  {group.items.map((row) => (
+                    <div
+                      key={row.label}
+                      className="grid grid-cols-1 sm:grid-cols-3 px-4 py-2.5 hover:bg-gray-50/70 dark:hover:bg-gray-800/40 transition-colors"
+                    >
+                      <span className="font-semibold text-gray-600 dark:text-gray-400 sm:col-span-1">
+                        {row.label}
+                      </span>
+                      <span className="text-gray-900 dark:text-gray-100 sm:col-span-2 font-medium">
+                        {row.value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── SECTION 3: EMI PLANS (Minimal Design) ── */}
+        <div
+          id="emi-plans"
+          className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-5 sm:p-6 shadow-2xs mb-6 scroll-mt-28"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 dark:border-border pb-3 mb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-lg bg-[#002b60]/10 text-[#002b60] dark:bg-primary/20 dark:text-primary">
+                <CreditCard className="w-4 h-4" />
+              </div>
               <div>
-                <span className="mb-1 inline-block rounded-full bg-secondary px-3 py-1 text-xs font-bold uppercase tracking-widest text-foreground">
-                  You May Also Like
-                </span>
-                <h2 className="text-xl font-extrabold text-foreground sm:text-2xl">
-                  Related Products
+                <h2 className="text-sm font-bold text-[#002b60] dark:text-foreground uppercase">
+                  EMI Available from ৳{Math.round((currentPrice * 1.18) / 36).toLocaleString()}/month
                 </h2>
+                <p className="text-[11px] text-gray-500">
+                  Easy monthly installments on credit cards from 19+ partner banks in Bangladesh.
+                </p>
               </div>
             </div>
+            <Link
+              href="/emi"
+              className="text-xs font-semibold text-[#dc0303] hover:underline self-start sm:self-auto shrink-0"
+            >
+              View Full EMI Policy →
+            </Link>
+          </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Minimal 4-Tenure Cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-3">
+            {[
+              { months: 6, rate: 0.04, label: "6 Months" },
+              { months: 12, rate: 0.08, label: "12 Months (Popular)" },
+              { months: 24, rate: 0.15, label: "24 Months" },
+              { months: 36, rate: 0.18, label: "36 Months" },
+            ].map((t) => {
+              const monthly = Math.round((currentPrice * (1 + t.rate)) / t.months);
+              return (
+                <div
+                  key={t.months}
+                  className={`p-3 rounded-lg border text-center transition-all ${
+                    t.months === 12
+                      ? "border-[#002b60] bg-[#002b60]/5 dark:bg-primary/10 shadow-2xs"
+                      : "border-gray-200 dark:border-border bg-gray-50/50 dark:bg-card"
+                  }`}
+                >
+                  <span className="block text-[11px] font-semibold text-gray-500 dark:text-gray-400">
+                    {t.label}
+                  </span>
+                  <span className="block text-base font-bold text-[#002b60] dark:text-primary font-mono mt-0.5">
+                    ৳{monthly.toLocaleString()}
+                  </span>
+                  <span className="block text-[10px] text-gray-400">per month</span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-gray-500 pt-2 border-t border-gray-100 dark:border-border">
+            <span>
+              ✓ Supported on: <strong>City Bank, BRAC Bank, SCB, DBBL, EBL, LankaBangla & 13 more</strong>
+            </span>
+            <span className="text-gray-400">0% to low interest • Instant approval</span>
+          </div>
+        </div>
+
+        {/* ── SECTION 4: QUESTIONS ── */}
+        <div
+          id="questions"
+          className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-5 sm:p-7 shadow-2xs mb-6 scroll-mt-28"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 dark:border-border pb-4 mb-4">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-[#002b60] dark:text-foreground uppercase">
+                Questions ({questions.length})
+              </h2>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Have question about this product? Get specific details about this product from our tech experts.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsQuestionModalOpen(true)}
+              className="px-4 py-2 border-2 border-[#002b60] text-[#002b60] dark:text-white dark:border-primary text-xs font-bold rounded hover:bg-[#002b60] hover:text-white transition-colors cursor-pointer self-start sm:self-auto"
+            >
+              Ask Question
+            </button>
+          </div>
+
+          {questions.length === 0 ? (
+            <div className="py-10 text-center text-xs text-gray-400">
+              <HelpCircle className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+              <p>There are no questions yet for this product.</p>
+              <p className="mt-1">Be the first to ask a question!</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {questions.map((q) => (
+                <div
+                  key={q.id}
+                  className="p-3.5 rounded-lg border border-gray-100 dark:border-border bg-gray-50/60 dark:bg-card text-xs"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-gray-800 dark:text-gray-200">
+                      {q.userName}
+                    </span>
+                    <span className="text-[10px] text-gray-400">{q.createdAt}</span>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 font-medium">
+                    Q: {q.question}
+                  </p>
+                  {q.answer && (
+                    <div className="mt-2.5 pl-3 border-l-2 border-[#002b60] text-gray-600 dark:text-gray-300">
+                      <p className="font-semibold text-[#002b60] dark:text-primary">
+                        Laptop Point BD:
+                      </p>
+                      <p>{q.answer}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── SECTION 5: REVIEWS ── */}
+        <div
+          id="reviews"
+          className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-5 sm:p-7 shadow-2xs mb-8 scroll-mt-28"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 dark:border-border pb-4 mb-4">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-[#002b60] dark:text-foreground uppercase">
+                Reviews ({reviewsList.length + (product.reviews || 0)})
+              </h2>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Get specific details about this product from verified customers who already bought it.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsReviewModalOpen(true)}
+              className="px-4 py-2 border-2 border-[#dc0303] text-[#dc0303] hover:bg-[#dc0303] hover:text-white text-xs font-bold rounded transition-colors cursor-pointer self-start sm:self-auto"
+            >
+              Write a Review
+            </button>
+          </div>
+
+          {reviewsList.length === 0 ? (
+            <div className="py-10 text-center text-xs text-gray-400">
+              <Star className="w-8 h-8 mx-auto mb-2 text-yellow-400 fill-yellow-400" />
+              <p>There are no reviews yet for this product.</p>
+              <p className="mt-1">Be the first to write a review!</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {reviewsList.map((r) => (
+                <div
+                  key={r.id}
+                  className="p-3.5 rounded-lg border border-gray-100 dark:border-border bg-gray-50/60 dark:bg-card text-xs"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-gray-800 dark:text-gray-200">
+                      {r.userName}
+                    </span>
+                    <span className="text-[10px] text-gray-400">{r.date}</span>
+                  </div>
+                  <div className="flex items-center gap-1 mb-2">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={`w-3.5 h-3.5 ${
+                          r.rating >= s
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300">{r.comment}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── SECTION 6: RELATED LAPTOPS (Bottom 4-column Grid) ── */}
+        {relatedProducts.length > 0 && (
+          <div className="mb-14">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-foreground">
+                  Related Laptops
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Top matches for you in this category
+                </p>
+              </div>
+              <Link
+                href="/shop"
+                className="text-xs font-bold text-[#dc0303] hover:underline"
+              >
+                View More →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {relatedProducts.map((p) => (
                 <div key={p.id} className="flex justify-center">
                   <ProductsCard product={p} />
@@ -758,47 +1396,202 @@ export default function ProductDetailsClient({
         )}
       </div>
 
+      {/* ── QUESTION MODAL ── */}
+      {isQuestionModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-white dark:bg-card rounded-xl max-w-md w-full p-6 shadow-2xl border border-gray-200 dark:border-border">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-bold uppercase text-[#002b60] dark:text-foreground">
+                Ask a Question
+              </h3>
+              <button
+                onClick={() => setIsQuestionModalOpen(false)}
+                className="text-gray-400 hover:text-gray-700"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {questionSuccess ? (
+              <div className="py-8 text-center text-xs text-emerald-600 font-semibold">
+                <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-emerald-500" />
+                Thank you! Your question has been submitted.
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitQuestion} className="space-y-3 text-xs">
+                <div>
+                  <label className="block font-semibold mb-1">Your Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter your name"
+                    value={questionName}
+                    onChange={(e) => setQuestionName(e.target.value)}
+                    className="w-full px-3 py-2 border rounded border-gray-300 dark:border-border focus:border-[#002b60] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold mb-1">Question</label>
+                  <textarea
+                    required
+                    rows={3}
+                    placeholder="Ask your question about this laptop..."
+                    value={questionText}
+                    onChange={(e) => setQuestionText(e.target.value)}
+                    className="w-full px-3 py-2 border rounded border-gray-300 dark:border-border focus:border-[#002b60] focus:outline-none"
+                  />
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsQuestionModalOpen(false)}
+                    className="px-3 py-1.5 border rounded hover:bg-gray-100"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmittingQuestion}
+                    className="px-4 py-1.5 bg-[#002b60] text-white rounded font-bold hover:bg-[#002047] disabled:opacity-50"
+                  >
+                    {isSubmittingQuestion ? "Sending..." : "Submit Question"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── REVIEW MODAL ── */}
+      {isReviewModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+          <div className="bg-white dark:bg-card rounded-xl max-w-md w-full p-6 shadow-2xl border border-gray-200 dark:border-border">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-bold uppercase text-[#dc0303]">
+                Write a Review
+              </h3>
+              <button
+                onClick={() => setIsReviewModalOpen(false)}
+                className="text-gray-400 hover:text-gray-700"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {reviewSuccess ? (
+              <div className="py-8 text-center text-xs text-emerald-600 font-semibold">
+                <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-emerald-500" />
+                Thank you! Your review has been added.
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitReview} className="space-y-3 text-xs">
+                <div>
+                  <label className="block font-semibold mb-1">Your Rating</label>
+                  <div className="flex items-center gap-1.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setReviewRating(s)}
+                        className="cursor-pointer"
+                      >
+                        <Star
+                          className={`w-5 h-5 ${
+                            reviewRating >= s
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block font-semibold mb-1">Your Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter your name"
+                    value={reviewName}
+                    onChange={(e) => setReviewName(e.target.value)}
+                    className="w-full px-3 py-2 border rounded border-gray-300 dark:border-border focus:border-[#dc0303] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold mb-1">Review</label>
+                  <textarea
+                    required
+                    rows={3}
+                    placeholder="Write about performance, battery life, condition..."
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    className="w-full px-3 py-2 border rounded border-gray-300 dark:border-border focus:border-[#dc0303] focus:outline-none"
+                  />
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsReviewModalOpen(false)}
+                    className="px-3 py-1.5 border rounded hover:bg-gray-100"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 bg-[#dc0303] text-white rounded font-bold hover:bg-[#b80202]"
+                  >
+                    Post Review
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── LIGHTBOX MODAL ── */}
       {isViewerOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm md:p-8"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm"
           onClick={() => setIsViewerOpen(false)}
         >
           <button
-            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 md:right-6 md:top-6"
+            className="absolute right-4 top-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
             onClick={() => setIsViewerOpen(false)}
-            aria-label="Close image viewer"
+            aria-label="Close"
           >
-            <X className="h-5 w-5" />
+            <X className="w-6 h-6" />
           </button>
 
           {galleryImages.length > 1 && (
             <>
               <button
-                className="absolute left-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 md:left-6"
-                onClick={(event) => {
-                  event.stopPropagation();
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
                   goToPrevImage();
                 }}
-                aria-label="Previous image"
+                aria-label="Previous"
               >
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="w-6 h-6" />
               </button>
               <button
-                className="absolute right-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 md:right-6"
-                onClick={(event) => {
-                  event.stopPropagation();
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
                   goToNextImage();
                 }}
-                aria-label="Next image"
+                aria-label="Next"
               >
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="w-6 h-6" />
               </button>
             </>
           )}
 
           <div
-            className="relative h-full max-h-[85vh] w-full max-w-6xl"
-            onClick={(event) => event.stopPropagation()}
+            className="relative h-[80vh] w-full max-w-5xl"
+            onClick={(e) => e.stopPropagation()}
           >
             <Image
               src={currentImage}
@@ -811,7 +1604,7 @@ export default function ProductDetailsClient({
           </div>
 
           {galleryImages.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-white/20 rounded-full text-white text-xs">
               {safeImageIndex + 1} / {galleryImages.length}
             </div>
           )}

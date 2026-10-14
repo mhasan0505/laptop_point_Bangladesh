@@ -76,7 +76,7 @@ const MegaMenu = ({
                       href={`/shop?category=${category.name.toLowerCase()}`}
                       className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all group ${
                         hoveredCategory === category.name
-                          ? "bg-yellow-50 text-yellow-700"
+                          ? "bg-[#002b60]/10 text-[#002b60] font-semibold"
                           : "hover:bg-gray-50 text-gray-700"
                       }`}
                     >
@@ -87,7 +87,7 @@ const MegaMenu = ({
                       <ChevronRight
                         className={`w-4 h-4 transition-transform ${
                           hoveredCategory === category.name
-                            ? "translate-x-1 text-yellow-600"
+                            ? "translate-x-1 text-[#002b60]"
                             : "text-gray-400"
                         }`}
                       />
@@ -100,7 +100,7 @@ const MegaMenu = ({
               <Link
                 href="/shop"
                 onClick={onClose}
-                className="mt-6 flex items-center gap-2 text-sm font-semibold text-yellow-600 hover:text-yellow-700 transition-colors"
+                className="mt-6 flex items-center gap-2 text-sm font-semibold text-[#002b60] hover:text-[#dc0303] transition-colors"
               >
                 <Laptop className="w-4 h-4" />
                 View All Products
@@ -123,7 +123,7 @@ const MegaMenu = ({
                     <Link
                       href={`/shop?category=${hoveredCategory.toLowerCase()}`}
                       onClick={onClose}
-                      className="text-sm font-medium text-yellow-600 hover:text-yellow-700 flex items-center gap-1"
+                      className="text-sm font-medium text-[#002b60] hover:text-[#dc0303] flex items-center gap-1"
                     >
                       See All
                       <ChevronRight className="w-4 h-4" />
@@ -136,7 +136,7 @@ const MegaMenu = ({
                         key={product.id}
                         href={`/product/${product.slug}`}
                         onClick={onClose}
-                        className="group bg-white border border-gray-100 rounded-xl p-4 hover:shadow-lg hover:border-yellow-200 transition-all"
+                        className="group bg-white border border-gray-100 rounded-xl p-4 hover:shadow-lg hover:border-[#002b60]/20 transition-all"
                       >
                         <div className="aspect-square relative mb-3 bg-gray-50 rounded-lg overflow-hidden">
                           <Image
@@ -146,7 +146,7 @@ const MegaMenu = ({
                             className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
                           />
                         </div>
-                        <h4 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-yellow-700 transition-colors">
+                        <h4 className="font-medium text-sm text-gray-900 mb-2 line-clamp-2 group-hover:text-[#002b60] transition-colors">
                           {product.name}
                         </h4>
                         <div className="flex items-center gap-2">

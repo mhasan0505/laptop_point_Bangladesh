@@ -21,13 +21,13 @@ export default async function BottomCtaStrip({
         placement="home.bottom-cta"
         aspectClassName="aspect-[16/6] sm:aspect-[16/2.5]"
       />
-      <section className="bg-gray-900 py-10 text-white">
+      <section className="bg-[#002b60] py-10 text-white">
         <div className="mx-auto flex w-full max-w-[95%] flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
           <div>
             <h2 className="text-2xl font-bold md:text-3xl">
               {heading || "Not sure which laptop fits you?"}
             </h2>
-            <p className="mt-1 text-sm text-gray-300">
+            <p className="mt-1 text-sm text-blue-100">
               {subheading ||
                 "Talk to our team — we'll help you pick by budget and use case."}
             </p>
@@ -35,7 +35,7 @@ export default async function BottomCtaStrip({
           <div className="flex flex-wrap justify-center gap-3">
             <a
               href={`tel:${dialable(profile.hotline)}`}
-              className="inline-flex items-center gap-2 rounded-full bg-yellow-400 px-6 py-3 text-sm font-bold text-gray-900 transition hover:bg-yellow-300"
+              className="inline-flex items-center gap-2 rounded-full bg-[#dc0303] px-6 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#b80202]"
             >
               <Phone size={16} /> {profile.hotline}
             </a>

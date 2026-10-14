@@ -53,7 +53,7 @@ const StickyMobileBar = () => {
               <div className="relative">
                 <Icon className={`w-5 h-5 ${isActive ? "fill-current" : ""}`} />
                 {item.count !== undefined && item.count > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-1.5 -right-1.5 bg-[#dc0303] text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                     {item.count}
                   </span>
                 )}

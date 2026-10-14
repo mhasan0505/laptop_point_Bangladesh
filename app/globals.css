@@ -6,21 +6,16 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
-  /* Typography — swap Poppins (geometric/rounded) for a neutral grotesk,
-     plus a monospace for specs, prices, and SKUs (tech/hardware convention).
-     Wire these up via next/font in your layout as --font-inter and
-     --font-jetbrains-mono (or swap in Geist / General Sans / Geist Mono). */
-  --font-sans: var(--font-inter);
+--font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo,
     Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
 
-  /* Typography scale — rems relative to a 16px root.
-     Deliberate scale (not Tailwind's default), with real display sizes
-     for hero / price-callout moments, plus tracking tokens. */
   --text-xs: 0.75rem; /* 12px — meta, badges, mono labels */
   --text-xs--line-height: 1.3333;
   --text-sm: 0.875rem; /* 14px — captions, specs */
@@ -97,32 +92,39 @@
   --stockColor: #78a962;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* blue-600 primary accent (Tailwind v4 value) */
-  --primary: oklch(24.664% 0.09692 262.463);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  /* Brand Colors: Laptop Point Bangladesh */
+  --brand-primary: #002b60;
+  --brand-secondary: #dc0303;
+
+  /* Primary Accent: #002b60 (Deep Navy) */
+  --primary: #002b60;
+  --primary-foreground: #ffffff;
+
+  /* Secondary Accent: #dc0303 (Vibrant Red) */
+  --secondary: #dc0303;
+  --secondary-foreground: #ffffff;
+
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
+  --accent: #f0f4f9;
+  --accent-foreground: #002b60;
+  --destructive: #dc0303;
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.546 0.245 262.881);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
+  --ring: #002b60;
+  --chart-1: #002b60;
+  --chart-2: #dc0303;
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.546 0.245 262.881);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-foreground: #002b60;
+  --sidebar-primary: #002b60;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f4f9;
+  --sidebar-accent-foreground: #002b60;
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.546 0.245 262.881);
+  --sidebar-ring: #002b60;
 }
 
 .dark {
@@ -133,31 +135,37 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.181 0.006 285.823);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.546 0.245 262.881);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+
+  /* Brand Colors Dark Mode */
+  --brand-primary: #38bdf8;
+  --brand-secondary: #ef4444;
+
+  --primary: #38bdf8;
+  --primary-foreground: #002b60;
+  --secondary: #ef4444;
+  --secondary-foreground: #ffffff;
+
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
+  --accent: #1e293b;
+  --accent-foreground: #f8fafc;
+  --destructive: #ef4444;
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.546 0.245 262.881);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
+  --ring: #38bdf8;
+  --chart-1: #38bdf8;
+  --chart-2: #ef4444;
   --chart-3: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.181 0.006 285.823);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: #38bdf8;
+  --sidebar-primary-foreground: #002b60;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: #38bdf8;
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.141 0.005 285.823);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.546 0.245 262.881);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.546 0.245 262.881);
 }
 
 @layer base {
@@ -248,3 +256,40 @@
     }
   }
 }
+
+/* Dual Range Slider Styles for Filter Sidebar */
+.dual-range-input::-webkit-slider-thumb {
+  pointer-events: auto;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 3px solid #dc0303;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.1s ease;
+}
+.dual-range-input::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.dual-range-input::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+}
+.dual-range-input::-moz-range-thumb {
+  pointer-events: auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 3px solid #dc0303;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.1s ease;
+}
+.dual-range-input::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
+.dual-range-input::-moz-range-thumb:active {
+  transform: scale(1.2);
+}

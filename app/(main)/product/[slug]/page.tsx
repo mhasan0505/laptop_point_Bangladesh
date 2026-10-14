@@ -1,5 +1,4 @@
 import { getLiveLaptops } from "@/app/data/data";
-import ProductQA from "@/components/product/ProductQA";
 import ProductDetailsClient from "@/components/product/ProductDetailsClient";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -63,7 +62,7 @@ export default async function ProductDetailsPage({ params }: PageProps) {
     notFound();
   }
 
-  // Related products (same brand or category)
+  // Related products (same brand or category for bottom grid)
   const relatedProducts = laptops
     .filter(
       (p) =>
@@ -72,10 +71,16 @@ export default async function ProductDetailsPage({ params }: PageProps) {
     )
     .slice(0, 4);
 
+  // Sidebar products (for right column Related Products list)
+  const sidebarProducts = laptops
+    .filter((p) => p.id !== product.id)
+    .slice(0, 5);
+
   return (
-    <>
-      <ProductDetailsClient product={product} relatedProducts={relatedProducts} />
-      <ProductQA productSlug={product.slug} />
-    </>
+    <ProductDetailsClient
+      product={product}
+      relatedProducts={relatedProducts}
+      sidebarProducts={sidebarProducts}
+    />
   );
 }

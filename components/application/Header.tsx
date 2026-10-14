@@ -487,7 +487,7 @@ const Header = ({
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
-                  className="group flex h-12 w-full items-center rounded-full border border-yellow-400/80 bg-white pl-2 pr-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-all hover:border-yellow-500 hover:shadow-[0_8px_24px_rgba(251,191,36,0.2)]"
+                  className="group flex h-12 w-full items-center rounded-full border border-[#002b60]/20 bg-white pl-2 pr-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] transition-all hover:border-[#002b60]/60 hover:shadow-[0_8px_24px_rgba(0,43,96,0.12)]"
                 >
                   <button
                     type="button"
@@ -541,13 +541,13 @@ const Header = ({
                               }}
                               className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors ${
                                 selectedSearchCategory === option.value
-                                  ? "bg-yellow-50 text-yellow-700"
+                                  ? "bg-[#002b60]/10 text-[#002b60]"
                                   : "text-neutral-700 hover:bg-neutral-50"
                               }`}
                             >
                               <span>{option.label}</span>
                               {selectedSearchCategory === option.value && (
-                                <span className="h-2 w-2 rounded-full bg-yellow-500" />
+                                <span className="h-2 w-2 rounded-full bg-[#002b60]" />
                               )}
                             </button>
                           ))}
@@ -559,7 +559,7 @@ const Header = ({
                   <button
                     type="button"
                     onClick={() => setIsSearchExpanded(true)}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-yellow-400 text-neutral-900 transition-colors group-hover:bg-yellow-300"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#002b60] text-white transition-colors hover:bg-[#002047]"
                     aria-label="Open search"
                   >
                     <Search className="h-4 w-4" />
@@ -620,7 +620,7 @@ const Header = ({
                   >
                     <Heart className="h-5 w-5" />
                     {wishlistCount > 0 && (
-                      <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-yellow-400 text-xs font-semibold text-neutral-900">
+                      <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc0303] text-xs font-semibold text-white">
                         {wishlistCount}
                       </span>
                     )}
@@ -644,7 +644,7 @@ const Header = ({
                   >
                     <ShoppingCart className="h-5 w-5" />
                     {cartCount > 0 && (
-                      <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-yellow-400 text-xs font-semibold text-neutral-900">
+                      <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc0303] text-xs font-semibold text-white">
                         {cartCount}
                       </span>
                     )}
@@ -700,7 +700,7 @@ const Header = ({
                   type="button"
                   onMouseEnter={handleDepartmentMenuEnter}
                   onMouseLeave={handleDepartmentMenuLeave}
-                  className="inline-flex h-11 min-w-56 items-center justify-between gap-2 rounded-t-md bg-yellow-400 px-5 text-sm font-semibold text-neutral-900 outline-none transition-colors hover:bg-yellow-300 data-[state=open]:bg-yellow-300"
+                  className="inline-flex h-11 min-w-56 items-center justify-between gap-2 rounded-t-md bg-[#002b60] px-5 text-sm font-semibold text-white outline-none transition-colors hover:bg-[#002047] data-[state=open]:bg-[#002047]"
                 >
                   <span className="inline-flex items-center gap-2">
                     <Menu className="h-4 w-4" />
@@ -723,7 +723,7 @@ const Header = ({
                       <DropdownMenuSubTrigger className="flex cursor-pointer items-center justify-between rounded-none px-4 py-3 text-sm font-medium text-neutral-700 focus:bg-neutral-50 focus:text-neutral-900 data-[state=open]:bg-neutral-50">
                         <span>{item.name}</span>
                         {item.badge && (
-                          <span className="ml-2 rounded bg-yellow-400 px-1.5 py-0.5 text-xs font-bold text-neutral-900">
+                          <span className="ml-2 rounded bg-[#dc0303] px-1.5 py-0.5 text-xs font-bold text-white">
                             {item.badge}
                           </span>
                         )}
@@ -760,13 +760,13 @@ const Header = ({
                         href={item.href}
                         className={`flex cursor-pointer items-center justify-between rounded-none px-4 py-3 text-sm font-medium focus:bg-neutral-50 ${
                           item.badge
-                            ? "bg-yellow-50 text-yellow-700 hover:bg-yellow-100 focus:bg-yellow-100"
+                            ? "bg-[#002b60]/10 text-[#002b60] hover:bg-[#002b60]/15 focus:bg-[#002b60]/15"
                             : "text-neutral-700"
                         }`}
                       >
                         <span>{item.name}</span>
                         {item.badge && (
-                          <span className="rounded bg-yellow-400 px-1.5 py-0.5 text-xs font-bold text-neutral-900">
+                          <span className="rounded bg-[#dc0303] px-1.5 py-0.5 text-xs font-bold text-white">
                             {item.badge}
                           </span>
                         )}
@@ -879,12 +879,12 @@ const NavItem = ({
         {link.hasDropdown && (
           <ChevronDown
             className={`ml-1 w-4 h-4 transition-transform duration-200 ${
-              isHovered ? "rotate-180 text-yellow-600" : ""
+              isHovered ? "rotate-180 text-[#dc0303]" : ""
             }`}
           />
         )}
         {link.badge && (
-          <span className="ml-2 px-1.5 py-0.5 text-xs font-bold rounded-full bg-red-500 text-white leading-none">
+          <span className="ml-2 px-1.5 py-0.5 text-xs font-bold rounded-full bg-[#dc0303] text-white leading-none">
             {link.badge}
           </span>
         )}
@@ -912,7 +912,7 @@ const NavItem = ({
               <Link
                 key={subItem.name}
                 href={subItem.href}
-                className="block px-4 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-yellow-50 hover:text-yellow-700 transition-colors font-medium"
+                className="block px-4 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-[#002b60]/10 hover:text-[#002b60] transition-colors font-medium"
               >
                 {subItem.name}
               </Link>

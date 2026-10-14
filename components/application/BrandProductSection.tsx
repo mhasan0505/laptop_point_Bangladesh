@@ -90,16 +90,16 @@ const BrandProductSection = ({
   // Theme configurations
   const themeConfig = {
     hp: {
-      gradient: "from-yellow-500/5 to-purple-500/5",
-      badgeBg: "bg-yellow-100 dark:bg-yellow-900/30",
-      badgeText: "text-yellow-800 dark:text-yellow-400",
-      accentRing: "ring-yellow-400",
-      accentText: "text-yellow-400",
-      accentBg: "bg-yellow-400",
-      activeTabShadow: "shadow-yellow-500/25",
+      gradient: "from-[#002b60]/5 to-blue-500/5",
+      badgeBg: "bg-[#002b60]/10 dark:bg-[#002b60]/30",
+      badgeText: "text-[#002b60] dark:text-blue-300",
+      accentRing: "ring-[#002b60]",
+      accentText: "text-[#002b60]",
+      accentBg: "bg-[#002b60]",
+      activeTabShadow: "shadow-[#002b60]/25",
       titleGradient:
         "from-gray-900 to-gray-600 dark:from-white dark:to-gray-400",
-      hoverBg: "hover:bg-yellow-400",
+      hoverBg: "hover:bg-[#002b60] hover:text-white",
     },
     dell: {
       gradient: "from-blue-500/5 to-cyan-500/5",
@@ -150,7 +150,7 @@ const BrandProductSection = ({
         <div
           className={`absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full blur-[100px] ${
             theme === "hp"
-              ? "bg-yellow-500/5"
+              ? "bg-[#002b60]/5"
               : theme === "dell"
               ? "bg-blue-500/5"
               : theme === "lenovo"
@@ -253,13 +253,13 @@ const BrandProductSection = ({
           {/* Navigation Buttons */}
           <div className="hidden lg:flex absolute top-1/2 -translate-y-1/2 -left-12 -right-12 justify-between pointer-events-none z-20">
             <button
-              className={`${brand}-prev pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg ${currentTheme.hoverBg} hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0`}
+              className={`${brand}-prev pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg ${currentTheme.hoverBg} hover:text-white dark:hover:bg-[#002b60] transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0`}
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
-              className={`${brand}-next pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg ${currentTheme.hoverBg} hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0`}
+              className={`${brand}-next pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg ${currentTheme.hoverBg} hover:text-white dark:hover:bg-[#002b60] transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0`}
               aria-label="Next slide"
             >
               <ChevronRight className="w-6 h-6" />

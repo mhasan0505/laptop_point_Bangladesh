@@ -52,7 +52,7 @@ export default function CartItem({ item }: CartItemProps) {
               </button>
               <button
                 onClick={handleRemove}
-                className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                className="flex-1 px-4 py-2 bg-[#dc0303] text-white rounded-lg hover:bg-[#b80202] transition-colors"
               >
                 Remove
               </button>
@@ -71,7 +71,7 @@ export default function CartItem({ item }: CartItemProps) {
             className="object-contain mix-blend-multiply p-2 transition-transform duration-300 hover:scale-110"
           />
           {discount > 0 && (
-            <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+            <div className="absolute top-2 right-2 bg-[#dc0303] text-white text-xs font-bold px-2 py-1 rounded-full">
               -{discount}%
             </div>
           )}
@@ -88,7 +88,7 @@ export default function CartItem({ item }: CartItemProps) {
             </div>
             <button
               onClick={() => setShowRemoveConfirm(true)}
-              className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-red-500"
+              className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-[#dc0303]"
               aria-label="Remove item"
             >
               <Trash2 className="w-5 h-5" />

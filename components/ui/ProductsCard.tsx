@@ -68,7 +68,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
           {/* Badges */}
           <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
             {product.discount && (
-              <span className="px-2 py-1 text-xs font-bold tracking-wider text-white bg-primary rounded-sm uppercase">
+              <span className="px-2 py-1 text-xs font-bold tracking-wider text-white bg-[#dc0303] rounded-sm uppercase">
                 -{product.discount}%
               </span>
             )}
@@ -84,7 +84,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               }}
               className={`p-2 rounded-full shadow-md transition-colors duration-200 ${
                 isWishlisted
-                  ? "bg-red-500 text-white"
+                  ? "bg-[#dc0303] text-white"
                   : "bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white"
               }`}
               title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}

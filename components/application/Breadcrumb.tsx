@@ -8,8 +8,8 @@ import { Fragment } from "react";
 const Breadcrumb = () => {
   const pathname = usePathname();
 
-  // Don't show on home page
-  if (pathname === "/") return null;
+  // Don't show on home page or product details pages
+  if (pathname === "/" || pathname.startsWith("/product")) return null;
 
   const pathSegments = pathname.split("/").filter((segment) => segment);
 

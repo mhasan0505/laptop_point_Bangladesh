@@ -75,8 +75,8 @@ const HpLaptopSection = ({ initialProducts }: HpLaptopSectionProps = {}) => {
     <div className="relative w-full bg-linear-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 py-16 md:py-24 overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-yellow-500/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px]" />
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#002b60]/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#dc0303]/5 rounded-full blur-[100px]" />
       </div>
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
@@ -89,7 +89,7 @@ const HpLaptopSection = ({ initialProducts }: HpLaptopSectionProps = {}) => {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-2 mb-3"
           >
-            <span className="px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 text-xs font-semibold tracking-wide uppercase">
+            <span className="px-3 py-1 rounded-full bg-[#002b60]/10 dark:bg-[#002b60]/30 text-[#002b60] dark:text-blue-300 text-xs font-semibold tracking-wide uppercase">
               Premium Collection
             </span>
           </motion.div>
@@ -126,22 +126,22 @@ const HpLaptopSection = ({ initialProducts }: HpLaptopSectionProps = {}) => {
                 onClick={() => setActiveCategory(category)}
                 className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   activeCategory === category
-                    ? "text-gray-900 shadow-lg shadow-yellow-500/25 ring-2 ring-yellow-400 ring-offset-2 dark:ring-offset-gray-900"
+                    ? "text-white shadow-lg shadow-[#002b60]/25 ring-2 ring-[#002b60] ring-offset-2 dark:ring-offset-gray-900"
                     : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                 }`}
               >
                 {activeCategory === category && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 bg-yellow-400 rounded-full"
+                    className="absolute inset-0 bg-[#002b60] rounded-full"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
                 <Icon
                   className={`w-4 h-4 relative z-10 ${
                     activeCategory === category
-                      ? "text-gray-900"
-                      : "text-yellow-400"
+                      ? "text-white"
+                      : "text-[#002b60] dark:text-blue-300"
                   }`}
                 />
                 <span className="relative z-10">{category}</span>
@@ -155,13 +155,13 @@ const HpLaptopSection = ({ initialProducts }: HpLaptopSectionProps = {}) => {
           {/* Navigation Buttons */}
           <div className="hidden lg:flex absolute top-1/2 -translate-y-1/2 -left-12 -right-12 justify-between pointer-events-none z-20">
             <button
-              className="hp-prev pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg hover:bg-yellow-400 hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0"
+              className="hp-prev pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg hover:bg-[#002b60] hover:text-white dark:hover:bg-[#002b60] transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 -translate-x-4 group-hover/carousel:translate-x-0"
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
-              className="hp-next pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg hover:bg-yellow-400 hover:text-gray-900 dark:hover:bg-yellow-400 transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0"
+              className="hp-next pointer-events-auto p-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white shadow-lg hover:bg-[#002b60] hover:text-white dark:hover:bg-[#002b60] transition-all duration-300 opacity-0 group-hover/carousel:opacity-100 translate-x-4 group-hover/carousel:translate-x-0"
               aria-label="Next slide"
             >
               <ChevronRight className="w-6 h-6" />

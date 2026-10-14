@@ -20,10 +20,15 @@ export interface Product {
     graphics?: string;
     battery?: string;
     weight?: string;
+    touchscreen?: boolean;
+    displayType?: string;
+    os?: string;
+    ports?: string[];
   };
   category?: string;
   features?: string[];
   condition?: string[];
+  grade?: string;
   sku?: string;
   description?: {
     short: string;

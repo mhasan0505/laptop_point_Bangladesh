@@ -252,8 +252,8 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
             exit="closed"
             className="fixed left-0 top-0 z-50 flex h-dvh w-[88vw] max-w-90 flex-col overflow-hidden bg-white shadow-[20px_0_70px_rgba(0,0,0,0.22)]"
           >
-            {/* ── Dark Brand Header ── */}
-            <div className="relative flex items-center justify-between bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 px-4 py-4 pt-[calc(1rem+env(safe-area-inset-top))]">
+            {/* ── Brand Primary Header ── */}
+            <div className="relative flex items-center justify-between bg-linear-to-r from-[#002b60] via-[#00387a] to-[#002b60] px-4 py-4 pt-[calc(1rem+env(safe-area-inset-top))]">
               {/* Subtle grid texture overlay */}
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -591,7 +591,7 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
               <Link
                 href="/deals"
                 onClick={onClose}
-                className="mb-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 text-sm font-bold text-white shadow-[0_4px_14px_rgba(245,158,11,0.35)] transition-all hover:shadow-[0_6px_20px_rgba(245,158,11,0.45)] active:scale-[0.98]"
+                className="mb-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#dc0303] to-[#b80202] text-sm font-bold text-white shadow-[0_4px_14px_rgba(220,3,3,0.35)] transition-all hover:shadow-[0_6px_20px_rgba(220,3,3,0.45)] active:scale-[0.98]"
               >
                 <Zap className="h-4 w-4 fill-current" />
                 View All Deals

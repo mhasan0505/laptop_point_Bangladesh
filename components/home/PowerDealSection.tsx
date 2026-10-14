@@ -27,11 +27,11 @@ export default async function PowerDealSection({
         aria-labelledby="power-deal-heading"
         className="mx-auto w-full max-w-[95%] py-8 md:py-12"
       >
-        <div className="overflow-hidden rounded-3xl bg-linear-to-br from-red-600 via-rose-600 to-orange-500 p-5 text-white shadow-lg md:p-10">
+        <div className="overflow-hidden rounded-3xl bg-linear-to-br from-[#dc0303] via-red-600 to-[#002b60] p-5 text-white shadow-lg md:p-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div className="max-w-2xl space-y-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-yellow-200">
-                <Zap size={14} /> {config.savingsHighlight}
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white">
+                <Zap size={14} className="text-yellow-300" /> {config.savingsHighlight}
               </span>
               <h2
                 id="power-deal-heading"
@@ -68,7 +68,7 @@ export default async function PowerDealSection({
                         unoptimized={/^https?:\/\//i.test(deal.image || "")}
                       />
                       {savings > 0 && (
-                        <span className="absolute left-2 top-2 rounded-full bg-red-600 px-2 py-0.5 text-[11px] font-bold text-white">
+                        <span className="absolute left-2 top-2 rounded-full bg-[#dc0303] px-2 py-0.5 text-[11px] font-bold text-white">
                           Save {formatBDT(savings)}
                         </span>
                       )}
@@ -80,7 +80,7 @@ export default async function PowerDealSection({
                       {[deal.cpu, deal.ram, deal.storage].filter(Boolean).join(" · ")}
                     </p>
                     <div className="mt-auto flex items-baseline gap-2 pt-3">
-                      <span className="text-lg font-extrabold text-red-600">
+                      <span className="text-lg font-extrabold text-[#dc0303]">
                         {formatBDT(deal.salePrice)}
                       </span>
                       {deal.originalPrice > deal.salePrice && (

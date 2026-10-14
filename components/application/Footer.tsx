@@ -181,7 +181,7 @@ export default function Footer({
                 ]
             ).map((column) => (
               <div key={column.columnTitle}>
-                <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-yellow-400 after:rounded-full">
+                <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-[#dc0303] after:rounded-full">
                   {column.columnTitle}
                 </h4>
                 <ul className="space-y-3">
@@ -189,7 +189,7 @@ export default function Footer({
                     <li key={`${column.columnTitle}-${link.label}`}>
                       <Link
                         href={link.href}
-                        className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
+                        className="text-gray-400 hover:text-[#dc0303] hover:pl-1 transition-all"
                       >
                         {link.label}
                       </Link>
@@ -201,12 +201,12 @@ export default function Footer({
 
             {/* Contact Info */}
             <div>
-              <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-yellow-400 after:rounded-full">
+              <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-[#dc0303] after:rounded-full">
                 Contact Us
               </h4>
               <address className="not-italic space-y-4 text-gray-400">
                 <div className="flex items-start gap-3">
-                  <div className="mt-1 p-1 bg-yellow-400 rounded text-primary">
+                  <div className="mt-1 p-1 bg-[#dc0303] rounded text-white">
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -243,7 +243,7 @@ export default function Footer({
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="p-1 bg-yellow-400 rounded text-primary">
+                  <div className="p-1 bg-[#dc0303] rounded text-white">
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -260,13 +260,13 @@ export default function Footer({
                   </div>
                   <a
                     href={`mailto:${contact?.email ?? "info@laptoppointbd.com"}`}
-                    className="text-sm hover:text-yellow-400 transition-colors"
+                    className="text-sm hover:text-[#dc0303] transition-colors"
                   >
                     {contact?.email ?? "info@laptoppointbd.com"}
                   </a>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="p-1 bg-yellow-400 rounded text-primary">
+                  <div className="p-1 bg-[#dc0303] rounded text-white">
                     <svg
                       className="w-4 h-4"
                       fill="none"
@@ -283,7 +283,7 @@ export default function Footer({
                   </div>
                   <a
                     href={`tel:${digitsOnly(contact?.hotline ?? "+8801612182408")}`}
-                    className="text-sm hover:text-yellow-400 transition-colors"
+                    className="text-sm hover:text-[#dc0303] transition-colors"
                   >
                     {contact?.hotline ?? "+880 1612-182408"}
                   </a>
@@ -300,9 +300,9 @@ export default function Footer({
                   href="https://artyx.digital"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                  className="text-[#dc0303] hover:text-red-400 transition-colors"
                 >
-                  <span className="text-yellow-400">Artyx Digital</span>
+                  <span className="text-[#dc0303]">Artyx Digital</span>
                 </a>
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">

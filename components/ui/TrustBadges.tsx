@@ -36,8 +36,8 @@ const TrustBadges = ({ variant = "row" }: TrustBadgeProps) => {
             key={index}
             className="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 hover:shadow-sm transition-shadow"
           >
-            <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center shrink-0">
-              <badge.icon className="w-6 h-6 text-yellow-600" />
+            <div className="w-12 h-12 rounded-full bg-[#002b60]/10 dark:bg-primary/20 flex items-center justify-center shrink-0">
+              <badge.icon className="w-6 h-6 text-[#002b60] dark:text-blue-400" />
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 text-sm">

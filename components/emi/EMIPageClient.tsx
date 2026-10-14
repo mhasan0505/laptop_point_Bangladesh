@@ -96,14 +96,14 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <div className="mb-4 flex items-center gap-2">
-              <div className="h-1 w-8 bg-yellow-400"></div>
-              <span className="text-sm font-semibold tracking-wide text-yellow-600">
+              <div className="h-1 w-8 bg-[#dc0303]"></div>
+              <span className="text-sm font-semibold tracking-wide text-[#dc0303]">
                 FLEXIBLE PAYMENT PLANS
               </span>
             </div>
             <h1 className="mb-6 text-5xl font-bold leading-tight text-gray-900 md:text-6xl">
               Own Your Laptop Today,
-              <span className="block text-yellow-500">
+              <span className="block text-[#002b60]">
                 Pay Comfortably Later
               </span>
             </h1>
@@ -198,7 +198,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
               onClick={() => setActiveTab(tab.id)}
               className={`relative px-6 py-4 font-semibold transition-all duration-200 ${
                 activeTab === tab.id
-                  ? "text-yellow-600"
+                  ? "text-[#002b60]"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
@@ -207,7 +207,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
                 {tab.label}
               </span>
               {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#002b60]"></div>
               )}
             </button>
           ))}
@@ -241,7 +241,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
                 <select
                   value={selectedBank}
                   onChange={(e) => setSelectedBank(e.target.value)}
-                  className="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-gray-900 transition-colors focus:border-yellow-400 focus:outline-none"
+                  className="w-full rounded-xl border-2 border-slate-200 px-4 py-3 text-gray-900 transition-colors focus:border-[#002b60] focus:outline-none"
                 >
                   {supportedBanks.map((bank) => (
                     <option key={bank.id} value={bank.id}>
@@ -257,7 +257,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
                   <label className="text-sm font-semibold text-gray-700">
                     Laptop Budget
                   </label>
-                  <span className="text-2xl font-bold text-yellow-600">
+                  <span className="text-2xl font-bold text-[#dc0303]">
                     ৳{amount.toLocaleString()}
                   </span>
                 </div>
@@ -268,7 +268,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
                   step="1000"
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
-                  className="mb-4 w-full accent-yellow-400"
+                  className="mb-4 w-full accent-[#dc0303]"
                 />
                 <div className="flex gap-3">
                   <input
@@ -277,7 +277,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
                     onChange={(e) =>
                       setAmount(Math.max(5000, Number(e.target.value)))
                     }
-                    className="flex-1 rounded-lg border-2 border-slate-200 px-3 py-2 text-sm transition-colors focus:border-yellow-400 focus:outline-none"
+                    className="flex-1 rounded-lg border-2 border-slate-200 px-3 py-2 text-sm transition-colors focus:border-[#002b60] focus:outline-none"
                     min="5000"
                   />
                   <span className="flex items-center text-sm text-gray-500">
@@ -298,8 +298,8 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
                       onClick={() => setMonths(option.months)}
                       className={`rounded-lg py-2.5 text-xs font-bold transition-all ${
                         months === option.months
-                          ? "bg-yellow-400 text-gray-900 shadow-md"
-                          : "border-2 border-slate-200 text-gray-700 hover:border-yellow-300"
+                          ? "bg-[#002b60] text-white shadow-md"
+                          : "border-2 border-slate-200 text-gray-700 hover:border-[#002b60]"
                       }`}
                     >
                       {option.months}m
@@ -323,7 +323,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
               {emiDetails ? (
                 <>
                   {/* Main EMI Result - Large and Bold */}
-                  <div className="rounded-2xl bg-linear-to-br from-yellow-400 via-yellow-500 to-amber-500 p-10 text-white shadow-lg">
+                  <div className="rounded-2xl bg-linear-to-br from-[#002b60] via-[#00387a] to-[#001d42] p-10 text-white shadow-lg">
                     <p className="text-sm font-semibold uppercase tracking-widest opacity-90">
                       Your Monthly Payment
                     </p>
@@ -591,7 +591,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
               {supportedBanks.map((bank) => (
                 <div
                   key={bank.id}
-                  className="group rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition-all hover:shadow-md hover:ring-yellow-200"
+                  className="group rounded-xl bg-white p-6 shadow-sm ring-1 border border-slate-200 transition-all hover:shadow-md hover:border-[#002b60]/40"
                 >
                   <div className="mb-4 flex items-start justify-between">
                     <div className="flex min-w-0 items-start gap-4">
@@ -732,7 +732,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
                   }
                   className="w-full text-left"
                 >
-                  <div className="flex w-full items-center justify-between rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition-all hover:ring-yellow-200">
+                  <div className="flex w-full items-center justify-between rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition-all hover:ring-[#002b60]/30">
                     <h3 className="pr-4 font-semibold text-gray-900">
                       {faq.question}
                     </h3>
@@ -810,7 +810,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
         </div>
 
         {/* CTA Footer */}
-        <div className="mt-16 rounded-2xl bg-linear-to-r from-yellow-50 to-amber-50 p-12 text-center ring-1 ring-yellow-100">
+        <div className="mt-16 rounded-2xl bg-linear-to-r from-blue-50 to-indigo-50 p-12 text-center ring-1 ring-blue-100">
           <h2 className="text-2xl font-bold text-gray-900">
             Ready to own your laptop?
           </h2>
@@ -820,7 +820,7 @@ const EMIPageClient = ({ commerce }: { commerce?: StorefrontCommerce }) => {
           </p>
           <button
             onClick={() => setActiveTab("calculator")}
-            className="mt-6 rounded-xl bg-yellow-400 px-8 py-3 font-bold text-gray-900 transition-all hover:bg-yellow-500 active:scale-95"
+            className="mt-6 rounded-xl bg-[#002b60] px-8 py-3 font-bold text-white transition-all hover:bg-[#002047] active:scale-95 shadow-md"
           >
             Start Calculating →
           </button>

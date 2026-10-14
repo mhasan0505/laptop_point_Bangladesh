@@ -23,7 +23,7 @@ export default async function AnnouncementBar() {
   return (
     <div className="bg-gray-900 px-4 py-2 text-center text-xs text-white sm:text-sm">
       {first.linkHref ? (
-        <Link href={first.linkHref} className="hover:text-yellow-300">
+        <Link href={first.linkHref} className="hover:text-red-300 transition-colors">
           {content}
         </Link>
       ) : (

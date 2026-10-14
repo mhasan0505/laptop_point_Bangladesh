@@ -18,7 +18,7 @@ const ComparisonBar = () => {
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         exit={{ y: 100 }}
-        className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-yellow-400 shadow-2xl z-40"
+        className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-[#002b60] shadow-2xl z-40"
       >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-4">
@@ -42,7 +42,7 @@ const ComparisonBar = () => {
                   >
                     <button
                       onClick={() => removeFromComparison(product.id)}
-                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors z-10"
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-[#dc0303] text-white rounded-full flex items-center justify-center hover:bg-[#b80202] transition-colors z-10"
                       aria-label="Remove"
                     >
                       <X className="w-3 h-3" />
@@ -70,7 +70,7 @@ const ComparisonBar = () => {
               {comparisonItems.length >= 2 && (
                 <Link
                   href="/compare"
-                  className="px-6 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors flex items-center gap-2"
+                  className="px-6 py-2 bg-[#002b60] text-white font-semibold rounded-lg hover:bg-[#002047] transition-colors flex items-center gap-2"
                 >
                   Compare Now
                   <ArrowRight className="w-4 h-4" />

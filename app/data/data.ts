@@ -95,6 +95,7 @@ export function mapRawToProduct(p: RawProduct): Product {
     reviews: reviewsFor(p.name || ""),
     inStock: stockCount > 0,
     condition: p.condition ? [p.condition] : [],
+    grade: p.grade || "",
     image: mainImage,
     images: mappedImages,
     specs: {
@@ -105,6 +106,16 @@ export function mapRawToProduct(p: RawProduct): Product {
       graphics: p.specs?.graphics || "",
       battery: "Up to 4 hours",
       weight: p.specs?.weight || "",
+      touchscreen:
+        typeof p.specs?.display === "object" && p.specs?.display !== null
+          ? Boolean(p.specs.display.touchscreen)
+          : false,
+      displayType:
+        typeof p.specs?.display === "object" && p.specs?.display !== null
+          ? p.specs.display.type || ""
+          : "",
+      os: p.specs?.os || "",
+      ports: p.specs?.ports || [],
     },
     features: p.features || [],
     category: p.category || "Laptop",
