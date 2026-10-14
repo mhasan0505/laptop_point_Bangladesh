@@ -308,7 +308,7 @@ export default function AdminPowerDealPage() {
       }
 
       setEditingDeal((prev) => (prev ? { ...prev, image: json.url } : null));
-      showToast("success", "Image uploaded and converted to WebP");
+      showToast("success", "Image uploaded (optimized WebP)");
     } catch (err) {
       showToast("error", err instanceof Error ? err.message : "Image upload failed");
     } finally {

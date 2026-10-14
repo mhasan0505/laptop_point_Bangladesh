@@ -19,33 +19,41 @@ export default async function BottomCtaStrip({
     <>
       <PromoBanner
         placement="home.bottom-cta"
-        aspectClassName="aspect-[16/6] sm:aspect-[16/2.5]"
+        aspectClassName="aspect-[16/6] sm:aspect-[16/3]"
       />
-      <section className="bg-[#002b60] py-10 text-white">
-        <div className="mx-auto flex w-full max-w-[95%] flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
-          <div>
-            <h2 className="text-2xl font-bold md:text-3xl">
-              {heading || "Not sure which laptop fits you?"}
+      <section
+        aria-labelledby="bottom-cta-heading"
+        className="bg-brand-navy py-12 sm:py-16 text-white"
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
+          <div className="max-w-2xl">
+            <h2
+              id="bottom-cta-heading"
+              className="text-h2 font-bold tracking-tight text-white mb-2"
+            >
+              {heading || "Not sure which laptop fits your needs?"}
             </h2>
-            <p className="mt-1 text-sm text-blue-100">
+            <p className="text-body text-white/80 max-w-[65ch]">
               {subheading ||
-                "Talk to our team — we'll help you pick by budget and use case."}
+                "Talk directly to our hardware team — we'll help you pick by budget and intended use."}
             </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
             <a
               href={`tel:${dialable(profile.hotline)}`}
-              className="inline-flex items-center gap-2 rounded-full bg-[#dc0303] px-6 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#b80202]"
+              className="inline-flex items-center gap-2 h-12 sm:h-11 px-6 rounded-full bg-brand-red hover:bg-brand-red-hover text-white text-small font-semibold shadow-soft hover:shadow-lift transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-navy"
             >
-              <Phone size={16} /> {profile.hotline}
+              <Phone className="w-4 h-4" aria-hidden="true" />
+              <span>{profile.hotline}</span>
             </a>
             <a
               href={`https://wa.me/${wa}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold transition hover:bg-white/10"
+              className="inline-flex items-center gap-2 h-12 sm:h-11 px-6 rounded-full border border-white/30 hover:border-white/60 hover:bg-white/10 text-white text-small font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-navy"
             >
-              <MessageCircle size={16} /> WhatsApp
+              <MessageCircle className="w-4 h-4 text-[#25D366]" aria-hidden="true" />
+              <span>WhatsApp Us</span>
             </a>
           </div>
         </div>

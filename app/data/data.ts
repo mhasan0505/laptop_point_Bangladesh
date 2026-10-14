@@ -94,6 +94,7 @@ export function mapRawToProduct(p: RawProduct): Product {
     rating: ratingFor(p.name || ""),
     reviews: reviewsFor(p.name || ""),
     inStock: stockCount > 0,
+    stockQty: stockCount,
     condition: p.condition ? [p.condition] : [],
     grade: p.grade || "",
     image: mainImage,

@@ -41,10 +41,10 @@ export default function PowerDealCountdown({ targetDate }: { targetDate: string 
           key={label}
           className="min-w-14 rounded-xl bg-white/15 px-3 py-2 text-center backdrop-blur"
         >
-          <div className="text-xl font-bold tabular-nums">
+          <div className="text-h3 font-bold tabular-nums">
             {value === undefined ? "--" : String(value).padStart(2, "0")}
           </div>
-          <div className="text-[10px] uppercase tracking-wide text-white/80">
+          <div className="text-caption uppercase tracking-wider text-white/80 font-medium">
             {label}
           </div>
         </div>

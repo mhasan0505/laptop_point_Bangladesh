@@ -55,6 +55,15 @@ export const pruneOrphanUploadsJob: JobDefinition = {
     for (const filename of diskFiles) {
       if (filename === ".gitkeep" || filename.startsWith(".")) continue;
 
+      // Responsive variants (`<base>-<w>w.webp|avif`) belong to their main file.
+      const variantBase = filename.match(/^(.*)-d+w.(?:webp|avif)$/);
+      if (variantBase) {
+        const owner = [...referencedFilenames].some(
+          (ref) => ref.replace(/.[^.]+$/, "") === variantBase[1],
+        );
+        if (owner) continue;
+      }
+
       if (!referencedFilenames.has(filename)) {
         const filePath = path.join(uploadsDir, filename);
         try {

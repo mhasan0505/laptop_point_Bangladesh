@@ -1,0 +1,173 @@
+[
+  {
+    "id": "acc-chg-hp-65wusbccharg",
+    "sku": "CHG-HP-65WUSBCCHARG",
+    "slug": "hp-65w-usb-c-charger",
+    "name": "HP 65W USB-C Charger",
+    "brand": "HP",
+    "category": "chargers-adapters",
+    "compatibility": [
+      "HP EliteBook",
+      "ProBook",
+      "ZBook Series"
+    ],
+    "condition": "New",
+    "warranty": "",
+    "color": "",
+    "price": 2490,
+    "originalPrice": 3500,
+    "stock": 5,
+    "specs": [
+      "Fast Charging",
+      "USB-C",
+      "Original Quality"
+    ],
+    "description": "HP 65W USB-C Charger for HP EliteBook, ProBook, ZBook Series.",
+    "images": [],
+    "active": true,
+    "createdAt": "2026-10-14T10:46:21.852Z",
+    "updatedAt": "2026-10-14T10:46:21.852Z"
+  },
+  {
+    "id": "acc-chg-dell-90wacadapter",
+    "sku": "CHG-DELL-90WACADAPTER",
+    "slug": "dell-90w-ac-adapter",
+    "name": "Dell 90W AC Adapter",
+    "brand": "Dell",
+    "category": "chargers-adapters",
+    "compatibility": [
+      "Dell Latitude",
+      "Precision",
+      "Inspiron"
+    ],
+    "condition": "New",
+    "warranty": "1 Year Warranty",
+    "color": "",
+    "price": 2290,
+    "originalPrice": 3200,
+    "stock": 5,
+    "specs": [
+      "OEM Quality",
+      "Short Circuit Protection",
+      "1 Year Warranty"
+    ],
+    "description": "Dell 90W AC Adapter for Dell Latitude, Precision, Inspiron.",
+    "images": [],
+    "active": true,
+    "createdAt": "2026-10-14T10:46:21.852Z",
+    "updatedAt": "2026-10-14T10:46:21.852Z"
+  },
+  {
+    "id": "acc-chg-lenovo-65wroundpinc",
+    "sku": "CHG-LENOVO-65WROUNDPINC",
+    "slug": "lenovo-65w-round-pin-charger",
+    "name": "Lenovo 65W Round Pin Charger",
+    "brand": "Lenovo",
+    "category": "chargers-adapters",
+    "compatibility": [
+      "Lenovo ThinkPad T",
+      "X",
+      "L Series"
+    ],
+    "condition": "New",
+    "warranty": "",
+    "color": "",
+    "price": 1990,
+    "originalPrice": 2800,
+    "stock": 5,
+    "specs": [
+      "Genuine Replacement",
+      "Energy Efficient",
+      "Compact Design"
+    ],
+    "description": "Lenovo 65W Round Pin Charger for Lenovo ThinkPad T, X, L Series.",
+    "images": [],
+    "active": true,
+    "createdAt": "2026-10-14T10:46:21.852Z",
+    "updatedAt": "2026-10-14T10:46:21.852Z"
+  },
+  {
+    "id": "acc-chg-universal-90wuniversal",
+    "sku": "CHG-UNIVERSAL-90WUNIVERSAL",
+    "slug": "universal-90w-universal-adapter",
+    "name": "Universal 90W Universal Adapter",
+    "brand": "Universal",
+    "category": "chargers-adapters",
+    "compatibility": [
+      "Multiple Brands & Models"
+    ],
+    "condition": "New",
+    "warranty": "",
+    "color": "",
+    "price": 1590,
+    "originalPrice": 2200,
+    "stock": 5,
+    "specs": [
+      "8 Connector Tips",
+      "Auto Voltage",
+      "LED Indicator"
+    ],
+    "description": "Universal 90W Universal Adapter for Multiple Brands & Models.",
+    "images": [],
+    "active": true,
+    "createdAt": "2026-10-14T10:46:21.852Z",
+    "updatedAt": "2026-10-14T10:46:21.852Z"
+  },
+  {
+    "id": "acc-chg-asus-45wadapter",
+    "sku": "CHG-ASUS-45WADAPTER",
+    "slug": "asus-45w-adapter",
+    "name": "Asus 45W Adapter",
+    "brand": "Asus",
+    "category": "chargers-adapters",
+    "compatibility": [
+      "Asus VivoBook",
+      "ZenBook Series"
+    ],
+    "condition": "New",
+    "warranty": "",
+    "color": "",
+    "price": 1790,
+    "originalPrice": 2500,
+    "stock": 5,
+    "specs": [
+      "Original Quality",
+      "Lightweight",
+      "Over Voltage Protection"
+    ],
+    "description": "Asus 45W Adapter for Asus VivoBook, ZenBook Series.",
+    "images": [],
+    "active": true,
+    "createdAt": "2026-10-14T10:46:21.852Z",
+    "updatedAt": "2026-10-14T10:46:21.852Z"
+  },
+  {
+    "id": "acc-chg-acer-65wcharger",
+    "sku": "CHG-ACER-65WCHARGER",
+    "slug": "acer-65w-charger",
+    "name": "Acer 65W Charger",
+    "brand": "Acer",
+    "category": "chargers-adapters",
+    "compatibility": [
+      "Acer Aspire",
+      "Swift",
+      "TravelMate"
+    ],
+    "condition": "New",
+    "warranty": "6 Month Warranty",
+    "color": "",
+    "price": 1890,
+    "originalPrice": 2600,
+    "stock": 0,
+    "specs": [
+      "Compatible Replacement",
+      "6 Month Warranty",
+      "Safe Charging"
+    ],
+    "description": "Acer 65W Charger for Acer Aspire, Swift, TravelMate.",
+    "images": [],
+    "active": true,
+    "createdAt": "2026-10-14T10:46:21.852Z",
+    "updatedAt": "2026-10-14T10:46:21.852Z"
+  }
+]

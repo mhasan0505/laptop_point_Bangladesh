@@ -32,6 +32,7 @@ interface AssetUsage {
 
 interface MediaAssetItem {
   id: string;
+  url?: string;
   originalFilename: string;
   storageKey: string;
   mime: string;
@@ -116,6 +117,7 @@ export default function MediaLibraryPage() {
     setIsUploading(true);
     setFailedUploads([]);
     let successCount = 0;
+    let imageKitCount = 0;
     const failures: Array<{ filename: string; stage: string; detail: string }> = [];
 
     for (let i = 0; i < fileList.length; i++) {
@@ -141,6 +143,8 @@ export default function MediaLibraryPage() {
           continue;
         }
 
+        const okData = await res.json().catch(() => ({}));
+        if (okData?.storage === "imagekit") imageKitCount++;
         successCount++;
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : "Network error";
@@ -155,7 +159,11 @@ export default function MediaLibraryPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
 
     if (successCount > 0) {
-      toastSuccess(`Successfully uploaded ${successCount} asset(s) with WebP & AVIF variants.`);
+      toastSuccess(
+        imageKitCount === successCount
+          ? `Uploaded ${successCount} asset(s) to ImageKit as optimized WebP.`
+          : `Uploaded ${successCount} asset(s) with WebP & AVIF variants.`
+      );
       fetchAssets();
     }
     if (failures.length > 0) {
@@ -428,7 +436,7 @@ export default function MediaLibraryPage() {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {assets.map((asset) => {
-            const displayUrl = `/uploads/${asset.storageKey}`;
+            const displayUrl = asset.url || `/uploads/${asset.storageKey}`;
             const variantCount = Array.isArray(asset.variants) ? asset.variants.length : 0;
 
             return (
@@ -560,7 +568,7 @@ export default function MediaLibraryPage() {
               {/* Preview Box */}
               <div className="relative w-full aspect-video rounded-xl bg-neutral-900 overflow-hidden flex items-center justify-center border border-border">
                 <Image
-                  src={`/uploads/${selectedAsset.storageKey}`}
+                  src={selectedAsset.url || `/uploads/${selectedAsset.storageKey}`}
                   alt={selectedAsset.alt || selectedAsset.originalFilename}
                   fill
                   className="object-contain"

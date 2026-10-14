@@ -1,16 +1,24 @@
-import BentoGridSection from "@/components/application/BentoGridSection";
-import HeroSection from "@/components/application/HeroSection";
+import { getLiveLaptops } from "@/app/data/data";
 import NewProductsSection from "@/components/application/NewProductsSection";
 import TestimonialsSection from "@/components/application/TestimonialsSection";
+import BottomCtaStrip from "@/components/home/BottomCtaStrip";
+import CategoryTiles from "@/components/home/CategoryTiles";
+import HomeHero from "@/components/home/HomeHero";
+import PowerDealSection from "@/components/home/PowerDealSection";
+import PromoBanner from "@/components/home/PromoBanner";
+import SpecialOffersStrip from "@/components/home/SpecialOffersStrip";
+import WhyUs from "@/components/home/WhyUs";
+import { getHomepageSections, getStorefrontContact } from "@/lib/public-content";
 import { eCommerceSchema } from "@/lib/seo-schemas";
 import { Metadata } from "next";
 import nextDynamic from "next/dynamic";
+import type { ReactNode } from "react";
 
-// Lazy load brand sections that are below the fold for better initial load
+// Lazy load brand sections that are below the fold for fast initial load
 const BrandProductSection = nextDynamic(
   () => import("@/components/application/BrandProductSection"),
   {
-    loading: () => <div className="h-96 bg-gray-50 animate-pulse" />,
+    loading: () => <div className="h-96 bg-surface-2 animate-pulse" />,
   },
 );
 
@@ -36,14 +44,6 @@ export const metadata: Metadata = {
   },
 };
 
-import { getLiveLaptops } from "@/app/data/data";
-import { getHomepageSections } from "@/lib/public-content";
-import BottomCtaStrip from "@/components/home/BottomCtaStrip";
-import PowerDealSection from "@/components/home/PowerDealSection";
-import PromoBanner from "@/components/home/PromoBanner";
-import SpecialOffersStrip from "@/components/home/SpecialOffersStrip";
-import type { ReactNode } from "react";
-
 export const dynamic = "force-dynamic";
 
 const BRAND_SECTIONS = [
@@ -51,32 +51,33 @@ const BRAND_SECTIONS = [
     brand: "HP",
     title: "HP Laptop Series",
     description:
-      "Experience power and elegance with our curated selection of HP laptops. Designed for professionals, business leaders, and creators.",
-    badgeText: "Premium Collection",
+      "Curated selection of tested HP EliteBook and ProBook business laptops.",
+    badgeText: "Business & Pro",
     theme: "hp",
   },
   {
     brand: "Dell",
     title: "Dell Latitude & XPS",
     description:
-      "Reliability meets performance. Explore our range of Dell laptops, from the rugged Latitude series to the premium XPS lineup.",
-    badgeText: "Business Choice",
+      "Engineered for reliability. Explore rugged Latitude and premium XPS laptops.",
+    badgeText: "Enterprise Choice",
     theme: "dell",
   },
   {
     brand: "Lenovo",
     title: "Lenovo ThinkPad Series",
     description:
-      "Built for business. The legendary ThinkPad series offers unmatched durability, keyboard comfort, and performance.",
-    badgeText: "Legendary Durability",
+      "Legendary ThinkPad durability, tactile keyboard comfort, and verified performance.",
+    badgeText: "High Durability",
     theme: "lenovo",
   },
 ] as const;
 
-const HomePage = async () => {
-  const [products, sections] = await Promise.all([
+export default async function HomePage() {
+  const [products, sections, contact] = await Promise.all([
     getLiveLaptops(),
     getHomepageSections(),
+    getStorefrontContact(),
   ]);
 
   const brandSection = (b: (typeof BRAND_SECTIONS)[number]) => (
@@ -96,17 +97,25 @@ const HomePage = async () => {
   const renderers: Record<string, (heading?: string, sub?: string) => ReactNode> = {
     hero: () => (
       <>
-        <HeroSection />
-        <NewProductsSection initialProducts={products} />
+        <HomeHero contact={contact} />
         <PromoBanner
           placement="home.flash-deal"
-          aspectClassName="aspect-[2/1]"
-          className="max-w-3xl!"
+          aspectClassName="aspect-[16/6] sm:aspect-[16/3]"
+          className="max-w-4xl"
         />
         <SpecialOffersStrip />
+        {/* If quick browse (prime-showcase) is hidden, still render New Arrivals here */}
+        {!sections.some((x) => x.id === "prime-showcase" && x.visible) && (
+          <NewProductsSection initialProducts={products} />
+        )}
       </>
     ),
-    "prime-showcase": () => <BentoGridSection />,
+    "prime-showcase": (h, s) => (
+      <>
+        <CategoryTiles products={products} heading={h} subheading={s} />
+        <NewProductsSection initialProducts={products} />
+      </>
+    ),
     "power-deal": (h, s) => <PowerDealSection heading={h} subheading={s} />,
     "surface-banner": () => <PromoBanner placement="home.surface" />,
     "surface-showcase": (h, s) => (
@@ -117,7 +126,7 @@ const HomePage = async () => {
           title={h || "Microsoft Surface"}
           description={
             s ||
-            "Sleek, powerful, and versatile. Surface laptops combine premium design with the full power of Windows."
+            "Sleek and versatile. Surface laptops combine touch capability with performance."
           }
           badgeText="Creative Studio"
           theme="microsoft"
@@ -129,6 +138,7 @@ const HomePage = async () => {
     "accessories-banner": () => <PromoBanner placement="home.accessories" />,
     "bottom-cta": (h, s) => (
       <>
+        <WhyUs />
         <TestimonialsSection />
         <BottomCtaStrip heading={h} subheading={s} />
       </>
@@ -151,12 +161,13 @@ const HomePage = async () => {
           </div>
         ))}
 
-      {/* Testimonials ride with the CTA strip; keep them if the strip is hidden. */}
+      {/* Trust & Testimonials ride with the CTA strip; keep them if the strip is hidden */}
       {!sections.some((x) => x.id === "bottom-cta" && x.visible) && (
-        <TestimonialsSection />
+        <>
+          <WhyUs />
+          <TestimonialsSection />
+        </>
       )}
     </>
   );
-};
-
-export default HomePage;
+}

@@ -49,7 +49,7 @@ function BannerCard({
 
   const body = (
     <div
-      className={`relative w-full overflow-hidden rounded-2xl bg-muted ${aspectClassName}`}
+      className={`relative w-full overflow-hidden rounded-[var(--radius-lg)] bg-surface-2 border border-line shadow-soft ${aspectClassName}`}
     >
       {hasMobile && mobile && (
         <BannerImage src={mobile} alt={alt} className="object-cover sm:hidden" />
@@ -60,19 +60,19 @@ function BannerCard({
         className={`object-cover ${hasMobile ? "hidden sm:block" : ""}`}
       />
       {(banner.headline || banner.subtext || banner.ctaLabel) && (
-        <div className="absolute inset-0 flex flex-col justify-center gap-2 bg-linear-to-r from-black/55 via-black/20 to-transparent p-6 text-white md:p-12">
+        <div className="absolute inset-0 flex flex-col justify-center gap-2 bg-linear-to-r from-ink/70 via-ink/30 to-transparent p-6 text-white md:p-12">
           {banner.headline && (
-            <h3 className="max-w-xl text-2xl font-extrabold leading-tight md:text-4xl">
+            <h3 className="max-w-xl text-h2 font-bold leading-tight text-white">
               {banner.headline}
             </h3>
           )}
           {banner.subtext && (
-            <p className="max-w-lg text-sm text-white/90 md:text-base">
+            <p className="max-w-lg text-body text-white/90">
               {banner.subtext}
             </p>
           )}
           {banner.ctaLabel && (
-            <span className="mt-2 inline-flex w-fit rounded-full bg-white px-5 py-2 text-sm font-semibold text-gray-900">
+            <span className="mt-2 inline-flex w-fit rounded-full bg-surface px-5 py-2 text-small font-semibold text-ink shadow-soft hover:bg-surface-2 transition-colors">
               {banner.ctaLabel}
             </span>
           )}
@@ -84,7 +84,7 @@ function BannerCard({
   return banner.linkHref ? (
     <Link
       href={banner.linkHref}
-      className="block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className="block rounded-[var(--radius-lg)] focus:outline-none focus:ring-2 focus:ring-brand-navy focus:ring-offset-2"
     >
       {body}
     </Link>
@@ -110,10 +110,10 @@ export default async function PromoBanner({
 
   return (
     <section
-      aria-label={visible[0].title}
-      className={`mx-auto w-full max-w-[95%] py-6 md:py-10 ${className}`}
+      aria-label={visible[0].title || "Promotional banner"}
+      className={`mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 ${className}`}
     >
-      <div className={visible.length > 1 ? "grid gap-4 md:grid-cols-2" : ""}>
+      <div className={visible.length > 1 ? "grid gap-6 md:grid-cols-2" : ""}>
         {visible.map((b) => (
           <BannerCard key={b.id} banner={b} aspectClassName={aspectClassName} />
         ))}

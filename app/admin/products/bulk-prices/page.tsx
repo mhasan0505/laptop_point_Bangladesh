@@ -205,7 +205,7 @@ export default function BulkPricesPage() {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv, .xlsx, .xls"
+              accept=".csv,text/csv"
               onChange={handleFileChange}
               className="text-xs file:mr-3 file:py-2 file:px-3 file:rounded-md file:border file:border-border file:text-xs file:font-semibold file:bg-muted file:text-foreground hover:file:bg-muted/80 text-muted-foreground cursor-pointer"
             />

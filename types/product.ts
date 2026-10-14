@@ -10,6 +10,8 @@ export interface Product {
   rating?: number;
   reviews?: number;
   inStock?: boolean;
+  stockQty?: number;
+  warranty?: string;
   image: string | StaticImageData;
   images?: (string | StaticImageData)[];
   specs?: {

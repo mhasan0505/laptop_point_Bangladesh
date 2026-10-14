@@ -29,6 +29,7 @@ export interface ImageUploaderProps {
 
 interface LibraryAsset {
   id: string;
+  url?: string;
   storageKey: string;
   originalFilename: string;
   alt: string;
@@ -154,7 +155,7 @@ export function ImageUploader({
   };
 
   const handleSelectFromLibrary = (asset: LibraryAsset) => {
-    const assetUrl = `/uploads/${asset.storageKey}`;
+    const assetUrl = asset.url || `/uploads/${asset.storageKey}`;
     if (multiple) {
       if (!images.includes(assetUrl)) {
         onChange([...images, assetUrl].slice(0, maxFiles));
@@ -344,7 +345,7 @@ export function ImageUploader({
               ) : (
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                   {filteredLibraryAssets.map((asset) => {
-                    const assetUrl = `/uploads/${asset.storageKey}`;
+                    const assetUrl = asset.url || `/uploads/${asset.storageKey}`;
                     const isSelected = images.includes(assetUrl);
 
                     return (

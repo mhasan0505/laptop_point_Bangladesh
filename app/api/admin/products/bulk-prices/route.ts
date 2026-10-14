@@ -88,7 +88,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No spreadsheet file uploaded" }, { status: 400 });
     }
 
-    const text = await file.text();
+    // The parser reads plain-text CSV only. Binary spreadsheets (.xlsx/.xls)
+    // would otherwise be decoded as garbage and fail with a misleading error.
+    const MAX_BYTES = 2 * 1024 * 1024;
+    if (file.size > MAX_BYTES) {
+      return NextResponse.json(
+        { error: "File is too large (max 2MB). Split it into smaller CSV files." },
+        { status: 413 }
+      );
+    }
+    const head = new Uint8Array(await file.slice(0, 8).arrayBuffer());
+    const isZip = head[0] === 0x50 && head[1] === 0x4b; // .xlsx container
+    const isOle = head[0] === 0xd0 && head[1] === 0xcf; // legacy .xls
+    if (isZip || isOle || /\.xlsx?$/i.test(file.name)) {
+      return NextResponse.json(
+        {
+          error:
+            "Excel files aren't supported. In Excel choose File → Save As → CSV (UTF-8), then upload the .csv file.",
+        },
+        { status: 415 }
+      );
+    }
+
+    // Strip a UTF-8 BOM (Excel's "CSV UTF-8" export adds one).
+    const text = (await file.text()).replace(/^﻿/, "");
     const table = parseCsv(text);
 
     if (table.length < 2) {

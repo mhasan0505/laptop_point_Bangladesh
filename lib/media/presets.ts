@@ -38,7 +38,8 @@ export interface PresetGenerationResult {
 export async function generatePresetVariants(
   inputBuffer: Buffer,
   baseKey: string,
-  presetName: string = "card"
+  presetName: string = "card",
+  options: { mainOnly?: boolean } = {}
 ): Promise<PresetGenerationResult> {
   const preset = MEDIA_PRESETS[presetName] || MEDIA_PRESETS.card;
 
@@ -105,7 +106,11 @@ export async function generatePresetVariants(
   const variants: ProcessedVariant[] = [];
   const skippedVariants: SkippedVariant[] = [];
 
-  for (const width of preset.widths) {
+  // Remote storage (ImageKit) serves its own transforms; skip the costly
+  // per-width WebP/AVIF set when only the main file is needed.
+  const variantWidths = options.mainOnly ? [] : preset.widths;
+
+  for (const width of variantWidths) {
     for (const format of preset.formats) {
       const variantWidth = Math.min(originalWidth, width);
       const stageName = `variant_${format}_${width}w`;
