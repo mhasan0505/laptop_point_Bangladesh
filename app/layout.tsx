@@ -25,86 +25,97 @@ const jetbrainsMono = JetBrains_Mono({
   fallback: ["ui-monospace", "monospace"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://laptoppointbd.com"),
-  title: {
-    default: SEO_CONFIG.metaTags.defaultTitle,
-    template: "%s | Laptop Point Bangladesh",
-  },
-  description: SEO_CONFIG.metaTags.defaultDescription,
-  keywords: SEO_CONFIG.keywords.primary.concat(SEO_CONFIG.keywords.secondary),
-  authors: [{ name: "Laptop Point Bangladesh" }],
-  creator: "Laptop Point Bangladesh",
-  publisher: "Laptop Point Bangladesh",
-  alternates: {
-    canonical: "https://laptoppointbd.com",
-  },
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    alternateLocale: "bn_BD",
-    url: "https://laptoppointbd.com",
-    siteName: "Laptop Point Bangladesh",
-    title: SEO_CONFIG.metaTags.defaultTitle,
-    description: SEO_CONFIG.metaTags.defaultDescription,
-    images: [
-      {
-        url: "/Hero_Image.png",
-        width: 1200,
-        height: 630,
-        alt: "Laptop Point Bangladesh - Premium Brand New And Used Laptops",
-        type: "image/png",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SEO_CONFIG.metaTags.defaultTitle,
-    description: SEO_CONFIG.metaTags.defaultDescription,
-    creator: SEO_CONFIG.metaTags.twitterHandle,
-    images: ["/Hero_Image.png"],
-  },
-  verification: {
-    google: [
-      "ljFisqvr68Zmoi6h41Y5BSMWuktGPPdHTkRCpYaeFOQ",
-      "1sz9tJ4KKpP8LbTkmf5oQdcVCjW4pKNd5AVrZE9iyLg",
-    ],
-    other: {
-      "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION || "",
+import { getStorefrontSeo, getStorefrontTracking } from "@/lib/public-content";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getStorefrontSeo();
+
+  return {
+    metadataBase: new URL("https://laptoppointbd.com"),
+    title: {
+      default: seo.defaultTitle,
+      template: seo.titleTemplate,
     },
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      {
-        url: "/android-chrome-192x192.png",
-        sizes: "192x192",
-        type: "image/png",
+    description: seo.defaultDescription,
+    keywords: SEO_CONFIG.keywords.primary.concat(SEO_CONFIG.keywords.secondary),
+    authors: [{ name: "Laptop Point Bangladesh" }],
+    creator: "Laptop Point Bangladesh",
+    publisher: "Laptop Point Bangladesh",
+    alternates: {
+      canonical: "https://laptoppointbd.com",
+    },
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      alternateLocale: "bn_BD",
+      url: "https://laptoppointbd.com",
+      siteName: "Laptop Point Bangladesh",
+      title: seo.defaultTitle,
+      description: seo.defaultDescription,
+      images: [
+        {
+          url: seo.defaultShareImage || "/Hero_Image.png",
+          width: 1200,
+          height: 630,
+          alt: "Laptop Point Bangladesh - Premium Brand New And Used Laptops",
+          type: "image/png",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seo.defaultTitle,
+      description: seo.defaultDescription,
+      creator: SEO_CONFIG.metaTags.twitterHandle,
+      images: [seo.defaultShareImage || "/Hero_Image.png"],
+    },
+    verification: {
+      google: seo.googleVerification
+        ? [seo.googleVerification]
+        : [
+            "ljFisqvr68Zmoi6h41Y5BSMWuktGPPdHTkRCpYaeFOQ",
+            "1sz9tJ4KKpP8LbTkmf5oQdcVCjW4pKNd5AVrZE9iyLg",
+          ],
+      other: {
+        "msvalidate.01":
+          seo.bingVerification ||
+          process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ||
+          "",
       },
-      {
-        url: "/android-chrome-512x512.png",
-        sizes: "512x512",
-        type: "image/png",
-      },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
-  },
-};
+    },
+    icons: {
+      icon: [
+        { url: "/favicon.ico" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        {
+          url: "/android-chrome-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          url: "/android-chrome-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+        },
+      ],
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    },
+  };
+}
 
 const jsonLd = organizationSchema;
-
 const localBusinessJsonLd = localBusinessSchema;
-const GOOGLE_TAG_ID = process.env.NEXT_PUBLIC_GA_ID || "G-NSPLFEW71H";
-const FB_PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID || "1676617903511293";
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-KXKXGWF6";
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const tracking = await getStorefrontTracking();
+  const GOOGLE_TAG_ID = tracking.ga4MeasurementId;
+  const FB_PIXEL_ID = tracking.metaPixelId;
+  const GTM_ID = tracking.gtmId;
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

@@ -21,6 +21,16 @@ export async function loadBaseProductsJson(): Promise<RawProduct[]> {
   }
 }
 
+/**
+ * Write JSON via temp file + rename so concurrent readers (and the dev
+ * bundler, which imports products.json) never observe a half-written file.
+ */
+async function writeJsonAtomic(filePath: string, data: unknown): Promise<void> {
+  const tmp = `${filePath}.${process.pid}.tmp`;
+  await fs.writeFile(tmp, JSON.stringify(data, null, 2), "utf-8");
+  await fs.rename(tmp, filePath);
+}
+
 let _memoryCachedRawProducts: RawProduct[] | null = null;
 
 export function getCachedRawProducts(): RawProduct[] | null {
@@ -40,13 +50,19 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
 
   // Initialize with base products (keyed by SKU lowercased)
   for (const product of baseProducts) {
-    productMap.set(product.sku.toLowerCase(), { ...product });
+    const skuKey = (product.sku || String(product.id || "")).toLowerCase();
+    if (skuKey) {
+      productMap.set(skuKey, { ...product });
+    }
   }
 
   // Fetch overrides from PostgreSQL
   try {
     const overrides = await prisma.productOverride.findMany();
     for (const item of overrides) {
+      if (!item.sku || item.sku.startsWith("system:") || item.sku.startsWith("setting:")) {
+        continue;
+      }
       const key = item.sku.toLowerCase();
       if (item.isDeleted) {
         productMap.delete(key);
@@ -62,6 +78,7 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
   try {
     const invRecords = await prisma.inventory.findMany();
     for (const inv of invRecords) {
+      if (!inv.sku) continue;
       const key = inv.sku.toLowerCase();
       const existing = productMap.get(key);
       if (existing) {
@@ -79,13 +96,6 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
   const merged = Array.from(productMap.values());
   setCachedRawProducts(merged);
 
-  // Sync to local products.json if writable (local dev environment)
-  try {
-    await fs.writeFile(productsFilePath, JSON.stringify(merged, null, 2), "utf-8");
-  } catch {
-    // Read-only filesystem in serverless / production - ignore
-  }
-
   return merged;
 }
 
@@ -96,7 +106,7 @@ export async function loadMergedRawProducts(): Promise<RawProduct[]> {
 export async function findRawProductByIdOrSku(idOrSku: string): Promise<RawProduct | null> {
   const products = await loadMergedRawProducts();
   const target = products.find(
-    (p) => String(p.id) === idOrSku || p.sku.toLowerCase() === idOrSku.toLowerCase(),
+    (p) => String(p.id) === idOrSku || (p.sku && p.sku.toLowerCase() === idOrSku.toLowerCase()),
   );
 
   if (!target) return null;
@@ -176,7 +186,7 @@ export async function saveRawProduct(raw: RawProduct): Promise<void> {
     } else {
       baseList.unshift(raw);
     }
-    await fs.writeFile(productsFilePath, JSON.stringify(baseList, null, 2), "utf-8");
+    await writeJsonAtomic(productsFilePath, baseList);
   } catch (fsErr: any) {
     // In serverless / read-only environments (e.g. Vercel / AWS Lambda), the filesystem is immutable
     if (fsErr.code === "EROFS" || fsErr.message?.includes("read-only file system")) {
@@ -251,7 +261,7 @@ export async function deleteRawProduct(idOrSku: string): Promise<boolean> {
     );
     if (index !== -1) {
       baseList.splice(index, 1);
-      await fs.writeFile(productsFilePath, JSON.stringify(baseList, null, 2), "utf-8");
+      await writeJsonAtomic(productsFilePath, baseList);
     }
   } catch (fsErr: any) {
     if (fsErr.code !== "EROFS" && !fsErr.message?.includes("read-only file system")) {
@@ -287,7 +297,7 @@ export async function safeSyncManifest(sku: string, images: string[]): Promise<v
     const raw = await fs.readFile(manifestFilePath, "utf-8");
     const data = JSON.parse(raw);
     data[sku] = images;
-    await fs.writeFile(manifestFilePath, JSON.stringify(data, null, 2), "utf-8");
+    await writeJsonAtomic(manifestFilePath, data);
   } catch (err: any) {
     if (err.code === "EROFS" || err.message?.includes("read-only file system")) {
       // Safely ignore on read-only environments

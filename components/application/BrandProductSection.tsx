@@ -1,6 +1,6 @@
 "use client";
 
-import { laptopData, Product } from "@/app/data/data";
+import type { Product } from "@/types/product";
 import { motion } from "framer-motion";
 import {
   Briefcase,
@@ -40,21 +40,21 @@ const BrandProductSection = ({
 }: BrandProductSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("All Series");
   const [allProducts, setAllProducts] = useState<Product[]>(
-    initialProducts && initialProducts.length > 0
-      ? initialProducts
-      : laptopData.laptops || [],
+    initialProducts && initialProducts.length > 0 ? initialProducts : [],
   );
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setAllProducts(data);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (!initialProducts || initialProducts.length === 0) {
+      fetch("/api/products")
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setAllProducts(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialProducts]);
 
   // Filter for brand laptops
   const brandProducts = allProducts.filter(

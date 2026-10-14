@@ -372,6 +372,38 @@ git push
 
 ---
 
+## 🔒 SECURITY & MULTI-INSTANCE ARCHITECTURE NOTE
+
+### In-Memory State Caveats in Serverless / Multi-Instance Deployments
+
+The following security components currently utilize in-memory storage (`Map` structures):
+1. **Login Rate Limiter** (`lib/rate-limit.ts`): Tracks pure-IP caps and `${ip}|${email}` attempts in process memory.
+2. **Session Freshness Cache** (`lib/auth-guard.ts`): Caches staff user status and role lookups for up to 30 seconds (`userCache`).
+
+#### Multi-Instance Implications:
+- **Single-instance / Container Deployments (e.g., VPS / Docker / Standalone Node)**: Process in-memory state provides zero-latency protection without external database overhead.
+- **Serverless / Multi-Instance Deployments (e.g., Vercel Functions / Multi-Pod K8s)**:
+  - In-memory state is isolated **per instance/lambda execution context**.
+  - Rate-limit attempt buckets are not synchronized across distinct running instances.
+  - A user role change or deactivation only clears the local container's cache, taking up to 30s to expire naturally on sibling instances.
+
+#### Recommended Shared-Store Fix for High-Scale Production:
+- **Distributed Rate Limiting**: Connect `checkLoginRateLimit` and `recordFailedLogin` to a distributed Redis backend (e.g. Upstash Redis using `@upstash/ratelimit`).
+- **Distributed Session Freshness**: Store active staff account revocations/roles in Redis with a 30-second TTL or subscribe to Postgres change notifications (`LISTEN` / `NOTIFY`).
+
+### Trusted Proxy Configuration (`TRUSTED_PROXY`)
+
+Configure `TRUSTED_PROXY` in your host environment variables based on your ingress architecture:
+
+| Host / Architecture | `TRUSTED_PROXY` Value | Description & Resolved Header |
+| :--- | :--- | :--- |
+| **Vercel** (Edge / Serverless) | `vercel` | Reads `x-vercel-forwarded-for` only (injected by Vercel Edge). Client-supplied headers are disregarded. |
+| **Cloudflare** (CDN / WAF in front of host) | `cloudflare` | Reads `cf-connecting-ip` only (injected by Cloudflare Edge). |
+| **Reverse Proxy / Ingress** (Nginx, Caddy, AWS ALB, Traefik) | `xff` | Reads the **last** entry of `x-forwarded-for` only (the rightmost IP appended by your trusted edge proxy). |
+| **Standalone / Direct Node / Local Dev** | *unset* (or empty) | **Do not read any forwarding headers.** Evaluates to `"unknown"` (or the platform socket address if exposed). Prevents spoofing in directly exposed environments. |
+
+---
+
 ## AFTER DEPLOYMENT
 
 ### Tasks

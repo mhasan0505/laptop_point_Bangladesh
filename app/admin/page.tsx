@@ -1,484 +1,291 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
-import { AdminProduct, AdminStats, OrderData } from "@/lib/admin-data";
-import { fetchAdminProducts } from "@/lib/admin-products-api";
-import {
-  AlertTriangle,
-  ArrowRight,
-  ArrowUpRight,
-  Boxes,
-  CheckCircle2,
-  CircleDollarSign,
-  Clock,
-  Flame,
-  Image as ImageIcon,
-  Laptop,
-  PackageOpen,
-  Plus,
-  RefreshCw,
-  ShoppingBag,
-  TrendingUp,
-  Truck,
-  Warehouse,
-} from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { OrderDocumentDialog, DocumentOrderData } from "@/components/admin/OrderDocumentDialog";
+import { OrderCreateDialog } from "@/components/admin/OrderCreateDialog";
+import { GreetingBar } from "@/components/admin/dashboard/GreetingBar";
+import { KpiCards } from "@/components/admin/dashboard/KpiCards";
+import { SalesChart } from "@/components/admin/dashboard/SalesChart";
+import { AttentionSection } from "@/components/admin/dashboard/AttentionSection";
+import { OrderPipeline } from "@/components/admin/dashboard/OrderPipeline";
+import { PerformanceColumns } from "@/components/admin/dashboard/PerformanceColumns";
+import { RecentOrdersTable } from "@/components/admin/dashboard/RecentOrdersTable";
+import { StorefrontNow } from "@/components/admin/dashboard/StorefrontNow";
+import { DashboardSkeleton } from "@/components/admin/dashboard/DashboardSkeleton";
+import type { AdminDashboardData, DashboardOrder } from "@/lib/admin-dashboard";
 
-interface ApiOrder {
+interface CreateDialogProduct {
   id: string;
-  orderNumber: string;
-  customerName: string;
-  totalAmount: number;
-  status: string;
-  paymentMethod: string;
-  createdAt: string;
+  sku: string;
+  name: string;
+  price: number | null;
+  stock: number;
+  variants?: Array<{
+    id?: string;
+    name?: string;
+    label?: string;
+    price?: number | null;
+    sku?: string;
+    stock?: number;
+  }>;
 }
 
-function paymentLabel(method: string): string {
-  const map: Record<string, string> = {
-    cod: "Cash on Delivery",
-    bkash: "bKash",
-    nagad: "Nagad",
-    card: "Card",
-  };
-  return map[method] ?? method;
-}
-
-const AdminDashboard = () => {
-  const { isAuthenticated, isLoading } = useAdminAuth();
+export default function AdminDashboardPage() {
+  const { isAuthenticated, isLoading: authLoading } = useAdminAuth();
   const router = useRouter();
-  const [stats, setStats] = useState<AdminStats>({
-    totalProducts: 0,
-    totalOrders: 0,
-    pendingOrders: 0,
-    totalRevenue: "৳0",
-    lowStockItems: 0,
-    deliveredToday: 0,
-  });
-  const [recentOrders, setRecentOrders] = useState<OrderData[]>([]);
-  const [lowStockProducts, setLowStockProducts] = useState<
-    Array<{
-      id?: string;
-      name: string;
-      stock: number;
-      category: string;
-    }>
-  >([]);
-  const [dataLoading, setDataLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const loadDashboardData = async () => {
+  const [dashboardData, setDashboardData] = useState<AdminDashboardData | null>(null);
+  const [selectedRange, setSelectedRange] = useState<number>(7);
+  const [dataLoading, setDataLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Document modal state
+  const [docOrder, setDocOrder] = useState<DocumentOrderData | null>(null);
+  const [docTab, setDocTab] = useState<"invoice" | "challan">("invoice");
+  const [docDialogOpen, setDocDialogOpen] = useState<boolean>(false);
+
+  // Manual order creation modal state (products loaded lazily only when opened)
+  const [orderCreateOpen, setOrderCreateOpen] = useState<boolean>(false);
+  const [productsForDialog, setProductsForDialog] = useState<CreateDialogProduct[]>([]);
+
+  // Manual refresh / retry handler
+  const handleRefresh = useCallback(async () => {
+    setDataLoading(true);
+    setErrorMessage(null);
     try {
-      setIsRefreshing(true);
-      const [ordersRes, productsData] = await Promise.all([
-        fetch("/api/orders", { cache: "no-store" }),
-        fetchAdminProducts(),
-      ]);
-
-      let apiOrders: ApiOrder[] = [];
-      if (ordersRes.ok) {
-        apiOrders = (await ordersRes.json()) as ApiOrder[];
-      }
-
-      const recent = apiOrders.slice(0, 5).map((o) => ({
-        id: o.orderNumber,
-        customer: o.customerName,
-        amount: `৳${o.totalAmount.toLocaleString()}`,
-        status: o.status,
-        date: o.createdAt ? o.createdAt.slice(0, 10) : "Today",
-        paymentMethod: paymentLabel(o.paymentMethod),
-      }));
-
-      const lowStockList = productsData.filter((p: AdminProduct) => p.stock < 10 && p.stock >= 0);
-      const lowStockCount = lowStockList.length;
-      const pendingCount = apiOrders.filter((o) => o.status === "Pending").length;
-      const deliveredToday = apiOrders.filter((o) => {
-        if (o.status !== "Delivered") return false;
-        return o.createdAt?.slice(0, 10) === new Date().toISOString().slice(0, 10);
-      }).length;
-      const totalRevenue = apiOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
-
-      setStats({
-        totalProducts: productsData.length,
-        totalOrders: apiOrders.length,
-        pendingOrders: pendingCount,
-        totalRevenue: `৳${totalRevenue.toLocaleString()}`,
-        lowStockItems: lowStockCount,
-        deliveredToday,
+      const res = await fetch(`/api/admin/dashboard?range=${selectedRange}`, {
+        cache: "no-store",
       });
 
-      setRecentOrders(recent);
-      setLowStockProducts(
-        lowStockList.slice(0, 5).map((p: AdminProduct) => ({
-          id: p.id,
-          name: p.name,
-          stock: p.stock,
-          category: p.category,
-        }))
-      );
+      if (!res.ok) {
+        const errorBody = await res.json().catch(() => ({}));
+        throw new Error(errorBody.error || `HTTP error ${res.status}`);
+      }
+
+      const data = (await res.json()) as AdminDashboardData;
+      setDashboardData(data);
     } catch (err) {
-      console.error("Error loading admin stats:", err);
+      console.error("[Dashboard Load Error]:", err);
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "Unable to load dashboard performance data from server."
+      );
     } finally {
       setDataLoading(false);
-      setIsRefreshing(false);
+    }
+  }, [selectedRange]);
+
+  // Initial and range-driven load without synchronous setState in effect body
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    let cancelled = false;
+
+    const executeFetch = async () => {
+      try {
+        const res = await fetch(`/api/admin/dashboard?range=${selectedRange}`, {
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          const errorBody = await res.json().catch(() => ({}));
+          throw new Error(errorBody.error || `HTTP error ${res.status}`);
+        }
+        const data = (await res.json()) as AdminDashboardData;
+        if (!cancelled) {
+          setDashboardData(data);
+          setErrorMessage(null);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setErrorMessage(
+            err instanceof Error ? err.message : "Unable to load dashboard performance data from server."
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setDataLoading(false);
+        }
+      }
+    };
+
+    executeFetch();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated, selectedRange]);
+
+  // Authentication redirect
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.replace("/admin/login");
+    }
+  }, [isAuthenticated, authLoading, router]);
+
+  // Open invoice / challan preview
+  const handleOpenDocument = (order: DashboardOrder, tab: "invoice" | "challan") => {
+    setDocOrder({
+      dbId: order.id,
+      id: order.orderNumber,
+      customer: order.customerName,
+      customerPhone: order.customerPhone,
+      customerEmail: order.customerEmail,
+      address: order.address,
+      city: null,
+      district: null,
+      postalCode: null,
+      subtotal: order.subtotal,
+      shippingCost: order.shippingCost,
+      totalAmount: order.totalAmount,
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      notes: order.notes,
+      createdAt: order.createdAt,
+      items: order.items.map((it) => ({
+        id: it.id,
+        productId: it.productId || "",
+        sku: it.sku || "BLG-SKU",
+        name: it.name,
+        variantLabel: it.variantLabel || undefined,
+        unitPrice: it.unitPrice,
+        quantity: it.quantity,
+      })),
+    });
+    setDocTab(tab);
+    setDocDialogOpen(true);
+  };
+
+  // Open manual order creation modal (lazy loads products only when opened)
+  const handleOpenNewOrder = async () => {
+    setOrderCreateOpen(true);
+    if (productsForDialog.length === 0) {
+      try {
+        const res = await fetch("/api/admin/products");
+        if (res.ok) {
+          const list = await res.json();
+          setProductsForDialog(list);
+        }
+      } catch (err) {
+        console.error("Failed to fetch products for order modal:", err);
+      }
     }
   };
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadDashboardData();
-    }
-  }, [isAuthenticated]);
+  // Handle sales chart range change
+  const handleRangeChange = (newRange: number) => {
+    setSelectedRange(newRange);
+  };
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.replace("/admin/login");
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  if (isLoading || !isAuthenticated || dataLoading) {
+  if (authLoading || (!isAuthenticated && typeof window !== "undefined")) {
     return (
       <div className="min-h-96 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary/20 border-t-primary" />
-          <p className="text-xs text-muted-foreground font-semibold">Loading console data...</p>
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/20 border-t-primary" />
+          <p className="text-xs font-semibold text-muted-foreground">Authenticating session...</p>
         </div>
       </div>
     );
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Pending":
-        return "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20";
-      case "Processing":
-        return "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20";
-      case "Shipped":
-        return "bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20";
-      case "Delivered":
-        return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20";
-      default:
-        return "bg-muted text-muted-foreground border border-border";
-    }
-  };
-
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* ── Welcome & Controls Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-5">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              Live System Status: Normal
-            </p>
-          </div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
-            Welcome back, Administrator
-          </h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Here is your real-time store performance, incoming orders, and inventory summary.
+      {/* ─── Inline Error State with Retry (No toasts, no retry loops) ─── */}
+      {errorMessage && (
+        <div className="rounded-xl border border-danger/40 bg-danger-soft p-6 text-center space-y-3">
+          <AlertCircle className="h-8 w-8 text-danger mx-auto" />
+          <h2 className="text-base font-bold text-foreground">
+            Could not load dashboard data
+          </h2>
+          <p className="text-xs text-muted-foreground max-w-md mx-auto">
+            {errorMessage}
           </p>
-        </div>
-
-        <div className="flex items-center gap-2">
           <Button
+            onClick={handleRefresh}
             variant="outline"
             size="sm"
-            onClick={loadDashboardData}
-            disabled={isRefreshing}
-            className="h-9 text-xs font-semibold rounded-sm border-border gap-1.5"
+            className="gap-2 border-danger/40 text-foreground hover:bg-danger-soft"
           >
-            <RefreshCw size={13} className={isRefreshing ? "animate-spin" : ""} />
-            Refresh Data
+            <RefreshCw className="h-3.5 w-3.5" />
+            Retry Connection
           </Button>
-
-          <Link href="/admin/products/new">
-            <Button
-              size="sm"
-              className="h-9 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-sm gap-1.5 shadow-xs"
-            >
-              <Plus size={14} />
-              Add Product
-            </Button>
-          </Link>
         </div>
-      </div>
+      )}
 
-      {/* ── KPI Stat Cards ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
-        {/* Total Revenue */}
-        <div className="flex flex-col justify-between rounded-md border border-border bg-card p-4 sm:p-5 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Total Revenue
-            </p>
-            <div className="grid h-8 w-8 place-items-center rounded-sm bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-              <CircleDollarSign size={16} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <p className="text-lg sm:text-2xl font-bold text-foreground tracking-tight">
-              {stats.totalRevenue}
-            </p>
-            <div className="mt-1 flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold">
-              <TrendingUp size={11} />
-              <span>All-time Gross</span>
-            </div>
-          </div>
-        </div>
+      {/* ─── Skeleton Loading State ─── */}
+      {dataLoading && !dashboardData && <DashboardSkeleton />}
 
-        {/* Total Orders */}
-        <div className="flex flex-col justify-between rounded-md border border-border bg-card p-4 sm:p-5 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Total Orders
-            </p>
-            <div className="grid h-8 w-8 place-items-center rounded-sm bg-blue-500/10 text-blue-600 dark:text-blue-400">
-              <ShoppingBag size={16} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <p className="text-lg sm:text-2xl font-bold text-foreground tracking-tight">
-              {stats.totalOrders}
-            </p>
-            <div className="mt-1 flex items-center gap-1 text-[10px] text-amber-600 dark:text-amber-400 font-semibold">
-              <Clock size={11} />
-              <span>{stats.pendingOrders} Pending Action</span>
-            </div>
-          </div>
-        </div>
+      {/* ─── Active Dashboard Content ─── */}
+      {dashboardData && (
+        <>
+          {/* 1. Greeting Bar */}
+          <GreetingBar
+            userName="Administrator"
+            currentTimeDhaka={dashboardData.currentTimeDhaka}
+            pendingOrdersCount={dashboardData.pipeline.pending}
+            onNewOrder={handleOpenNewOrder}
+          />
 
-        {/* Total Products */}
-        <div className="flex flex-col justify-between rounded-md border border-border bg-card p-4 sm:p-5 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Catalog Items
-            </p>
-            <div className="grid h-8 w-8 place-items-center rounded-sm bg-zinc-500/10 text-zinc-600 dark:text-zinc-400">
-              <Laptop size={16} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <p className="text-lg sm:text-2xl font-bold text-foreground tracking-tight">
-              {stats.totalProducts}
-            </p>
-            <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground font-semibold">
-              <Boxes size={11} />
-              <span>Active Hardware</span>
-            </div>
-          </div>
-        </div>
+          {/* 2. Four KPI Cards */}
+          <KpiCards
+            today={dashboardData.today}
+            yesterday={dashboardData.yesterday}
+            sparklines={dashboardData.sparklines}
+          />
 
-        {/* Low Stock Alerts */}
-        <div className="flex flex-col justify-between rounded-md border border-border bg-card p-4 sm:p-5 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Low Stock Alerts
-            </p>
-            <div className="grid h-8 w-8 place-items-center rounded-sm bg-red-500/10 text-red-600 dark:text-red-400">
-              <AlertTriangle size={16} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <p className="text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400 tracking-tight">
-              {stats.lowStockItems}
-            </p>
-            <div className="mt-1 flex items-center gap-1 text-[10px] text-red-600 dark:text-red-400 font-semibold">
-              <span>Restock recommended</span>
-            </div>
-          </div>
-        </div>
+          {/* 3. Sales Chart (Dual axis Area + Line with 7/30/90D toggle) */}
+          <SalesChart
+            data={dashboardData.salesSeries}
+            selectedRange={selectedRange}
+            onRangeChange={handleRangeChange}
+            isLoading={dataLoading}
+          />
 
-        {/* Delivered Today */}
-        <div className="col-span-2 sm:col-span-1 flex flex-col justify-between rounded-md border border-border bg-card p-4 sm:p-5 shadow-2xs">
-          <div className="flex items-center justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-              Fulfilled Today
-            </p>
-            <div className="grid h-8 w-8 place-items-center rounded-sm bg-purple-500/10 text-purple-600 dark:text-purple-400">
-              <PackageOpen size={16} />
-            </div>
-          </div>
-          <div className="mt-3">
-            <p className="text-lg sm:text-2xl font-bold text-foreground tracking-tight">
-              {stats.deliveredToday}
-            </p>
-            <div className="mt-1 flex items-center gap-1 text-[10px] text-purple-600 dark:text-purple-400 font-semibold">
-              <CheckCircle2 size={11} />
-              <span>Delivered packages</span>
-            </div>
-          </div>
-        </div>
-      </div>
+          {/* 4. Needs Your Attention Tiles (Shown only when count > 0; calm all-clear otherwise) */}
+          <AttentionSection items={dashboardData.attentionItems} />
 
-      {/* ── Dashboard Operations Grid ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Orders (2 Columns) */}
-        <div className="lg:col-span-2 rounded-md border border-border bg-card shadow-2xs flex flex-col overflow-hidden">
-          <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border">
-            <div>
-              <h2 className="text-sm font-bold text-foreground">Recent Customer Orders</h2>
-              <p className="text-[11px] text-muted-foreground">
-                Showing latest transaction activities
-              </p>
-            </div>
-            <Link
-              href="/admin/orders"
-              className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"
-            >
-              All Orders <ArrowRight size={12} />
-            </Link>
-          </div>
+          {/* 5. Order Pipeline Segmented Bar */}
+          <OrderPipeline pipeline={dashboardData.pipeline} />
 
-          <div className="flex-1 overflow-x-auto">
-            {recentOrders.length === 0 ? (
-              <div className="p-8 text-center text-xs text-muted-foreground">
-                No orders received yet.
-              </div>
-            ) : (
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-border bg-muted/40 text-[10px] uppercase font-bold text-muted-foreground">
-                    <th className="py-2.5 px-4">Order ID</th>
-                    <th className="py-2.5 px-4">Customer</th>
-                    <th className="py-2.5 px-4">Payment</th>
-                    <th className="py-2.5 px-4">Amount</th>
-                    <th className="py-2.5 px-4 text-right">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {recentOrders.map((order) => (
-                    <tr
-                      key={order.id}
-                      onClick={() => router.push("/admin/orders")}
-                      className="hover:bg-zinc-100 dark:hover:bg-zinc-850/60 transition-colors cursor-pointer"
-                    >
-                      <td className="py-3 px-4 font-mono font-bold text-foreground">
-                        {order.id}
-                      </td>
-                      <td className="py-3 px-4">
-                        <p className="font-semibold text-foreground">{order.customer}</p>
-                        <p className="text-[10px] text-muted-foreground">{order.date}</p>
-                      </td>
-                      <td className="py-3 px-4 text-muted-foreground font-medium">
-                        {order.paymentMethod}
-                      </td>
-                      <td className="py-3 px-4 font-bold text-foreground">
-                        {order.amount}
-                      </td>
-                      <td className="py-3 px-4 text-right">
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded-xs text-[10px] font-bold ${getStatusColor(
-                            order.status
-                          )}`}
-                        >
-                          {order.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </div>
-        </div>
+          {/* 6. Two Columns: Best Sellers & Brand Revenue Distribution */}
+          <PerformanceColumns
+            topProducts={dashboardData.topProductsMonth}
+            brandRevenue={dashboardData.brandRevenueMonth}
+          />
 
-        {/* Low Stock Watchlist & Shortcuts (1 Column) */}
-        <div className="space-y-6">
-          {/* Critical Low Stock Alert Card */}
-          <div className="rounded-md border border-border bg-card shadow-2xs p-4 sm:p-5">
-            <div className="flex items-center justify-between border-b border-border pb-3 mb-3">
-              <div className="flex items-center gap-2">
-                <AlertTriangle size={15} className="text-red-500" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  Low Stock Watchlist
-                </h3>
-              </div>
-              <Link
-                href="/admin/inventory"
-                className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                Manage
-              </Link>
-            </div>
+          {/* 7. Recent Orders (Compact rows, status badges, invoice & challan) */}
+          <RecentOrdersTable
+            orders={dashboardData.latestOrders}
+            onOpenDocument={handleOpenDocument}
+          />
 
-            <div className="space-y-2.5">
-              {lowStockProducts.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-4 text-center">
-                  All inventory levels are healthy.
-                </p>
-              ) : (
-                lowStockProducts.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between p-2 rounded-sm border border-border bg-background/60 text-xs"
-                  >
-                    <div className="min-w-0 flex-1 pr-2">
-                      <p className="font-semibold text-foreground truncate">{item.name}</p>
-                      <p className="text-[10px] text-muted-foreground">{item.category}</p>
-                    </div>
-                    <span className="rounded-xs bg-red-500/10 text-red-600 dark:text-red-400 font-bold px-2 py-0.5 text-[10px] shrink-0">
-                      {item.stock} left
-                    </span>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+          {/* 8. Storefront Now (Live hero banner & active Power Deal with live countdown) */}
+          <StorefrontNow data={dashboardData.storefrontNow} />
 
-          {/* Quick Management Navigation Shortcuts */}
-          <div className="rounded-md border border-border bg-card shadow-2xs p-4 sm:p-5">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground mb-3 border-b border-border pb-2">
-              Quick Shortcuts
-            </h3>
-            <div className="grid grid-cols-2 gap-2">
-              <Link
-                href="/admin/products"
-                className="flex flex-col items-center justify-center p-3 rounded-sm border border-border bg-background hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors text-center group"
-              >
-                <Laptop size={18} className="text-muted-foreground group-hover:text-blue-500 mb-1" />
-                <span className="text-xs font-bold text-foreground">Products</span>
-                <span className="text-[9px] text-muted-foreground">Manage catalog</span>
-              </Link>
+          {/* Phase5Placeholder: reserved slot for Phase 5 store traffic & ad attribution cards (code comment only) */}
 
-              <Link
-                href="/admin/inventory"
-                className="flex flex-col items-center justify-center p-3 rounded-sm border border-border bg-background hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors text-center group"
-              >
-                <Warehouse size={18} className="text-muted-foreground group-hover:text-blue-500 mb-1" />
-                <span className="text-xs font-bold text-foreground">Inventory</span>
-                <span className="text-[9px] text-muted-foreground">Adjust stock</span>
-              </Link>
+          {/* Invoice & Challan Document Dialog (Preserved) */}
+          <OrderDocumentDialog
+            isOpen={docDialogOpen}
+            onClose={() => setDocDialogOpen(false)}
+            order={docOrder}
+            initialTab={docTab}
+          />
 
-              <Link
-                href="/admin/hero-banners"
-                className="flex flex-col items-center justify-center p-3 rounded-sm border border-border bg-background hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors text-center group"
-              >
-                <ImageIcon size={18} className="text-muted-foreground group-hover:text-blue-500 mb-1" />
-                <span className="text-xs font-bold text-foreground">Hero Banners</span>
-                <span className="text-[9px] text-muted-foreground">Homepage slides</span>
-              </Link>
-
-              <Link
-                href="/admin/hot-deal"
-                className="flex flex-col items-center justify-center p-3 rounded-sm border border-border bg-background hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors text-center group"
-              >
-                <Flame size={18} className="text-muted-foreground group-hover:text-blue-500 mb-1" />
-                <span className="text-xs font-bold text-foreground">Flash Deals</span>
-                <span className="text-[9px] text-muted-foreground">Promotions</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+          {/* Create Manual Order Dialog */}
+          <OrderCreateDialog
+            isOpen={orderCreateOpen}
+            onClose={() => setOrderCreateOpen(false)}
+            products={productsForDialog}
+            onSuccess={() => {
+              handleRefresh();
+            }}
+          />
+        </>
+      )}
     </div>
   );
-};
-
-export default AdminDashboard;
+}

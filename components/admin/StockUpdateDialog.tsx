@@ -12,16 +12,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useToast } from "@/contexts/ToastContext";
 
 interface StockUpdateDialogProps {
   isOpen: boolean;
   onClose: () => void;
   product: {
     id: string;
+    variantId?: string;
     name: string;
+    variantLabel?: string;
     currentStock: number;
   } | null;
-  onSuccess: (newStock: number) => void;
+  onSuccess: (newStock: number, variantId?: string) => void;
 }
 
 export function StockUpdateDialog({
@@ -32,18 +35,19 @@ export function StockUpdateDialog({
 }: StockUpdateDialogProps) {
   const [newStock, setNewStock] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const { error } = useToast();
 
   const handleUpdate = () => {
     if (!product || !newStock) return;
 
     const stockValue = parseInt(newStock);
     if (isNaN(stockValue) || stockValue < 0) {
-      alert("Please enter a valid stock quantity (0 or greater)");
+      error("Please enter a valid stock quantity (0 or greater)");
       return;
     }
 
     setIsUpdating(true);
-    onSuccess(stockValue);
+    onSuccess(stockValue, product.variantId);
     onClose();
     setNewStock("");
     setIsUpdating(false);
@@ -56,6 +60,7 @@ export function StockUpdateDialog({
           <DialogTitle>Update Stock</DialogTitle>
           <DialogDescription>
             Update the stock quantity for {product?.name}
+            {product?.variantLabel ? ` (${product.variantLabel})` : ""}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-4">

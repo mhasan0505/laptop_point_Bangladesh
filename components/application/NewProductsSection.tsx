@@ -1,6 +1,6 @@
 "use client";
 
-import { laptopData, Product } from "@/app/data/data";
+import type { Product } from "@/types/product";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import "swiper/css";
@@ -17,21 +17,21 @@ interface NewProductsSectionProps {
 
 const NewProductsSection = ({ initialProducts }: NewProductsSectionProps) => {
   const [products, setProducts] = useState<Product[]>(
-    initialProducts && initialProducts.length > 0
-      ? initialProducts
-      : laptopData.laptops || [],
+    initialProducts && initialProducts.length > 0 ? initialProducts : [],
   );
 
   useEffect(() => {
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setProducts(data);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (!initialProducts || initialProducts.length === 0) {
+      fetch("/api/products")
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setProducts(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialProducts]);
 
   // Show newest products first (sorted by ID descending)
   const newProducts = [...products]

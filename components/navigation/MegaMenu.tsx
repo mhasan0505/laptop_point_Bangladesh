@@ -1,23 +1,27 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
+import type { MegaMenuFeaturedProduct } from "@/lib/public-content";
 import { motion } from "framer-motion";
 import { ChevronRight, Laptop } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+interface MegaMenuProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  featuredProducts?: Record<string, MegaMenuFeaturedProduct[]>;
+}
+
 const MegaMenu = ({
   isOpen,
   onClose,
   onMouseEnter,
   onMouseLeave,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
-}) => {
+  featuredProducts,
+}: MegaMenuProps) => {
   const [hoveredCategory, setHoveredCategory] = useState<string>("Business");
 
   // Get unique categories from laptop data
@@ -28,23 +32,9 @@ const MegaMenu = ({
     { name: "Budget", icon: "💰" },
   ];
 
-  // Get featured products for each category based on product names/brands
+  // Get featured products for each category
   const getFeaturedProducts = (category: string) => {
-    const categoryMap: { [key: string]: string[] } = {
-      Business: ["HP", "Dell", "Lenovo"],
-      Professional: ["HP", "Dell", "Lenovo"],
-      Gaming: ["ASUS", "MSI", "Acer"],
-      Budget: ["Dell", "Lenovo"],
-    };
-
-    const brands = categoryMap[category] || [];
-    return laptopData.laptops
-      .filter((laptop) =>
-        brands.some((brand) =>
-          laptop.name.toUpperCase().includes(brand.toUpperCase()),
-        ),
-      )
-      .slice(0, 3);
+    return featuredProducts?.[category] || [];
   };
 
   if (!isOpen) return null;

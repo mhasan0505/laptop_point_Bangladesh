@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/lib/admin-auth";
+import { requireAdmin } from "@/lib/auth-guard";
 import fs from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
@@ -6,9 +6,8 @@ import path from "path";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  if (!(await requireAdminSession(request))) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin(request, { roles: ["owner"] });
+  if (auth.error) return auth.error;
 
   try {
     const body = await request.json();

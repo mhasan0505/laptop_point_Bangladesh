@@ -39,9 +39,19 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type {
+  MegaMenuFeaturedProduct,
+  StorefrontNavigation,
+} from "@/lib/public-content";
 import MegaMenu from "../navigation/MegaMenu";
 
-const Header = () => {
+const Header = ({
+  navigation,
+  megaMenuFeatured,
+}: {
+  navigation?: StorefrontNavigation;
+  megaMenuFeatured?: Record<string, MegaMenuFeaturedProduct[]>;
+}) => {
   const router = useRouter();
   const { getCartCount } = useCart();
   const { getWishlistCount } = useWishlist();
@@ -148,7 +158,40 @@ const Header = () => {
   const cartCount = getCartCount();
   const wishlistCount = getWishlistCount();
 
-  const navLinks = navigationLinks;
+  const navLinks =
+    navigation && navigation.topNavMenus.length > 0
+      ? navigation.topNavMenus.map((item) => ({
+          name: item.label,
+          href: item.href || (item.dropdownItems?.[0]?.href ?? "#"),
+          hasDropdown: Boolean(item.dropdownItems && item.dropdownItems.length > 0),
+          submenu: item.dropdownItems?.map((s) => ({
+            name: s.name,
+            href: s.href,
+          })),
+          badge: item.badge,
+        }))
+      : navigationLinks;
+
+  const departmentItems =
+    navigation && navigation.shopCategories.length > 0
+      ? navigation.shopCategories.map((item) => ({
+          name: item.label,
+          href: item.href,
+          badge: undefined as string | undefined,
+          sub:
+            item.subitems && item.subitems.length > 0
+              ? [
+                  {
+                    title: item.label.toUpperCase(),
+                    items: item.subitems.map((s) => ({
+                      name: s.name,
+                      href: s.href,
+                    })),
+                  },
+                ]
+              : undefined,
+        }))
+      : departmentMenuItems;
 
   // Handle click outside search and load search index when opened
   useEffect(() => {
@@ -674,7 +717,7 @@ const Header = () => {
                 onMouseLeave={handleDepartmentMenuLeave}
                 className="w-64 overflow-hidden rounded-none rounded-b-xl border border-neutral-200 bg-white p-0 shadow-[0_16px_44px_rgba(15,23,42,0.16)]"
               >
-                {departmentMenuItems.map((item) =>
+                {departmentItems.map((item) =>
                   item.sub ? (
                     <DropdownMenuSub key={item.name}>
                       <DropdownMenuSubTrigger className="flex cursor-pointer items-center justify-between rounded-none px-4 py-3 text-sm font-medium text-neutral-700 focus:bg-neutral-50 focus:text-neutral-900 data-[state=open]:bg-neutral-50">
@@ -756,6 +799,7 @@ const Header = () => {
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
+        navigation={navigation}
       />
 
       {/* MegaMenu for Categories */}
@@ -767,6 +811,7 @@ const Header = () => {
           setIsMegaMenuHovered(true);
         }}
         onMouseLeave={() => setIsMegaMenuHovered(false)}
+        featuredProducts={megaMenuFeatured}
       />
     </header>
   );

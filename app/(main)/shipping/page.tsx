@@ -1,4 +1,8 @@
-export default function ShippingInfo() {
+import { getStorefrontCommerce } from "@/lib/public-content";
+
+export default async function ShippingInfo() {
+  const commerce = await getStorefrontCommerce();
+
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">
       <div className="container mx-auto px-6 sm:px-8 lg:px-12 max-w-4xl">
@@ -6,7 +10,12 @@ export default function ShippingInfo() {
           Shipping Information
         </h1>
 
-        <div className="prose prose-lg max-w-none">
+        {commerce.shippingPolicy ? (
+          <div className="prose prose-lg max-w-none whitespace-pre-line text-gray-700 leading-relaxed">
+            {commerce.shippingPolicy}
+          </div>
+        ) : (
+          <div className="prose prose-lg max-w-none">
           <p className="text-gray-600 mb-6">
             Last updated: {new Date().toLocaleDateString()}
           </p>
@@ -116,6 +125,7 @@ export default function ShippingInfo() {
             </p>
           </section>
         </div>
+        )}
       </div>
     </div>
   );

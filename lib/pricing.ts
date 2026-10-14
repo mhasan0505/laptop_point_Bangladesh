@@ -22,6 +22,7 @@ export interface PriceLineItem {
  */
 export function computeOrderTotals(
   items: PriceLineItem[],
+  options?: { shippingCost?: number; taxRate?: number }
 ): { subtotal: number; tax: number; shipping: number; total: number } {
   const unitPriceOf = (item: PriceLineItem) =>
     item.unitPrice !== undefined ? item.unitPrice : (item.price ?? 0);
@@ -29,7 +30,13 @@ export function computeOrderTotals(
     (sum, item) => sum + unitPriceOf(item) * item.quantity,
     0,
   );
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  const tax = subtotal * TAX_RATE;
+  const shipping =
+    options?.shippingCost !== undefined
+      ? options.shippingCost
+      : subtotal >= FREE_SHIPPING_THRESHOLD
+        ? 0
+        : SHIPPING_COST;
+  const taxRate = options?.taxRate !== undefined ? options.taxRate : TAX_RATE;
+  const tax = subtotal * taxRate;
   return { subtotal, tax, shipping, total: subtotal + tax + shipping };
 }

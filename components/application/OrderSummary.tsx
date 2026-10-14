@@ -4,7 +4,11 @@ import { useCart } from "@/contexts/CartContext";
 import { formatBDT } from "@/lib/format";
 import Image from "next/image";
 
-export default function OrderSummary() {
+interface OrderSummaryProps {
+  showCheckoutButton?: boolean;
+}
+
+export default function OrderSummary({ showCheckoutButton }: OrderSummaryProps = {}) {
   const { items, getSubtotal, getTax, getShipping, getCartTotal } = useCart();
 
   const subtotal = getSubtotal();

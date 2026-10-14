@@ -1,0 +1,34 @@
+[
+  {
+    "id": "q-1",
+    "productSlug": "hp-elitebook-840-g8",
+    "userName": "Tanvir Ahmed",
+    "question": "Does this HP EliteBook 840 G8 come with the official charger and replacement warranty?",
+    "answer": "Yes! All our premium laptops come with an original OEM charger and a 15-day official shop replacement guarantee plus 2 years free service warranty.",
+    "createdAt": "2026-10-11T13:45:27.848Z"
+  },
+  {
+    "id": "q-2",
+    "productSlug": "dell-latitude-7420",
+    "userName": "Sabbir Hossain",
+    "question": "Can I upgrade the RAM to 32GB on this Latitude 7420?",
+    "answer": "The Dell Latitude 7420 uses soldered LPDDR4x high-speed memory, so the RAM capacity is fixed at 16GB. However, the M.2 NVMe SSD is fully user-upgradable up to 2TB.",
+    "createdAt": "2026-10-12T13:45:27.848Z"
+  },
+  {
+    "id": "q-3",
+    "productSlug": "lenovo-thinkpad-t14-gen-2",
+    "userName": "Mehedi Hasan",
+    "question": "Is cash on delivery available with product checking in Chittagong?",
+    "answer": null,
+    "createdAt": "2026-10-13T09:45:27.848Z"
+  },
+  {
+    "id": "q-4",
+    "productSlug": "microsoft-surface-laptop-4",
+    "userName": "Nusrat Jahan",
+    "question": "What is the battery health percentage for this Surface Laptop 4?",
+    "answer": null,
+    "createdAt": "2026-10-13T11:45:27.848Z"
+  }
+]

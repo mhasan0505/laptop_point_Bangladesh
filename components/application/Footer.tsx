@@ -12,7 +12,26 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Footer() {
+interface FooterContact {
+  hotline: string;
+  email: string;
+  address: string;
+  hours: string;
+  social: { facebook: string; instagram: string; tiktok: string; youtube: string };
+}
+
+const digitsOnly = (v: string) => v.replace(/[^d+]/g, "");
+
+export default function Footer({
+  contact,
+  footerLinks,
+}: {
+  contact?: FooterContact;
+  footerLinks?: Array<{
+    columnTitle: string;
+    links: Array<{ label: string; href: string }>;
+  }>;
+}) {
   const currentYear = new Date().getFullYear();
 
   const paymentMethods = [
@@ -56,19 +75,19 @@ export default function Footer() {
                 {[
                   {
                     Icon: Facebook,
-                    href: "https://www.facebook.com/laptoppointbd",
+                    href: contact?.social.facebook ?? "https://www.facebook.com/laptoppointbd",
                     color: "hover:text-blue-600",
                     label: "Visit us on Facebook",
                   },
                   {
                     Icon: Instagram,
-                    href: "https://www.instagram.com/laptop_point.bd/",
+                    href: contact?.social.instagram ?? "https://www.instagram.com/laptop_point.bd/",
                     color: "hover:text-pink-600",
                     label: "Visit us on Instagram",
                   },
                   {
                     Icon: Music,
-                    href: "https://www.tiktok.com/@laptop.point.bd",
+                    href: contact?.social.tiktok ?? "https://www.tiktok.com/@laptop.point.bd",
                     color: "hover:text-sky-500",
                     label: "Visit us on TikTok",
                   },
@@ -80,7 +99,7 @@ export default function Footer() {
                   },
                   {
                     Icon: Youtube,
-                    href: "https://www.youtube.com/@LaptopPointBD",
+                    href: contact?.social.youtube ?? "https://www.youtube.com/@LaptopPointBD",
                     color: "hover:text-red-600",
                     label: "Visit us on YouTube",
                   },
@@ -128,128 +147,57 @@ export default function Footer() {
       <div className="bg-gray-900 text-white pt-16 pb-8">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
-            {/* Quick Links */}
-            <div>
-              <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-yellow-400 after:rounded-full">
-                Quick Links
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    href="/shop"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    All Products
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shop?category=laptop"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Laptops
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shop?category=accessories"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Accessories
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/deals"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Hot Deals
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Support */}
-            <div>
-              <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-yellow-400 after:rounded-full">
-                Support
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    href="/contact"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    My Account
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/cart"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Order Tracking
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    FAQs
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Contact Us
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Policies */}
-            <div>
-              <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-yellow-400 after:rounded-full">
-                Policies
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    href="/privacy"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/shipping"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Shipping Info
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/returns"
-                    className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
-                  >
-                    Returns & Refund
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            {/* Dynamic / Fallback Columns */}
+            {(footerLinks && footerLinks.length > 0
+              ? footerLinks
+              : [
+                  {
+                    columnTitle: "Quick Links",
+                    links: [
+                      { label: "All Products", href: "/shop" },
+                      { label: "Laptops", href: "/shop?category=laptop" },
+                      { label: "Accessories", href: "/shop?category=accessories" },
+                      { label: "Hot Deals", href: "/deals" },
+                    ],
+                  },
+                  {
+                    columnTitle: "Support",
+                    links: [
+                      { label: "My Account", href: "/contact" },
+                      { label: "Order Tracking", href: "/cart" },
+                      { label: "FAQs", href: "/contact" },
+                      { label: "Contact Us", href: "/contact" },
+                    ],
+                  },
+                  {
+                    columnTitle: "Policies",
+                    links: [
+                      { label: "Privacy Policy", href: "/privacy" },
+                      { label: "Terms of Service", href: "/terms" },
+                      { label: "Shipping Info", href: "/shipping" },
+                      { label: "Returns & Refund", href: "/returns" },
+                    ],
+                  },
+                ]
+            ).map((column) => (
+              <div key={column.columnTitle}>
+                <h4 className="text-lg font-bold mb-6 text-white relative inline-block after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-12 after:h-1 after:bg-yellow-400 after:rounded-full">
+                  {column.columnTitle}
+                </h4>
+                <ul className="space-y-3">
+                  {column.links.map((link) => (
+                    <li key={`${column.columnTitle}-${link.label}`}>
+                      <Link
+                        href={link.href}
+                        className="text-gray-400 hover:text-yellow-400 hover:pl-1 transition-all"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
 
             {/* Contact Info */}
             <div>
@@ -311,10 +259,10 @@ export default function Footer() {
                     </svg>
                   </div>
                   <a
-                    href="mailto:info@laptoppointbd.com"
+                    href={`mailto:${contact?.email ?? "info@laptoppointbd.com"}`}
                     className="text-sm hover:text-yellow-400 transition-colors"
                   >
-                    info@laptoppointbd.com
+                    {contact?.email ?? "info@laptoppointbd.com"}
                   </a>
                 </div>
                 <div className="flex items-center gap-3">
@@ -334,10 +282,10 @@ export default function Footer() {
                     </svg>
                   </div>
                   <a
-                    href="tel:+8801612182408"
+                    href={`tel:${digitsOnly(contact?.hotline ?? "+8801612182408")}`}
                     className="text-sm hover:text-yellow-400 transition-colors"
                   >
-                    +880 1612-182408
+                    {contact?.hotline ?? "+880 1612-182408"}
                   </a>
                 </div>
               </address>

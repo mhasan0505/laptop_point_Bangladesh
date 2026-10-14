@@ -16,44 +16,28 @@ export interface SearchItem {
 // Reducing bundle size significantly for components that only need basic product info
 export async function getSearchIndex(): Promise<SearchItem[]> {
   try {
-    if (typeof window !== "undefined") {
-      const res = await fetch("/api/products");
-      if (res.ok) {
-        const products = await res.json();
-        if (Array.isArray(products) && products.length > 0) {
-          return products.map((product: any) => ({
-            id: product.id,
-            name: product.name,
-            slug: product.slug,
-            brand: product.brand || "",
-            category: product.category || "",
-            price: product.price,
-            image: typeof product.image === "string" ? product.image : product.image?.src || "/Hero_Image.png",
-            sku: product.sku || "",
-            processor: product.specs?.processor || "",
-          }));
-        }
+    const res = await fetch("/api/products");
+    if (res.ok) {
+      const products = await res.json();
+      if (Array.isArray(products) && products.length > 0) {
+        return products.map((product: any) => ({
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          brand: product.brand || "",
+          category: product.category || "",
+          price: product.price,
+          image: typeof product.image === "string" ? product.image : product.image?.src || "/Hero_Image.png",
+          sku: product.sku || "",
+          processor: product.specs?.processor || "",
+        }));
       }
     }
-  } catch {
-    // fallback to local data
+  } catch (err) {
+    console.error("Failed to load search index:", err);
   }
 
-  // Dynamic import only when search is triggered
-  const { getLiveLaptops, laptopData } = await import("@/app/data/data");
-  const list = typeof window === "undefined" ? await getLiveLaptops() : laptopData.laptops;
-
-  return list.map((product) => ({
-    id: product.id,
-    name: product.name,
-    slug: product.slug,
-    brand: product.brand || "",
-    category: product.category || "",
-    price: product.price,
-    image: typeof product.image === "string" ? product.image : (product.image as any)?.src || "/Hero_Image.png",
-    sku: product.sku || "",
-    processor: product.specs?.processor || "",
-  }));
+  return [];
 }
 
 // For components that need immediate access (like search suggestions)

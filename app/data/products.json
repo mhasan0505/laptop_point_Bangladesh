@@ -61,32 +61,11 @@
     "sku": "HP-840G3-002",
     "name": "HP EliteBook 840 G3 Ultrabook",
     "brand": "HP",
-    "model": "EliteBook 840 G3",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "A+",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 21700,
-      "market_price": 26000,
-      "discount_percentage": 16,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 8
-    },
+    "model": "EliteBook 840 G3",
     "specs": {
-      "processor": "Intel Core i5-6300U (6th Gen)",
+      "os": "Windows 10 Pro",
       "ram": "8GB DDR4",
-      "storage": "256GB SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "TN/IPS",
-        "touchscreen": false
-      },
-      "graphics": "Intel HD Graphics 520",
       "ports": [
         "USB-C",
         "DisplayPort",
@@ -95,23 +74,44 @@
         "Docking Connector"
       ],
       "weight": "1.48 kg",
-      "os": "Windows 10 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "TN/IPS",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB SSD",
+      "graphics": "Intel HD Graphics 520",
+      "processor": "Intel Core i5-6300U (6th Gen)"
     },
-    "description": {
-      "short": "Slim enterprise ultrabook with enterprise-grade security and connectivity.",
-      "full": "**What is the main difference between the ProBook and EliteBook series?**\n The EliteBook 840 G3 is significantly thinner and lighter, featuring a more premium magnesium alloy chassis compared to the ProBook series. \n\n**What modern connectivity does it offer?**\nIt introduces a USB-C port for modern peripherals while maintaining backward compatibility with essential ports like VGA and DisplayPort. \n\n**Who is this laptop best suited for?**\nWith its blend of portability, premium build, and comprehensive ports, it's a favorite for corporate environments and business professionals on the go."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 8
     },
-    "features": [
-      "Slim Aluminum Body",
-      "Backlit Keyboard",
-      "Enterprise Security"
-    ],
     "images": [
       "/products/hp/HP-Elitebook-840-G3-Core-i5-6TH-Gen-8-256/main.jpg",
       "/products/hp/HP-Elitebook-840-G3-Core-i5-6TH-Gen-8-256/side.jpg",
       "/products/hp/HP-Elitebook-840-G3-Core-i5-6TH-Gen-8-256/side1.jpg",
       "/products/hp/HP-Elitebook-840-G3-Core-i5-6TH-Gen-8-256/back.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 22900,
+      "market_price": 27000,
+      "tax_included": true,
+      "discount_percentage": 15
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Slim Aluminum Body",
+      "Backlit Keyboard",
+      "Enterprise Security"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What is the main difference between the ProBook and EliteBook series?**\n The EliteBook 840 G3 is significantly thinner and lighter, featuring a more premium magnesium alloy chassis compared to the ProBook series. \n\n**What modern connectivity does it offer?**\nIt introduces a USB-C port for modern peripherals while maintaining backward compatibility with essential ports like VGA and DisplayPort. \n\n**Who is this laptop best suited for?**\nWith its blend of portability, premium build, and comprehensive ports, it's a favorite for corporate environments and business professionals on the go.",
+      "short": "Slim enterprise ultrabook with enterprise-grade security and connectivity."
+    }
   },
   {
     "id": 3,
@@ -189,7 +189,7 @@
       "tax_included": true
     },
     "stock": {
-      "status": "Limited Stock",
+      "status": "In Stock",
       "quantity": 3
     },
     "specs": {
@@ -232,13 +232,13 @@
   {
     "id": 5,
     "sku": "HP-840G7-005",
-    "name": "HP EliteBook 840 G7 Premium",
+    "name": "HP Elitebook 840 G7 Core i5 10th Gen 14.1\" FHD Laptop",
     "brand": "HP",
     "grade": "Like New",
     "model": "EliteBook 840 G7",
     "specs": {
       "os": "Windows 11 Pro",
-      "ram": "16GB DDR4",
+      "ram": "8GB DDR4",
       "ports": [
         "2x Thunderbolt 3",
         "2x USB 3.1",
@@ -269,10 +269,10 @@
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 38500,
-      "market_price": 44000,
+      "sale_price": 38000,
+      "market_price": 45000,
       "tax_included": true,
-      "discount_percentage": 13
+      "discount_percentage": 16
     },
     "category": "Ultrabook",
     "features": [
@@ -283,8 +283,8 @@
     ],
     "condition": "Used",
     "description": {
-      "full": "**What are the main design improvements in the G7?**\n The G7 features a major design overhaul, resulting in a lighter chassis (1.33kg) and significantly thinner screen bezels, giving it a more modern and compact footprint. \n\n**How does it handle multitasking?**\n With 16GB of RAM as a standard configuration, this laptop is built to handle heavy multitasking with ease, allowing you to run multiple applications smoothly. \n\n**What are the user experience upgrades?**\n The keyboard has been redesigned to be quieter and more comfortable for long typing sessions, and it offers around 3 hours of battery life for typical use.",
-      "short": "Redesigned 10th Gen lightweight ultrabook with narrow bezels."
+      "full": "Brand\tHP\nModel\tHP EliteBook 840 G7\nProcessor\tIntel Core i5-10210U, 10th Gen (Up to 4.2 GHz, 4 Cores, 8 Threads)\nMemory\t8GB / 16GB DDR4 RAM (Upgradeable up to 32GB)\nStorage\t256GB / 512GB PCIe NVMe SSD (Upgradeable)\nGraphics\tIntel UHD Graphics\nDisplay\t14″ Full HD (1920×1080) IPS Anti-Glare Display\nKeyboard\tBacklit, Spill-resistant Keyboard\nAudio\tBang & Olufsen Premium Speakers\nPorts\tUSB-C (Thunderbolt), USB-A 3.1, HDMI, RJ-45, Audio Jack\nConnectivity\tWi-Fi 6, Bluetooth\nBattery\tLong Backup Lithium-ion Battery\nWeight\tApprox. 1.35 kg\nOperating System\tWindows 10 Pro (Upgradeable to Windows 11 Pro)",
+      "short": "Model: HP Elitebook 840 G7\nIntel Core i5-10210U Processor (6M Cache, 1.60 GHz up to 4.20 GHz)\n8GB 2666MHz DDR4 RAM\n256GB NVMe M.2 SSD\n14.1\" FHD(1920 x 1080) IPS Display"
     }
   },
   {
@@ -386,10 +386,10 @@
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 49500,
-      "market_price": 55000,
+      "sale_price": 52500,
+      "market_price": 60000,
       "tax_included": true,
-      "discount_percentage": 10
+      "discount_percentage": 13
     },
     "category": "Ultrabook",
     "features": [
@@ -443,10 +443,10 @@
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 68000,
+      "sale_price": 72000,
       "market_price": 85000,
       "tax_included": true,
-      "discount_percentage": 20
+      "discount_percentage": 15
     },
     "category": "Convertible 2-in-1",
     "features": [
@@ -522,11 +522,11 @@
     "sku": "HP-845G8-010",
     "name": "HP EliteBook 845 G8 (Ryzen)",
     "brand": "HP",
-    "grade": "Like New",
+    "grade": "Grade A Quality Product,",
     "model": "EliteBook 845 G8",
     "specs": {
       "os": "Windows 11 Pro",
-      "ram": "16GB DDR4",
+      "ram": "8GB DDR4",
       "ports": [
         "2x USB-C",
         "2x USB-A",
@@ -539,7 +539,7 @@
         "resolution": "1920 x 1080 (FHD)",
         "touchscreen": false
       },
-      "storage": "512GB NVMe SSD",
+      "storage": "256GB NVMe SSD",
       "graphics": "AMD Radeon Graphics",
       "processor": "AMD Ryzen 5 PRO 5650U"
     },
@@ -562,14 +562,12 @@
     },
     "category": "Ultrabook",
     "features": [
-      "Ryzen 5000 Series",
-      "Zen 3 Architecture",
-      "Premium Build"
+      "AMD Ryzen 5 5600U"
     ],
     "condition": "Used",
     "description": {
-      "full": "**What's new in the 845 G8 model?**\n The G8 model gets a significant performance boost by upgrading the processor to the Ryzen 5000 series, which is based on the highly efficient 'Zen 3' architecture. \n\n**What does this upgrade mean for performance?**\n This results in blazing-fast speeds for both single-core and multi-core tasks, along with some of the best integrated graphics performance you can find in a business laptop. \n\n**Is it still a premium device?**\n Absolutely. It features the same high-quality premium build as the rest of the EliteBook 800 series, combining top-tier performance with a durable and professional design.",
-      "short": "Updated Ryzen 5000 series performance in a premium chassis."
+      "full": "Brand\nHP\n\nModel\nHP EliteBook 845 G8\n\nProcessor\nAMD Ryzen 5 5600U, 6 Cores / 12 Threads, 2.3 GHz base speed up to 4.2 GHz boost, 16MB L3 cache\n\nGraphics\nAMD Radeon Graphics (Integrated)\n\nRAM\n8GB DDR4 3200MHz, upgradeable up to 64GB via 2 SODIMM slots\n\nStorage\n256GB PCIe NVMe SSD, M.2 interface, upgradeable\n\nDisplay\n14-inch FHD (1920×1080), IPS panel, 250 nits brightness, anti-glare, 45% NTSC color gamut\n\nOperating System\nWindows 11 Pro (64-bit)\n\nAudio\nDual stereo speakers, dual-array microphones, Bang & Olufsen audio tuning\n\nCamera\n720p HD webcam, with privacy shutter and IR sensor for Windows Hello\n\nKeyboard\nBacklit, spill-resistant keyboard\n\nConnectivity\nWi-Fi 6 (802.11ax), Bluetooth 5.2\n\nPorts\n2x USB-A 3.2 Gen1, 2x USB-C 3.2 Gen2 with DisplayPort Alt Mode, 1x HDMI 2.0, 1x headphone/mic combo jack, 1x nano-SIM slot (optional), 1x AC power\n\nBattery\n3-cell, 53Wh Li-ion polymer battery, supports fast charging (50% in ~30 minutes), battery life up to 4-5 hours+\n\nSecurity Features\nIR camera for Windows Hello, fingerprint reader, TPM 2.0, HP Sure Start, BIOS-level protections\n\nBuild Material\nAluminum chassis, MIL-STD-810H certified for durability\n\nDimensions\n324.2 x 215.5 x 17.9 mm (12.76 x 8.48 x 0.70 in)\n\nWeight\nApprox. 1.37 kg (3.02 lbs)",
+      "short": "Model: HP EliteBook 845 G8\nDisplay: 14″ FHD IPS Anti-Glare\nProcessor: AMD Ryzen 5 5600U \nRAM: 8GB DDR4 (Upgradeable)\nStorage: 256GB PCIe NVMe SSD\nBattery Life: Up to 4-5 hours+"
     }
   },
   {
@@ -864,32 +862,11 @@
     "sku": "DELL-7420-2IN1-016",
     "name": "Dell Latitude 7420 2-in-1",
     "brand": "Dell",
-    "model": "Latitude 7420 2-in-1",
-    "category": "Convertible 2-in-1",
-    "condition": "Used",
     "grade": "Premium",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 52000,
-      "market_price": 65000,
-      "discount_percentage": 20,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "Limited Stock",
-      "quantity": 2
-    },
+    "model": "Latitude 7420 2-in-1",
     "specs": {
-      "processor": "Intel Core i5-1145G7 (11th Gen)",
+      "os": "Windows 11 Pro",
       "ram": "16GB LPDDR4x (Soldered)",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "Touchscreen IPS",
-        "touchscreen": true
-      },
-      "graphics": "Intel Iris Xe Graphics",
       "ports": [
         "2x Thunderbolt 4",
         "1x USB-A",
@@ -897,18 +874,20 @@
         "MicroSD"
       ],
       "weight": "1.3 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "Touchscreen IPS",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": true
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "Intel Iris Xe Graphics",
+      "processor": "Intel Core i5-1145G7 (11th Gen)"
     },
-    "description": {
-      "short": "High-end 11th Gen convertible with carbon fiber/aluminum build.",
-      "full": "**What does 'Intel Evo Certified' mean?**\n The Intel Evo certification guarantees a premium mobile experience, ensuring the device has instant wake, about 3 hours of battery life, fast charging, and excellent responsiveness. \n\n**What are its standout features?**\n This is a top-tier business machine featuring a flexible 2-in-1 convertible design, powerful 11th Gen performance with Iris Xe graphics, and two Thunderbolt 4 ports for ultimate connectivity. \n\n**What is the build quality like?**\n It's exceptionally premium, available in materials like carbon fiber or aluminum. It’s lightweight, durable, and designed for professionals who need the best."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 2
     },
-    "features": [
-      "Evo Certified",
-      "2-in-1 Convertible",
-      "Thunderbolt 4",
-      "Premium Materials"
-    ],
     "images": [
       "/products/dell/Dell-latitude-7420-2-1-Core-i5-11TH-Gen-16512/main.jpg",
       "/products/dell/Dell-latitude-7420-2-1-Core-i5-11TH-Gen-16512/port.jpg",
@@ -917,7 +896,26 @@
       "/products/dell/Dell-latitude-7420-2-1-Core-i5-11TH-Gen-16512/side (3).jpg",
       "/products/dell/Dell-latitude-7420-2-1-Core-i5-11TH-Gen-16512/side (4).jpg",
       "/products/dell/Dell-latitude-7420-2-1-Core-i5-11TH-Gen-16512/side (5).jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 56000,
+      "market_price": 65000,
+      "tax_included": true,
+      "discount_percentage": 14
+    },
+    "category": "Convertible 2-in-1",
+    "features": [
+      "Evo Certified",
+      "2-in-1 Convertible",
+      "Thunderbolt 4",
+      "Premium Materials"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What does 'Intel Evo Certified' mean?**\n The Intel Evo certification guarantees a premium mobile experience, ensuring the device has instant wake, about 3 hours of battery life, fast charging, and excellent responsiveness. \n\n**What are its standout features?**\n This is a top-tier business machine featuring a flexible 2-in-1 convertible design, powerful 11th Gen performance with Iris Xe graphics, and two Thunderbolt 4 ports for ultimate connectivity. \n\n**What is the build quality like?**\n It's exceptionally premium, available in materials like carbon fiber or aluminum. It’s lightweight, durable, and designed for professionals who need the best.",
+      "short": "High-end 11th Gen convertible with carbon fiber/aluminum build."
+    }
   },
   {
     "id": 17,
@@ -1022,7 +1020,7 @@
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 34900,
+      "sale_price": 35500,
       "market_price": 410000,
       "tax_included": true,
       "discount_percentage": 91
@@ -1117,7 +1115,7 @@
       "tax_included": true
     },
     "stock": {
-      "status": "Limited Stock",
+      "status": "In Stock",
       "quantity": 2
     },
     "specs": {
@@ -1513,32 +1511,11 @@
     "sku": "HP-845G10-R5-027",
     "name": "HP EliteBook 845 G10 Ryzen 5 Pro 16/512",
     "brand": "HP",
-    "model": "EliteBook 845 G10",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "A",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 57500,
-      "market_price": 57500,
-      "discount_percentage": 0,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 4
-    },
+    "model": "EliteBook 845 G10",
     "specs": {
-      "processor": "AMD Ryzen 5 PRO",
+      "os": "Windows 11 Pro",
       "ram": "16GB DDR4",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "AMD Radeon Graphics",
       "ports": [
         "USB-C",
         "USB-A",
@@ -1546,24 +1523,45 @@
         "Audio Combo"
       ],
       "weight": "1.40 kg",
-      "os": "Windows 11 Pro"
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "AMD Radeon Graphics",
+      "processor": "AMD Ryzen 5 PRO"
     },
-    "description": {
-      "short": "Modern Ryzen Pro business ultrabook with 16GB RAM and 512GB SSD.",
-      "full": "**Who is this laptop for?**\nThis model is suitable for professionals, students, and multitaskers who need modern Ryzen performance, fast SSD storage, and reliable battery efficiency in a premium chassis.\n\n**Why choose this configuration?**\nWith 16GB RAM and 512GB NVMe SSD, it handles office workloads, coding, browsing, and productivity tasks smoothly."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 4
     },
+    "images": [
+      "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/main.png",
+      "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/back.png",
+      "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/side.png",
+      "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/port.png"
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 64500,
+      "market_price": 72000,
+      "tax_included": true,
+      "discount_percentage": 10
+    },
+    "category": "Ultrabook",
     "features": [
       "Ryzen 5 Pro",
       "16GB RAM",
       "512GB NVMe SSD",
       "Business Grade Build"
     ],
-    "images": [
-      "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/main.png",
-      "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/back.png",
-      "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/side.png",
-      "/products/hp/HP-Elitebook-845-G10-Ryzen-5-pro-16-512/port.png"
-    ]
+    "condition": "Used",
+    "description": {
+      "full": "**Who is this laptop for?**\nThis model is suitable for professionals, students, and multitaskers who need modern Ryzen performance, fast SSD storage, and reliable battery efficiency in a premium chassis.\n\n**Why choose this configuration?**\nWith 16GB RAM and 512GB NVMe SSD, it handles office workloads, coding, browsing, and productivity tasks smoothly.",
+      "short": "Modern Ryzen Pro business ultrabook with 16GB RAM and 512GB SSD."
+    }
   },
   {
     "id": 28,
@@ -1628,32 +1626,11 @@
     "sku": "HP-830G6-I5-029",
     "name": "HP EliteBook 830 G6 i5 8th Gen 8/256",
     "brand": "HP",
-    "model": "EliteBook 830 G6",
-    "category": "Ultrabook",
-    "condition": "Used",
     "grade": "A",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 28000,
-      "market_price": 32500,
-      "discount_percentage": 14,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 5
-    },
+    "model": "EliteBook 830 G6",
     "specs": {
-      "processor": "Intel Core i5-8365U (8th Gen)",
+      "os": "Windows 10/11 Pro",
       "ram": "8GB DDR4",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "13.3 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "Intel UHD Graphics 620",
       "ports": [
         "USB-C",
         "2x USB-A",
@@ -1662,25 +1639,46 @@
         "Audio Combo"
       ],
       "weight": "1.33 kg",
-      "os": "Windows 10/11 Pro"
+      "display": {
+        "size": "13.3 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1080 (FHD)",
+        "touchscreen": false
+      },
+      "storage": "256GB NVMe SSD",
+      "graphics": "Intel UHD Graphics 620",
+      "processor": "Intel Core i5-8365U (8th Gen)"
     },
-    "description": {
-      "short": "Compact 13.3-inch EliteBook with 8th Gen i5 and 8/256 setup.",
-      "full": "**Who should buy this laptop?**\nThis EliteBook 830 G6 is ideal for students, freelancers, and office users who need a lightweight and reliable business machine for day-to-day tasks.\n\n**How does this 8/256 configuration perform?**\nWith 8GB RAM and 256GB NVMe SSD, it handles regular multitasking, web browsing, online meetings, and office applications smoothly."
+    "stock": {
+      "status": "In Stock",
+      "quantity": 5
     },
-    "features": [
-      "8th Gen Intel Core i5",
-      "8GB DDR4 RAM",
-      "256GB NVMe SSD",
-      "Compact 13.3-inch Business Design"
-    ],
     "images": [
       "/products/hp/HP-Elitebook-830-G6-Core-i5-8TH-Gen-8-266/main.jpg",
       "/products/hp/HP-Elitebook-830-G6-Core-i5-8TH-Gen-8-266/back.jpg",
       "/products/hp/HP-Elitebook-830-G6-Core-i5-8TH-Gen-8-266/side.jpg",
       "/products/hp/HP-Elitebook-830-G6-Core-i5-8TH-Gen-8-266/port.jpg",
       "/products/hp/HP-Elitebook-830-G6-Core-i5-8TH-Gen-8-266/port2.jpg"
-    ]
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 29500,
+      "market_price": 34000,
+      "tax_included": true,
+      "discount_percentage": 13
+    },
+    "category": "Ultrabook",
+    "features": [
+      "8th Gen Intel Core i5",
+      "8GB DDR4 RAM",
+      "256GB NVMe SSD",
+      "Compact 13.3-inch Business Design"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**Who should buy this laptop?**\nThis EliteBook 830 G6 is ideal for students, freelancers, and office users who need a lightweight and reliable business machine for day-to-day tasks.\n\n**How does this 8/256 configuration perform?**\nWith 8GB RAM and 256GB NVMe SSD, it handles regular multitasking, web browsing, online meetings, and office applications smoothly.",
+      "short": "Compact 13.3-inch EliteBook with 8th Gen i5 and 8/256 setup."
+    }
   },
   {
     "id": 30,
@@ -1722,8 +1720,8 @@
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 55000,
-      "market_price": 61000,
+      "sale_price": 58500,
+      "market_price": 65000,
       "tax_included": true,
       "discount_percentage": 10
     },
@@ -1922,7 +1920,7 @@
   {
     "id": 34,
     "sku": "LEN-T14SG2-R7-034",
-    "name": "Lenovo ThinkPad T14s Gen 2 Ryzen 7 Pro 16/256",
+    "name": "Lenovo ThinkPad T14s Gen 2 Ultrabook Laptop, 14.0 inch 1920 x 1080 (FHD) IPS Anti-Glare, AMD Ryzen™ 7 PRO 5850U (2.30 GHz base, up to 4.70 GHz, 8 Cores, 16 Threads), 16GB DDR4 RAM, 256GB NVMe SSD, Windows 11 Pro",
     "brand": "Lenovo",
     "grade": "Like New",
     "model": "ThinkPad T14s Gen 2",
@@ -1944,11 +1942,11 @@
       },
       "storage": "256GB NVMe SSD",
       "graphics": "AMD Radeon Pro (1GB Dedicated)",
-      "processor": "AMD Ryzen 7 PRO 4750U (8C/16T)"
+      "processor": "AMD Ryzen™ 7 PRO 5850U (2.30 GHz base, up to 4.70 GHz, 8 Cores, 16 Threads)"
     },
     "stock": {
       "status": "In Stock",
-      "quantity": 2
+      "quantity": 5
     },
     "images": [
       "/products/lenovo/Lenovo-Thinkpad-T14s-Gen-2-Ryzen-7-pro-4650U-16-256/main.jpg",
@@ -1960,22 +1958,20 @@
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 45000,
-      "market_price": 50000,
+      "sale_price": 48500,
+      "market_price": 55000,
       "tax_included": true,
-      "discount_percentage": 10
+      "discount_percentage": 12
     },
     "category": "Ultrabook",
     "features": [
-      "Ryzen 7 Pro 8C/16T",
-      "1GB Dedicated Graphics",
-      "16GB DDR4 RAM",
-      "Thunderbolt 4"
+      "AMD Ryzen™ 7 PRO 5850U (2.30 GHz base, up to 4.70 GHz, 8 Cores, 16 Threads)",
+      "Lenovo ThinkPad T14s Gen 2 AMD Ryzen 7 Pro 5850U"
     ],
     "condition": "Used",
     "description": {
-      "full": "**How does Ryzen 7 Pro differ from Ryzen 5 Pro?**\nWith 8 cores vs 6, the Ryzen 7 Pro delivers significantly higher multi-threaded performance while maintaining the same lightweight form factor and professional features.\n\n**What's the benefit of 8-core performance?**\nIdeal for heavy multitasking, video editing, CAD, programming, and running virtual machines—all while maintaining excellent portability and battery life.\n\n**Who is this built for?**\nPower users, engineers, designers, and business professionals who need maximum performance in an ultraportable ThinkPad.",
-      "short": "Top-tier Ryzen 7 Pro ultrabook with 8-core performance and graphics."
+      "full": "Processor\tAMD Ryzen™ 7 PRO 5850U (2.30 GHz base, up to 4.70 GHz, 8 Cores, 16 Threads)\nRAM\t16 GB DDR4\nStorage\t256 GB PCIe NVMe SSD (Upgradeable)\nDisplay\t14” FHD IPS Anti-Glare (1920 × 1080), 300 nits\nGraphics\tAMD Radeon™ Graphics\nOperating System\tWindows 11 Pro Original\nBattery\t50 Wh Li-ion (Up to 5 hours)\nConnectivity\tWi-Fi 6, Bluetooth 5.1, USB-C, USB-A, HDMI 2.0, RJ-45\nWebCam\t720p HD Camera with Privacy Shutter\nWeight\tApprox. 1.47 kg",
+      "short": "Model\t\nThinkPad T14s Gen 2\nProcessor\t\n7 PRO 5850U (2.60 GHz base, up to 4.70 GHz, 8 Cores, 16 Threads)\nRAM\t\n16 GB DDR4\nStorage\t\n256 GB SSD SSD\nDisplay\t\n14-inch diagonal FHD display (1920 x 1080)"
     }
   },
   {
@@ -2146,6 +2142,171 @@
     "description": {
       "full": "Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop\nThe Dell Pro 15 Essential PV15250 15.6\" FHD Laptop with a modern Intel Core 3 100U processor featuring six cores. The Laptop reaches up to 4.7GHz boost speed, ensuring smooth multitasking and efficient handling of office tasks. This Dell Laptop runs on free dos, offering enhanced productivity, advanced security, and a user-friendly professional environment. The Dell Pro 15 Essential PV15250 Laptop features Intel UHD Graphics, providing stable visuals for browsing, document editing, streaming, and light multimedia use. The 15.6-inch Full HD display offers 120Hz refresh rate, IPS WVA panel, and anti-glare coating with 250 nits brightness. With 8GB DDR5 memory at 4400 MT/s, the Dell Laptop ensures responsive multitasking and smooth application performance for daily workflows. The 512GB PCIe NVMe SSD delivers fast boot times, quick file access, and sufficient storage capacity for essential software and data. The Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop includes an English US non-backlit keyboard for comfortable typing. It offers versatile connectivity with USB 3.2 Type-A, USB 2.0, and USB Type-C ports supporting data transfer, DisplayPort, and power delivery depending on configuration. Additional ports include HDMI 1.4, universal audio jack, power jack, and an SD card slot for expanded usability. The Dell Pro 15 Essential PV15250 Core 3 100U Laptop includes a 720p HD camera with integrated microphone for video calls. Dual tuned speakers enhance audio clarity for meetings and entertainment. Built with a durable plastic chassis, the Dell Pro 15 Essential PV15250 Laptop ensures long-term reliability. Realtek Wi-Fi 6 and Bluetooth provide fast wireless connectivity, while the 41WHr battery and 65W adapter support dependable daily usage.",
       "short": "Buy Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop from Laptop Point BD\nIn Bangladesh, you can get original Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop From Laptop Point BD. We have a large collection of latest Dell Laptop to purchase. Order Online Or Visit your Nearest Laptop Point BD Shop to get yours at lowest price. The Dell Pro 15 Essential PV15250 Core 3 100U 15.6\" FHD Laptop comes with 2 years warranty."
+    }
+  },
+  {
+    "id": 38,
+    "sku": "HP-ELITEBOOK-645-G10",
+    "name": "HP Elitebook 645 G10 Laptop, 14 Inch Full HD (1920 × 1080) IPS Anti-Glare, AMD Ryzen 5 7530U, 16GB DDR4 3200MHz RAM, 512GB PCIe NVMe SSD, Windows 11 Pro (Depending on Configuration)",
+    "brand": "HP",
+    "grade": "A+",
+    "model": "Elitebook 645 G10",
+    "specs": {
+      "os": "Windows 11 Pro (Depending on Configuration)",
+      "ram": "16GB DDR4 3200MHz",
+      "ports": [
+        "USB Type-C",
+        "USB Type-A",
+        "HDMI",
+        "Audio Combo Jack",
+        "RJ-45 LAN"
+      ],
+      "weight": "Approximately 1.4kg",
+      "display": {
+        "size": "14 Inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "Full HD (1920 × 1080)",
+        "touchscreen": false
+      },
+      "storage": "512GB PCIe NVMe SSD",
+      "graphics": "AMD Radeon Graphics",
+      "processor": "AMD Ryzen 5 7530U"
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
+    },
+    "images": [
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/HP_EliteBook_645_G10_AMD_Ryzen_5-7530U_16GB_RAM_512GB_SSD4_ZBIyL0pfV.jpg",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/HP_EliteBook_645_G10_AMD_Ryzen_5-7530U_16GB_RAM_512GB_SSD3_GP7ulzzuy.jpg",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/HP_EliteBook_645_G10_AMD_Ryzen_5-7530U_16GB_RAM_512GB_SSD2_EG1bx9btC.jpg",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/HP_EliteBook_645_G10_AMD_Ryzen_5-7530U_16GB_RAM_512GB_SSD1_w7m9Dq71x.jpg",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/HP_EliteBook_645_G10_AMD_Ryzen_5-7530U_16GB_RAM_512GB_SSD_SsEN0yUdA.jpg"
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 53500,
+      "market_price": 59000,
+      "tax_included": true,
+      "discount_percentage": 9
+    },
+    "category": "Laptop",
+    "features": [],
+    "condition": "Used",
+    "description": {
+      "full": "HP EliteBook 645 G10 Built for Business Performance\nThe HP EliteBook 645 G10 is engineered for professionals who need speed, reliability, and long-term durability. Powered by the AMD Ryzen 5 7530U processor featuring 6 cores, 12 threads, and boost speeds up to 4.5GHz, this laptop easily handles office applications, web browsing, virtual meetings, multitasking, programming, and business workloads. Combined with AMD Radeon Graphics, it also delivers smooth multimedia performance and light creative work.\n\nSmooth Multitasking Experience\nWith 16GB DDR4 3200MHz RAM, the laptop allows users to work efficiently across multiple applications without slowdowns. The 512GB PCIe NVMe SSD provides fast boot times, quick file transfers, and responsive application loading. HP’s EliteBook 645 G10 platform supports memory upgrades up to 64GB through dual SODIMM slots, giving users room for future expansion.\n\nCrisp 14-inch Full HD Display\nThe HP EliteBook 645 G10 features a 14-inch Full HD IPS anti-glare display that delivers clear visuals and comfortable viewing during long working hours. The narrow-bezel design maximizes screen space while maintaining a compact footprint. Whether you’re working with spreadsheets, editing documents, attending online meetings, or streaming videos, the display provides excellent clarity for daily productivity. HP offers multiple FHD display options across this model family.\n\nBusiness-Class Features\nDesigned for professionals, the EliteBook series is known for premium build quality, reliable keyboards, enterprise-level security, and excellent portability. The laptop includes modern connectivity options, Wi-Fi, Bluetooth, USB ports, HDMI, and business-focused features that help improve workflow in office environments, remote work, and hybrid workspaces.\n\nPortable and Reliable\nIts lightweight design makes it easy to carry between meetings, offices, classrooms, and client visits. The efficient Ryzen processor also helps deliver strong battery efficiency for everyday business use, making the laptop suitable for professionals who work on the move.",
+      "short": "HP EliteBook 645 G10 AMD Ryzen 5 Pro 7530U 16GB DDR4 3200MHz RAM 512GB NVMe SSD 14 Inch FHD Business Laptop"
+    }
+  },
+  {
+    "id": 39,
+    "sku": "MICROSOFT-SURFACE-GO-2",
+    "name": "Microsoft Surface Go 2 Laptop, 12.4-inch (1536 x 1024 ) PixelSense, 11th Gen Intel Core i5-1135G7, 16 GB DDR4 4200 MHz RAM, 256 GB NVMe SSD, Windows 11 Pro",
+    "brand": "Microsoft",
+    "grade": "A+",
+    "model": "Surface Go 2",
+    "specs": {
+      "os": "Windows 11 Pro",
+      "ram": "16 GB DDR4 4200 MHz",
+      "ports": [
+        "1 x USB-C",
+        "1 x USB-A",
+        "3.5mm headphone jack",
+        "and a Surface Connect"
+      ],
+      "weight": "1.127kg",
+      "display": {
+        "size": "12.4-inch",
+        "type": "PixelSense",
+        "resolution": "(1536 x 1024 )",
+        "touchscreen": true
+      },
+      "storage": "256 GB NVMe SSD",
+      "graphics": "Intel Iris Xe Graphics",
+      "processor": "11th Gen Intel Core i5-1135G7"
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 8
+    },
+    "images": [
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/406477-12-to-13-inch-laptops-microsoft-surface-laptop-go-2-128gb-10029963_icvDWn_INe.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/MicrosoftSurfaceLaptopGo2i511th8GB256GBWidnows11ProTS_grande_kmCYox2Pb8.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/Highlight-Feature-Surface-Laptop-Go-2-Lifestyle-01_VP2-859x540_vxYCRoeML.avif",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/MICROSOFT-Surface-Laptop-Go-2-bangladesh_2UddY39Ez.webp"
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 48000,
+      "market_price": 55000,
+      "tax_included": true,
+      "discount_percentage": 13
+    },
+    "category": "Laptop",
+    "features": [
+      "11th Gen Intel Core i5-1135G7"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "Model\nSurface Go 2\nBrand\tMicrosoft\nLaptop Type\tStandard\nProcessor Type\t11th Gen Intel Core i5-1135G7\nProcessor Speed\tUp to 4.20 GHz\nScreen Size\t12.4\" PixelSense Touch\nRAM\t16GB LPDDR4x\nStorage  256 GB NVMe SSD\nGraphics Card\tIntel Iris Xe Graphics\nAudio/Speaker\tDolby Audio Premium\nNetworking\tWi-Fi 6, Bluetooth 5.0\nWebcam\tYes\nBattery\tUp to 5 hours of typical device usage\nPorts\tUSB-C, USB-A, 3.5 mm headphone jack\nDimensions (W x D x H)\t278.2 x 206.2 x 15.7mm\nProduct Weight (Kg)\t1.127kg",
+      "short": "Processor: Intel Core i5 11th Gen - Up to 4.20 GHz\n\nMemory: 16 GB DDR4 4200 MHz\n\nStorage: 256GB PCIe NVMe SSD\n\nGraphics: Intel Iris Xe Graphics\n\nDisplay: 12.4″ PixelSense Multi-Touch Display (1536×1024)"
+    }
+  },
+  {
+    "id": 21,
+    "sku": "LENOVO-THINKPAD-X1-CARBON-GEN-9",
+    "name": "Lenovo ThinkPad X1 Carbon Gen 9 Ultrabook Laptop, 14.0 inch 1920 x 1200 (16:10) IPS Anti-Glare, Intel Core i7-1165G7 (11th Gen), 16GB LPDDR4 4267MHz RAM, 512GB NVMe SSD, Windows 11 Pro",
+    "brand": "Lenovo",
+    "grade": "LIKE NEW",
+    "model": "ThinkPad X1 Carbon Gen 9",
+    "specs": {
+      "os": "Windows 11 Pro",
+      "ram": "16GB LPDDR4 4267MHz",
+      "ports": [
+        "2x Thunderbolt 4",
+        "2x USB-A",
+        "HDMI 2.0"
+      ],
+      "weight": "1.13 kg",
+      "display": {
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1200 (16:10)",
+        "touchscreen": true
+      },
+      "storage": "512GB NVMe SSD",
+      "graphics": "Intel Iris Xe Graphics",
+      "processor": "Intel Core i7-1165G7 (11th Gen)"
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 3
+    },
+    "images": [
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/lenovo-thinkpad-x1-carbon-gen-9-Custom-Mac-BD_jUjbt7LbW.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/lenovo-thinkpad-x1-carbon-Custom-Mac-BD_f37f7296-21b0-4e6f-902c-b775342368c0_1CVSitNvE.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/Thinkpad-x1-carbon-Custom-Mac-BD_wCMyrRYMOl.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/e92a46db-9384-46a3-913f-7ecc439b9c81_7OhVPn4VL.jpg",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/thinkpad-x1-carbon-gen-9-01-500x500_hJmvjAvUj.webp"
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 64500,
+      "market_price": 75000,
+      "tax_included": true,
+      "discount_percentage": 14
+    },
+    "category": "Ultrabook",
+    "features": [
+      "Intel Core i7-1165G7 (11th Gen)",
+      "16GB LPDDR4 4267MHz",
+      "512GB NVMe SSD",
+      "Lenovo ThinkPad X1 Carbon Gen 9 Ultrabook Laptop, 14.0 inch 1920 x 1200 (16:10) IPS Anti-Glare, Intel Core i7-1165G7 (11th Gen), 16GB LPDDR4 4267MHz RAM, 512GB NVMe SSD, Windows 11 Pro"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "Processor Type\n\nIntel Core i7 1185G7 11th Generation\n\nProcessor Speed\n\n11th Generation Up to 4.80Ghz\n\nScreen Size\n\n\t14″ WUXGA (1920×1200) IPS, Anti-glare, Low Blue Light\n\nRAM\n\n16GB DDR4 4267 Mhz\n\nStorage\n\n512 GB Nvme\n\nDisk Type\n\nSSD Nvme\n\nGraphics Card\n\nIntel Irish Xe 16 GB Graphics\n\nAudio/Speaker\n\nDolby Atmos\n\nNetworking\n\nWi-Fi 6E AX211 802.11AX 2 x 2, Bluetooth V5.1\n\nWebcam\n\nFHD RGB with webcam privacy shutter\n\nBattery\n\n4-Cell\n\nKeyboard\n\nSpill-Resistant, Backlit with white LED lighting, Air intake key\n\nSoftware\n\nWindows\n\nDimensions (W x D x H)\n\n14.96 x 315.6 x 222.5mm\n\nProduct Weight (Kg)\n\nStarting at 1.12 Kg",
+      "short": "𝐌𝐎𝐃𝐄𝐋:\nLenovo ThinkPad X1 Carbon - Gen 9\n𝐏𝐑𝐎𝐂𝐄𝐒𝐒𝐎𝐑:\nIntel Core i7-1185G7\n𝐒𝐏𝐄𝐄𝐃:\nUpTo 4.80GHz, 12MB Cache\n𝐑𝐀𝐌:\n16GB LPDDR4 4267MHz\n𝐒𝐓𝐎𝐑𝐀𝐆𝐄:\n512GB NVM Express Drive\n𝐃𝐈𝐒𝐏𝐋𝐀𝐘:\n14 inch FHD (1920*1200) Display Touch"
     }
   }
 ]

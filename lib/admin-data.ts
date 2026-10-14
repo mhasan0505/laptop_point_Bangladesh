@@ -4,12 +4,16 @@ export interface AdminProduct {
   id: string;
   name: string;
   brand: string;
+  brandId?: string;
   model?: string;
   category: string;
+  categoryId?: string;
   condition?: string;
   grade?: string;
   price: number;
   salePrice?: number;
+  marketPrice?: number;
+  regularPrice?: number;
   pricing?: {
     currency?: string;
     sale_price: number;
@@ -31,6 +35,7 @@ export interface AdminProduct {
   fullDescription?: string;
   tags?: string[];
   features?: string[];
+  youtubeUrl?: string;
   specs?: {
     processor?: string;
     ram?: string;
@@ -49,17 +54,32 @@ export interface AdminProduct {
     weight?: string;
     dimensions?: string;
     os?: string;
+    [key: string]: any;
   };
   warranty?: {
     period?: string;
     type?: string;
     details?: string;
   };
+  variantOptions?: Array<{
+    name: string;
+    values: string[];
+  }>;
   variants?: Array<{
+    id?: string;
     name: string;
     price: number;
     originalPrice?: number;
+    marketPrice?: number | null;
+    regularPrice?: number | null;
     sku?: string;
+    stock?: number;
+    stockQty?: number;
+    stockStatus?: string;
+    imageUrl?: string | null;
+    sortOrder?: number;
+    active?: boolean;
+    options?: Record<string, string>;
   }>;
   images: string[];
 }

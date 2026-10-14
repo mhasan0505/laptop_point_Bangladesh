@@ -1,0 +1,46 @@
+{
+  "store_profile": {
+    "name": "Laptop Point BD",
+    "tagline": "Exclusive Laptop Shop in Bangladesh",
+    "logo": "/icons/logo.png",
+    "favicon": "/favicon/favicon.ico",
+    "hotline": "+880 1612-182408",
+    "salesPhone": "+880 1612-182408",
+    "supportPhone": "+880 1830-515157",
+    "email": "info@laptoppointbd.com",
+    "whatsapp": "+880 1612-182408",
+    "socialLinks": {
+      "facebook": "https://www.facebook.com/laptoppointbd",
+      "instagram": "https://www.instagram.com/laptop_point.bd/",
+      "tiktok": "https://www.tiktok.com/@laptop.point.bd",
+      "youtube": "https://www.youtube.com/@LaptopPointBD"
+    },
+    "showroomBranches": [
+      {
+        "id": "mirpur-10",
+        "name": "Mirpur-10 Outlet",
+        "address": "Madbar Mansion, Shop-08, Mirpur-10, Dhaka-1216, Bangladesh",
+        "phone": "+880 1612-182408",
+        "hours": "Open Everyday: 10:00 AM - 9:00 PM",
+        "mapLink": ""
+      }
+    ]
+  },
+  "seo": {
+    "titleTemplate": "%s | Laptop Point Bangladesh",
+    "defaultTitle": "Laptop Point Bangladesh | Premium Used Laptops",
+    "defaultDescription": "Best refurbished laptops in Bangladesh.",
+    "defaultShareImage": "/icons/logo.png",
+    "robotsRules": {
+      "allow": [
+        "/"
+      ],
+      "disallow": [
+        "/admin/",
+        "/api/"
+      ]
+    },
+    "googleVerification": "",
+    "bingVerification": ""
+  }
+}

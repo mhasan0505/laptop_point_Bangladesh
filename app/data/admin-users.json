@@ -1,0 +1,12 @@
+[
+  {
+    "id": "usr-owner-1",
+    "email": "admin@laptoppointbd.com",
+    "name": "Primary Store Owner",
+    "role": "owner",
+    "active": true,
+    "lastLoginAt": "2026-10-14T08:12:44.196Z",
+    "createdAt": "2026-10-13T13:46:46.418Z",
+    "updatedAt": "2026-10-13T13:46:46.418Z"
+  }
+]

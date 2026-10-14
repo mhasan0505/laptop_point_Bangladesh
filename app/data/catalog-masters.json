@@ -1,0 +1,126 @@
+{
+  "brands": [
+    {
+      "id": "brand-hp",
+      "name": "HP",
+      "slug": "hp",
+      "logo": "/Hero/HP.png",
+      "website": "https://hp.com",
+      "sortOrder": 0,
+      "active": true
+    },
+    {
+      "id": "brand-dell",
+      "name": "Dell",
+      "slug": "dell",
+      "logo": "/Hero/dell.png",
+      "website": "https://dell.com",
+      "sortOrder": 1,
+      "active": true
+    },
+    {
+      "id": "brand-lenovo",
+      "name": "Lenovo",
+      "slug": "lenovo",
+      "logo": "/Hero/lenovo.png",
+      "website": "https://lenovo.com",
+      "sortOrder": 2,
+      "active": true
+    },
+    {
+      "id": "brand-microsoft",
+      "name": "Microsoft",
+      "slug": "microsoft",
+      "logo": "/Hero/Microsoft.png",
+      "website": "https://microsoft.com",
+      "sortOrder": 3,
+      "active": true
+    },
+    {
+      "id": "brand-apple",
+      "name": "Apple",
+      "slug": "apple",
+      "logo": null,
+      "website": "https://apple.com",
+      "sortOrder": 4,
+      "active": true
+    },
+    {
+      "id": "brand-asus",
+      "name": "Asus",
+      "slug": "asus",
+      "logo": null,
+      "website": "https://asus.com",
+      "sortOrder": 5,
+      "active": true
+    },
+    {
+      "id": "brand-acer",
+      "name": "Acer",
+      "slug": "acer",
+      "logo": null,
+      "website": "https://acer.com",
+      "sortOrder": 6,
+      "active": true
+    },
+    {
+      "id": "brand-msi",
+      "name": "MSI",
+      "slug": "msi",
+      "logo": null,
+      "website": "https://msi.com",
+      "sortOrder": 7,
+      "active": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat-laptops",
+      "name": "All Laptops",
+      "slug": "laptops",
+      "icon": "Laptop",
+      "sortOrder": 0,
+      "active": true
+    },
+    {
+      "id": "cat-business",
+      "name": "Business Ultrabooks",
+      "slug": "business-ultrabooks",
+      "icon": "Briefcase",
+      "sortOrder": 1,
+      "active": true
+    },
+    {
+      "id": "cat-workstations",
+      "name": "Mobile Workstations",
+      "slug": "workstations",
+      "icon": "Cpu",
+      "sortOrder": 2,
+      "active": true
+    },
+    {
+      "id": "cat-gaming",
+      "name": "Gaming Laptops",
+      "slug": "gaming-laptops",
+      "icon": "Gamepad2",
+      "sortOrder": 3,
+      "active": true
+    },
+    {
+      "id": "cat-touch",
+      "name": "2-in-1 Touch Laptops",
+      "slug": "touch-laptops",
+      "icon": "Tablet",
+      "sortOrder": 4,
+      "active": true
+    },
+    {
+      "id": "cat-accessories",
+      "name": "Accessories",
+      "slug": "accessories",
+      "icon": "Cable",
+      "sortOrder": 5,
+      "active": true
+    }
+  ]
+}

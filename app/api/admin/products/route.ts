@@ -56,8 +56,8 @@ export function rawToAdminProduct(raw: RawProduct, currentStock?: number): Admin
     statusValue: "active",
     featured: false,
     sku: raw.sku || String(raw.id),
-    description: raw.description?.short || "",
-    fullDescription: raw.description?.full || "",
+    description: typeof raw.description === "string" ? raw.description : (raw.description?.short || ""),
+    fullDescription: typeof raw.description === "string" ? raw.description : (raw.description?.full || raw.description?.short || ""),
     features: raw.features || [],
     specs: {
       processor: raw.specs?.processor || "",
@@ -93,7 +93,7 @@ export function adminToRawProduct(
       : admin.specs?.ports
         ? admin.specs.ports
             .split(",")
-            .map((p) => p.trim())
+            .map((p: string) => p.trim())
             .filter(Boolean)
         : [];
 

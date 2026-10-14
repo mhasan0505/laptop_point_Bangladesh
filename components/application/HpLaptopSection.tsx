@@ -1,6 +1,6 @@
 "use client";
 
-import { laptopData } from "@/app/data/data";
+import type { Product } from "@/types/product";
 import { motion } from "framer-motion";
 import {
   Briefcase,
@@ -12,7 +12,7 @@ import {
   LayoutGrid,
   Wallet,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/navigation";
@@ -21,12 +21,28 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProductsCard from "../ui/ProductsCard";
 
-const HpLaptopSection = () => {
+interface HpLaptopSectionProps {
+  initialProducts?: Product[];
+}
+
+const HpLaptopSection = ({ initialProducts }: HpLaptopSectionProps = {}) => {
+  const [products, setProducts] = useState<Product[]>(initialProducts || []);
   const [activeCategory, setActiveCategory] = useState("All Series");
 
+  useEffect(() => {
+    if (!initialProducts || initialProducts.length === 0) {
+      fetch("/api/products")
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) setProducts(data);
+        })
+        .catch(() => {});
+    }
+  }, [initialProducts]);
+
   // Filter for all HP brand laptops first
-  const allHpLaptops = laptopData.laptops.filter(
-    (product) => product.brand === "HP"
+  const allHpLaptops = products.filter(
+    (product) => product.brand === "HP",
   );
 
   // Extract unique categories from HP laptops

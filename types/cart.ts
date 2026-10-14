@@ -50,7 +50,7 @@ export interface CheckoutFormData {
   agreeToTerms: boolean;
 }
 
-export type PaymentMethod = "cod" | "bkash" | "nagad" | "card";
+export type PaymentMethod = "cod" | "bkash" | "nagad" | "card" | "emi";
 
 export type OrderStatus =
   | "pending"

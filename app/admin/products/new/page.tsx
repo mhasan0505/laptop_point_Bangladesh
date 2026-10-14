@@ -6,8 +6,8 @@ import { createAdminProduct } from "@/lib/admin-products-api";
 export default function NewProductPage() {
   return (
     <ProductEditorForm
-      title="Add New Product"
-      subtitle="Create a new hardware listing for your catalog with complete specs and pricing"
+      title="Add Product"
+      subtitle="Create a new product in your inventory"
       submitLabel="Add Product"
       onSubmitProductAction={createAdminProduct}
     />

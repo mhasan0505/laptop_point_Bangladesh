@@ -37,11 +37,103 @@ export const metadata: Metadata = {
 };
 
 import { getLiveLaptops } from "@/app/data/data";
+import { getHomepageSections } from "@/lib/public-content";
+import BottomCtaStrip from "@/components/home/BottomCtaStrip";
+import PowerDealSection from "@/components/home/PowerDealSection";
+import PromoBanner from "@/components/home/PromoBanner";
+import SpecialOffersStrip from "@/components/home/SpecialOffersStrip";
+import type { ReactNode } from "react";
 
 export const dynamic = "force-dynamic";
 
+const BRAND_SECTIONS = [
+  {
+    brand: "HP",
+    title: "HP Laptop Series",
+    description:
+      "Experience power and elegance with our curated selection of HP laptops. Designed for professionals, business leaders, and creators.",
+    badgeText: "Premium Collection",
+    theme: "hp",
+  },
+  {
+    brand: "Dell",
+    title: "Dell Latitude & XPS",
+    description:
+      "Reliability meets performance. Explore our range of Dell laptops, from the rugged Latitude series to the premium XPS lineup.",
+    badgeText: "Business Choice",
+    theme: "dell",
+  },
+  {
+    brand: "Lenovo",
+    title: "Lenovo ThinkPad Series",
+    description:
+      "Built for business. The legendary ThinkPad series offers unmatched durability, keyboard comfort, and performance.",
+    badgeText: "Legendary Durability",
+    theme: "lenovo",
+  },
+] as const;
+
 const HomePage = async () => {
-  const products = await getLiveLaptops();
+  const [products, sections] = await Promise.all([
+    getLiveLaptops(),
+    getHomepageSections(),
+  ]);
+
+  const brandSection = (b: (typeof BRAND_SECTIONS)[number]) => (
+    <BrandProductSection
+      key={b.brand}
+      brand={b.brand}
+      title={b.title}
+      description={b.description}
+      badgeText={b.badgeText}
+      theme={b.theme}
+      initialProducts={products}
+    />
+  );
+
+  // Each registry id maps to the storefront block it controls. Visibility and
+  // order come from Admin → Setup → Homepage Layout.
+  const renderers: Record<string, (heading?: string, sub?: string) => ReactNode> = {
+    hero: () => (
+      <>
+        <HeroSection />
+        <NewProductsSection initialProducts={products} />
+        <PromoBanner
+          placement="home.flash-deal"
+          aspectClassName="aspect-[2/1]"
+          className="max-w-3xl!"
+        />
+        <SpecialOffersStrip />
+      </>
+    ),
+    "prime-showcase": () => <BentoGridSection />,
+    "power-deal": (h, s) => <PowerDealSection heading={h} subheading={s} />,
+    "surface-banner": () => <PromoBanner placement="home.surface" />,
+    "surface-showcase": (h, s) => (
+      <>
+        {BRAND_SECTIONS.map(brandSection)}
+        <BrandProductSection
+          brand="Microsoft"
+          title={h || "Microsoft Surface"}
+          description={
+            s ||
+            "Sleek, powerful, and versatile. Surface laptops combine premium design with the full power of Windows."
+          }
+          badgeText="Creative Studio"
+          theme="microsoft"
+          initialProducts={products}
+        />
+      </>
+    ),
+    "apple-showcase": () => <PromoBanner placement="home.apple" />,
+    "accessories-banner": () => <PromoBanner placement="home.accessories" />,
+    "bottom-cta": (h, s) => (
+      <>
+        <TestimonialsSection />
+        <BottomCtaStrip heading={h} subheading={s} />
+      </>
+    ),
+  };
 
   return (
     <>
@@ -51,50 +143,18 @@ const HomePage = async () => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(eCommerceSchema) }}
       />
 
-      <HeroSection />
-      <NewProductsSection initialProducts={products} />
-      <BentoGridSection />
+      {sections
+        .filter((section) => section.visible && renderers[section.id])
+        .map((section) => (
+          <div key={section.id} data-homepage-section={section.id}>
+            {renderers[section.id](section.heading, section.subheading)}
+          </div>
+        ))}
 
-      {/* HP Section */}
-      <BrandProductSection
-        brand="HP"
-        title="HP Laptop Series"
-        description="Experience power and elegance with our curated selection of HP laptops. Designed for professionals, business leaders, and creators."
-        badgeText="Premium Collection"
-        theme="hp"
-        initialProducts={products}
-      />
-
-      {/* Dell Section */}
-      <BrandProductSection
-        brand="Dell"
-        title="Dell Latitude & XPS"
-        description="Reliability meets performance. Explore our range of Dell laptops, from the rugged Latitude series to the premium XPS lineup."
-        badgeText="Business Choice"
-        theme="dell"
-        initialProducts={products}
-      />
-
-      {/* Lenovo Section */}
-      <BrandProductSection
-        brand="Lenovo"
-        title="Lenovo ThinkPad Series"
-        description="Built for business. The legendary ThinkPad series offers unmatched durability, keyboard comfort, and performance."
-        badgeText="Legendary Durability"
-        theme="lenovo"
-        initialProducts={products}
-      />
-
-      {/* Microsoft Section */}
-      <BrandProductSection
-        brand="Microsoft"
-        title="Microsoft Surface"
-        description="Sleek, powerful, and versatile. Surface laptops combine premium design with the full power of Windows."
-        badgeText="Creative Studio"
-        theme="microsoft"
-        initialProducts={products}
-      />
-      <TestimonialsSection />
+      {/* Testimonials ride with the CTA strip; keep them if the strip is hidden. */}
+      {!sections.some((x) => x.id === "bottom-cta" && x.visible) && (
+        <TestimonialsSection />
+      )}
     </>
   );
 };

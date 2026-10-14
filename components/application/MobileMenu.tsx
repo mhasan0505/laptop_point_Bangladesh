@@ -23,9 +23,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import type { StorefrontNavigation } from "@/lib/public-content";
+
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  navigation?: StorefrontNavigation;
 }
 
 // Icon map for department items
@@ -105,13 +108,53 @@ const rowVariants: Variants = {
   open: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 340, damping: 32 } },
 };
 
-const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
+const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
   const router = useRouter();
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
   const [searchIndex, setSearchIndex] = useState<SearchItem[] | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+
+  const activeChips =
+    navigation && navigation.categoryChips.length > 0
+      ? navigation.categoryChips
+      : quickLinks;
+
+  const activeDepartmentItems =
+    navigation && navigation.shopCategories.length > 0
+      ? navigation.shopCategories.map((item) => ({
+          name: item.label,
+          href: item.href,
+          badge: undefined as string | undefined,
+          sub:
+            item.subitems && item.subitems.length > 0
+              ? [
+                  {
+                    title: item.label.toUpperCase(),
+                    items: item.subitems.map((s) => ({
+                      name: s.name,
+                      href: s.href,
+                    })),
+                  },
+                ]
+              : undefined,
+        }))
+      : departmentMenuItems;
+
+  const activeNavLinks =
+    navigation && navigation.topNavMenus.length > 0
+      ? navigation.topNavMenus.map((item) => ({
+          name: item.label,
+          href: item.href || (item.dropdownItems?.[0]?.href ?? "#"),
+          hasDropdown: Boolean(item.dropdownItems && item.dropdownItems.length > 0),
+          submenu: item.dropdownItems?.map((s) => ({
+            name: s.name,
+            href: s.href,
+          })),
+          badge: item.badge,
+        }))
+      : navigationLinks;
 
   // Lazy-load the lightweight search index the first time the menu opens —
   // mirrors the Header. The old implementation fetched "/api/products", an
@@ -312,7 +355,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
 
             {/* ── Quick-access chips ── */}
             <div className="flex gap-2 overflow-x-auto border-b border-slate-100 bg-slate-50/60 px-4 py-2.5 scrollbar-hide">
-              {quickLinks.map((chip) => (
+              {activeChips.map((chip) => (
                 <Link
                   key={chip.label}
                   href={chip.href}
@@ -337,7 +380,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                 animate="open"
                 className="flex flex-col gap-1"
               >
-                {departmentMenuItems.map((item) => {
+                {activeDepartmentItems.map((item) => {
                   const menuKey = `dept-${item.name}`;
                   const submenu = item.sub
                     ? item.sub.flatMap((s) => s.items)
@@ -457,7 +500,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                 animate="open"
                 className="flex flex-col gap-1"
               >
-                {navigationLinks.map((item) => {
+                {activeNavLinks.map((item) => {
                   const menuKey = `nav-${item.name}`;
                   const isOpen = openSubmenu === menuKey;
                   return (

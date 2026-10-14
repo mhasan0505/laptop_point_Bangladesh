@@ -11,9 +11,11 @@ export default function NewsletterPopup() {
     const hasSeenPopup = localStorage.getItem("newsletterPopupSeen");
 
     if (!hasSeenPopup) {
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+      const delay = isMobile ? 15000 : 8000;
       const timer = setTimeout(() => {
         setIsVisible(true);
-      }, 5000); // Show after 5 seconds
+      }, delay);
 
       return () => clearTimeout(timer);
     }

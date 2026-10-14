@@ -1,14 +1,17 @@
 import { requireAdminSession } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { VALID_STATUSES } from "@/lib/orders";
-import { computeOrderTotals } from "@/lib/pricing";
+import { computeOrderTotals, FREE_SHIPPING_THRESHOLD, TAX_RATE } from "@/lib/pricing";
+import { calculateDeliveryFee } from "@/lib/delivery";
+import { getStorefrontCommerce, type StorefrontCommerce } from "@/lib/public-content";
+import { loadMergedRawProducts } from "@/lib/products-storage";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 // Business rules imported from lib/pricing.ts (single source of truth,
 // shared with the client cart context).
 
-const PAYMENT_METHODS = ["cod", "bkash", "nagad", "card"] as const;
+const PAYMENT_METHODS = ["cod", "bkash", "nagad", "card", "emi"] as const;
 type PaymentMethod = (typeof PAYMENT_METHODS)[number];
 
 class InsufficientStockError extends Error {
@@ -39,9 +42,14 @@ interface ParsedOrder {
   paymentMethod: PaymentMethod;
   notes?: string;
   items: ParsedOrderItem[];
+  subtotal: number;
+  shippingCost: number;
+  totalAmount: number;
 }
 
-type ParseResult = { data: ParsedOrder } | { error: string };
+type ParseResult =
+  | { data: ParsedOrder }
+  | { error: string; details?: Record<string, unknown> };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -52,11 +60,16 @@ function asOptionalString(value: unknown): string | undefined {
 }
 
 /**
- * Validates and normalizes a checkout payload. Amounts are NOT trusted:
- * subtotal must equal the sum of line items, shipping must match the
- * free-shipping rule, and total must equal subtotal + 5% tax + shipping.
+ * Validates and normalizes a checkout payload with strict SERVER-SIDE PRICE AUTHORITY:
+ * - Client-supplied `unitPrice`, `subtotal`, `shippingCost`, and `totalAmount` are completely ignored.
+ * - Every line item is verified against live catalogue data (`loadMergedRawProducts()`).
+ * - Unknown products or out-of-stock products are rejected with a 400 error.
+ * - Delivery fee is derived exclusively from store rules + zone config + free-shipping threshold.
  */
-function parseCreateOrderBody(body: unknown): ParseResult {
+async function parseCreateOrderBody(
+  body: unknown,
+  commerce: StorefrontCommerce,
+): Promise<ParseResult> {
   if (!isRecord(body)) return { error: "Invalid request body" };
 
   const customerName = asOptionalString(body.customerName);
@@ -80,8 +93,13 @@ function parseCreateOrderBody(body: unknown): ParseResult {
     typeof body.paymentMethod === "string"
       ? body.paymentMethod.trim().toLowerCase()
       : "cod";
-  if (!(PAYMENT_METHODS as readonly string[]).includes(rawPaymentMethod)) {
-    return { error: "Unsupported payment method" };
+  const enabledMethods = (commerce.paymentMethods || [])
+    .filter((m) => m.enabled)
+    .map((m) => m.id.toLowerCase());
+  const allowedMethods =
+    enabledMethods.length > 0 ? enabledMethods : (PAYMENT_METHODS as readonly string[]);
+  if (!allowedMethods.includes(rawPaymentMethod)) {
+    return { error: `Unsupported or disabled payment method: ${rawPaymentMethod}` };
   }
 
   if (!Array.isArray(body.items) || body.items.length === 0) {
@@ -91,66 +109,115 @@ function parseCreateOrderBody(body: unknown): ParseResult {
     return { error: "Too many items in order" };
   }
 
+  // Load canonical product catalogue (merged with PostgreSQL overrides & live inventory)
+  const rawProducts = await loadMergedRawProducts();
+  const productLookup = new Map<string, (typeof rawProducts)[number]>();
+  for (const p of rawProducts) {
+    if (p.sku) productLookup.set(p.sku.toLowerCase().trim(), p);
+    if (p.id != null) productLookup.set(String(p.id).toLowerCase().trim(), p);
+  }
+
   const items: ParsedOrderItem[] = [];
   const seenProductIds = new Set<string>();
+
   for (const raw of body.items) {
     if (!isRecord(raw)) return { error: "Invalid item in order" };
 
-    const productId = asOptionalString(raw.productId);
-    const sku = asOptionalString(raw.sku);
-    const name = asOptionalString(raw.name);
-    const unitPrice =
-      typeof raw.unitPrice === "number" ? raw.unitPrice : Number(raw.unitPrice);
+    const rawSku = asOptionalString(raw.sku)?.toLowerCase().trim();
+    const rawProductId = asOptionalString(raw.productId)?.toLowerCase().trim();
+    const rawId = asOptionalString(raw.id)?.toLowerCase().trim();
     const quantity =
       typeof raw.quantity === "number" ? raw.quantity : Number(raw.quantity);
 
-    if (!productId || !name) return { error: "Invalid item in order" };
-    if (seenProductIds.has(productId)) {
+    if (!rawProductId && !rawSku && !rawId) {
+      return { error: "Item missing product identifier" };
+    }
+
+    const matchedProduct =
+      (rawSku && productLookup.get(rawSku)) ||
+      (rawProductId && productLookup.get(rawProductId)) ||
+      (rawId && productLookup.get(rawId));
+
+    if (!matchedProduct) {
+      return {
+        error: `Unknown product: "${raw.name || raw.sku || raw.productId || raw.id || "item"}"`,
+      };
+    }
+
+    const productIdStr = String(matchedProduct.id);
+    if (seenProductIds.has(productIdStr)) {
       return { error: "Duplicate product in order" };
     }
-    seenProductIds.add(productId);
+    seenProductIds.add(productIdStr);
 
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
-      return { error: `Invalid quantity for "${name}"` };
-    }
-    if (!Number.isFinite(unitPrice) || unitPrice < 0 || unitPrice > 10_000_000) {
-      return { error: `Invalid price for "${name}"` };
+      return { error: `Invalid quantity for "${matchedProduct.name}"` };
     }
 
-    items.push({ productId, sku: sku ?? productId, name, unitPrice, quantity });
+    // Live stock verification
+    const stockQty =
+      typeof matchedProduct.stock?.quantity === "number"
+        ? matchedProduct.stock.quantity
+        : 0;
+    const isOutOfStock =
+      stockQty <= 0 ||
+      (matchedProduct.stock?.status &&
+        matchedProduct.stock.status.toLowerCase() === "out of stock");
+
+    if (isOutOfStock) {
+      return { error: `Product "${matchedProduct.name}" is out of stock` };
+    }
+    // Authoritative sale price strictly from server
+    const salePrice = matchedProduct.pricing?.sale_price;
+    if (typeof salePrice !== "number" || salePrice <= 0 || !Number.isFinite(salePrice)) {
+      return { error: `Valid price unavailable for product "${matchedProduct.name}"` };
+    }
+
+    if (quantity > stockQty) {
+      return {
+        error: `Requested quantity (${quantity}) exceeds available stock (${stockQty}) for "${matchedProduct.name}"`,
+        details: {
+          productId: productIdStr,
+          sku: matchedProduct.sku || productIdStr,
+          name: matchedProduct.name,
+          serverPrice: salePrice,
+          availableStock: stockQty,
+        },
+      };
+    }
+
+    items.push({
+      productId: productIdStr,
+      sku: matchedProduct.sku || productIdStr,
+      name: matchedProduct.name,
+      unitPrice: salePrice,
+      quantity,
+    });
   }
 
-  // Financial consistency: subtotal === Σ(unitPrice × quantity)
-  const subtotal =
-    typeof body.subtotal === "number" ? body.subtotal : Number(body.subtotal);
-  const shippingCost =
-    typeof body.shippingCost === "number"
-      ? body.shippingCost
-      : Number(body.shippingCost);
-  const totalAmount =
-    typeof body.totalAmount === "number"
-      ? body.totalAmount
-      : Number(body.totalAmount);
+  // 1. Calculate canonical subtotal
+  const subtotal = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
 
-  const expected = computeOrderTotals(items);
+  // 2. Derive shipping fee from commerce delivery rules & customer zone
+  const rawShippingMethod =
+    typeof body.shippingMethod === "string"
+      ? body.shippingMethod.trim().toLowerCase()
+      : "";
+  let deliveryFee = calculateDeliveryFee(commerce, {
+    shippingMethod: rawShippingMethod || undefined,
+    city: asOptionalString(body.city),
+  });
 
-  if (!Number.isFinite(subtotal) || Math.abs(subtotal - expected.subtotal) > 0.01) {
-    return { error: "Order subtotal does not match item prices" };
+  // 3. Apply free-shipping threshold (standard orders over threshold get free delivery)
+  const isExpressOrVip = rawShippingMethod === "vip" || rawShippingMethod === "express";
+  const threshold = FREE_SHIPPING_THRESHOLD;
+  if (!isExpressOrVip && threshold > 0 && subtotal >= threshold) {
+    deliveryFee = 0;
   }
 
-  if (
-    !Number.isFinite(shippingCost) ||
-    Math.abs(shippingCost - expected.shipping) > 0.01
-  ) {
-    return { error: "Order shipping cost does not match store policy" };
-  }
-
-  if (
-    !Number.isFinite(totalAmount) ||
-    Math.abs(totalAmount - expected.total) > 0.02
-  ) {
-    return { error: "Order total does not match item prices" };
-  }
+  // 4. Compute final canonical totals
+  const taxRate = commerce.taxRule === "exempt" ? 0 : TAX_RATE;
+  const totals = computeOrderTotals(items, { shippingCost: deliveryFee, taxRate });
 
   return {
     data: {
@@ -164,6 +231,9 @@ function parseCreateOrderBody(body: unknown): ParseResult {
       paymentMethod: rawPaymentMethod as PaymentMethod,
       notes: asOptionalString(body.notes),
       items,
+      subtotal: totals.subtotal,
+      shippingCost: totals.shipping,
+      totalAmount: totals.total,
     },
   };
 }
@@ -234,16 +304,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const parsed = parseCreateOrderBody(body);
+  const commerce = await getStorefrontCommerce();
+  const parsed = await parseCreateOrderBody(body, commerce);
   if ("error" in parsed) {
-    return NextResponse.json({ error: parsed.error }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: parsed.error,
+        ...(parsed.details ? { details: parsed.details } : {}),
+      },
+      { status: 400 }
+    );
   }
   const orderInput = parsed.data;
 
-  const totals = computeOrderTotals(orderInput.items);
-  const computedSubtotal = totals.subtotal;
-  const computedShipping = totals.shipping;
-  const computedTotal = totals.total;
+  const computedSubtotal = orderInput.subtotal;
+  const computedShipping = orderInput.shippingCost;
+  const computedTotal = orderInput.totalAmount;
 
   // Retry on the rare orderNumber collision (P2002).
   for (let attempt = 0; attempt < 3; attempt++) {
@@ -319,7 +395,14 @@ export async function POST(request: NextRequest) {
       });
 
       return NextResponse.json(
-        { success: true, orderNumber: order.orderNumber, id: order.id },
+        {
+          success: true,
+          orderNumber: order.orderNumber,
+          id: order.id,
+          subtotal: computedSubtotal,
+          shippingCost: computedShipping,
+          totalAmount: computedTotal,
+        },
         { status: 201 },
       );
     } catch (error) {

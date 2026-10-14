@@ -1,4 +1,5 @@
 import { getLiveLaptops } from "@/app/data/data";
+import ProductQA from "@/components/product/ProductQA";
 import ProductDetailsClient from "@/components/product/ProductDetailsClient";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -72,6 +73,9 @@ export default async function ProductDetailsPage({ params }: PageProps) {
     .slice(0, 4);
 
   return (
-    <ProductDetailsClient product={product} relatedProducts={relatedProducts} />
+    <>
+      <ProductDetailsClient product={product} relatedProducts={relatedProducts} />
+      <ProductQA productSlug={product.slug} />
+    </>
   );
 }

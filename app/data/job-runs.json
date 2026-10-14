@@ -1,0 +1,11 @@
+[
+  {
+    "id": "run-1791900041316",
+    "name": "Deal & Flash Offer Expiry",
+    "status": "success",
+    "startedAt": "2026-10-13T14:00:41.316Z",
+    "finishedAt": "2026-10-13T14:00:41.431Z",
+    "durationMs": 115,
+    "message": "Deactivated 0 expired deal(s) (Banners: 0, Power Deals: 0)."
+  }
+]
