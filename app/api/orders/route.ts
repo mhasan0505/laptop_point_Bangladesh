@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/lib/admin-auth";
+import { requireAdmin } from "@/lib/auth-guard";
 import { prisma } from "@/lib/prisma";
 import { VALID_STATUSES } from "@/lib/orders";
 import { computeOrderTotals, FREE_SHIPPING_THRESHOLD, TAX_RATE } from "@/lib/pricing";
@@ -265,9 +265,8 @@ function generateOrderNumber(): string {
 // ─── GET /api/orders ──────────────────────────────────────────────────────────
 // Query params: ?status=Pending&search=john  (admin only)
 export async function GET(request: NextRequest) {
-  if (!(await requireAdminSession(request))) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "support"] });
+  if (auth.error) return auth.error;
 
   try {
     const { searchParams } = new URL(request.url);
@@ -331,10 +330,12 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+
   const orderInput = parsed.data;
   const accessoryList = orderInput.items.some((i) => i.productId.startsWith("acc-"))
     ? await listAccessories().catch(() => [])
     : [];
+  const rawProductsList = await loadMergedRawProducts().catch(() => []);
 
   const computedSubtotal = orderInput.subtotal;
   const computedShipping = orderInput.shippingCost;
@@ -383,8 +384,8 @@ export async function POST(request: NextRequest) {
         // 2. Conditional decrement — updateMany fails to match once stock is
         //    insufficient, closing the check-then-decrement race.
         for (const item of orderInput.items) {
-          // Accessories seeded from JSON may not have an inventory row yet.
-          // Create it from the validated stock so the guarded decrement below works.
+          // Accessories or catalogue laptops seeded from JSON may not have an inventory row yet.
+          // Lazily create it from validated catalogue stock so the guarded decrement below works.
           if (item.productId.startsWith("acc-")) {
             const acc = accessoryList.find((a) => a.id === item.productId);
             if (acc) {
@@ -392,6 +393,23 @@ export async function POST(request: NextRequest) {
                 where: { productId: acc.id },
                 update: {},
                 create: { productId: acc.id, sku: acc.sku, name: acc.name, quantity: acc.stock },
+              });
+            }
+          } else {
+            const prod = rawProductsList.find(
+              (p) => String(p.id) === item.productId || (p.sku && p.sku.toLowerCase() === item.sku.toLowerCase())
+            );
+            if (prod) {
+              const stockQty = typeof prod.stock === "number" ? prod.stock : (prod.stock?.quantity ?? 0);
+              await tx.inventory.upsert({
+                where: { productId: String(prod.id) },
+                update: {},
+                create: {
+                  productId: String(prod.id),
+                  sku: prod.sku || String(prod.id),
+                  name: prod.name || item.name,
+                  quantity: stockQty,
+                },
               });
             }
           }

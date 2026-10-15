@@ -36,3 +36,14 @@ google-credential.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# runtime data stores (accessories.json is a seed so keep it tracked)
+app/data/admin-users.json
+app/data/media-meta.json
+app/data/job-runs.json
+app/data/questions.json
+

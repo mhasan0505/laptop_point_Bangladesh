@@ -39,6 +39,7 @@ interface InventoryProduct {
   status: string;
   sku: string;
   variants: InventoryVariant[];
+  isAccessory?: boolean;
 }
 
 export default function InventoryPage() {
@@ -69,51 +70,80 @@ export default function InventoryPage() {
 
   const loadInventory = () => {
     setLoading(true);
-    fetch("/api/admin/products", { cache: "no-store" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          const mapped = data.map((item: any) => {
-            const rawVariants = Array.isArray(item.variants) ? item.variants : [];
-            const variants: InventoryVariant[] = rawVariants.map((v: any) => {
-              const opts = typeof v.options === "object" && v.options !== null ? v.options : {};
-              const label = Object.entries(opts).map(([k, val]) => `${k}: ${val}`).join(", ") || v.sku || "Variant";
+    Promise.all([
+      fetch("/api/admin/products", { cache: "no-store" })
+        .then((res) => res.json())
+        .catch(() => []),
+      fetch("/api/admin/accessories", { cache: "no-store" })
+        .then((res) => res.json())
+        .catch(() => []),
+    ])
+      .then(([productData, accessoryData]) => {
+        const mappedProducts: InventoryProduct[] = Array.isArray(productData)
+          ? productData.map((item: any) => {
+              const rawVariants = Array.isArray(item.variants) ? item.variants : [];
+              const variants: InventoryVariant[] = rawVariants.map((v: any) => {
+                const opts = typeof v.options === "object" && v.options !== null ? v.options : {};
+                const label = Object.entries(opts).map(([k, val]) => `${k}: ${val}`).join(", ") || v.sku || "Variant";
+                return {
+                  id: String(v.id),
+                  sku: v.sku || "",
+                  options: opts,
+                  label,
+                  stock: Number(v.stockQty ?? v.stock ?? 0),
+                  stockStatus: v.stockStatus || "In Stock",
+                };
+              });
+
+              const totalStock = variants.length > 0
+                ? variants.reduce((sum, v) => sum + v.stock, 0)
+                : Number(item.stock ?? item.quantity ?? 0);
+
+              let status = "In Stock";
+              if (totalStock === 0) status = "Out of Stock";
+              else if (totalStock <= 10) status = "Low Stock";
+
+              const skuParts = (item.sku || "").split("-");
+              const brandRaw = skuParts[0] || "Hardware";
+              const brand =
+                item.brand || (brandRaw.charAt(0).toUpperCase() + brandRaw.slice(1).toLowerCase());
+
               return {
-                id: String(v.id),
-                sku: v.sku || "",
-                options: opts,
-                label,
-                stock: Number(v.stockQty ?? v.stock ?? 0),
-                stockStatus: v.stockStatus || "In Stock",
+                id: String(item.id || item.productId),
+                name: item.name || "Hardware Listing",
+                brand,
+                category: item.category || "Laptop",
+                stock: totalStock,
+                status,
+                sku: item.sku || `SKU-${item.id}`,
+                variants,
+                isAccessory: false,
               };
-            });
+            })
+          : [];
 
-            const totalStock = variants.length > 0
-              ? variants.reduce((sum, v) => sum + v.stock, 0)
-              : Number(item.stock ?? item.quantity ?? 0);
+        const mappedAccessories: InventoryProduct[] = Array.isArray(accessoryData)
+          ? accessoryData.map((acc: any) => {
+              const stock = Number(acc.stock ?? 0);
+              let status = "In Stock";
+              if (stock === 0) status = "Out of Stock";
+              else if (stock <= 10) status = "Low Stock";
 
-            let status = "In Stock";
-            if (totalStock === 0) status = "Out of Stock";
-            else if (totalStock <= 10) status = "Low Stock";
+              return {
+                id: String(acc.id),
+                name: acc.name || "Accessory",
+                brand: acc.brand || "Accessory",
+                category: acc.category || "Accessories",
+                stock,
+                status,
+                sku: acc.sku || `SKU-${acc.id}`,
+                variants: [],
+                isAccessory: true,
+              };
+            })
+          : [];
 
-            const skuParts = (item.sku || "").split("-");
-            const brandRaw = skuParts[0] || "Hardware";
-            const brand =
-              item.brand || (brandRaw.charAt(0).toUpperCase() + brandRaw.slice(1).toLowerCase());
-
-            return {
-              id: String(item.id || item.productId),
-              name: item.name || "Hardware Listing",
-              brand,
-              category: item.category || "Hardware",
-              stock: totalStock,
-              status,
-              sku: item.sku || `SKU-${item.id}`,
-              variants,
-            };
-          });
-          setProducts(mapped);
-        }
+        setProducts([...mappedProducts, ...mappedAccessories]);
       })
       .catch((err) => {
         console.error("Failed to load inventory:", err);
@@ -165,13 +195,21 @@ export default function InventoryPage() {
     const newQty = Math.max(0, product.stock + delta);
     setUpdatingId(product.id);
     try {
-      const res = await fetch(`/api/admin/products/${product.id}`, {
-        method: "PATCH",
+      const isAcc = product.isAccessory || product.id.startsWith("acc-");
+      const endpoint = isAcc
+        ? `/api/admin/accessories/${product.id}`
+        : `/api/admin/products/${product.id}`;
+      const payload = isAcc
+        ? { stock: newQty }
+        : {
+            stock: newQty,
+            stockStatus: newQty === 0 ? "Out of Stock" : newQty <= 10 ? "Low Stock" : "In Stock",
+          };
+
+      const res = await fetch(endpoint, {
+        method: isAcc ? "PUT" : "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          stock: newQty,
-          stockStatus: newQty === 0 ? "Out of Stock" : newQty <= 10 ? "Low Stock" : "In Stock",
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -304,13 +342,21 @@ export default function InventoryPage() {
           })
         );
       } else {
-        const res = await fetch(`/api/admin/products/${selectedProduct.id}`, {
-          method: "PATCH",
+        const isAcc = selectedProduct.id.startsWith("acc-");
+        const endpoint = isAcc
+          ? `/api/admin/accessories/${selectedProduct.id}`
+          : `/api/admin/products/${selectedProduct.id}`;
+        const payload = isAcc
+          ? { stock: newStock }
+          : {
+              stock: newStock,
+              stockStatus: newStock === 0 ? "Out of Stock" : newStock <= 10 ? "Low Stock" : "In Stock",
+            };
+
+        const res = await fetch(endpoint, {
+          method: isAcc ? "PUT" : "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            stock: newStock,
-            stockStatus: newStock === 0 ? "Out of Stock" : newStock <= 10 ? "Low Stock" : "In Stock",
-          }),
+          body: JSON.stringify(payload),
         });
 
         if (!res.ok) throw new Error("Failed to update product stock");
@@ -465,6 +511,11 @@ export default function InventoryPage() {
                               </button>
                             )}
                             <span className="truncate">{p.name}</span>
+                            {p.isAccessory && (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium shrink-0">
+                                Accessory
+                              </span>
+                            )}
                             {hasVariants && (
                               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-primary/10 text-primary font-medium shrink-0">
                                 <Layers size={10} />

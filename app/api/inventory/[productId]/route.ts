@@ -1,11 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth-guard";
 
 // ─── GET /api/inventory/[productId] ──────────────────────────────────────────
 export async function GET(
-  _req: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ productId: string }> },
 ) {
+  const auth = await requireAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const { productId } = await params;
     const record = await prisma.inventory.findUnique({ where: { productId } });
@@ -33,6 +37,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ productId: string }> },
 ) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager"] });
+  if (auth.error) return auth.error;
+
   try {
     const { productId } = await params;
     const body = (await request.json()) as {

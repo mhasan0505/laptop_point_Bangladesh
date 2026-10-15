@@ -66,6 +66,26 @@ const accBody = {
   active: true,
 };
 
+async function getJson(url, retries = 4) {
+  for (let i = 0; i < retries; i++) {
+    const res = await fetch(url);
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch (err) {
+      if (i < retries - 1) {
+        // Next.js dev server may transiently yield 404 while re-bundling after data file write
+        await new Promise((r) => setTimeout(r, 600));
+        continue;
+      }
+      console.error(`\n[DEBUG] JSON.parse failed for URL: ${url}`);
+      console.error(`Status: ${res.status}, Content-Type: ${res.headers.get("content-type")}`);
+      console.error(`Body snippet: ${text.slice(0, 300)}\n`);
+      throw err;
+    }
+  }
+}
+
 let acc;
 {
   const r = await api("/api/admin/accessories", { method: "POST", body: JSON.stringify(accBody) });
@@ -84,7 +104,7 @@ let acc;
   check("negative price rejected (400)", r.status === 400, `status ${r.status}`);
 }
 {
-  const list = await (await fetch(`${BASE}/api/accessories`)).json();
+  const list = await getJson(`${BASE}/api/accessories`);
   check("accessory visible in public API", Array.isArray(list) && list.some((a) => a.sku === accSku));
   const page = await fetch(`${BASE}/accessories/${acc.slug}`);
   check("accessory detail page renders", page.status === 200, `status ${page.status}`);
@@ -97,7 +117,7 @@ let acc;
     body: JSON.stringify({ active: false }),
   });
   check("accessory can be hidden", r.ok, `status ${r.status}`);
-  const list = await (await fetch(`${BASE}/api/accessories`)).json();
+  const list = await getJson(`${BASE}/api/accessories`);
   check("hidden accessory not in public API", !list.some((a) => a.sku === accSku));
 }
 
@@ -135,7 +155,7 @@ let lap;
   check("zero price rejected (400)", bad.status === 400, `status ${bad.status}`);
 }
 {
-  const list = await (await fetch(`${BASE}/api/products`)).json();
+  const list = await getJson(`${BASE}/api/products`);
   check("laptop visible in public API", Array.isArray(list) && list.some((p) => p.sku === lapSku));
 }
 
@@ -147,7 +167,7 @@ if (acc?.id) {
 if (lap?.id) {
   const r = await api(`/api/admin/products/${lap.id}`, { method: "DELETE" });
   check("laptop deleted", r.ok, `status ${r.status}`);
-  const list = await (await fetch(`${BASE}/api/products`)).json();
+  const list = await getJson(`${BASE}/api/products`);
   check("deleted laptop gone from public API", !list.some((p) => p.sku === lapSku));
 }
 

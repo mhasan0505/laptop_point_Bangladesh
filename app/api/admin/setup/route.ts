@@ -5,6 +5,7 @@ import {
   SETTINGS_GROUP_REGISTRY,
   type SettingsGroupKey,
 } from "@/lib/settings";
+import { canAccessSetup } from "@/lib/settings-base";
 import { requireAdmin } from "@/lib/auth-guard";
 
 export async function GET(request: NextRequest) {
@@ -52,7 +53,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireAdmin(request, { roles: ["owner", "manager"] });
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
   if (auth.error) return auth.error;
 
   try {
@@ -64,6 +65,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: `Invalid settings group "${group}"` },
         { status: 400 }
+      );
+    }
+
+    if (!canAccessSetup(auth.user.role, group as any, "write")) {
+      return NextResponse.json(
+        { error: `Forbidden: role '${auth.user.role}' cannot modify '${group}'` },
+        { status: 403 }
       );
     }
 

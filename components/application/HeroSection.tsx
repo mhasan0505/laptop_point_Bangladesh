@@ -83,7 +83,7 @@ const HeroSection = () => {
           <>
             {slide.mobileImage ? (
               <>
-                <div className="relative w-full h-full md:hidden">
+                <div className="relative w-full h-full sm:hidden">
                   <Image
                     src={slide.mobileImage}
                     alt={slide.alt}
@@ -95,7 +95,7 @@ const HeroSection = () => {
                     className="object-contain"
                   />
                 </div>
-                <div className="relative w-full h-full hidden md:block">
+                <div className="relative w-full h-full hidden sm:block">
                   <Image
                     src={slide.image}
                     alt={slide.alt}

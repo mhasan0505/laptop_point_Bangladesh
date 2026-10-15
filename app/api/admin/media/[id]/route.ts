@@ -6,6 +6,12 @@ import { loadMergedRawProducts } from "@/lib/products-storage";
 import { readBanners } from "@/lib/banners/storage";
 import { getPowerDeals } from "@/lib/power-deal-data";
 
+import {
+  findAssetUsages,
+  deleteFromImageKit,
+  deleteMediaMeta,
+} from "@/lib/media/storage";
+
 const mediaMetaFilePath = path.join(process.cwd(), "app", "data", "media-meta.json");
 const VARIANT_FILE = /-\d+w\.(webp|avif)$/i;
 
@@ -26,29 +32,6 @@ async function writeMeta(meta: Record<string, unknown>): Promise<void> {
   const tmp = `${mediaMetaFilePath}.${process.pid}.tmp`;
   await fs.writeFile(tmp, JSON.stringify(meta, null, 2), "utf-8");
   await fs.rename(tmp, mediaMetaFilePath);
-}
-
-/** Names of records that currently reference this upload filename. */
-async function findUsages(filename: string): Promise<string[]> {
-  const used: string[] = [];
-  const matches = (u: unknown) =>
-    typeof u === "string" && u.includes("/uploads/") && path.basename(u.split("?")[0]) === filename;
-
-  const [products, banners, deals] = await Promise.all([
-    loadMergedRawProducts().catch(() => []),
-    readBanners().catch(() => []),
-    getPowerDeals().catch(() => []),
-  ]);
-  for (const p of products) {
-    if ((p.images ?? []).some(matches)) used.push(`Product: ${p.name}`);
-  }
-  for (const b of banners) {
-    if (matches(b.desktopImageUrl) || matches(b.mobileImageUrl)) used.push(`Banner: ${b.title}`);
-  }
-  for (const d of deals) {
-    if (matches(d.image)) used.push(`Power Deal: ${d.name}`);
-  }
-  return used;
 }
 
 export async function PATCH(request: NextRequest, { params }: Params) {
@@ -81,22 +64,21 @@ export async function DELETE(request: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
 
-    if (id.startsWith("ik:") || id.startsWith("ref:")) {
+    if (id.startsWith("ref:")) {
       return NextResponse.json(
-        { error: "This image is hosted remotely or is bundled with the site. Remove it where it is hosted (e.g. the ImageKit dashboard)." },
+        { error: "This image is bundled with the site and cannot be deleted." },
         { status: 400 },
       );
     }
 
-    const filename = path.basename(id);
     const force = new URL(request.url).searchParams.get("force") === "1";
 
     if (!force) {
-      const usages = await findUsages(filename);
+      const usages = await findAssetUsages(id);
       if (usages.length > 0) {
         return NextResponse.json(
           {
-            error: `This image is in use (${usages.slice(0, 3).join(", ")}${usages.length > 3 ? "…" : ""}). Replace it first, or delete anyway.`,
+            error: `This image is in use (${usages.slice(0, 3).join(", ")}${usages.length > 3 ? "…" : ""}). Replace it first, or delete anyway with force=1.`,
             usages,
           },
           { status: 409 },
@@ -104,6 +86,29 @@ export async function DELETE(request: NextRequest, { params }: Params) {
       }
     }
 
+    if (id.startsWith("ik:")) {
+      const fileId = id.slice(3);
+      const privateKey = process.env.IMAGEKIT_PRIVATE_KEY;
+      if (!privateKey) {
+        return NextResponse.json(
+          { error: "ImageKit is not configured. Set IMAGEKIT_PRIVATE_KEY to delete ImageKit files." },
+          { status: 503 },
+        );
+      }
+
+      const res = await deleteFromImageKit(fileId, privateKey);
+      if (!res.ok) {
+        return NextResponse.json(
+          { error: res.error || "Failed to delete file from ImageKit" },
+          { status: 502 },
+        );
+      }
+
+      await deleteMediaMeta(id);
+      return NextResponse.json({ ok: true, deleted: true, fileId });
+    }
+
+    const filename = path.basename(id);
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
     const stem = filename.replace(/\.[^.]+$/, "");
     const entries = await fs.readdir(uploadsDir).catch(() => [] as string[]);
@@ -112,11 +117,8 @@ export async function DELETE(request: NextRequest, { params }: Params) {
     );
     await Promise.all(victims.map((f) => fs.unlink(path.join(uploadsDir, f)).catch(() => {})));
 
-    const meta = await readMeta();
-    if (meta[filename]) {
-      delete meta[filename];
-      await writeMeta(meta).catch(() => {});
-    }
+    await deleteMediaMeta(filename);
+    await deleteMediaMeta(id);
 
     return NextResponse.json({ ok: true, removed: victims.length });
   } catch (err) {

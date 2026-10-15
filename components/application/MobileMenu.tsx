@@ -323,32 +323,49 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
                   >
                     {searchResults.length > 0 ? (
                       <div className="max-h-56 overflow-y-auto">
-                        {searchResults.map((product) => (
-                          <Link
-                            key={product.id}
-                            href={`/product/${product.slug}`}
-                            onClick={onClose}
-                            className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-slate-50"
-                          >
-                            <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-slate-100">
-                              <Image
-                                src={product.image}
-                                alt={product.name}
-                                fill
-                                className="object-contain p-1"
-                                unoptimized={typeof product.image === "string" && product.image.startsWith("http")}
-                              />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="truncate text-sm font-medium text-slate-800">
-                                {product.name}
-                              </p>
-                              <p className="text-xs text-slate-500">
-                                {formatBDT(product.price)}
-                              </p>
-                            </div>
-                          </Link>
-                        ))}
+                        {searchResults.map((product) => {
+                          const href =
+                            product.type === "accessory"
+                              ? `/accessories/${product.slug}`
+                              : `/product/${product.slug}`;
+                          return (
+                            <Link
+                              key={product.id}
+                              href={href}
+                              onClick={onClose}
+                              className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-slate-50"
+                            >
+                              <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-lg bg-slate-100">
+                                <Image
+                                  src={product.image}
+                                  alt={product.name}
+                                  fill
+                                  className="object-contain p-1"
+                                  unoptimized={typeof product.image === "string" && product.image.startsWith("http")}
+                                />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5">
+                                  <p className="truncate text-sm font-medium text-slate-800">
+                                    {product.name}
+                                  </p>
+                                  {product.type === "accessory" ? (
+                                    <span className="shrink-0 rounded bg-purple-50 px-1 py-0.2 text-[9px] font-medium text-purple-700 border border-purple-200">
+                                      Accessory
+                                    </span>
+                                  ) : (
+                                    <span className="shrink-0 rounded bg-blue-50 px-1 py-0.2 text-[9px] font-medium text-blue-700 border border-blue-200">
+                                      Laptop
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-xs text-slate-500">
+                                  {formatBDT(product.price)}
+                                </p>
+                              </div>
+                            </Link>
+                          );
+                        })}
                         <Link
                           href={`/shop?search=${searchQuery}`}
                           onClick={onClose}

@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/lib/admin-auth";
+import { requireAdmin } from "@/lib/auth-guard";
 import { prisma } from "@/lib/prisma";
 import {
   isValidOrderStatus,
@@ -13,9 +13,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await requireAdminSession(request))) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "support"] });
+  if (auth.error) return auth.error;
 
   try {
     const { id } = await params;
@@ -48,9 +47,8 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  if (!(await requireAdminSession(request))) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "support"] });
+  if (auth.error) return auth.error;
 
   try {
     const { id } = await params;

@@ -67,11 +67,11 @@ function extractCookies(response) {
 async function run() {
   console.log("=== Testing Staff Login, Freshness, Trusted Device & Rate Limiting ===");
   let passed = 0;
-  let total = 10;
+  let total = 11;
 
   // 1. Owner Login via env credentials (issues admin_session & trusted_device cookies)
   console.log("\n[Test 1] Logging in as Primary Owner via env credentials...");
-  const ownerRes = await fetch(`${BASE_URL}/api/admin/login`, {
+  let ownerRes = await fetch(`${BASE_URL}/api/admin/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -79,6 +79,24 @@ async function run() {
       password: process.env.ADMIN_PASSWORD,
     }),
   });
+
+  // If locked from a previous aborted test run, unlock with a freshly minted trusted device token
+  if (ownerRes.status === 429) {
+    console.log("Detected lingering lock from prior run, unlocking via trusted device token...");
+    const fp = await computePasswordFingerprint(process.env.ADMIN_PASSWORD);
+    const unlockToken = await createTrustedDeviceToken("usr-owner-1", fp);
+    ownerRes = await fetch(`${BASE_URL}/api/admin/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `admin_trusted_device=${unlockToken}`,
+      },
+      body: JSON.stringify({
+        email: "admin@laptoppointbd.com",
+        password: process.env.ADMIN_PASSWORD,
+      }),
+    });
+  }
 
   const ownerData = await ownerRes.json();
   console.log("Owner login status:", ownerRes.status);
@@ -192,13 +210,54 @@ async function run() {
   });
 
   const jobsData = await jobsRes.json();
-  console.log("Staff hitting manager-only route status (expected 403):", jobsRes.status);
+  console.log("Staff hitting manager-only jobs route status (expected 403):", jobsRes.status);
 
-  if (jobsRes.status === 403) {
-    console.log("PASS: Demoted staff holding old 'manager' cookie was rejected with HTTP 403 Forbidden!");
+  // Assertion 1: Support staff hitting owner-only credentials route -> 403
+  const credsRes = await fetch(`${BASE_URL}/api/admin/setup/credentials`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: staffCookies.sessionCookie,
+    },
+    body: JSON.stringify({ provider: "imagekit", key: "fake_attempt" }),
+  });
+  console.log("Support staff hitting owner-only credentials route (expected 403):", credsRes.status);
+
+  // Assertion 2: Support staff hitting owner/manager-only bulk-prices route -> 403
+  const bulkRes = await fetch(`${BASE_URL}/api/admin/products/bulk-prices`, {
+    method: "POST",
+    headers: {
+      Cookie: staffCookies.sessionCookie,
+    },
+  });
+  console.log("Support staff hitting owner/manager bulk-prices route (expected 403):", bulkRes.status);
+
+  // Assertion 3: Support staff hitting owner/manager/marketing banners route -> 403
+  const bannerRes = await fetch(`${BASE_URL}/api/admin/banners`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: staffCookies.sessionCookie,
+    },
+    body: JSON.stringify({ title: "Unauthorized Test Banner" }),
+  });
+  console.log("Support staff hitting banners route (expected 403):", bannerRes.status);
+
+  if (
+    jobsRes.status === 403 &&
+    credsRes.status === 403 &&
+    bulkRes.status === 403 &&
+    bannerRes.status === 403
+  ) {
+    console.log("PASS: Demoted staff received HTTP 403 Forbidden across all tested routes (/api/admin/jobs, /api/admin/setup/credentials, /api/admin/products/bulk-prices, /api/admin/banners)!");
     passed++;
   } else {
-    console.error("FAIL: Expected 403 for demoted staff but got:", jobsRes.status, jobsData);
+    console.error("FAIL: Expected 403 for restricted routes but got:", {
+      jobs: jobsRes.status,
+      credentials: credsRes.status,
+      bulkPrices: bulkRes.status,
+      banners: bannerRes.status,
+    });
   }
 
   // 5. Deactivated staff gets 401 on next request
@@ -219,7 +278,13 @@ async function run() {
     },
   });
 
-  const nextReqData = await nextReqRes.json();
+  const nextReqText = await nextReqRes.text();
+  let nextReqData = null;
+  try {
+    nextReqData = JSON.parse(nextReqText);
+  } catch {
+    nextReqData = { raw: nextReqText.slice(0, 100) };
+  }
   console.log("Deactivated staff access status (expected 401):", nextReqRes.status);
 
   if (nextReqRes.status === 401) {
@@ -454,6 +519,46 @@ async function run() {
     passed++;
   }
 
+  // 11. Cross-use token confusion & fail-closed assertions
+  console.log("\n[Test 11] Cross-use token confusion & fail-closed assertions...");
+  let crossUsePassed = true;
+
+  const trustedTokenVal = ownerCookies.trustedDeviceCookie.replace(/^trusted_device=/, "");
+  const sessionTokenVal = ownerCookies.sessionCookie.replace(/^admin_session=/, "");
+
+  // (a) Trusted-device token in admin_session cookie -> 401 on GET /api/admin/dashboard
+  const wrongCookieRes = await fetch(`${BASE_URL}/api/admin/dashboard`, {
+    headers: {
+      Cookie: `admin_session=${trustedTokenVal}`,
+    },
+  });
+  console.log("Trusted token in admin_session cookie status (expected 401):", wrongCookieRes.status);
+  if (wrongCookieRes.status !== 401) {
+    console.error("FAIL: Expected 401 when passing trusted token in admin_session cookie, got:", wrongCookieRes.status);
+    crossUsePassed = false;
+  }
+
+  // (b) Session token used as trusted device -> verifyTrustedDeviceToken returns false
+  const ownerFp = await computePasswordFingerprint(process.env.ADMIN_PASSWORD);
+  const sessionAsTrusted = await verifyTrustedDeviceToken(sessionTokenVal, "usr-owner-1", ownerFp);
+  if (sessionAsTrusted !== false) {
+    console.error("FAIL: Session token should not validate as trusted device token");
+    crossUsePassed = false;
+  }
+
+  // (c) Fail-closed assertions: empty/missing fingerprint must be rejected
+  const emptyFpRejected = !(await verifyTrustedDeviceToken(trustedTokenVal, "usr-owner-1", ""));
+  const undefFpRejected = !(await verifyTrustedDeviceToken(trustedTokenVal, "usr-owner-1", undefined));
+  if (!emptyFpRejected || !undefFpRejected) {
+    console.error("FAIL: verifyTrustedDeviceToken must reject empty or undefined fingerprint");
+    crossUsePassed = false;
+  }
+
+  if (crossUsePassed) {
+    console.log("PASS: Cross-use token confusion rejected and verifyTrustedDeviceToken fails closed!");
+    passed++;
+  }
+
   // Cleanup: Delete the test staff user
   if (staffUserId) {
     console.log("\n[Cleanup] Removing test staff user...");
@@ -466,6 +571,19 @@ async function run() {
     });
     console.log("Delete staff user status:", delRes.status);
   }
+
+  // Reset rate limits on targetEmail so subsequent test suites can log in fresh
+  await fetch(`${BASE_URL}/api/admin/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: freshCookies.trustedDeviceCookie || ownerCookies.trustedDeviceCookie,
+    },
+    body: JSON.stringify({
+      email: targetEmail,
+      password: process.env.ADMIN_PASSWORD,
+    }),
+  });
 
   console.log(`\n=== Staff Login & Hardening Test Summary: ${passed}/${total} Passed ===`);
   if (passed !== total) {

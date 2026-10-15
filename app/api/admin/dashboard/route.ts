@@ -3,10 +3,13 @@ import {
   getAdminDashboardData,
   getFallbackAdminDashboardData,
 } from "@/lib/admin-dashboard";
+import { requireAdmin } from "@/lib/auth-guard";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (auth.error) return auth.error;
   try {
     const { searchParams } = new URL(request.url);
     const rangeParam = searchParams.get("range");

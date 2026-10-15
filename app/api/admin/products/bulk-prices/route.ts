@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loadMergedRawProducts, saveRawProduct } from "@/lib/products-storage";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth-guard";
 
 interface PreviewItem {
   type: "product" | "variant";
@@ -20,6 +21,9 @@ interface PreviewItem {
 }
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager"] });
+  if (auth.error) return auth.error;
+
   try {
     const products = await loadMergedRawProducts();
 
@@ -77,6 +81,8 @@ function parseCsv(text: string): string[][] {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager"] });
+  if (auth.error) return auth.error;
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get("action") || "preview";

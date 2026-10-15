@@ -11,7 +11,7 @@ import {
   type AccessoryRecord,
 } from "@/lib/accessory-types";
 import { formatBDT } from "@/lib/format";
-import { ExternalLink, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { Download, ExternalLink, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -233,6 +233,47 @@ export default function AdminAccessoriesPage() {
     }
   };
 
+  const exportCSV = () => {
+    if (items.length === 0) return;
+    const headers = [
+      "ID",
+      "SKU",
+      "Name",
+      "Brand",
+      "Category",
+      "Condition",
+      "Price (BDT)",
+      "Original Price (BDT)",
+      "Stock",
+      "Status",
+      "Visible",
+    ];
+    const rows = items.map((a) => [
+      a.id,
+      a.sku,
+      `"${(a.name || "").replace(/"/g, '""')}"`,
+      `"${(a.brand || "").replace(/"/g, '""')}"`,
+      a.category,
+      a.condition,
+      a.price,
+      a.originalPrice ?? "",
+      a.stock,
+      a.stock <= 0 ? "Out of Stock" : a.stock <= 5 ? "Low Stock" : "In Stock",
+      a.active ? "Yes" : "No",
+    ]);
+
+    const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `accessories_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="mx-auto w-full max-w-7xl space-y-5 p-4 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -243,6 +284,9 @@ export default function AdminAccessoriesPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={exportCSV} disabled={items.length === 0}>
+            <Download className="mr-1.5 h-4 w-4" /> Export CSV
+          </Button>
           <Button variant="outline" asChild>
             <Link href="/accessories" target="_blank">
               <ExternalLink className="mr-1.5 h-4 w-4" /> View page
@@ -345,9 +389,19 @@ export default function AdminAccessoriesPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 tabular-nums">
-                    <span className={a.stock <= 0 ? "font-semibold text-destructive" : a.stock <= 5 ? "font-semibold text-amber-600" : ""}>
-                      {a.stock}
-                    </span>
+                    {a.stock <= 0 ? (
+                      <span className="inline-flex items-center gap-1 rounded-xs bg-red-500/10 px-2 py-0.5 text-xs font-bold text-red-600 dark:text-red-400 border border-red-500/20">
+                        {a.stock} Out
+                      </span>
+                    ) : a.stock <= 5 ? (
+                      <span className="inline-flex items-center gap-1 rounded-xs bg-amber-500/10 px-2 py-0.5 text-xs font-bold text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                        {a.stock} Low
+                      </span>
+                    ) : (
+                      <span className="font-semibold text-foreground">
+                        {a.stock}
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <button

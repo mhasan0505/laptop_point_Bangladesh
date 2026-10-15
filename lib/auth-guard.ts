@@ -19,21 +19,13 @@ export type RequireAdminResult =
   | { user: AuthAdminUser; error: null }
   | { user: null; error: NextResponse };
 
-interface CachedUserEntry {
-  user: AdminUserRecord | null;
-  fetchedAt: number;
-}
+import { rateLimitStore } from "@/lib/rate-limit";
 
-const userCache = new Map<string, CachedUserEntry>();
-const CACHE_TTL_MS = 30 * 1000; // <= 30s in-memory freshness cache
+const CACHE_TTL_MS = 30 * 1000; // <= 30s user freshness cache
 
 /** Invalidate cache for a specific user (or all users) on account modification */
 export function invalidateUserCache(userId?: string) {
-  if (userId) {
-    userCache.delete(userId);
-  } else {
-    userCache.clear();
-  }
+  rateLimitStore.invalidateUserCache(userId);
 }
 
 export async function requireAdmin(
@@ -56,15 +48,19 @@ export async function requireAdmin(
     // For any non-owner staff session, verify freshness against storage (cached <= 30s)
     if (session.userId !== "usr-owner-1") {
       const now = Date.now();
-      const cached = userCache.get(session.userId);
+      const cached = rateLimitStore.getUserCache(session.userId);
       let storedUser: AdminUserRecord | null = null;
 
       if (cached && now - cached.fetchedAt < CACHE_TTL_MS) {
-        storedUser = cached.user;
+        storedUser = cached.user as AdminUserRecord | null;
       } else {
         const allUsers = await getAdminUsers();
         storedUser = allUsers.find((u) => u.id === session.userId) || null;
-        userCache.set(session.userId, { user: storedUser, fetchedAt: now });
+        rateLimitStore.setUserCache(
+          session.userId,
+          { user: storedUser, fetchedAt: now },
+          CACHE_TTL_MS
+        );
       }
 
       // Reject if user was deleted or deactivated

@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/lib/admin-auth";
+import { requireAdmin } from "@/lib/auth-guard";
 import { checkGoogleCredentialsStatus } from "@/lib/analytics/utils";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -6,9 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  if (!(await requireAdminSession(request))) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin(request, { roles: ["owner", "manager"] });
+  if (auth.error) return auth.error;
 
   try {
     // 1. Database Check

@@ -21,9 +21,9 @@ export default async function AnnouncementBar() {
   );
 
   return (
-    <div className="bg-gray-900 px-4 py-2 text-center text-xs text-white sm:text-sm">
+    <div className="bg-brand-navy px-4 py-2 text-center text-caption sm:text-small text-white">
       {first.linkHref ? (
-        <Link href={first.linkHref} className="hover:text-red-300 transition-colors">
+        <Link href={first.linkHref} className="hover:text-brand-red transition-colors">
           {content}
         </Link>
       ) : (

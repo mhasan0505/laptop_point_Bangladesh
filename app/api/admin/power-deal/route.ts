@@ -8,8 +8,12 @@ import {
   reorderPowerDeals,
 } from "@/lib/power-deal-data";
 import { loadMergedRawProducts } from "@/lib/products-storage";
+import { requireAdmin } from "@/lib/auth-guard";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const [config, deals, rawProducts] = await Promise.all([
       getPowerDealConfig(),
@@ -52,6 +56,9 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     const updated = await savePowerDealConfig(body);
@@ -66,6 +73,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     if (!body.name || !body.salePrice) {
@@ -87,6 +97,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     if (Array.isArray(body.deals)) {
@@ -108,6 +121,9 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");

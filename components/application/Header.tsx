@@ -415,34 +415,49 @@ const Header = ({
                         </p>
                         {searchResults.length > 0 ? (
                           <div className="space-y-1">
-                            {searchResults.map((product) => (
-                              <Link
-                                key={product.id}
-                                href={`/product/${product.slug}`}
-                                onClick={() => setIsSearchExpanded(false)}
-                                className="group flex w-full items-center gap-3 rounded-lg p-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
-                              >
-                                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-gray-50">
-                                  <Image
-                                    src={product.image}
-                                    alt={product.name}
-                                    fill
-                                    className="object-contain p-1"
-                                    unoptimized={product.image.startsWith(
-                                      "http",
-                                    )}
-                                  />
-                                </div>
-                                <div>
-                                  <p className="line-clamp-1 font-medium text-gray-900">
-                                    {product.name}
-                                  </p>
-                                  <p className="text-xs text-gray-500">
-                                    ৳{product.price.toLocaleString()}
-                                  </p>
-                                </div>
-                              </Link>
-                            ))}
+                            {searchResults.map((product) => {
+                              const href =
+                                product.type === "accessory"
+                                  ? `/accessories/${product.slug}`
+                                  : `/product/${product.slug}`;
+                              return (
+                                <Link
+                                  key={product.id}
+                                  href={href}
+                                  onClick={() => setIsSearchExpanded(false)}
+                                  className="group flex w-full items-center gap-3 rounded-lg p-2.5 text-left text-sm text-gray-700 transition-colors hover:bg-gray-50"
+                                >
+                                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-gray-50">
+                                    <Image
+                                      src={product.image}
+                                      alt={product.name}
+                                      fill
+                                      className="object-contain p-1"
+                                      unoptimized={product.image.startsWith("http")}
+                                    />
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2">
+                                      <p className="line-clamp-1 font-medium text-gray-900">
+                                        {product.name}
+                                      </p>
+                                      {product.type === "accessory" ? (
+                                        <span className="shrink-0 rounded bg-purple-50 px-1.5 py-0.5 text-[10px] font-medium text-purple-700 border border-purple-200">
+                                          Accessory
+                                        </span>
+                                      ) : (
+                                        <span className="shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-medium text-blue-700 border border-blue-200">
+                                          Laptop
+                                        </span>
+                                      )}
+                                    </div>
+                                    <p className="text-xs text-gray-500">
+                                      ৳{product.price.toLocaleString()}
+                                    </p>
+                                  </div>
+                                </Link>
+                              );
+                            })}
                             <Link
                               href={`/shop?search=${searchQuery}`}
                               onClick={() => setIsSearchExpanded(false)}

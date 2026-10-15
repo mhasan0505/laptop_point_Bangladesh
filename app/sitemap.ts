@@ -171,11 +171,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // 1c. Active accessory product routes
+  const activeAccessoryRoutes = accessories
+    .filter((a) => Boolean(a.slug))
+    .map((a) => ({
+      url: `${baseUrl}/accessories/${a.slug}`,
+      lastModified: catalogDate,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }));
+
   return [
     ...staticRoutes,
     ...brandRoutes,
     ...categoryRoutes,
     ...accessoryCategoryRoutes,
+    ...activeAccessoryRoutes,
     ...productRoutes,
     ...blogRoutes,
   ];

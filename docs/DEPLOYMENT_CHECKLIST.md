@@ -393,6 +393,11 @@ The following security components currently utilize in-memory storage (`Map` str
 
 ### Trusted Proxy Configuration (`TRUSTED_PROXY`)
 
+> [!CAUTION]
+> **CRITICAL PRODUCTION REQUIREMENT: `TRUSTED_PROXY` MUST BE CONFIGURED IN PRODUCTION**
+> If `TRUSTED_PROXY` is unset in production, every visitor shares the IP identity `"unknown"`. As a result, **5 failed login attempts from any visitor or attacker will lock out all untrusted-device logins globally for 15 minutes**.
+> For Vercel deployments, you MUST configure `TRUSTED_PROXY=vercel` in your project's Environment Variables. For Cloudflare, set `TRUSTED_PROXY=cloudflare`. For custom reverse proxies (e.g., Nginx, ALB, Traefik), set `TRUSTED_PROXY=xff`.
+
 Configure `TRUSTED_PROXY` in your host environment variables based on your ingress architecture:
 
 | Host / Architecture | `TRUSTED_PROXY` Value | Description & Resolved Header |

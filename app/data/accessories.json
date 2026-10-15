@@ -1,5 +1,86 @@
 [
   {
+    "id": "acc-test-acc-mv8gmyih",
+    "sku": "TEST-ACC-MV8GMYIH",
+    "name": "Test Charger MV8GMYIH",
+    "slug": "test-charger-mv8gmyih",
+    "brand": "TestBrand",
+    "color": "",
+    "price": 1500,
+    "specs": [
+      "65W",
+      "USB-C"
+    ],
+    "stock": 3,
+    "active": false,
+    "images": [],
+    "category": "chargers-adapters",
+    "warranty": "",
+    "condition": "New",
+    "createdAt": "2026-10-14T18:45:39.402Z",
+    "updatedAt": "2026-10-14T18:46:17.288Z",
+    "description": "",
+    "compatibility": [
+      "Test Laptop A",
+      "Test Laptop B"
+    ],
+    "originalPrice": 2000
+  },
+  {
+    "id": "acc-test-acc-mv8gk42k",
+    "sku": "TEST-ACC-MV8GK42K",
+    "name": "Test Charger MV8GK42K",
+    "slug": "test-charger-mv8gk42k",
+    "brand": "TestBrand",
+    "color": "",
+    "price": 1500,
+    "specs": [
+      "65W",
+      "USB-C"
+    ],
+    "stock": 3,
+    "active": false,
+    "images": [],
+    "category": "chargers-adapters",
+    "warranty": "",
+    "condition": "New",
+    "createdAt": "2026-10-14T18:43:30.355Z",
+    "updatedAt": "2026-10-14T18:43:56.200Z",
+    "description": "",
+    "compatibility": [
+      "Test Laptop A",
+      "Test Laptop B"
+    ],
+    "originalPrice": 2000
+  },
+  {
+    "id": "acc-test-acc-mv8gh5e3",
+    "sku": "TEST-ACC-MV8GH5E3",
+    "name": "Test Charger MV8GH5E3",
+    "slug": "test-charger-mv8gh5e3",
+    "brand": "TestBrand",
+    "color": "",
+    "price": 1500,
+    "specs": [
+      "65W",
+      "USB-C"
+    ],
+    "stock": 3,
+    "active": false,
+    "images": [],
+    "category": "chargers-adapters",
+    "warranty": "",
+    "condition": "New",
+    "createdAt": "2026-10-14T18:41:08.724Z",
+    "updatedAt": "2026-10-14T18:41:49.113Z",
+    "description": "",
+    "compatibility": [
+      "Test Laptop A",
+      "Test Laptop B"
+    ],
+    "originalPrice": 2000
+  },
+  {
     "id": "acc-chg-hp-65wusbccharg",
     "sku": "CHG-HP-65WUSBCCHARG",
     "slug": "hp-65w-usb-c-charger",

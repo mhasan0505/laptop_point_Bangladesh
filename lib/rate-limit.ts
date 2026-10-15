@@ -1,42 +1,247 @@
-interface RateLimitRecord {
+export interface RateLimitRecord {
   attempts: number;
   firstAttemptAt: number;
   lockedUntil: number;
 }
 
-const MAX_ATTEMPTS = 5;
-const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes lockout
+export const MAX_ATTEMPTS = 5;
+export const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+export const LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes lockout
 
-const GLOBAL_EMAIL_MAX_ATTEMPTS = 10; // 10 failures / 15 min across all IPs
-const GLOBAL_EMAIL_WINDOW_MS = 15 * 60 * 1000; // 15 minutes window
+export const GLOBAL_EMAIL_MAX_ATTEMPTS = 10; // 10 failures / 15 min across all IPs
+export const GLOBAL_EMAIL_WINDOW_MS = 15 * 60 * 1000; // 15 minutes window
 
-interface GlobalEmailRecord {
+export interface GlobalEmailRecord {
   failures: number;
   firstFailureAt: number;
 }
 
-const ipAttempts = new Map<string, RateLimitRecord>();
-const ipEmailAttempts = new Map<string, RateLimitRecord>();
-const globalEmailFailures = new Map<string, GlobalEmailRecord>();
+export interface CachedUserRecord {
+  user: unknown;
+  fetchedAt: number;
+}
 
-function cleanExpiredRecords(map: Map<string, RateLimitRecord>) {
-  const now = Date.now();
-  for (const [key, record] of map.entries()) {
-    if (now > record.lockedUntil && now - record.firstAttemptAt > WINDOW_MS) {
-      map.delete(key);
+/**
+ * Adapter interface for rate-limiting counters and the 30s user freshness cache.
+ * Enables zero-dependency local in-memory storage while supporting distributed stores
+ * (such as Upstash Redis) in multi-instance or serverless production deployments.
+ */
+export interface RateLimitStore {
+  getIpAttempt(ip: string): RateLimitRecord | null;
+  setIpAttempt(ip: string, record: RateLimitRecord, ttlMs?: number): void;
+  deleteIpAttempt(ip: string): void;
+
+  getIpEmailAttempt(key: string): RateLimitRecord | null;
+  setIpEmailAttempt(key: string, record: RateLimitRecord, ttlMs?: number): void;
+  deleteIpEmailAttempt(key: string): void;
+
+  getGlobalEmailFailure(email: string): GlobalEmailRecord | null;
+  setGlobalEmailFailure(email: string, record: GlobalEmailRecord, ttlMs?: number): void;
+  deleteGlobalEmailFailure(email: string): void;
+
+  getUserCache(userId: string): CachedUserRecord | null;
+  setUserCache(userId: string, entry: CachedUserRecord, ttlMs?: number): void;
+  invalidateUserCache(userId?: string): void;
+}
+
+export class MemoryRateLimitStore implements RateLimitStore {
+  private ipAttempts = new Map<string, RateLimitRecord>();
+  private ipEmailAttempts = new Map<string, RateLimitRecord>();
+  private globalEmailFailures = new Map<string, GlobalEmailRecord>();
+  private userCache = new Map<string, CachedUserRecord>();
+
+  getIpAttempt(ip: string): RateLimitRecord | null {
+    const rec = this.ipAttempts.get(ip);
+    if (!rec) return null;
+    const now = Date.now();
+    if (now > rec.lockedUntil && now - rec.firstAttemptAt > WINDOW_MS) {
+      this.ipAttempts.delete(ip);
+      return null;
+    }
+    return rec;
+  }
+
+  setIpAttempt(ip: string, record: RateLimitRecord): void {
+    this.ipAttempts.set(ip, record);
+  }
+
+  deleteIpAttempt(ip: string): void {
+    this.ipAttempts.delete(ip);
+  }
+
+  getIpEmailAttempt(key: string): RateLimitRecord | null {
+    const rec = this.ipEmailAttempts.get(key);
+    if (!rec) return null;
+    const now = Date.now();
+    if (now > rec.lockedUntil && now - rec.firstAttemptAt > WINDOW_MS) {
+      this.ipEmailAttempts.delete(key);
+      return null;
+    }
+    return rec;
+  }
+
+  setIpEmailAttempt(key: string, record: RateLimitRecord): void {
+    this.ipEmailAttempts.set(key, record);
+  }
+
+  deleteIpEmailAttempt(key: string): void {
+    this.ipEmailAttempts.delete(key);
+  }
+
+  getGlobalEmailFailure(email: string): GlobalEmailRecord | null {
+    const rec = this.globalEmailFailures.get(email);
+    if (!rec) return null;
+    const now = Date.now();
+    if (now - rec.firstFailureAt > GLOBAL_EMAIL_WINDOW_MS) {
+      this.globalEmailFailures.delete(email);
+      return null;
+    }
+    return rec;
+  }
+
+  setGlobalEmailFailure(email: string, record: GlobalEmailRecord): void {
+    this.globalEmailFailures.set(email, record);
+  }
+
+  deleteGlobalEmailFailure(email: string): void {
+    this.globalEmailFailures.delete(email);
+  }
+
+  getUserCache(userId: string): CachedUserRecord | null {
+    const rec = this.userCache.get(userId);
+    if (!rec) return null;
+    const now = Date.now();
+    if (now - rec.fetchedAt > 30 * 1000) {
+      this.userCache.delete(userId);
+      return null;
+    }
+    return rec;
+  }
+
+  setUserCache(userId: string, entry: CachedUserRecord): void {
+    this.userCache.set(userId, entry);
+  }
+
+  invalidateUserCache(userId?: string): void {
+    if (userId) {
+      this.userCache.delete(userId);
+    } else {
+      this.userCache.clear();
     }
   }
 }
 
-function cleanGlobalEmailRecords() {
-  const now = Date.now();
-  for (const [email, record] of globalEmailFailures.entries()) {
-    if (now - record.firstFailureAt > GLOBAL_EMAIL_WINDOW_MS) {
-      globalEmailFailures.delete(email);
+/**
+ * Documented Upstash / Redis implementation stub.
+ * Activated via environment variable `RATE_LIMIT_STORE=upstash` or `RATE_LIMIT_STORE=redis`.
+ *
+ * To connect to live Upstash Redis:
+ * 1. Install client: `pnpm add @upstash/redis`
+ * 2. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN in .env.production
+ * 3. Replace the fallback calls below with:
+ *    - `redis.get<RateLimitRecord>(key)`
+ *    - `redis.set(key, value, { px: ttlMs })`
+ *    - `redis.del(key)`
+ */
+export class UpstashRedisRateLimitStoreStub implements RateLimitStore {
+  private fallback = new MemoryRateLimitStore();
+
+  constructor() {
+    if (process.env.NODE_ENV === "production") {
+      console.info(
+        "[RateLimitStore] Upstash Redis store activated via RATE_LIMIT_STORE env. (Using memory fallback stub until confirmed by administrator)."
+      );
     }
   }
+
+  getIpAttempt(ip: string): RateLimitRecord | null {
+    // Example: return await redis.get<RateLimitRecord>(`rl:ip:${ip}`);
+    return this.fallback.getIpAttempt(ip);
+  }
+
+  setIpAttempt(ip: string, record: RateLimitRecord, ttlMs: number = LOCKOUT_MS): void {
+    // Example: await redis.set(`rl:ip:${ip}`, record, { px: ttlMs });
+    this.fallback.setIpAttempt(ip, record);
+  }
+
+  deleteIpAttempt(ip: string): void {
+    // Example: await redis.del(`rl:ip:${ip}`);
+    this.fallback.deleteIpAttempt(ip);
+  }
+
+  getIpEmailAttempt(key: string): RateLimitRecord | null {
+    // Example: return await redis.get<RateLimitRecord>(`rl:ipe:${key}`);
+    return this.fallback.getIpEmailAttempt(key);
+  }
+
+  setIpEmailAttempt(key: string, record: RateLimitRecord, ttlMs: number = LOCKOUT_MS): void {
+    // Example: await redis.set(`rl:ipe:${key}`, record, { px: ttlMs });
+    this.fallback.setIpEmailAttempt(key, record);
+  }
+
+  deleteIpEmailAttempt(key: string): void {
+    // Example: await redis.del(`rl:ipe:${key}`);
+    this.fallback.deleteIpEmailAttempt(key);
+  }
+
+  getGlobalEmailFailure(email: string): GlobalEmailRecord | null {
+    // Example: return await redis.get<GlobalEmailRecord>(`rl:ge:${email}`);
+    return this.fallback.getGlobalEmailFailure(email);
+  }
+
+  setGlobalEmailFailure(email: string, record: GlobalEmailRecord, ttlMs: number = GLOBAL_EMAIL_WINDOW_MS): void {
+    // Example: await redis.set(`rl:ge:${email}`, record, { px: ttlMs });
+    this.fallback.setGlobalEmailFailure(email, record);
+  }
+
+  deleteGlobalEmailFailure(email: string): void {
+    // Example: await redis.del(`rl:ge:${email}`);
+    this.fallback.deleteGlobalEmailFailure(email);
+  }
+
+  getUserCache(userId: string): CachedUserRecord | null {
+    // Example: return await redis.get<CachedUserRecord>(`cache:user:${userId}`);
+    return this.fallback.getUserCache(userId);
+  }
+
+  setUserCache(userId: string, entry: CachedUserRecord, ttlMs: number = 30 * 1000): void {
+    // Example: await redis.set(`cache:user:${userId}`, entry, { px: ttlMs });
+    this.fallback.setUserCache(userId, entry);
+  }
+
+  invalidateUserCache(userId?: string): void {
+    // Example: if (userId) await redis.del(`cache:user:${userId}`);
+    this.fallback.invalidateUserCache(userId);
+  }
 }
+
+export function createRateLimitStore(): RateLimitStore {
+  const store = (process.env.RATE_LIMIT_STORE || "").trim().toLowerCase();
+  if (store === "upstash" || store === "redis") {
+    return new UpstashRedisRateLimitStoreStub();
+  }
+  return new MemoryRateLimitStore();
+}
+
+export const rateLimitStore = createRateLimitStore();
+
+let hasWarnedProxy = false;
+
+export function warnIfTrustedProxyUnsetInProduction() {
+  if (
+    !hasWarnedProxy &&
+    process.env.NODE_ENV === "production" &&
+    !process.env.TRUSTED_PROXY
+  ) {
+    hasWarnedProxy = true;
+    console.warn(
+      "[SECURITY WARNING] TRUSTED_PROXY is unset in production. All clients will share the IP identity 'unknown', meaning 5 failed login attempts will lock all untrusted-device logins globally for 15 minutes. Set TRUSTED_PROXY=vercel (or cloudflare/xff) to resolve client IPs securely."
+    );
+  }
+}
+
+// Initial startup warning check
+warnIfTrustedProxyUnsetInProduction();
 
 /**
  * Checks whether global failures for this email across all IPs reached or exceeded the cap.
@@ -45,11 +250,10 @@ function cleanGlobalEmailRecords() {
 export function isGlobalEmailCapExceeded(
   email: string
 ): { exceeded: boolean; retryAfterSeconds?: number } {
-  cleanGlobalEmailRecords();
   const normalizedEmail = email.trim().toLowerCase();
   if (!normalizedEmail) return { exceeded: false };
 
-  const record = globalEmailFailures.get(normalizedEmail);
+  const record = rateLimitStore.getGlobalEmailFailure(normalizedEmail);
   if (record && record.failures >= GLOBAL_EMAIL_MAX_ATTEMPTS) {
     const elapsed = Date.now() - record.firstFailureAt;
     const remaining = Math.max(1, Math.ceil((GLOBAL_EMAIL_WINDOW_MS - elapsed) / 1000));
@@ -62,15 +266,12 @@ export function checkLoginRateLimit(
   ip: string,
   email: string
 ): { allowed: boolean; retryAfterSeconds?: number } {
-  cleanExpiredRecords(ipAttempts);
-  cleanExpiredRecords(ipEmailAttempts);
-
   const now = Date.now();
   const normalizedEmail = email.trim().toLowerCase();
 
   // 1. Coarser cap: pure-IP limit blocks aggressive botnet/bruteforce IPs (only if IP is known)
   if (ip !== "unknown") {
-    const ipRecord = ipAttempts.get(ip);
+    const ipRecord = rateLimitStore.getIpAttempt(ip);
     if (ipRecord && now < ipRecord.lockedUntil) {
       const retryAfter = Math.ceil((ipRecord.lockedUntil - now) / 1000);
       return { allowed: false, retryAfterSeconds: retryAfter };
@@ -81,7 +282,7 @@ export function checkLoginRateLimit(
   // the legitimate store owner from logging in from their own IP.
   if (normalizedEmail) {
     const ipEmailKey = `${ip}|${normalizedEmail}`;
-    const ipEmailRecord = ipEmailAttempts.get(ipEmailKey);
+    const ipEmailRecord = rateLimitStore.getIpEmailAttempt(ipEmailKey);
     if (ipEmailRecord && now < ipEmailRecord.lockedUntil) {
       const retryAfter = Math.ceil((ipEmailRecord.lockedUntil - now) / 1000);
       return { allowed: false, retryAfterSeconds: retryAfter };
@@ -98,7 +299,7 @@ export function checkLoginRateLimit(
 export function getProgressiveDelayMs(ip: string, email: string): number {
   const normalizedEmail = email.trim().toLowerCase();
   const key = normalizedEmail ? `${ip}|${normalizedEmail}` : ip;
-  const record = normalizedEmail ? ipEmailAttempts.get(key) : ipAttempts.get(key);
+  const record = normalizedEmail ? rateLimitStore.getIpEmailAttempt(key) : rateLimitStore.getIpAttempt(key);
   const n = record ? record.attempts : 1;
   return Math.min(200 * Math.pow(2, Math.max(0, n - 1)), 3000);
 }
@@ -114,9 +315,9 @@ export function recordFailedLogin(ip: string, email: string): number {
 
   // 1. Record for pure IP (coarser cap, if ip is known)
   if (ip !== "unknown") {
-    const currentIpRecord = ipAttempts.get(ip);
+    const currentIpRecord = rateLimitStore.getIpAttempt(ip);
     if (!currentIpRecord || now - currentIpRecord.firstAttemptAt > WINDOW_MS) {
-      ipAttempts.set(ip, {
+      rateLimitStore.setIpAttempt(ip, {
         attempts: 1,
         firstAttemptAt: now,
         lockedUntil: 0,
@@ -127,6 +328,7 @@ export function recordFailedLogin(ip: string, email: string): number {
       if (currentIpRecord.attempts >= MAX_ATTEMPTS) {
         currentIpRecord.lockedUntil = now + LOCKOUT_MS;
       }
+      rateLimitStore.setIpAttempt(ip, currentIpRecord);
       if (!normalizedEmail) attemptsForDelay = currentIpRecord.attempts;
     }
   }
@@ -134,12 +336,12 @@ export function recordFailedLogin(ip: string, email: string): number {
   // 2. Record for ${ip}|${email} (fine-grained attempt tracking per IP + target user)
   if (normalizedEmail) {
     const ipEmailKey = `${ip}|${normalizedEmail}`;
-    const currentIpEmailRecord = ipEmailAttempts.get(ipEmailKey);
+    const currentIpEmailRecord = rateLimitStore.getIpEmailAttempt(ipEmailKey);
     if (
       !currentIpEmailRecord ||
       now - currentIpEmailRecord.firstAttemptAt > WINDOW_MS
     ) {
-      ipEmailAttempts.set(ipEmailKey, {
+      rateLimitStore.setIpEmailAttempt(ipEmailKey, {
         attempts: 1,
         firstAttemptAt: now,
         lockedUntil: 0,
@@ -147,22 +349,23 @@ export function recordFailedLogin(ip: string, email: string): number {
       attemptsForDelay = 1;
     } else {
       currentIpEmailRecord.attempts += 1;
-      attemptsForDelay = currentIpEmailRecord.attempts;
       if (currentIpEmailRecord.attempts >= MAX_ATTEMPTS) {
         currentIpEmailRecord.lockedUntil = now + LOCKOUT_MS;
       }
+      rateLimitStore.setIpEmailAttempt(ipEmailKey, currentIpEmailRecord);
+      attemptsForDelay = currentIpEmailRecord.attempts;
     }
 
     // 3. Record for global per-email failure cap across all IPs
-    cleanGlobalEmailRecords();
-    const globalRecord = globalEmailFailures.get(normalizedEmail);
+    const globalRecord = rateLimitStore.getGlobalEmailFailure(normalizedEmail);
     if (!globalRecord || now - globalRecord.firstFailureAt > GLOBAL_EMAIL_WINDOW_MS) {
-      globalEmailFailures.set(normalizedEmail, {
+      rateLimitStore.setGlobalEmailFailure(normalizedEmail, {
         failures: 1,
         firstFailureAt: now,
       });
     } else {
       globalRecord.failures += 1;
+      rateLimitStore.setGlobalEmailFailure(normalizedEmail, globalRecord);
     }
   }
 
@@ -171,10 +374,10 @@ export function recordFailedLogin(ip: string, email: string): number {
 }
 
 export function resetLoginRateLimit(ip: string, email: string) {
-  ipAttempts.delete(ip);
+  rateLimitStore.deleteIpAttempt(ip);
   const normalizedEmail = email.trim().toLowerCase();
   if (normalizedEmail) {
-    ipEmailAttempts.delete(`${ip}|${normalizedEmail}`);
+    rateLimitStore.deleteIpEmailAttempt(`${ip}|${normalizedEmail}`);
   }
 }
 
@@ -187,6 +390,7 @@ export function resetLoginRateLimit(ip: string, email: string) {
  * Any other value or missing expected header falls back to "unknown".
  */
 export function getClientIp(request: Request): string {
+  warnIfTrustedProxyUnsetInProduction();
   const proxyMode = (process.env.TRUSTED_PROXY || "").trim().toLowerCase();
 
   if (proxyMode === "vercel") {
@@ -232,6 +436,18 @@ const orderLookupAttempts = new Map<string, RateLimitRecord>();
 const ORDER_LOOKUP_MAX_ATTEMPTS = 15;
 const ORDER_LOOKUP_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 const ORDER_LOOKUP_LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes lockout
+
+function cleanExpiredRecords(
+  map: Map<string, RateLimitRecord>,
+  windowMs: number = ORDER_LOOKUP_WINDOW_MS
+) {
+  const now = Date.now();
+  for (const [key, record] of map.entries()) {
+    if (now > record.lockedUntil && now - record.firstAttemptAt > windowMs) {
+      map.delete(key);
+    }
+  }
+}
 
 export function checkOrderLookupRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: number } {
   cleanExpiredRecords(orderLookupAttempts);

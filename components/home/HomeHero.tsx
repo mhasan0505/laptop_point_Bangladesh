@@ -176,27 +176,81 @@ export default function HomeHero({ contact }: HomeHeroProps) {
                         className="block w-full h-full relative focus:outline-none focus:ring-2 focus:ring-brand-navy"
                         tabIndex={isCurrent ? 0 : -1}
                       >
-                        <Image
-                          src={slide.image}
-                          alt={slide.alt}
-                          fill
-                          priority={index === 0}
-                          loading={index === 0 ? "eager" : "lazy"}
-                          sizes="(min-width: 1024px) 50vw, 100vw"
-                          className="object-contain p-4 sm:p-6"
-                        />
+                        {slide.mobileImage ? (
+                          <>
+                            <div className="relative w-full h-full block sm:hidden">
+                              <Image
+                                src={slide.mobileImage}
+                                alt={slide.alt}
+                                fill
+                                priority={index === 0}
+                                loading={index === 0 ? "eager" : "lazy"}
+                                sizes="100vw"
+                                className="object-contain p-2"
+                              />
+                            </div>
+                            <div className="relative w-full h-full hidden sm:block">
+                              <Image
+                                src={slide.image}
+                                alt={slide.alt}
+                                fill
+                                priority={index === 0}
+                                loading={index === 0 ? "eager" : "lazy"}
+                                sizes="(min-width: 1024px) 50vw, 100vw"
+                                className="object-contain p-4 sm:p-6"
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <Image
+                            src={slide.image}
+                            alt={slide.alt}
+                            fill
+                            priority={index === 0}
+                            loading={index === 0 ? "eager" : "lazy"}
+                            sizes="(min-width: 1024px) 50vw, 100vw"
+                            className="object-contain p-4 sm:p-6"
+                          />
+                        )}
                       </Link>
                     ) : (
                       <div className="relative w-full h-full">
-                        <Image
-                          src={slide.image}
-                          alt={slide.alt}
-                          fill
-                          priority={index === 0}
-                          loading={index === 0 ? "eager" : "lazy"}
-                          sizes="(min-width: 1024px) 50vw, 100vw"
-                          className="object-contain p-4 sm:p-6"
-                        />
+                        {slide.mobileImage ? (
+                          <>
+                            <div className="relative w-full h-full block sm:hidden">
+                              <Image
+                                src={slide.mobileImage}
+                                alt={slide.alt}
+                                fill
+                                priority={index === 0}
+                                loading={index === 0 ? "eager" : "lazy"}
+                                sizes="100vw"
+                                className="object-contain p-2"
+                              />
+                            </div>
+                            <div className="relative w-full h-full hidden sm:block">
+                              <Image
+                                src={slide.image}
+                                alt={slide.alt}
+                                fill
+                                priority={index === 0}
+                                loading={index === 0 ? "eager" : "lazy"}
+                                sizes="(min-width: 1024px) 50vw, 100vw"
+                                className="object-contain p-4 sm:p-6"
+                              />
+                            </div>
+                          </>
+                        ) : (
+                          <Image
+                            src={slide.image}
+                            alt={slide.alt}
+                            fill
+                            priority={index === 0}
+                            loading={index === 0 ? "eager" : "lazy"}
+                            sizes="(min-width: 1024px) 50vw, 100vw"
+                            className="object-contain p-4 sm:p-6"
+                          />
+                        )}
                       </div>
                     )}
                   </div>

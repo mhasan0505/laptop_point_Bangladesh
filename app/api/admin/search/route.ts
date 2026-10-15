@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { loadMergedRawProducts } from "@/lib/products-storage";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth-guard";
 
 export interface AdminProductSearchResult {
   id: string;
@@ -29,6 +30,8 @@ export interface AdminSearchResponse {
 }
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (auth.error) return auth.error;
   try {
     const { searchParams } = new URL(request.url);
     const query = (searchParams.get("q") || "").trim().toLowerCase();

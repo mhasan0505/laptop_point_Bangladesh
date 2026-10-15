@@ -1,4 +1,4 @@
-import { requireAdminSession } from "@/lib/admin-auth";
+import { requireAdmin } from "@/lib/auth-guard";
 import { fetchUnifiedAnalytics } from "@/lib/analytics";
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,9 +7,8 @@ export const revalidate = 1800;
 
 // GET /api/admin/analytics?range=7d|30d|90d&refresh=true
 export async function GET(request: NextRequest) {
-  if (!(await requireAdminSession(request))) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
 
   try {
     const searchParams = request.nextUrl.searchParams;

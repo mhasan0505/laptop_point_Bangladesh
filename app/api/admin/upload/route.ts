@@ -4,6 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
 import { generatePresetVariants, MEDIA_PRESETS } from "@/lib/media/presets";
 import { UploadStageError, sanitizeDetail } from "@/lib/media/upload-errors";
+import {
+  storeMediaMeta,
+  getMediaMeta,
+  deleteMediaMeta,
+  findAssetUsages,
+  deleteFromImageKit,
+} from "@/lib/media/storage";
 
 export const runtime = "nodejs";
 
@@ -37,7 +44,7 @@ async function uploadToImageKit(
   buffer: Buffer,
   fileName: string,
   folder: string,
-): Promise<{ url: string; name: string }> {
+): Promise<{ url: string; name: string; fileId: string }> {
   const form = new FormData();
   form.append("file", buffer.toString("base64"));
   form.append("fileName", fileName);
@@ -55,9 +62,9 @@ async function uploadToImageKit(
     const text = await res.text().catch(() => "");
     throw new Error(`ImageKit responded ${res.status}${text ? `: ${sanitizeDetail(text)}` : ""}`);
   }
-  const data = (await res.json()) as { url?: string; name?: string };
+  const data = (await res.json()) as { url?: string; name?: string; fileId?: string };
   if (!data.url) throw new Error("ImageKit response did not include a url");
-  return { url: data.url, name: data.name || fileName };
+  return { url: data.url, name: data.name || fileName, fileId: data.fileId || "" };
 }
 
 export async function POST(request: NextRequest) {
@@ -65,10 +72,19 @@ export async function POST(request: NextRequest) {
   if (auth.error) return auth.error;
 
   try {
+    const cl = request.headers.get("content-length");
+    if (cl && parseInt(cl, 10) > MAX_UPLOAD_BYTES) {
+      return fail(413, "validate", `File is too large (max ${MAX_UPLOAD_BYTES / (1024 * 1024)}MB)`);
+    }
+
     let formData: FormData;
     try {
       formData = await request.formData();
-    } catch {
+    } catch (err: unknown) {
+      const msg = String((err as any)?.message || "");
+      if ((err as any)?.status === 413 || /too large|payload|exceeded|body limit/i.test(msg)) {
+        return fail(413, "parse", "Request body too large");
+      }
       return fail(400, "parse", "Could not read the upload. Send multipart/form-data with a `file` field.");
     }
 
@@ -123,8 +139,22 @@ export async function POST(request: NextRequest) {
           `${uniqueBase}.webp`,
           `/laptop-point/${preset}`,
         );
+
+        // Store fileId and metadata in media-meta.json keyed by URL
+        await storeMediaMeta(ik.url, {
+          fileId: ik.fileId,
+          url: ik.url,
+          name: ik.name,
+          preset,
+          width: processed.mainWidth,
+          height: processed.mainHeight,
+          bytes: processed.mainBytes,
+          createdAt: new Date().toISOString(),
+        });
+
         return NextResponse.json({
           url: ik.url,
+          fileId: ik.fileId,
           name: ik.name,
           originalFilename: file.name,
           width: processed.mainWidth,
@@ -209,25 +239,56 @@ export async function DELETE(request: NextRequest) {
   try {
     const targetUrl = new URL(request.url).searchParams.get("url");
     if (!targetUrl) return fail(400, "validate", "Missing url query param");
+    const force = new URL(request.url).searchParams.get("force") === "1";
 
-    // Only locally stored uploads can be removed here. ImageKit files must be
-    // deleted from the ImageKit dashboard (we don't persist their fileId).
-    if (!targetUrl.startsWith("/uploads/")) {
-      return NextResponse.json({ ok: true, deleted: false, reason: "not-a-local-upload" });
+    if (!force) {
+      const usages = await findAssetUsages(targetUrl);
+      if (usages.length > 0) {
+        return NextResponse.json(
+          {
+            error: `This image is in use (${usages.slice(0, 3).join(", ")}${usages.length > 3 ? "…" : ""}). Replace it first, or delete anyway with force=1.`,
+            usages,
+          },
+          { status: 409 },
+        );
+      }
     }
 
-    const filename = path.basename(targetUrl.split("?")[0]);
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
-    const stem = filename.replace(/\.webp$/i, "");
+    // Check if it's an ImageKit upload with a stored fileId
+    const meta = await getMediaMeta(targetUrl);
+    const privateKey = process.env.IMAGEKIT_PRIVATE_KEY;
 
-    // Remove the main file and its responsive variants (`<stem>-<w>w.<fmt>`).
-    const entries = await fs.readdir(uploadDir).catch(() => [] as string[]);
-    const victims = entries.filter(
-      (f) => f === filename || (f.startsWith(`${stem}-`) && /-\d+w\.(webp|avif)$/.test(f)),
-    );
-    await Promise.all(victims.map((f) => fs.unlink(path.join(uploadDir, f)).catch(() => {})));
+    if (meta?.fileId && privateKey) {
+      const res = await deleteFromImageKit(meta.fileId, privateKey);
+      if (!res.ok) {
+        return fail(502, "imagekit_delete", res.error || "Failed to delete file from ImageKit");
+      }
+      await deleteMediaMeta(targetUrl);
+      return NextResponse.json({ ok: true, deleted: true, storage: "imagekit", fileId: meta.fileId });
+    }
 
-    return NextResponse.json({ ok: true, deleted: victims.length > 0, removed: victims.length });
+    if (targetUrl.startsWith("/uploads/")) {
+      const filename = path.basename(targetUrl.split("?")[0]);
+      const uploadDir = path.join(process.cwd(), "public", "uploads");
+      const stem = filename.replace(/\.webp$/i, "");
+
+      // Remove the main file and its responsive variants (`<stem>-<w>w.<fmt>`).
+      const entries = await fs.readdir(uploadDir).catch(() => [] as string[]);
+      const victims = entries.filter(
+        (f) => f === filename || (f.startsWith(`${stem}-`) && /-\d+w\.(webp|avif)$/.test(f)),
+      );
+      await Promise.all(victims.map((f) => fs.unlink(path.join(uploadDir, f)).catch(() => {})));
+      await deleteMediaMeta(targetUrl);
+      await deleteMediaMeta(filename);
+
+      return NextResponse.json({ ok: true, deleted: victims.length > 0, removed: victims.length, storage: "local" });
+    }
+
+    if (/ik\.imagekit\.io/.test(targetUrl)) {
+      return fail(404, "not_found", "Could not find fileId for the requested ImageKit asset in media metadata");
+    }
+
+    return NextResponse.json({ ok: true, deleted: false, reason: "not-a-recognized-upload" });
   } catch (error) {
     console.error("[api/admin/upload DELETE] Error:", error);
     return fail(500, "delete", "Delete failed");

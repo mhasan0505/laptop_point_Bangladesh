@@ -38,13 +38,15 @@ interface LibraryAsset {
   height: number;
 }
 
+const MAX_UPLOAD_MB = Number(process.env.NEXT_PUBLIC_MAX_UPLOAD_MB) || 16;
+
 export function ImageUploader({
   value,
   onChange,
   multiple = false,
   maxFiles = 10,
   label,
-  description = "PNG, JPG, WebP up to 16MB",
+  description = `PNG, JPG, WebP up to ${MAX_UPLOAD_MB}MB`,
   disabled = false,
   preset = "card",
   className,
@@ -79,8 +81,8 @@ export function ImageUploader({
         if (!file.type.startsWith("image/")) {
           throw new Error(`"${file.name}" is not an image file.`);
         }
-        if (file.size > 16 * 1024 * 1024) {
-          throw new Error(`"${file.name}" exceeds the 16MB size limit.`);
+        if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
+          throw new Error(`"${file.name}" exceeds the ${MAX_UPLOAD_MB}MB size limit.`);
         }
 
         const formData = new FormData();

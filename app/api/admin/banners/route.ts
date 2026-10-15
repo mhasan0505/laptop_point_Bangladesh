@@ -4,8 +4,12 @@ import {
   saveBanner,
   reorderBanners,
 } from "@/lib/banners/storage";
+import { requireAdmin } from "@/lib/auth-guard";
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const { searchParams } = new URL(request.url);
     const placement = searchParams.get("placement") || undefined;
@@ -22,6 +26,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     if (!body.title || typeof body.title !== "string" || !body.title.trim()) {
@@ -43,6 +50,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const body = await request.json();
     if (Array.isArray(body.orders)) {

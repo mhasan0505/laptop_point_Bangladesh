@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { saveBanner, deleteBanner, readBanners } from "@/lib/banners/storage";
+import { requireAdmin } from "@/lib/auth-guard";
 
 interface Params {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(request: NextRequest, { params }: Params) {
+  const auth = await requireAdmin(request);
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const all = await readBanners();
@@ -25,6 +29,9 @@ export async function GET(request: NextRequest, { params }: Params) {
 }
 
 export async function PATCH(request: NextRequest, { params }: Params) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -41,6 +48,9 @@ export async function PATCH(request: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(request: NextRequest, { params }: Params) {
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
+  if (auth.error) return auth.error;
+
   try {
     const { id } = await params;
     const removed = await deleteBanner(id);

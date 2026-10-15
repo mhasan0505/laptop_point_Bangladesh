@@ -42,12 +42,17 @@ const STOCK_STATUSES = [
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const ACCEPT_IMAGE_TYPES = "image/jpeg,image/png,image/webp,image/gif";
-const MAX_IMAGE_SIZE = 8 * 1024 * 1024; // 8MB
+const MAX_UPLOAD_MB = Number(process.env.NEXT_PUBLIC_MAX_UPLOAD_MB) || 16;
+const MAX_IMAGE_SIZE = MAX_UPLOAD_MB * 1024 * 1024;
+
+type UploadStatus = "idle" | "uploading" | "success" | "error";
 
 type SelectedUploadFile = {
   id: string;
   file: File;
   previewUrl: string;
+  status?: UploadStatus;
+  error?: string;
 };
 
 export const DEFAULT_SPEC_GROUPS: Record<string, string[]> = {
@@ -1051,12 +1056,13 @@ export function ProductEditorForm({
         id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
         file,
         previewUrl,
+        status: "idle",
       });
     }
 
     if (rejectedCount > 0) {
       setImageError(
-        `Only JPG, PNG, WebP, or GIF images under 8MB are allowed. ${rejectedCount} file(s) were skipped.`
+        `Only JPG, PNG, WebP, or GIF images under ${MAX_UPLOAD_MB}MB are allowed. ${rejectedCount} file(s) were skipped.`
       );
     } else {
       setImageError("");
@@ -1084,55 +1090,109 @@ export function ProductEditorForm({
     setSelectedFiles([]);
   };
 
+  const executeUploadBatch = async (itemsToUpload: SelectedUploadFile[]) => {
+    if (itemsToUpload.length === 0) return { uploadedUrls: [], failedItems: [] };
+
+    // Reset status of items to upload
+    setSelectedFiles((current) =>
+      current.map((item) =>
+        itemsToUpload.some((it) => it.id === item.id)
+          ? { ...item, status: "idle", error: undefined }
+          : item
+      )
+    );
+
+    const updateItemStatus = (id: string, status: UploadStatus, error?: string) => {
+      setSelectedFiles((current) =>
+        current.map((item) => (item.id === id ? { ...item, status, error } : item))
+      );
+    };
+
+    const results: PromiseSettledResult<{ item: SelectedUploadFile; url: string }>[] = new Array(
+      itemsToUpload.length
+    );
+    let nextIndex = 0;
+
+    async function worker() {
+      while (nextIndex < itemsToUpload.length) {
+        const idx = nextIndex++;
+        const item = itemsToUpload[idx];
+        updateItemStatus(item.id, "uploading");
+
+        try {
+          const data = new FormData();
+          data.append("file", item.file);
+          data.append("preset", "product");
+
+          const response = await fetch("/api/admin/upload", {
+            method: "POST",
+            body: data,
+          });
+
+          const json = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            const stage = json?.stage ? ` [stage: ${json.stage}]` : "";
+            const detail = json?.detail
+              ? `: ${json.detail}`
+              : json?.error
+              ? `: ${json.error}`
+              : "";
+            const errMsg = `Upload failed for "${item.file.name}"${stage}${detail}`;
+            updateItemStatus(item.id, "error", errMsg);
+            throw new Error(errMsg);
+          }
+
+          updateItemStatus(item.id, "success");
+          results[idx] = {
+            status: "fulfilled",
+            value: { item, url: String(json.url) },
+          };
+        } catch (err) {
+          const errMsg =
+            err instanceof Error ? err.message : `Failed to upload ${item.file.name}`;
+          updateItemStatus(item.id, "error", errMsg);
+          results[idx] = {
+            status: "rejected",
+            reason: err instanceof Error ? err : new Error(errMsg),
+          };
+        }
+      }
+    }
+
+    const concurrency = Math.min(2, itemsToUpload.length);
+    const workers = Array.from({ length: concurrency }, () => worker());
+    await Promise.all(workers);
+
+    const uploadedUrls: string[] = [];
+    const failedItems: { item: SelectedUploadFile; error: string }[] = [];
+
+    results.forEach((res, index) => {
+      const item = itemsToUpload[index];
+      if (res.status === "fulfilled") {
+        uploadedUrls.push(res.value.url);
+        if (item?.previewUrl) {
+          URL.revokeObjectURL(item.previewUrl);
+          activeObjectUrlsRef.current.delete(item.previewUrl);
+        }
+      } else {
+        const errMsg =
+          res.reason instanceof Error
+            ? res.reason.message
+            : `Failed to upload ${item.file.name}`;
+        failedItems.push({ item, error: errMsg });
+      }
+    });
+
+    return { uploadedUrls, failedItems };
+  };
+
   const uploadSelectedImages = async () => {
     if (selectedFiles.length === 0) return;
     setUploadingImages(true);
     setImageError("");
 
     try {
-      const uploadPromises = selectedFiles.map(async (item) => {
-        const data = new FormData();
-        data.append("file", item.file);
-
-        const response = await fetch("/api/admin/upload", {
-          method: "POST",
-          body: data,
-        });
-
-        const json = await response.json().catch(() => ({}));
-        if (!response.ok) {
-          const stage = json?.stage ? ` [stage: ${json.stage}]` : "";
-          const detail = json?.detail
-            ? `: ${json.detail}`
-            : json?.error
-            ? `: ${json.error}`
-            : "";
-          throw new Error(`Upload failed for "${item.file.name}"${stage}${detail}`);
-        }
-        return { item, url: String(json.url) };
-      });
-
-      const results = await Promise.allSettled(uploadPromises);
-
-      const uploadedUrls: string[] = [];
-      const remainingItems: SelectedUploadFile[] = [];
-      const errorsList: string[] = [];
-
-      results.forEach((res, index) => {
-        const item = selectedFiles[index];
-        if (res.status === "fulfilled") {
-          uploadedUrls.push(res.value.url);
-          if (item?.previewUrl) {
-            URL.revokeObjectURL(item.previewUrl);
-            activeObjectUrlsRef.current.delete(item.previewUrl);
-          }
-        } else {
-          remainingItems.push(item);
-          errorsList.push(
-            res.reason instanceof Error ? res.reason.message : `Failed to upload ${item.file.name}`
-          );
-        }
-      });
+      const { uploadedUrls, failedItems } = await executeUploadBatch(selectedFiles);
 
       if (uploadedUrls.length > 0) {
         setImageUrls((current) => [...new Set([...current, ...uploadedUrls])]);
@@ -1143,10 +1203,13 @@ export function ProductEditorForm({
         });
       }
 
-      setSelectedFiles(remainingItems);
+      // Retain only failed items in selectedFiles
+      setSelectedFiles((current) =>
+        current.filter((item) => failedItems.some((f) => f.item.id === item.id))
+      );
 
-      if (errorsList.length > 0) {
-        setImageError(errorsList.join("; "));
+      if (failedItems.length > 0) {
+        setImageError(failedItems.map((f) => f.error).join("; "));
       }
     } catch (error) {
       setImageError(error instanceof Error ? error.message : "Image upload failed");
@@ -1264,35 +1327,33 @@ export function ProductEditorForm({
     if (selectedFiles.length > 0) {
       setUploadingImages(true);
       try {
-        const uploadPromises = selectedFiles.map(async (item) => {
-          const data = new FormData();
-          data.append("file", item.file);
-          const response = await fetch("/api/admin/upload", {
-            method: "POST",
-            body: data,
-          });
-          const json = await response.json();
-          if (!response.ok) {
-            throw new Error(json?.error || `Upload failed for ${item.file.name}`);
-          }
-          return { item, url: String(json.url) };
-        });
-
-        const results = await Promise.allSettled(uploadPromises);
-        const uploadedUrls: string[] = [];
-        results.forEach((res) => {
-          if (res.status === "fulfilled") {
-            uploadedUrls.push(res.value.url);
-          }
-        });
+        const { uploadedUrls, failedItems } = await executeUploadBatch(selectedFiles);
 
         if (uploadedUrls.length > 0) {
           currentImages = [...new Set([...currentImages, ...uploadedUrls])];
           setImageUrls(currentImages);
-          clearAllSelectedFiles();
+        }
+
+        // Retain only failed items in selectedFiles
+        setSelectedFiles((current) =>
+          current.filter((item) => failedItems.some((f) => f.item.id === item.id))
+        );
+
+        if (failedItems.length > 0) {
+          const failedNames = failedItems.map((f) => `"${f.item.file.name}"`).join(", ");
+          setImageError(
+            `Cannot save product: ${failedItems.length} image(s) failed to upload (${failedNames}). Please resolve the upload errors or remove the failed images before saving.`
+          );
+          setSaving(false);
+          setUploadingImages(false);
+          return;
         }
       } catch (uploadErr) {
-        console.error("Auto image upload error:", uploadErr);
+        const errMsg = uploadErr instanceof Error ? uploadErr.message : "Image upload failed";
+        setImageError(`Cannot save product: ${errMsg}. Please resolve upload errors before saving.`);
+        setSaving(false);
+        setUploadingImages(false);
+        return;
       } finally {
         setUploadingImages(false);
       }
@@ -2637,7 +2698,7 @@ export function ProductEditorForm({
                         `Upload${selectedFiles.length > 0 ? ` (${selectedFiles.length})` : ""}`
                       )}
                     </Button>
-                    <p className="text-xs text-gray-500">JPG, PNG, WebP up to 8MB each</p>
+                    <p className="text-xs text-gray-500">JPG, PNG, WebP up to {MAX_UPLOAD_MB}MB each</p>
                   </div>
 
                   {selectedFiles.length > 0 && (
@@ -2660,14 +2721,30 @@ export function ProductEditorForm({
                             key={item.id}
                             className="relative group rounded-lg border border-gray-200 bg-gray-50 p-2 overflow-hidden shadow-xs"
                           >
-                            <img
-                              src={item.previewUrl}
-                              alt={item.file.name}
-                              className="w-full h-20 object-cover rounded"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = "/placeholder.png";
-                              }}
-                            />
+                            <div className="relative w-full h-20 rounded overflow-hidden">
+                              <img
+                                src={item.previewUrl}
+                                alt={item.file.name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "/placeholder.png";
+                                }}
+                              />
+                              {item.status === "uploading" && (
+                                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white text-[10px] gap-1 z-10">
+                                  <Loader2 className="w-4 h-4 animate-spin text-white" />
+                                  <span className="font-medium">Uploading...</span>
+                                </div>
+                              )}
+                              {item.status === "error" && (
+                                <div className="absolute inset-0 bg-red-900/80 flex flex-col items-center justify-center text-white text-[10px] p-1.5 text-center z-10">
+                                  <AlertCircle className="w-4 h-4 text-red-200 mb-0.5 shrink-0" />
+                                  <span className="line-clamp-2 leading-tight text-[10px]">
+                                    {item.error || "Upload failed"}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
                             <div className="mt-1 flex items-center justify-between gap-1">
                               <span
                                 className="truncate text-[11px] text-gray-700 font-medium max-w-[100px]"
@@ -2681,7 +2758,7 @@ export function ProductEditorForm({
                             </div>
                             <button
                               type="button"
-                              className="absolute top-1 right-1 h-5 w-5 rounded-full bg-black/70 text-white flex items-center justify-center text-xs hover:bg-red-600 transition-colors cursor-pointer"
+                              className="absolute top-1 right-1 h-5 w-5 rounded-full bg-black/70 text-white flex items-center justify-center text-xs hover:bg-red-600 transition-colors cursor-pointer z-20"
                               onClick={() => removeSelectedFile(index)}
                               title="Remove file"
                             >

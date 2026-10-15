@@ -19,7 +19,10 @@ function getSecret(): string {
   return secret;
 }
 
-async function sign(payload: string): Promise<Uint8Array> {
+async function sign(
+  payload: string,
+  domain: "session" | "trusted",
+): Promise<Uint8Array> {
   const key = await crypto.subtle.importKey(
     "raw",
     textEncoder.encode(getSecret()),
@@ -30,9 +33,24 @@ async function sign(payload: string): Promise<Uint8Array> {
   const signature = await crypto.subtle.sign(
     "HMAC",
     key,
-    textEncoder.encode(payload),
+    textEncoder.encode(`${domain}.${payload}`),
   );
   return new Uint8Array(signature);
+}
+
+function timingSafeEqualBytes(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a[i] ^ b[i];
+  }
+  return diff === 0;
+}
+
+function timingSafeEqualStr(a: string, b: string): boolean {
+  const aBytes = textEncoder.encode(a);
+  const bBytes = textEncoder.encode(b);
+  return timingSafeEqualBytes(aBytes, bBytes);
 }
 
 function toBase64Url(bytes: Uint8Array): string {
@@ -88,11 +106,11 @@ export async function createAdminSession(user: AdminSessionUser): Promise<string
   const payload = toBase64Url(
     textEncoder.encode(JSON.stringify(sessionData)),
   );
-  const signature = toBase64Url(await sign(payload));
+  const signature = toBase64Url(await sign(payload, "session"));
   return `${payload}.${signature}`;
 }
 
-/** Constant-time verify of a session token (also checks expiry). */
+/** Constant-time verify of a session token (also checks expiry and role). */
 export async function verifyAdminSession(
   token: string | null | undefined,
 ): Promise<boolean> {
@@ -100,21 +118,21 @@ export async function verifyAdminSession(
   const [payload, signature] = token.split(".");
   if (!payload || !signature) return false;
 
-  const expected = await sign(payload);
+  const expected = await sign(payload, "session");
   const provided = fromBase64Url(signature);
-  if (expected.length !== provided.length) return false;
-
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) {
-    diff |= expected[i] ^ provided[i];
-  }
-  if (diff !== 0) return false;
+  if (!timingSafeEqualBytes(expected, provided)) return false;
 
   try {
-    const { exp } = JSON.parse(
+    const data = JSON.parse(
       new TextDecoder().decode(fromBase64Url(payload)),
-    ) as { exp: number };
-    return typeof exp === "number" && exp > Date.now();
+    );
+    return (
+      typeof data.exp === "number" &&
+      data.exp > Date.now() &&
+      typeof data.userId === "string" &&
+      data.userId.trim().length > 0 &&
+      isValidAdminRole(data.role)
+    );
   } catch {
     return false;
   }
@@ -148,15 +166,9 @@ export async function getAdminSession(
   const [payload, signature] = token.split(".");
   if (!payload || !signature) return null;
 
-  const expected = await sign(payload);
+  const expected = await sign(payload, "session");
   const provided = fromBase64Url(signature);
-  if (expected.length !== provided.length) return null;
-
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) {
-    diff |= expected[i] ^ provided[i];
-  }
-  if (diff !== 0) return null;
+  if (!timingSafeEqualBytes(expected, provided)) return null;
 
   try {
     const data = JSON.parse(
@@ -198,62 +210,78 @@ export interface TrustedDevicePayload {
 }
 
 /**
- * Computes a short fingerprint of the password or passwordHash via SHA-256.
+ * Computes a keyed HMAC-SHA256 fingerprint of the password or passwordHash via ADMIN_SESSION_SECRET.
+ * Yields 43 base64url chars (satisfies 22+ char requirement).
  * Embedded in the trusted_device payload so password changes automatically revoke existing device cookies.
  */
 export async function computePasswordFingerprint(passwordOrHash: string): Promise<string> {
-  const hashBuffer = await crypto.subtle.digest(
-    "SHA-256",
-    textEncoder.encode(passwordOrHash || "")
+  if (!passwordOrHash) return "";
+  const key = await crypto.subtle.importKey(
+    "raw",
+    textEncoder.encode(getSecret()),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
   );
-  return toBase64Url(new Uint8Array(hashBuffer)).slice(0, 16);
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    textEncoder.encode(passwordOrHash),
+  );
+  return toBase64Url(new Uint8Array(signature));
 }
 
 /**
  * Creates a signed HttpOnly trusted device token ({userId, exp 30d, fingerprint}).
- * Uses the same HMAC secret as the session.
+ * Domain-separated from session tokens ("trusted." prefix).
  */
 export async function createTrustedDeviceToken(
   userId: string,
-  fingerprint?: string
+  fingerprint: string
 ): Promise<string> {
   if (!userId || !userId.trim()) {
     throw new Error("Cannot create trusted device token: missing userId");
   }
+  if (!fingerprint || !fingerprint.trim()) {
+    throw new Error("Cannot create trusted device token: missing fingerprint");
+  }
   const payloadData: TrustedDevicePayload = {
     userId: userId.trim(),
     exp: Date.now() + TRUSTED_DEVICE_TTL_MS,
-    fingerprint: fingerprint || "",
+    fingerprint: fingerprint.trim(),
   };
   const payload = toBase64Url(
     textEncoder.encode(JSON.stringify(payloadData))
   );
-  const signature = toBase64Url(await sign(payload));
+  const signature = toBase64Url(await sign(payload, "trusted"));
   return `${payload}.${signature}`;
 }
 
 /**
  * Verifies a trusted device token against an expected userId and expected fingerprint.
- * Uses constant-time comparison for signature verification.
+ * Fails closed: requires a non-empty stored fingerprint that matches the expected one.
+ * Uses constant-time comparison for signature, userId, and fingerprint.
  */
 export async function verifyTrustedDeviceToken(
   token: string | null | undefined,
   expectedUserId: string,
   expectedFingerprint?: string
 ): Promise<boolean> {
-  if (!token || !expectedUserId) return false;
+  if (
+    !token ||
+    !expectedUserId ||
+    !expectedUserId.trim() ||
+    !expectedFingerprint ||
+    !expectedFingerprint.trim()
+  ) {
+    return false;
+  }
   const [payload, signature] = token.split(".");
   if (!payload || !signature) return false;
 
-  const expectedSig = await sign(payload);
+  const expectedSig = await sign(payload, "trusted");
   const providedSig = fromBase64Url(signature);
-  if (expectedSig.length !== providedSig.length) return false;
-
-  let diff = 0;
-  for (let i = 0; i < expectedSig.length; i++) {
-    diff |= expectedSig[i] ^ providedSig[i];
-  }
-  if (diff !== 0) return false;
+  if (!timingSafeEqualBytes(expectedSig, providedSig)) return false;
 
   try {
     const data = JSON.parse(
@@ -262,11 +290,12 @@ export async function verifyTrustedDeviceToken(
     if (
       typeof data.exp === "number" &&
       data.exp > Date.now() &&
-      data.userId === expectedUserId
+      typeof data.userId === "string" &&
+      timingSafeEqualStr(data.userId, expectedUserId.trim()) &&
+      typeof data.fingerprint === "string" &&
+      data.fingerprint.trim().length > 0 &&
+      timingSafeEqualStr(data.fingerprint, expectedFingerprint.trim())
     ) {
-      if (expectedFingerprint && data.fingerprint) {
-        return data.fingerprint === expectedFingerprint;
-      }
       return true;
     }
   } catch {

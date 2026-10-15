@@ -268,6 +268,26 @@ pnpm build
 pnpm start
 ```
 
+## 🧪 Automated Testing & Verification
+
+Run the full end-to-end verification suite against your local development server:
+
+```bash
+node --env-file=.env.local scripts/check-all.mjs
+```
+
+### Suite Pipeline:
+1. **TypeScript Compilation**: `tsc --noEmit -p .` (0 errors required)
+2. **Server-Side Price Authority**: 4xx-only anti-spoofing tests (guaranteed zero DB writes)
+3. **Staff Login, RBAC 403 Guards & Trusted Tokens**: Tests session/trusted token separation, constant-time fingerprinting, role freshness, and 403 Forbidden enforcement
+4. **Upload Pipeline & File Security**: Verifies MIME/magic-byte sniffing, size limits, and ImageKit re-encoding
+5. **Catalogue Smoke Test**: Exercises accessory/laptop create, storefront indexing, duplicate SKU rejection, and cleanup
+6. **ImageKit Deletions & 409 Protection**: Unit tests API request signing, 409 conflict detection for in-use images, and metadata synchronization
+
+> [!IMPORTANT]
+> - Requires `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env.local` or environment.
+> - **Local server only**: The runner checks `TEST_URL` and explicitly refuses to run against any non-localhost URL to prevent accidental writes or state mutation on remote environments.
+
 ## 📄 Documentation
 
 Detailed documentation is available in the `/docs` folder:
