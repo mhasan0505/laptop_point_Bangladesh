@@ -57,9 +57,30 @@ const DEFAULT_CATEGORIES: MasterCategory[] = [
   { id: "cat-accessories", name: "Accessories", slug: "accessories", icon: "Cable", sortOrder: 5, active: true },
 ];
 
+export function resetMastersCache(): void {
+  inMemoryMasters = null;
+}
+
 async function readMasters(): Promise<MastersDataFile> {
   if (inMemoryMasters) return inMemoryMasters;
 
+  // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
+  try {
+    const rec = await prisma.productOverride.findUnique({
+      where: { sku: "system:catalog_masters" },
+    });
+    if (rec && rec.data) {
+      const parsed = rec.data as unknown as MastersDataFile;
+      if (parsed && Array.isArray(parsed.brands) && Array.isArray(parsed.categories)) {
+        inMemoryMasters = parsed;
+        return parsed;
+      }
+    }
+  } catch (dbErr) {
+    console.warn("[readMasters] DB fetch warning:", dbErr);
+  }
+
+  // 2. Try local file fallback
   try {
     const raw = await fs.readFile(mastersFilePath, "utf-8");
     const parsed = JSON.parse(raw) as MastersDataFile;
@@ -71,21 +92,7 @@ async function readMasters(): Promise<MastersDataFile> {
     // File not created yet
   }
 
-  try {
-    const rec = await prisma.productOverride.findUnique({
-      where: { sku: "system:catalog_masters" },
-    });
-    if (rec && rec.data) {
-      const parsed = rec.data as unknown as MastersDataFile;
-      if (parsed && Array.isArray(parsed.brands)) {
-        inMemoryMasters = parsed;
-        return parsed;
-      }
-    }
-  } catch {
-    // DB fallback
-  }
-
+  // 3. Fallback to default seeded
   inMemoryMasters = {
     brands: [...DEFAULT_BRANDS],
     categories: [...DEFAULT_CATEGORIES],
@@ -96,13 +103,8 @@ async function readMasters(): Promise<MastersDataFile> {
 
 async function writeMasters(data: MastersDataFile): Promise<void> {
   inMemoryMasters = data;
-  try {
-    await fs.mkdir(path.dirname(mastersFilePath), { recursive: true });
-    await fs.writeFile(mastersFilePath, JSON.stringify(data, null, 2), "utf-8");
-  } catch {
-    // Read-only filesystem in serverless
-  }
 
+  // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {
     await prisma.productOverride.upsert({
       where: { sku: "system:catalog_masters" },
@@ -113,10 +115,19 @@ async function writeMasters(data: MastersDataFile): Promise<void> {
       },
       update: {
         data: data as any,
+        isDeleted: false,
       },
     });
+  } catch (dbErr) {
+    console.error("[writeMasters] DB persist failed:", dbErr);
+  }
+
+  // 2. Best-effort write to local file (safely catches EROFS)
+  try {
+    await fs.mkdir(path.dirname(mastersFilePath), { recursive: true });
+    await fs.writeFile(mastersFilePath, JSON.stringify(data, null, 2), "utf-8");
   } catch {
-    // Ignore db fallback error
+    // Read-only filesystem in serverless
   }
 }
 

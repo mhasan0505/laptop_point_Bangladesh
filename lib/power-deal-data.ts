@@ -37,22 +37,14 @@ interface PowerDealStoreFile {
 const storeFilePath = path.join(process.cwd(), "app", "data", "power-deals.json");
 let inMemoryStore: PowerDealStoreFile | null = null;
 
+export function resetPowerDealsCache(): void {
+  inMemoryStore = null;
+}
+
 async function readStore(): Promise<PowerDealStoreFile> {
   if (inMemoryStore) return inMemoryStore;
 
-  // Try file read first
-  try {
-    const raw = await fs.readFile(storeFilePath, "utf-8");
-    const parsed = JSON.parse(raw) as PowerDealStoreFile;
-    if (parsed && Array.isArray(parsed.deals)) {
-      inMemoryStore = parsed;
-      return parsed;
-    }
-  } catch {
-    // file does not exist yet or unreadable
-  }
-
-  // Try Prisma ProductOverride store fallback
+  // 1. Try Prisma ProductOverride store FIRST (authoritative in production/serverless)
   try {
     const record = await prisma.productOverride.findUnique({
       where: { sku: "system:power_deals" },
@@ -64,11 +56,23 @@ async function readStore(): Promise<PowerDealStoreFile> {
         return parsed;
       }
     }
-  } catch {
-    // db fallback error
+  } catch (dbErr) {
+    console.warn("[power-deal-data] DB fetch warning:", dbErr);
   }
 
-  // Default seed
+  // 2. Try file read fallback
+  try {
+    const raw = await fs.readFile(storeFilePath, "utf-8");
+    const parsed = JSON.parse(raw) as PowerDealStoreFile;
+    if (parsed && Array.isArray(parsed.deals)) {
+      inMemoryStore = parsed;
+      return parsed;
+    }
+  } catch {
+    // file does not exist yet or unreadable
+  }
+
+  // 3. Default seed
   const seeded: PowerDealStoreFile = {
     config: { ...DEFAULT_POWER_DEAL_CONFIG },
     deals: [...CURATED_POWER_DEALS],
@@ -82,13 +86,7 @@ async function readStore(): Promise<PowerDealStoreFile> {
 async function writeStore(data: PowerDealStoreFile): Promise<void> {
   inMemoryStore = data;
 
-  try {
-    await fs.mkdir(path.dirname(storeFilePath), { recursive: true });
-    await fs.writeFile(storeFilePath, JSON.stringify(data, null, 2), "utf-8");
-  } catch {
-    // Read-only filesystem in serverless environments
-  }
-
+  // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {
     await prisma.productOverride.upsert({
       where: { sku: "system:power_deals" },
@@ -99,10 +97,19 @@ async function writeStore(data: PowerDealStoreFile): Promise<void> {
       },
       update: {
         data: data as any,
+        isDeleted: false,
       },
     });
+  } catch (dbErr) {
+    console.error("[power-deal-data] DB persist error:", dbErr);
+  }
+
+  // 2. Best-effort write to local file for dev (catches EROFS)
+  try {
+    await fs.mkdir(path.dirname(storeFilePath), { recursive: true });
+    await fs.writeFile(storeFilePath, JSON.stringify(data, null, 2), "utf-8");
   } catch {
-    // Ignore db fallback error
+    // Read-only filesystem in serverless environments
   }
 }
 

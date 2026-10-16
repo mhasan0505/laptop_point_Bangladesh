@@ -1,7 +1,7 @@
 import productsRaw from "@/app/data/products.json";
 import imageManifest from "@/app/data/product-image-manifest.json";
 import { prisma } from "@/lib/prisma";
-import { RawProduct } from "@/types/raw-product";
+import type { RawProduct } from "@/types/raw-product";
 import { promises as fs } from "fs";
 import path from "path";
 

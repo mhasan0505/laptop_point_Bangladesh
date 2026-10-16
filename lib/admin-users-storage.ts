@@ -46,6 +46,10 @@ export function verifyPassword(password: string, storedHash?: string): boolean {
 const adminUsersFilePath = path.join(process.cwd(), "app", "data", "admin-users.json");
 let inMemoryUsers: AdminUserRecord[] | null = null;
 
+export function resetAdminUsersCache(): void {
+  inMemoryUsers = null;
+}
+
 function getDefaultOwner(): AdminUserRecord {
   const email = process.env.ADMIN_EMAIL || "admin@laptoppointbd.com";
   return {
@@ -69,7 +73,20 @@ async function writeJsonAtomic(filePath: string, data: unknown): Promise<void> {
 export async function readAdminUsers(): Promise<AdminUserRecord[]> {
   if (inMemoryUsers) return inMemoryUsers;
 
-  // 1. Try file
+  // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
+  try {
+    const record = await prisma.productOverride.findUnique({
+      where: { sku: "system:admin_users" },
+    });
+    if (record && record.data && Array.isArray(record.data) && record.data.length > 0) {
+      inMemoryUsers = record.data as unknown as AdminUserRecord[];
+      return inMemoryUsers;
+    }
+  } catch (dbErr) {
+    console.warn("[readAdminUsers] DB fetch warning:", dbErr);
+  }
+
+  // 2. Try file fallback
   try {
     const raw = await fs.readFile(adminUsersFilePath, "utf-8");
     if (raw && raw.trim().length > 0) {
@@ -83,19 +100,6 @@ export async function readAdminUsers(): Promise<AdminUserRecord[]> {
     // File not created yet or invalid JSON
   }
 
-  // 2. Try DB ProductOverride
-  try {
-    const record = await prisma.productOverride.findUnique({
-      where: { sku: "system:admin_users" },
-    });
-    if (record && record.data && Array.isArray(record.data)) {
-      inMemoryUsers = record.data as unknown as AdminUserRecord[];
-      return inMemoryUsers;
-    }
-  } catch {
-    // DB fallback ignore
-  }
-
   // 3. Fallback to default owner
   inMemoryUsers = [getDefaultOwner()];
   await writeAdminUsers(inMemoryUsers).catch(() => {});
@@ -105,17 +109,7 @@ export async function readAdminUsers(): Promise<AdminUserRecord[]> {
 export async function writeAdminUsers(users: AdminUserRecord[]): Promise<void> {
   inMemoryUsers = users;
 
-  try {
-    await fs.mkdir(path.dirname(adminUsersFilePath), { recursive: true });
-    await writeJsonAtomic(adminUsersFilePath, users);
-  } catch {
-    try {
-      await fs.writeFile(adminUsersFilePath, JSON.stringify(users, null, 2), "utf-8");
-    } catch {
-      // Read-only filesystem in serverless
-    }
-  }
-
+  // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {
     await prisma.productOverride.upsert({
       where: { sku: "system:admin_users" },
@@ -126,10 +120,23 @@ export async function writeAdminUsers(users: AdminUserRecord[]): Promise<void> {
       },
       update: {
         data: users as any,
+        isDeleted: false,
       },
     });
+  } catch (dbErr) {
+    console.error("[writeAdminUsers] DB persist failed:", dbErr);
+  }
+
+  // 2. Best-effort write to local file for dev (catches EROFS)
+  try {
+    await fs.mkdir(path.dirname(adminUsersFilePath), { recursive: true });
+    await writeJsonAtomic(adminUsersFilePath, users);
   } catch {
-    // DB fallback ignore
+    try {
+      await fs.writeFile(adminUsersFilePath, JSON.stringify(users, null, 2), "utf-8");
+    } catch {
+      // Read-only filesystem in serverless
+    }
   }
 }
 

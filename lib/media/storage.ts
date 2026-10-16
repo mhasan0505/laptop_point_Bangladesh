@@ -27,24 +27,64 @@ export interface MediaMetaRecord {
 const mediaMetaFilePath = path.join(process.cwd(), "app", "data", "media-meta.json");
 
 // In-memory cache for runtime performance and serverless resilience
-const memoryCache: Record<string, MediaMetaRecord> = {};
+let memoryCache: Record<string, MediaMetaRecord> = {};
+
+export function resetMediaMetaCache(): void {
+  memoryCache = {};
+}
 
 function sanitizeKey(k: string): string {
   return k.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 100);
 }
 
 /**
- * Safely reads media-meta.json and merges with memory cache.
+ * Safely reads media-meta from DB overrides, static file, and memory cache.
  */
 export async function readMediaMeta(): Promise<Record<string, MediaMetaRecord>> {
-  const result: Record<string, MediaMetaRecord> = { ...memoryCache };
+  const result: Record<string, MediaMetaRecord> = {};
+
+  // 1. Static base from local file
   try {
     const raw = await fs.readFile(mediaMetaFilePath, "utf-8");
     const fileMeta = JSON.parse(raw);
-    return { ...fileMeta, ...result };
+    if (fileMeta && typeof fileMeta === "object") {
+      Object.assign(result, fileMeta);
+    }
   } catch {
-    return result;
+    // File not created yet
   }
+
+  // 2. Query database overrides (authoritative source of truth for production)
+  try {
+    const db = await getPrisma();
+    if (db) {
+      const records = await db.productOverride.findMany({
+        where: { sku: { startsWith: "system:media:" } },
+      });
+      for (const rec of records) {
+        if (rec.isDeleted) {
+          const key = rec.sku.replace("system:media:", "");
+          delete result[key];
+          delete result[`ik:${key}`];
+        } else if (rec.data) {
+          const data = rec.data as MediaMetaRecord;
+          if (data.url) {
+            result[data.url] = { ...result[data.url], ...data };
+            result[data.url.split("?")[0]] = { ...result[data.url.split("?")[0]], ...data };
+          }
+          if (data.fileId) {
+            result[`ik:${data.fileId}`] = { ...result[`ik:${data.fileId}`], ...data };
+            result[data.fileId] = { ...result[data.fileId], ...data };
+          }
+        }
+      }
+    }
+  } catch (dbErr) {
+    console.warn("[readMediaMeta] DB fetch warning:", dbErr);
+  }
+
+  // 3. Merge active in-memory cache
+  return { ...result, ...memoryCache };
 }
 
 /**
@@ -165,14 +205,28 @@ export async function getMediaMeta(urlOrKey: string): Promise<MediaMetaRecord | 
  */
 export async function deleteMediaMeta(urlOrKey: string): Promise<void> {
   const cleanUrl = urlOrKey.split("?")[0];
-  const fileIdMatch = urlOrKey.startsWith("ik:") ? urlOrKey.slice(3) : sanitizeKey(urlOrKey);
+  const meta = await readMediaMeta();
+  const existing = meta[urlOrKey] || meta[cleanUrl];
+  const fileId = existing?.fileId;
+
+  const skusToDelete = [
+    `system:media:${sanitizeKey(urlOrKey)}`,
+    `system:media:${sanitizeKey(cleanUrl)}`,
+  ];
+  if (fileId) {
+    skusToDelete.push(`system:media:${fileId}`);
+    skusToDelete.push(`system:media:${sanitizeKey(fileId)}`);
+  }
+  if (urlOrKey.startsWith("ik:")) {
+    skusToDelete.push(`system:media:${urlOrKey.slice(3)}`);
+  }
 
   delete memoryCache[urlOrKey];
   delete memoryCache[cleanUrl];
   for (const [key, value] of Object.entries(memoryCache)) {
     if (
       (value.url && value.url.split("?")[0] === cleanUrl) ||
-      (value.fileId && (urlOrKey === value.fileId || urlOrKey === `ik:${value.fileId}`))
+      (value.fileId && (urlOrKey === value.fileId || urlOrKey === `ik:${value.fileId}` || value.fileId === fileId))
     ) {
       delete memoryCache[key];
     }
@@ -184,7 +238,7 @@ export async function deleteMediaMeta(urlOrKey: string): Promise<void> {
     if (db) {
       await db.productOverride.updateMany({
         where: {
-          sku: { in: [`system:media:${fileIdMatch}`, `system:media:${sanitizeKey(cleanUrl)}`] },
+          sku: { in: skusToDelete },
         },
         data: { isDeleted: true },
       });
@@ -193,7 +247,6 @@ export async function deleteMediaMeta(urlOrKey: string): Promise<void> {
     // Best-effort
   }
 
-  const meta = await readMediaMeta();
   let modified = false;
 
   if (meta[urlOrKey]) {

@@ -154,12 +154,29 @@ function computeBannerStatus(b: BannerRecord): "live" | "scheduled" | "expired" 
   return "live";
 }
 
+export function resetBannersCache(): void {
+  inMemoryBanners = null;
+}
+
 export async function readBanners(): Promise<BannerRecord[]> {
   if (inMemoryBanners) {
     return inMemoryBanners.map((b) => ({ ...b, status: computeBannerStatus(b) }));
   }
 
-  // 1. Try local JSON file
+  // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
+  try {
+    const record = await prisma.productOverride.findUnique({
+      where: { sku: "system:banners" },
+    });
+    if (record && record.data && Array.isArray(record.data)) {
+      inMemoryBanners = record.data as unknown as BannerRecord[];
+      return inMemoryBanners.map((b) => ({ ...b, status: computeBannerStatus(b) }));
+    }
+  } catch (dbErr) {
+    console.warn("[readBanners] DB fetch warning:", dbErr);
+  }
+
+  // 2. Try local JSON file fallback (dev or initial seed)
   try {
     const raw = await fs.readFile(bannersFilePath, "utf-8");
     const parsed = JSON.parse(raw) as BannerRecord[];
@@ -171,19 +188,6 @@ export async function readBanners(): Promise<BannerRecord[]> {
     // file not created yet
   }
 
-  // 2. Try DB ProductOverride
-  try {
-    const record = await prisma.productOverride.findUnique({
-      where: { sku: "system:banners" },
-    });
-    if (record && record.data && Array.isArray(record.data)) {
-      inMemoryBanners = record.data as unknown as BannerRecord[];
-      return inMemoryBanners.map((b) => ({ ...b, status: computeBannerStatus(b) }));
-    }
-  } catch {
-    // db fallback
-  }
-
   // 3. Fallback to default seeded banners
   inMemoryBanners = [...DEFAULT_BANNERS];
   await writeBanners(inMemoryBanners).catch(() => {});
@@ -193,13 +197,7 @@ export async function readBanners(): Promise<BannerRecord[]> {
 export async function writeBanners(banners: BannerRecord[]): Promise<void> {
   inMemoryBanners = banners;
 
-  try {
-    await fs.mkdir(path.dirname(bannersFilePath), { recursive: true });
-    await fs.writeFile(bannersFilePath, JSON.stringify(banners, null, 2), "utf-8");
-  } catch {
-    // Serverless filesystem read-only safe
-  }
-
+  // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {
     await prisma.productOverride.upsert({
       where: { sku: "system:banners" },
@@ -210,10 +208,19 @@ export async function writeBanners(banners: BannerRecord[]): Promise<void> {
       },
       update: {
         data: banners as any,
+        isDeleted: false,
       },
     });
+  } catch (dbErr) {
+    console.error("[writeBanners] DB persist failed:", dbErr);
+  }
+
+  // 2. Best-effort write to local file for dev environments (safely catches EROFS)
+  try {
+    await fs.mkdir(path.dirname(bannersFilePath), { recursive: true });
+    await fs.writeFile(bannersFilePath, JSON.stringify(banners, null, 2), "utf-8");
   } catch {
-    // db fallback ignore
+    // Serverless filesystem read-only safe
   }
 }
 

@@ -18,40 +18,42 @@ import {
 const settingsFilePath = path.join(process.cwd(), "app", "data", "settings.json");
 let inMemorySettingsCache: Record<string, unknown> | null = null;
 
+export function resetSettingsCache(): void {
+  inMemorySettingsCache = null;
+}
+
 async function loadAllSettingsFile(): Promise<Record<string, unknown>> {
   if (inMemorySettingsCache) return inMemorySettingsCache;
 
-  // 1. Try local JSON file
+  const merged: Record<string, unknown> = {};
+
+  // 1. Load baseline from local JSON file if available
   try {
     const raw = await fs.readFile(settingsFilePath, "utf-8");
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === "object") {
-      inMemorySettingsCache = parsed;
-      return parsed;
+      Object.assign(merged, parsed);
     }
   } catch {
-    // File not created yet
+    // File not created yet or not present
   }
 
-  // 2. Try DB overrides
+  // 2. Query DB overrides (authoritative source of truth for production/serverless)
   try {
     const records = await prisma.productOverride.findMany({
-      where: { sku: { startsWith: "setting:" } },
+      where: { sku: { startsWith: "setting:" }, isDeleted: false },
     });
-    if (records.length > 0) {
-      const merged: Record<string, unknown> = {};
-      for (const rec of records) {
-        const group = rec.sku.replace("setting:", "");
-        if (rec.data) merged[group] = rec.data;
+    for (const rec of records) {
+      const group = rec.sku.replace("setting:", "");
+      if (rec.data) {
+        merged[group] = rec.data;
       }
-      inMemorySettingsCache = merged;
-      return merged;
     }
-  } catch {
-    // DB fallback ignore
+  } catch (dbErr) {
+    console.warn("[loadAllSettingsFile] DB settings fetch warning:", dbErr);
   }
 
-  inMemorySettingsCache = {};
+  inMemorySettingsCache = merged;
   return inMemorySettingsCache;
 }
 

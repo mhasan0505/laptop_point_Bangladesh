@@ -54,3 +54,7 @@ export interface RawProduct {
   variantOptions?: Array<{ name: string; values: string[] }>;
   variants?: Array<Record<string, unknown>>;
 }
+
+export const isRawProduct = (obj: unknown): obj is RawProduct =>
+  typeof obj === "object" && obj !== null && "sku" in obj && "name" in obj;
+

@@ -49,10 +49,27 @@ const DEFAULT_QUESTIONS: QuestionRecord[] = [
 const questionsFilePath = path.join(process.cwd(), "app", "data", "questions.json");
 let inMemoryQuestions: QuestionRecord[] | null = null;
 
+export function resetQuestionsCache(): void {
+  inMemoryQuestions = null;
+}
+
 export async function readQuestions(): Promise<QuestionRecord[]> {
   if (inMemoryQuestions) return inMemoryQuestions;
 
-  // 1. Try file
+  // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
+  try {
+    const record = await prisma.productOverride.findUnique({
+      where: { sku: "system:questions" },
+    });
+    if (record && record.data && Array.isArray(record.data)) {
+      inMemoryQuestions = record.data as unknown as QuestionRecord[];
+      return inMemoryQuestions;
+    }
+  } catch (dbErr) {
+    console.warn("[readQuestions] DB fetch warning:", dbErr);
+  }
+
+  // 2. Try file fallback
   try {
     const raw = await fs.readFile(questionsFilePath, "utf-8");
     const parsed = JSON.parse(raw) as QuestionRecord[];
@@ -64,19 +81,6 @@ export async function readQuestions(): Promise<QuestionRecord[]> {
     // File not created yet
   }
 
-  // 2. Try DB ProductOverride
-  try {
-    const record = await prisma.productOverride.findUnique({
-      where: { sku: "system:questions" },
-    });
-    if (record && record.data && Array.isArray(record.data)) {
-      inMemoryQuestions = record.data as unknown as QuestionRecord[];
-      return inMemoryQuestions;
-    }
-  } catch {
-    // db fallback ignore
-  }
-
   // 3. Fallback to default seeded
   inMemoryQuestions = [...DEFAULT_QUESTIONS];
   await writeQuestions(inMemoryQuestions).catch(() => {});
@@ -86,13 +90,7 @@ export async function readQuestions(): Promise<QuestionRecord[]> {
 export async function writeQuestions(items: QuestionRecord[]): Promise<void> {
   inMemoryQuestions = items;
 
-  try {
-    await fs.mkdir(path.dirname(questionsFilePath), { recursive: true });
-    await fs.writeFile(questionsFilePath, JSON.stringify(items, null, 2), "utf-8");
-  } catch {
-    // Serverless filesystem read-only safe
-  }
-
+  // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {
     await prisma.productOverride.upsert({
       where: { sku: "system:questions" },
@@ -103,10 +101,19 @@ export async function writeQuestions(items: QuestionRecord[]): Promise<void> {
       },
       update: {
         data: items as any,
+        isDeleted: false,
       },
     });
+  } catch (dbErr) {
+    console.error("[writeQuestions] DB persist failed:", dbErr);
+  }
+
+  // 2. Best-effort write to local file for dev (catches EROFS)
+  try {
+    await fs.mkdir(path.dirname(questionsFilePath), { recursive: true });
+    await fs.writeFile(questionsFilePath, JSON.stringify(items, null, 2), "utf-8");
   } catch {
-    // db fallback ignore
+    // Serverless filesystem read-only safe
   }
 }
 

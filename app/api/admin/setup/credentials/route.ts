@@ -14,13 +14,7 @@ interface CredentialItem {
 const credsFilePath = path.join(process.cwd(), "app", "data", "credentials.json");
 
 async function readCredentials(): Promise<Record<string, string>> {
-  try {
-    const raw = await fs.readFile(credsFilePath, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    // fallback to DB
-  }
-
+  // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
   try {
     const rec = await prisma.productOverride.findUnique({
       where: { sku: "system:connected_credentials" },
@@ -28,21 +22,23 @@ async function readCredentials(): Promise<Record<string, string>> {
     if (rec && rec.data && typeof rec.data === "object") {
       return rec.data as Record<string, string>;
     }
+  } catch (dbErr) {
+    console.warn("[readCredentials] DB fetch warning:", dbErr);
+  }
+
+  // 2. Try local file fallback
+  try {
+    const raw = await fs.readFile(credsFilePath, "utf-8");
+    return JSON.parse(raw);
   } catch {
-    // ignore
+    // fallback
   }
 
   return {};
 }
 
 async function writeCredentials(creds: Record<string, string>): Promise<void> {
-  try {
-    await fs.mkdir(path.dirname(credsFilePath), { recursive: true });
-    await fs.writeFile(credsFilePath, JSON.stringify(creds, null, 2), "utf-8");
-  } catch {
-    // Read-only filesystem in serverless
-  }
-
+  // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {
     await prisma.productOverride.upsert({
       where: { sku: "system:connected_credentials" },
@@ -53,10 +49,19 @@ async function writeCredentials(creds: Record<string, string>): Promise<void> {
       },
       update: {
         data: creds as any,
+        isDeleted: false,
       },
     });
+  } catch (dbErr) {
+    console.error("[writeCredentials] DB persist failed:", dbErr);
+  }
+
+  // 2. Best-effort write to local file (safely catches EROFS)
+  try {
+    await fs.mkdir(path.dirname(credsFilePath), { recursive: true });
+    await fs.writeFile(credsFilePath, JSON.stringify(creds, null, 2), "utf-8");
   } catch {
-    // ignore
+    // Read-only filesystem in serverless
   }
 }
 
