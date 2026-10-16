@@ -221,13 +221,17 @@ export default function CheckoutClient({
         <div className="mb-8">
           <Link
             href="/cart"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Cart
           </Link>
-          <h1 className="text-3xl sm:text-4xl font-bold mb-2">Checkout</h1>
-          <p className="text-muted-foreground">Complete your order</p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mb-1">
+            Checkout
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Complete your order with secure delivery and flexible payment options
+          </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -235,10 +239,12 @@ export default function CheckoutClient({
             <div className="lg:col-span-2 space-y-6">
               {/* Customer Information */}
               <div className="bg-white dark:bg-card rounded-xl border border-border/30 p-6">
-                <h2 className="text-xl font-bold mb-6">Customer Information</h2>
+                <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
+                  Customer Information
+                </h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium mb-2">
+                    <label htmlFor="firstName" className="block text-sm font-medium text-foreground mb-2">
                       First Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -250,7 +256,7 @@ export default function CheckoutClient({
                       aria-describedby={
                         errors.firstName ? "firstName-error" : undefined
                       }
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                      className={`w-full px-4 py-2.5 border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
                         errors.firstName
                           ? "border-red-500"
                           : "border-border"
@@ -258,13 +264,13 @@ export default function CheckoutClient({
                       placeholder="John"
                     />
                     {errors.firstName && (
-                      <p id="firstName-error" className="text-red-500 text-sm mt-1" role="alert">
+                      <p id="firstName-error" className="text-red-500 text-xs font-medium mt-1.5" role="alert">
                         {errors.firstName.message}
                       </p>
                     )}
                   </div>
                   <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium mb-2">
+                    <label htmlFor="lastName" className="block text-sm font-medium text-foreground mb-2">
                       Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -276,7 +282,7 @@ export default function CheckoutClient({
                       aria-describedby={
                         errors.lastName ? "lastName-error" : undefined
                       }
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                      className={`w-full px-4 py-2.5 border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
                         errors.lastName
                           ? "border-red-500"
                           : "border-border"
@@ -284,7 +290,7 @@ export default function CheckoutClient({
                       placeholder="Doe"
                     />
                     {errors.lastName && (
-                      <p id="lastName-error" className="text-red-500 text-sm mt-1" role="alert">
+                      <p id="lastName-error" className="text-red-500 text-xs font-medium mt-1.5" role="alert">
                         {errors.lastName.message}
                       </p>
                     )}
@@ -293,7 +299,7 @@ export default function CheckoutClient({
 
                 <div className="grid sm:grid-cols-2 gap-4 mt-4">
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
                       Email Address <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -309,19 +315,19 @@ export default function CheckoutClient({
                       autoComplete="email"
                       aria-invalid={errors.email ? true : undefined}
                       aria-describedby={errors.email ? "email-error" : undefined}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                      className={`w-full px-4 py-2.5 border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
                         errors.email ? "border-red-500" : "border-border"
                       }`}
                       placeholder="john@example.com"
                     />
                     {errors.email && (
-                      <p id="email-error" className="text-red-500 text-sm mt-1" role="alert">
+                      <p id="email-error" className="text-red-500 text-xs font-medium mt-1.5" role="alert">
                         {errors.email.message}
                       </p>
                     )}
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium mb-2">
+                    <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-2">
                       Phone Number <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -337,13 +343,13 @@ export default function CheckoutClient({
                       autoComplete="tel"
                       aria-invalid={errors.phone ? true : undefined}
                       aria-describedby={errors.phone ? "phone-error" : undefined}
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                      className={`w-full px-4 py-2.5 border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
                         errors.phone ? "border-red-500" : "border-border"
                       }`}
                       placeholder="01712345678"
                     />
                     {errors.phone && (
-                      <p id="phone-error" className="text-red-500 text-sm mt-1" role="alert">
+                      <p id="phone-error" className="text-red-500 text-xs font-medium mt-1.5" role="alert">
                         {errors.phone.message}
                       </p>
                     )}
@@ -353,10 +359,12 @@ export default function CheckoutClient({
 
               {/* Shipping Address */}
               <div className="bg-white dark:bg-card rounded-xl border border-border/30 p-6">
-                <h2 className="text-xl font-bold mb-6">Shipping Address</h2>
+                <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
+                  Shipping Address
+                </h2>
                 <div className="space-y-4">
                   <div>
-                    <label htmlFor="address" className="block text-sm font-medium mb-2">
+                    <label htmlFor="address" className="block text-sm font-medium text-foreground mb-2">
                       Address <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -369,20 +377,20 @@ export default function CheckoutClient({
                       aria-describedby={
                         errors.address ? "address-error" : undefined
                       }
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                      className={`w-full px-4 py-2.5 border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
                         errors.address ? "border-red-500" : "border-border"
                       }`}
                       placeholder="House/Flat, Street, Area"
                     />
                     {errors.address && (
-                      <p id="address-error" className="text-red-500 text-sm mt-1" role="alert">
+                      <p id="address-error" className="text-red-500 text-xs font-medium mt-1.5" role="alert">
                         {errors.address.message}
                       </p>
                     )}
                   </div>
                   <div className="grid sm:grid-cols-3 gap-4">
                     <div>
-                      <label htmlFor="city" className="block text-sm font-medium mb-2">
+                      <label htmlFor="city" className="block text-sm font-medium text-foreground mb-2">
                         City <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -391,19 +399,19 @@ export default function CheckoutClient({
                         autoComplete="address-level2"
                         aria-invalid={errors.city ? true : undefined}
                         aria-describedby={errors.city ? "city-error" : undefined}
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                        className={`w-full px-4 py-2.5 border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
                           errors.city ? "border-red-500" : "border-border"
                         }`}
                         placeholder="Dhaka"
                       />
                       {errors.city && (
-                        <p id="city-error" className="text-red-500 text-sm mt-1" role="alert">
+                        <p id="city-error" className="text-red-500 text-xs font-medium mt-1.5" role="alert">
                           {errors.city.message}
                         </p>
                       )}
                     </div>
                     <div>
-                      <label htmlFor="district" className="block text-sm font-medium mb-2">
+                      <label htmlFor="district" className="block text-sm font-medium text-foreground mb-2">
                         District <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -416,19 +424,19 @@ export default function CheckoutClient({
                         aria-describedby={
                           errors.district ? "district-error" : undefined
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                        className={`w-full px-4 py-2.5 border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
                           errors.district ? "border-red-500" : "border-border"
                         }`}
                         placeholder="Dhaka"
                       />
                       {errors.district && (
-                        <p id="district-error" className="text-red-500 text-sm mt-1" role="alert">
+                        <p id="district-error" className="text-red-500 text-xs font-medium mt-1.5" role="alert">
                           {errors.district.message}
                         </p>
                       )}
                     </div>
                     <div>
-                      <label htmlFor="postalCode" className="block text-sm font-medium mb-2">
+                      <label htmlFor="postalCode" className="block text-sm font-medium text-foreground mb-2">
                         Postal Code <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -441,13 +449,13 @@ export default function CheckoutClient({
                         aria-describedby={
                           errors.postalCode ? "postalCode-error" : undefined
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
+                        className={`w-full px-4 py-2.5 border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all ${
                           errors.postalCode ? "border-red-500" : "border-border"
                         }`}
                         placeholder="1207"
                       />
                       {errors.postalCode && (
-                        <p id="postalCode-error" className="text-red-500 text-sm mt-1" role="alert">
+                        <p id="postalCode-error" className="text-red-500 text-xs font-medium mt-1.5" role="alert">
                           {errors.postalCode.message}
                         </p>
                       )}
@@ -458,7 +466,7 @@ export default function CheckoutClient({
                 {/* Delivery Zone Options */}
                 {commerce?.deliveryZones && commerce.deliveryZones.length > 0 && (
                   <div className="mt-6 border-t border-border pt-4">
-                    <label className="block text-sm font-medium mb-3">
+                    <label className="block text-sm font-medium text-foreground mb-3">
                       Select Delivery Method
                     </label>
                     <div className="grid gap-3 sm:grid-cols-3">
@@ -469,21 +477,21 @@ export default function CheckoutClient({
                             key={zone.id}
                             type="button"
                             onClick={() => setSelectedZone(zone.id)}
-                            className={`p-3 text-left border rounded-lg transition-all ${
+                            className={`p-3.5 text-left border rounded-lg transition-all ${
                               selectedZone === zone.id
                                 ? "border-primary bg-primary/5 ring-1 ring-primary"
                                 : "border-border hover:border-primary/50"
                             }`}
                           >
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs font-bold text-gray-900 dark:text-white">
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <span className="text-sm font-semibold text-foreground">
                                 {zone.name}
                               </span>
-                              <span className="text-xs font-semibold text-primary">
+                              <span className="text-xs font-bold text-primary shrink-0">
                                 {zone.fee === 0 ? "Free" : formatBDT(zone.fee)}
                               </span>
                             </div>
-                            <p className="text-[11px] text-muted-foreground">{zone.timeline}</p>
+                            <p className="text-xs text-muted-foreground">{zone.timeline}</p>
                           </button>
                         ))}
                     </div>
@@ -493,7 +501,9 @@ export default function CheckoutClient({
 
               {/* Payment Method */}
               <div className="bg-white dark:bg-card rounded-xl border border-border/30 p-6">
-                <h2 className="text-xl font-bold mb-6">Payment Method</h2>
+                <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">
+                  Payment Method
+                </h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   {enabledPaymentMethods.map((method) => {
                     const Icon = method.icon;
@@ -524,8 +534,10 @@ export default function CheckoutClient({
                           )}
                         </div>
                         <div className="text-left">
-                          <h3 className="font-semibold">{method.name}</h3>
-                          <p className="text-xs text-muted-foreground">
+                          <h3 className="text-sm sm:text-base font-semibold text-foreground">
+                            {method.name}
+                          </h3>
+                          <p className="text-xs text-muted-foreground mt-0.5">
                             {method.description}
                           </p>
                         </div>
@@ -537,7 +549,7 @@ export default function CheckoutClient({
 
               {/* Order Notes */}
               <div className="bg-white dark:bg-card rounded-xl border border-border/30 p-6">
-                <h2 className="text-xl font-bold mb-4">
+                <h2 className="text-xl font-bold tracking-tight text-foreground mb-4">
                   Order Notes (Optional)
                 </h2>
                 <textarea
@@ -545,7 +557,7 @@ export default function CheckoutClient({
                   {...register("orderNotes")}
                   rows={4}
                   aria-label="Order notes (optional)"
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
+                  className="w-full px-4 py-3 border border-border rounded-lg text-base sm:text-sm placeholder:text-muted-foreground/60 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
                   placeholder="Any special instructions for your order..."
                 />
               </div>
@@ -564,7 +576,7 @@ export default function CheckoutClient({
                     I have read and agree to the website{" "}
                     <Link
                       href="/terms"
-                      className="text-primary hover:underline"
+                      className="font-medium text-primary hover:underline"
                       target="_blank"
                     >
                       terms and conditions
@@ -572,7 +584,7 @@ export default function CheckoutClient({
                     and{" "}
                     <Link
                       href="/privacy"
-                      className="text-primary hover:underline"
+                      className="font-medium text-primary hover:underline"
                       target="_blank"
                     >
                       privacy policy
@@ -581,14 +593,14 @@ export default function CheckoutClient({
                   </span>
                 </label>
                 {errors.agreeToTerms && (
-                  <p className="text-red-500 text-sm mb-4" role="alert">
+                  <p className="text-red-500 text-xs font-medium mb-4" role="alert">
                     {errors.agreeToTerms.message}
                   </p>
                 )}
 
                 {submitError && (
                   <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                    <p className="text-red-600 dark:text-red-400 text-sm">
+                    <p className="text-red-600 dark:text-red-400 text-sm font-medium">
                       {submitError}
                     </p>
                   </div>
@@ -597,7 +609,7 @@ export default function CheckoutClient({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-primary to-primary/90 text-white py-4 rounded-lg font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full bg-gradient-to-r from-primary to-primary/90 text-white py-3.5 sm:py-4 rounded-xl text-base sm:text-lg font-bold tracking-wide hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   {isSubmitting ? "Placing Order..." : "Place Order"}
                 </button>

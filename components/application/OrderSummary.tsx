@@ -18,7 +18,7 @@ export default function OrderSummary({ showCheckoutButton }: OrderSummaryProps =
 
   return (
     <div className="bg-white dark:bg-card rounded-xl border border-border/30 p-6 sticky top-24">
-      <h2 className="text-xl font-bold mb-6">Order Summary</h2>
+      <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">Order Summary</h2>
 
       {/* Cart Items */}
       <div className="space-y-3 mb-6 pb-6 border-b border-border max-h-64 overflow-y-auto">
@@ -38,14 +38,14 @@ export default function OrderSummary({ showCheckoutButton }: OrderSummaryProps =
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-medium line-clamp-2 mb-1">
+                <h3 className="text-sm font-medium text-foreground line-clamp-2 mb-1">
                   {item.name}
                 </h3>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-muted-foreground">
                     Qty: {item.quantity}
                   </span>
-                  <span className="text-sm font-semibold">
+                  <span className="text-sm font-semibold text-foreground">
                     {formatBDT(item.price * item.quantity)}
                   </span>
                 </div>
@@ -61,11 +61,11 @@ export default function OrderSummary({ showCheckoutButton }: OrderSummaryProps =
           <span className="text-muted-foreground">
             Subtotal ({items.length} items)
           </span>
-          <span className="font-medium">{formatBDT(subtotal)}</span>
+          <span className="font-medium text-foreground">{formatBDT(subtotal)}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Tax (5%)</span>
-          <span className="font-medium">{formatBDT(tax)}</span>
+          <span className="font-medium text-foreground">{formatBDT(tax)}</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-muted-foreground">Shipping</span>
@@ -74,15 +74,15 @@ export default function OrderSummary({ showCheckoutButton }: OrderSummaryProps =
               FREE
             </span>
           ) : (
-            <span className="font-medium">{formatBDT(shipping)}</span>
+            <span className="font-medium text-foreground">{formatBDT(shipping)}</span>
           )}
         </div>
       </div>
 
       {/* Total */}
       <div className="flex justify-between items-center">
-        <span className="text-lg font-semibold">Total</span>
-        <span className="text-2xl font-bold text-primary">
+        <span className="text-base sm:text-lg font-semibold text-foreground">Total</span>
+        <span className="text-2xl font-bold text-primary tracking-tight">
           {formatBDT(total)}
         </span>
       </div>

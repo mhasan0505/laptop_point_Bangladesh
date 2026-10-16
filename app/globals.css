@@ -418,4 +418,25 @@ body {
 .pt-safe {
   padding-top: env(safe-area-inset-top, 0px);
 }
+
+/* Modern Infinite Marquee for Super Deals */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-deals {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-deals:hover {
+  animation-play-state: paused;
+}
 

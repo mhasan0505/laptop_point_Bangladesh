@@ -29,22 +29,52 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import type {
   MegaMenuFeaturedProduct,
   StorefrontNavigation,
 } from "@/lib/public-content";
 import MegaMenu from "../navigation/MegaMenu";
+
+const superDealMarqueeItems = [
+  {
+    icon: "🔥",
+    tag: "SUPER DEAL",
+    text: "Extra Up to ৳5,000 OFF on Certified Laptops",
+    code: "LPDEAL5K",
+    href: "/deals",
+  },
+  {
+    icon: "🎁",
+    tag: "FREE GIFTS",
+    text: "Laptop Bag + Wireless Mouse + Pad + Skin with Every Laptop",
+    href: "/deals",
+  },
+  {
+    icon: "⚡",
+    tag: "IN STOCK",
+    text: "HP EliteBook, Dell Latitude & ThinkPad from ৳22,990",
+    href: "/shop?category=Laptop",
+  },
+  {
+    icon: "💳",
+    tag: "0% EMI",
+    text: "3 to 12 Months Flexible EMI Available on 30+ Banks",
+    href: "/EMI",
+  },
+  {
+    icon: "🛡️",
+    tag: "WARRANTY",
+    text: "15 Days Replacement Guarantee & 5 Years Free Servicing",
+    href: "/deals",
+  },
+  {
+    icon: "📍",
+    tag: "SHOWROOM",
+    text: "Mirpur-10 Showroom Open 10:30 AM – 9:00 PM (Madbar Mansion)",
+    href: "/contact",
+  },
+];
 
 const Header = ({
   navigation,
@@ -61,6 +91,8 @@ const Header = ({
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [isMegaMenuHovered, setIsMegaMenuHovered] = useState(false);
   const [isDepartmentMenuOpen, setIsDepartmentMenuOpen] = useState(false);
+  const [activeDepartmentSub, setActiveDepartmentSub] = useState<string | null>(null);
+  const departmentMenuRef = useRef<HTMLDivElement>(null);
   const [isSearchCategoryDropdownOpen, setIsSearchCategoryDropdownOpen] =
     useState(false);
   const [selectedSearchCategory, setSelectedSearchCategory] = useState("all");
@@ -267,8 +299,9 @@ const Header = ({
     }
     departmentCloseTimerRef.current = setTimeout(() => {
       setIsDepartmentMenuOpen(false);
+      setActiveDepartmentSub(null);
       departmentCloseTimerRef.current = null;
-    }, 180);
+    }, 220);
   };
 
   useEffect(() => {
@@ -289,18 +322,36 @@ const Header = ({
 
   useEffect(() => {
     const handleGlobalClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
       if (
         searchCategoryDropdownRef.current &&
-        !searchCategoryDropdownRef.current.contains(event.target as Node)
+        !searchCategoryDropdownRef.current.contains(target)
       ) {
         setIsSearchCategoryDropdownOpen(false);
+      }
+      if (
+        departmentMenuRef.current &&
+        !departmentMenuRef.current.contains(target)
+      ) {
+        setIsDepartmentMenuOpen(false);
+        setActiveDepartmentSub(null);
+      }
+    };
+
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsSearchCategoryDropdownOpen(false);
+        setIsDepartmentMenuOpen(false);
+        setActiveDepartmentSub(null);
       }
     };
 
     document.addEventListener("mousedown", handleGlobalClickOutside);
+    document.addEventListener("keydown", handleEscKey);
 
     return () => {
       document.removeEventListener("mousedown", handleGlobalClickOutside);
+      document.removeEventListener("keydown", handleEscKey);
     };
   }, []);
 
@@ -308,7 +359,12 @@ const Header = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      const y = window.scrollY;
+      setIsScrolled((prev) => {
+        if (!prev && y > 40) return true;
+        if (prev && y < 15) return false;
+        return prev;
+      });
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -324,55 +380,104 @@ const Header = ({
       }`}
     >
       <div
-        className={`border-b border-neutral-200 bg-primary text-xs text-white transition-all duration-300 ease-in-out ${
+        className={`border-b border-white/10 bg-linear-to-r from-[#001e42] via-[#002b60] to-[#001e42] text-xs text-white transition-all duration-300 ease-in-out ${
           isScrolled
             ? "max-h-0 opacity-0 overflow-hidden py-0 border-transparent"
             : "max-h-12 opacity-100 py-0"
         }`}
       >
         <div className="container mx-auto px-3 sm:px-4">
-          <div className="flex min-h-9 items-center justify-between gap-3 py-1.5">
-            <p className="hidden truncate lg:block">
-              Your trusted laptop shop in Mirpur Dhaka | Budget-friendly verified devices
-            </p>
-            <div className="flex items-center gap-3 text-white sm:gap-5">
+          <div className="flex min-h-9 items-center justify-between gap-2 sm:gap-4 py-1.5">
+            {/* ── LEFT/CENTER: SUPER DEALS MARQUEE TICKER ───────────────── */}
+            <div className="flex items-center min-w-0 flex-1 overflow-hidden">
+              <Link
+                href="/deals"
+                className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-[10.5px] font-extrabold uppercase tracking-wider text-white shrink-0 shadow-2xs transition-colors group mr-2 cursor-pointer"
+                title="Browse Super Deals & Offers"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500" />
+                </span>
+                <span>Super Deals</span>
+                <span className="text-[10px] text-white/70 group-hover:translate-x-0.5 transition-transform">
+                  →
+                </span>
+              </Link>
+
+              {/* Seamless Infinite Marquee with refined edge fade */}
+              <div className="flex-1 min-w-0 overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_16px,black_calc(100%-16px),transparent)]">
+                <div className="animate-marquee-deals items-center gap-6 whitespace-nowrap">
+                  {[...superDealMarqueeItems, ...superDealMarqueeItems].map(
+                    (deal, idx) => (
+                      <Link
+                        key={idx}
+                        href={deal.href}
+                        className="inline-flex items-center gap-2 text-[12px] font-medium text-white/90 hover:text-white transition-colors group/deal cursor-pointer"
+                      >
+                        <span className="text-xs">{deal.icon}</span>
+                        <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/90 border border-white/15">
+                          {deal.tag}
+                        </span>
+                        <span className="group-hover/deal:underline underline-offset-2">
+                          {deal.text}
+                        </span>
+                        {deal.code && (
+                          <span className="font-mono text-[10.5px] font-extrabold px-1.5 py-0.5 rounded bg-white/15 border border-white/25 text-white tracking-wider">
+                            {deal.code}
+                          </span>
+                        )}
+                        <span className="text-white/30 text-xs font-light mx-2">
+                          ✦
+                        </span>
+                      </Link>
+                    ),
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* ── RIGHT: STORE UTILITIES ──────────────────────────────── */}
+            <div className="flex items-center gap-2.5 sm:gap-4 text-white/85 shrink-0 text-xs pl-2 border-l border-white/10">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1.5 hover:text-neutral-100"
+                className="hidden md:inline-flex items-center gap-1.5 hover:text-white transition-colors"
               >
-                <MapPin className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Store Locator</span>
+                <MapPin className="h-3.5 w-3.5 text-white/70" />
+                <span className="hidden lg:inline">Store Locator</span>
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1.5 hover:text-neutral-100"
+                className="hidden xl:inline-flex items-center gap-1.5 hover:text-white transition-colors"
               >
-                <Truck className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Track Your Order</span>
+                <Truck className="h-3.5 w-3.5 text-white/70" />
+                <span>Track Order</span>
               </Link>
               <a
                 href="tel:+8801612182408"
-                className="inline-flex items-center gap-1.5 hover:text-neutral-100"
+                className="inline-flex items-center gap-1.5 hover:text-white transition-colors font-medium"
               >
-                <Phone className="h-3.5 w-3.5" />
-                <span className="hidden md:inline">+880 1612-182408</span>
+                <Phone className="h-3.5 w-3.5 text-white/70" />
+                <span className="hidden sm:inline">+880 1612-182408</span>
               </a>
-              <Link
-                href="https://www.facebook.com/laptoppointbd"
-                target="_blank"
-                className="hover:text-neutral-100"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-3.5 w-3.5" />
-              </Link>
-              <Link
-                href="https://www.youtube.com/@LaptopPointBD"
-                target="_blank"
-                className="hover:text-neutral-100"
-                aria-label="Youtube"
-              >
-                <Youtube className="h-3.5 w-3.5" />
-              </Link>
+              <div className="flex items-center gap-1.5 pl-1.5 border-l border-white/10">
+                <Link
+                  href="https://www.facebook.com/laptoppointbd"
+                  target="_blank"
+                  className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-3.5 w-3.5" />
+                </Link>
+                <Link
+                  href="https://www.youtube.com/@LaptopPointBD"
+                  target="_blank"
+                  className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                  aria-label="Youtube"
+                >
+                  <Youtube className="h-3.5 w-3.5" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -751,92 +856,134 @@ const Header = ({
           <div className="flex h-12 xl:h-13 items-center justify-between gap-4">
             {/* ── LEFT: ALL DEPARTMENTS + NAV LINKS + BRAND PILLS ───────── */}
             <div className="flex items-center gap-2 xl:gap-3 flex-1 min-w-0">
-              {/* ── ALL DEPARTMENTS DROPDOWN ─────────────────────────────── */}
-              <DropdownMenu
-                open={isDepartmentMenuOpen}
-                onOpenChange={setIsDepartmentMenuOpen}
+              {/* ── ALL DEPARTMENTS HOVER DROPDOWN (100% FLICKER-FREE) ── */}
+              <div
+                ref={departmentMenuRef}
+                className="relative shrink-0"
+                onMouseEnter={handleDepartmentMenuEnter}
+                onMouseLeave={handleDepartmentMenuLeave}
               >
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    onMouseEnter={handleDepartmentMenuEnter}
-                    onMouseLeave={handleDepartmentMenuLeave}
-                    className="inline-flex h-9.5 xl:h-10 min-w-44 xl:min-w-50 items-center justify-between gap-2.5 rounded-xl bg-gradient-to-r from-[#002b60] to-[#0a3875] px-4 text-xs font-bold uppercase tracking-wider text-white shadow-xs outline-none transition-all hover:from-[#002047] hover:to-[#002b60] hover:shadow-md data-[state=open]:from-[#002047] data-[state=open]:to-[#002b60] shrink-0"
-                  >
-                    <span className="inline-flex items-center gap-2">
-                      <Menu className="h-4 w-4" />
-                      All Departments
-                    </span>
-                    <ChevronDown className="h-3.5 w-3.5 transition-transform data-[state=open]:rotate-180" />
-                  </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent
-                  align="start"
-                  sideOffset={8}
-                  onMouseEnter={handleDepartmentMenuEnter}
-                  onMouseLeave={handleDepartmentMenuLeave}
-                  className="w-64 overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/98 backdrop-blur-md p-1.5 shadow-[0_20px_50px_rgba(0,43,96,0.15)] ring-1 ring-black/5"
+                <button
+                  type="button"
+                  onClick={() =>
+                    setIsDepartmentMenuOpen((prev) => {
+                      if (prev) setActiveDepartmentSub(null);
+                      return !prev;
+                    })
+                  }
+                  className="inline-flex h-9.5 xl:h-10 min-w-44 xl:min-w-50 items-center justify-between gap-2.5 rounded-xl bg-gradient-to-r from-[#002b60] to-[#0a3875] px-4 text-xs font-bold uppercase tracking-wider text-white shadow-xs outline-none transition-all hover:from-[#002047] hover:to-[#002b60] hover:shadow-md shrink-0 cursor-pointer"
+                  aria-expanded={isDepartmentMenuOpen}
+                  aria-haspopup="true"
                 >
-                  {departmentItems.map((item) =>
-                    item.sub ? (
-                      <DropdownMenuSub key={item.name}>
-                        <DropdownMenuSubTrigger className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 focus:bg-[#002b60]/8 focus:text-[#002b60] data-[state=open]:bg-[#002b60]/8 data-[state=open]:text-[#002b60]">
-                          <span>{item.name}</span>
-                          {item.badge && (
-                            <span className="ml-2 rounded-full bg-[#dc0303] px-1.5 py-0.5 text-[10px] font-bold text-white">
-                              {item.badge}
-                            </span>
-                          )}
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuSubContent
-                          sideOffset={8}
-                          className="w-56 overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/98 backdrop-blur-md p-1.5 shadow-[0_20px_50px_rgba(0,43,96,0.15)] ring-1 ring-black/5"
+                  <span className="inline-flex items-center gap-2">
+                    <Menu className="h-4 w-4" />
+                    All Departments
+                  </span>
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                      isDepartmentMenuOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown panel with seamless bridge */}
+                <AnimatePresence>
+                  {isDepartmentMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                      transition={{ duration: 0.16, ease: "easeOut" }}
+                      className="absolute left-0 top-[calc(100%+4px)] z-50 w-64 rounded-2xl border border-neutral-200/80 bg-white/98 backdrop-blur-md p-1.5 shadow-[0_20px_50px_rgba(0,43,96,0.15)] ring-1 ring-black/5 before:absolute before:-top-2 before:left-0 before:right-0 before:h-2 before:content-['']"
+                    >
+                      {departmentItems.map((item) => (
+                        <div
+                          key={item.name}
+                          className="relative"
+                          onMouseEnter={() => {
+                            if (item.sub) {
+                              setActiveDepartmentSub(item.name);
+                            } else {
+                              setActiveDepartmentSub(null);
+                            }
+                          }}
                         >
-                          {item.sub.map((section, si) => (
-                            <div key={section.title}>
-                              {si > 0 && (
-                                <DropdownMenuSeparator className="my-1 border-neutral-100" />
+                          {item.sub ? (
+                            <div
+                              className={`flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition-colors ${
+                                activeDepartmentSub === item.name
+                                  ? "bg-[#002b60]/8 text-[#002b60]"
+                                  : "text-neutral-700 hover:bg-neutral-50 hover:text-[#002b60]"
+                              }`}
+                            >
+                              <span className="flex items-center gap-2">
+                                <span>{item.name}</span>
+                                {item.badge && (
+                                  <span className="rounded-full bg-[#dc0303] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                                    {item.badge}
+                                  </span>
+                                )}
+                              </span>
+                              <ChevronRight className="h-3.5 w-3.5 text-neutral-400" />
+                            </div>
+                          ) : (
+                            <Link
+                              href={item.href}
+                              onClick={() => {
+                                setIsDepartmentMenuOpen(false);
+                                setActiveDepartmentSub(null);
+                              }}
+                              className={`flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition-colors ${
+                                item.badge
+                                  ? "bg-[#002b60]/8 text-[#002b60] hover:bg-[#002b60]/12"
+                                  : "text-neutral-700 hover:bg-neutral-50 hover:text-[#002b60]"
+                              }`}
+                            >
+                              <span>{item.name}</span>
+                              {item.badge && (
+                                <span className="rounded-full bg-[#dc0303] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                                  {item.badge}
+                                </span>
                               )}
-                              <DropdownMenuLabel className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
-                                {section.title}
-                              </DropdownMenuLabel>
-                              {section.items.map((subItem) => (
-                                <DropdownMenuItem key={subItem.name} asChild>
-                                  <Link
-                                    href={subItem.href}
-                                    className="cursor-pointer rounded-lg px-3 py-2 text-xs font-medium text-neutral-700 hover:bg-[#002b60]/8 hover:text-[#002b60] focus:bg-[#002b60]/8 focus:text-[#002b60]"
-                                  >
-                                    {subItem.name}
-                                  </Link>
-                                </DropdownMenuItem>
+                            </Link>
+                          )}
+
+                          {/* Submenu flyout panel with left bridge */}
+                          {item.sub && activeDepartmentSub === item.name && (
+                            <div className="absolute left-[calc(100%+4px)] top-0 w-64 max-h-[460px] overflow-y-auto rounded-2xl border border-neutral-200/80 bg-white/98 backdrop-blur-md p-2 shadow-[0_20px_50px_rgba(0,43,96,0.15)] ring-1 ring-black/5 before:absolute before:-left-3 before:top-0 before:bottom-0 before:w-3 before:content-['']">
+                              {item.sub.map((section, si) => (
+                                <div
+                                  key={section.title}
+                                  className={si > 0 ? "mt-2 pt-2 border-t border-neutral-100" : ""}
+                                >
+                                  <div className="px-3 pb-1 pt-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
+                                    {section.title}
+                                  </div>
+                                  <div className="space-y-0.5">
+                                    {section.items.map((subItem) => (
+                                      <Link
+                                        key={subItem.name}
+                                        href={subItem.href}
+                                        onClick={() => {
+                                          setIsDepartmentMenuOpen(false);
+                                          setActiveDepartmentSub(null);
+                                        }}
+                                        className="flex items-center rounded-lg px-3 py-1.5 text-xs font-medium text-neutral-700 hover:bg-[#002b60]/8 hover:text-[#002b60] transition-colors"
+                                      >
+                                        {subItem.name}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
                               ))}
                             </div>
-                          ))}
-                        </DropdownMenuSubContent>
-                      </DropdownMenuSub>
-                    ) : (
-                      <DropdownMenuItem key={item.name} asChild>
-                        <Link
-                          href={item.href}
-                          className={`flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold focus:bg-[#002b60]/8 focus:text-[#002b60] ${
-                            item.badge
-                              ? "bg-[#002b60]/8 text-[#002b60] hover:bg-[#002b60]/12"
-                              : "text-neutral-700 hover:bg-neutral-50 hover:text-[#002b60]"
-                          }`}
-                        >
-                          <span>{item.name}</span>
-                          {item.badge && (
-                            <span className="rounded-full bg-[#dc0303] px-1.5 py-0.5 text-[10px] font-bold text-white">
-                              {item.badge}
-                            </span>
                           )}
-                        </Link>
-                      </DropdownMenuItem>
-                    ),
+                        </div>
+                      ))}
+                    </motion.div>
                   )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </AnimatePresence>
+              </div>
               {/* ─────────────────────────────────────────────────────────── */}
 
               <nav className="flex items-center gap-0.5">
