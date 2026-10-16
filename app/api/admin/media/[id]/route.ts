@@ -28,10 +28,17 @@ async function readMeta(): Promise<Record<string, { alt?: string; preset?: strin
 }
 
 async function writeMeta(meta: Record<string, unknown>): Promise<void> {
-  await fs.mkdir(path.dirname(mediaMetaFilePath), { recursive: true });
-  const tmp = `${mediaMetaFilePath}.${process.pid}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(meta, null, 2), "utf-8");
-  await fs.rename(tmp, mediaMetaFilePath);
+  try {
+    await fs.mkdir(path.dirname(mediaMetaFilePath), { recursive: true });
+    const tmp = `${mediaMetaFilePath}.${process.pid}.tmp`;
+    await fs.writeFile(tmp, JSON.stringify(meta, null, 2), "utf-8");
+    await fs.rename(tmp, mediaMetaFilePath);
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException)?.code;
+    if (code !== "EROFS" && code !== "EACCES" && code !== "EPERM") {
+      console.warn("[media/[id]] writeMeta filesystem warning:", err);
+    }
+  }
 }
 
 export async function PATCH(request: NextRequest, { params }: Params) {

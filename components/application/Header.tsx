@@ -602,7 +602,7 @@ const Header = ({
 
               <Link
                 href="/compare"
-                className={isSearchExpanded ? "hidden md:block" : ""}
+                className={`hidden sm:block ${isSearchExpanded ? "md:block" : ""}`}
               >
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -621,7 +621,7 @@ const Header = ({
 
               <Link
                 href="/wishlist"
-                className={isSearchExpanded ? "hidden md:block" : ""}
+                className={`hidden sm:block ${isSearchExpanded ? "md:block" : ""}`}
               >
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -670,7 +670,7 @@ const Header = ({
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={isSearchExpanded ? "hidden md:block" : ""}
+                className="hidden md:block"
               >
                 <Button
                   variant="ghost"

@@ -132,25 +132,36 @@ export async function POST(request: NextRequest) {
 
     // 1. ImageKit (persistent, CDN-backed) when configured.
     if (privateKey) {
+      let ik: { url: string; fileId: string; name: string } | null = null;
       try {
-        const ik = await uploadToImageKit(
+        ik = await uploadToImageKit(
           privateKey,
           processed.mainBuffer,
           `${uniqueBase}.webp`,
           `/laptop-point/${preset}`,
         );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "ImageKit upload failed";
+        console.error("[api/admin/upload] ImageKit failed:", msg);
+        warnings.push(`ImageKit failed (${msg}); trying local storage.`);
+      }
 
-        // Store fileId and metadata in media-meta.json keyed by URL
-        await storeMediaMeta(ik.url, {
-          fileId: ik.fileId,
-          url: ik.url,
-          name: ik.name,
-          preset,
-          width: processed.mainWidth,
-          height: processed.mainHeight,
-          bytes: processed.mainBytes,
-          createdAt: new Date().toISOString(),
-        });
+      if (ik) {
+        // Store fileId and metadata in media-meta.json / DB (safely wrapped)
+        try {
+          await storeMediaMeta(ik.url, {
+            fileId: ik.fileId,
+            url: ik.url,
+            name: ik.name,
+            preset,
+            width: processed.mainWidth,
+            height: processed.mainHeight,
+            bytes: processed.mainBytes,
+            createdAt: new Date().toISOString(),
+          });
+        } catch (metaErr) {
+          console.warn("[api/admin/upload] storeMediaMeta warning (upload succeeded):", metaErr);
+        }
 
         return NextResponse.json({
           url: ik.url,
@@ -163,10 +174,6 @@ export async function POST(request: NextRequest) {
           storage: "imagekit" satisfies Storage,
           variants: [],
         });
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : "ImageKit upload failed";
-        console.error("[api/admin/upload] ImageKit failed:", msg);
-        warnings.push(`ImageKit failed (${msg}); trying local storage.`);
       }
     }
 

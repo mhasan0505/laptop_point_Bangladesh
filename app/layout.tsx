@@ -2,10 +2,17 @@ import { SEO_CONFIG } from "@/lib/seo-config";
 import OrganizationSchemaMeta from "@/components/seo/OrganizationSchemaMeta";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#002b60",
+};
 
 const inter = Inter({
   variable: "--font-inter",

@@ -260,7 +260,7 @@ export default function Footer({
                   </div>
                   <a
                     href={`mailto:${contact?.email ?? "info@laptoppointbd.com"}`}
-                    className="text-sm hover:text-[#dc0303] transition-colors"
+                    className="text-sm hover:text-[#dc0303] transition-colors break-all"
                   >
                     {contact?.email ?? "info@laptoppointbd.com"}
                   </a>

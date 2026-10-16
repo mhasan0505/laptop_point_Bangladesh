@@ -18,7 +18,7 @@ const ComparisonBar = () => {
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         exit={{ y: 100 }}
-        className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-[#002b60] shadow-2xl z-40"
+        className="fixed bottom-16 lg:bottom-0 left-0 right-0 bg-white border-t-2 border-[#002b60] shadow-2xl z-40"
       >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-4">

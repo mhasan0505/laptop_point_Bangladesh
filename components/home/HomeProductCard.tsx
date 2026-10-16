@@ -1,114 +1,111 @@
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
+import { useComparison } from "@/contexts/ComparisonContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { formatBDT } from "@/lib/format";
 import { getValidDiscount } from "@/lib/pricing-display";
 import { Product } from "@/types/product";
-import { Check, Heart, ShoppingBag } from "lucide-react";
+import { CheckSquare, Heart, PlusSquare, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface HomeProductCardProps {
   product: Product;
   priority?: boolean;
 }
 
-// Spec token cleaners: strip clock/gen/marketing noise
-function cleanProcessor(raw?: string): string {
-  if (!raw) return "";
-  const intelMatch = raw.match(/Core\s+(i[3579])[\s\S]*?\(?(\d+)(?:th|st|nd|rd)?\s*Gen\)?/i);
-  if (intelMatch) {
-    return `Core ${intelMatch[1]} ${intelMatch[2]}th Gen`;
-  }
-  const ryzenMatch = raw.match(/Ryzen(?:™)?\s*([3579])\s*(PRO)?/i);
-  if (ryzenMatch) {
-    return `Ryzen ${ryzenMatch[1]}${ryzenMatch[2] ? " PRO" : ""}`;
-  }
-  return raw
-    .replace(/Intel\s+/i, "")
-    .replace(/\(.*?\)/g, "")
-    .replace(/,\s*.*$/, "")
-    .replace(/\d+(\.\d+)?\s*GHz.*$/i, "")
-    .trim();
-}
+export function getProductBulletSpecs(product: Product): string[] {
+  const bullets: string[] = [];
+  const s = product.specs;
 
-function cleanRAM(raw?: string): string {
-  if (!raw) return "";
-  const match = raw.match(/(\d+\s*GB)/i);
-  return match ? match[1].replace(/\s+/g, "") : raw.split(" ")[0];
-}
-
-function cleanStorage(raw?: string): string {
-  if (!raw) return "";
-  const match = raw.match(/(\d+\s*(?:GB|TB))\s*(?:NVMe|M\.2|PCIe)?\s*(SSD|HDD)?/i);
-  if (match) {
-    const size = match[1].replace(/\s+/g, "");
-    const type = match[2] || "SSD";
-    return `${size} ${type}`;
+  // 1. Processor
+  if (s?.processor) {
+    bullets.push(`Processor: ${s.processor}`);
   }
-  return raw.replace(/NVMe|PCIe|M\.2/gi, "").trim();
+
+  // 2. RAM
+  if (s?.ram) {
+    bullets.push(`RAM: ${s.ram}`);
+  }
+
+  // 3. Storage
+  if (s?.storage) {
+    bullets.push(`Storage: ${s.storage}`);
+  }
+
+  // 4. Display
+  if (s?.display) {
+    if (typeof s.display === "string") {
+      bullets.push(`Display: ${s.display}`);
+    } else if (typeof s.display === "object") {
+      const d = s.display as {
+        size?: string;
+        resolution?: string;
+        type?: string;
+        touchscreen?: boolean;
+      };
+      const parts = [d.size, d.resolution, d.type].filter(Boolean).join(" ");
+      bullets.push(
+        `Display: ${parts || "Standard Display"}${d.touchscreen ? " (Touch)" : ""}`,
+      );
+    }
+  }
+
+  // Fallbacks if fewer than 4 specs found
+  if (bullets.length < 4 && s?.graphics) {
+    bullets.push(`Graphics: ${s.graphics}`);
+  }
+  if (bullets.length < 4 && product.features && product.features.length > 0) {
+    bullets.push(`Features: ${product.features.slice(0, 2).join(", ")}`);
+  }
+  if (bullets.length < 4 && product.warranty) {
+    bullets.push(`Warranty: ${product.warranty}`);
+  }
+
+  return bullets.slice(0, 4);
 }
 
 export default function HomeProductCard({
   product,
   priority = false,
 }: HomeProductCardProps) {
+  const router = useRouter();
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const [addedToCart, setAddedToCart] = useState(false);
+  const { addToComparison, removeFromComparison, isInComparison, canAddMore } =
+    useComparison();
 
   const isWishlisted = isInWishlist(product.id);
+  const isCompared = isInComparison(product.id);
+
   const stockQty = product.stockQty;
   const isOutOfStock =
-    product.inStock === false || (typeof stockQty === "number" && stockQty <= 0);
-  const isLowStock =
-    typeof stockQty === "number" && stockQty >= 1 && stockQty <= 5;
+    product.inStock === false ||
+    (typeof stockQty === "number" && stockQty <= 0);
 
-  // Validate discount (guards against extreme discounts >60% like 91% on LEN-T14G2-018)
   const discountInfo = getValidDiscount(
     product.price,
     product.originalPrice,
-    product.sku
+    product.sku,
   );
 
-  // Condition pill styling by semantic meaning
-  const rawCondition =
-    product.grade ||
-    (product.condition && product.condition.length > 0 ? product.condition[0] : "") ||
-    "Refurbished";
-  const conditionLabel = rawCondition.replace(/^grade\s+/i, "").trim() || "A";
+  const primaryImage =
+    product.image ||
+    (product.images && product.images.length > 0 ? product.images[0] : "") ||
+    "/Hero_Image.png";
 
-  const isLikeNewOrPremium = /like\s*new|premium|flawless|mint/i.test(conditionLabel);
-  const isGradeA = /^(a\+?|grade\s*a\+?)$/i.test(conditionLabel);
+  const secondaryImage =
+    product.images && product.images.length > 1
+      ? product.images.find((img) => img !== primaryImage) || product.images[1]
+      : null;
 
-  let conditionClasses = "bg-surface text-ink-2 border border-line";
-  let conditionAria = `Condition: ${conditionLabel}`;
-  if (isLikeNewOrPremium) {
-    conditionClasses = "bg-brand-navy/10 text-brand-navy border border-brand-navy/20 font-semibold";
-    conditionAria = `Condition: ${conditionLabel} - flawless pre-owned laptop`;
-  } else if (isGradeA) {
-    conditionClasses = "bg-success/10 text-success border border-success/20 font-semibold";
-    conditionAria = `Condition: Grade ${conditionLabel} - certified tested hardware`;
-  }
+  const hasSecondary = Boolean(secondaryImage);
 
-  // Build spec chips (max 3: CPU, RAM, Storage)
-  const specChips: string[] = [];
-  const proc = cleanProcessor(product.specs?.processor);
-  if (proc) specChips.push(proc);
-  const ram = cleanRAM(product.specs?.ram);
-  if (ram) specChips.push(ram);
-  const storage = cleanStorage(product.specs?.storage);
-  if (storage) specChips.push(storage);
+  const bulletSpecs = getProductBulletSpecs(product);
+  const priceFormatted = Math.round(product.price).toLocaleString("en-BD");
 
-  // Trust cue from existing product data
-  const trustCue =
-    product.warranty ||
-    (product.features && product.features.find((f: string) => /warranty/i.test(f))) ||
-    null;
-
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleBuyNow = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (isOutOfStock) return;
@@ -119,12 +116,22 @@ export default function HomeProductCard({
       brand: product.brand || "",
       price: product.price,
       originalPrice: product.originalPrice || 0,
-      image: typeof product.image === "string" ? product.image : product.image.src,
+      image:
+        typeof product.image === "string" ? product.image : product.image.src,
       specs: product.specs,
     });
 
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
+    router.push("/checkout");
+  };
+
+  const handleToggleComparison = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isCompared) {
+      removeFromComparison(product.id);
+    } else if (canAddMore()) {
+      addToComparison(product);
+    }
   };
 
   const handleToggleWishlist = (e: React.MouseEvent) => {
@@ -137,203 +144,148 @@ export default function HomeProductCard({
     }
   };
 
-  const priceFormatted = Math.round(product.price).toLocaleString("en-BD");
-
   return (
-    <article className="@container group relative flex flex-col bg-surface border border-line rounded-[var(--radius-md)] overflow-hidden transition-all duration-150 ease-out hover:-translate-y-0.5 hover:shadow-lift motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none focus-within:ring-2 focus-within:ring-brand-navy focus-within:ring-offset-2">
-      {/* 1. Stretched Link (First in Tab Order) */}
-      <Link
-        href={`/product/${product.slug}`}
-        className="absolute inset-0 z-0 rounded-[var(--radius-md)] focus:outline-none"
-        tabIndex={0}
-        aria-label={`View details for ${product.name}`}
-      >
-        <span className="sr-only">{product.name}</span>
-      </Link>
-
-      {/* 2. Media Area (Aspect 4:3, bg surface-2, radial highlight, p-5 inset padding) */}
-      <div className="relative aspect-4/3 w-full bg-surface-2 p-5 flex items-center justify-center overflow-hidden border-b border-line/60">
-        {/* Subtle luminous spotlight behind laptop */}
-        <div
-          className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.9)_0%,rgba(248,250,252,0.4)_70%,transparent_100%)] pointer-events-none"
-          aria-hidden="true"
-        />
-
-        {/* Top-Left: Condition Pill (meaning-driven color) */}
-        <div className="absolute top-3 left-3 z-10 pointer-events-none">
-          <span
-            className={`inline-flex items-center text-caption px-2.5 py-0.5 rounded-full shadow-xs ${conditionClasses}`}
-            title={conditionAria}
-            aria-label={conditionAria}
-          >
-            {conditionLabel}
-          </span>
-        </div>
-
-        {/* Top-Right: Wishlist Button (Second in Tab Order, white circular chip, 44x44 target) */}
-        <div className="absolute top-2.5 right-2.5 z-10">
-          <button
-            type="button"
-            tabIndex={0}
-            onClick={handleToggleWishlist}
-            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-            aria-pressed={isWishlisted}
-            className={`w-11 h-11 flex items-center justify-center rounded-full bg-surface shadow-soft border border-line/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-navy focus-visible:ring-offset-1 ${
-              isWishlisted
-                ? "text-brand-red bg-surface"
-                : "text-muted-text hover:text-brand-red hover:bg-surface-2"
-            }`}
-          >
-            <Heart
-              className={`w-4 h-4 transition-transform active:scale-90 ${
-                isWishlisted ? "fill-brand-red text-brand-red" : ""
-              }`}
-              aria-hidden="true"
-            />
-          </button>
-        </div>
-
-        {/* Bottom-Left: "Save ৳X" chip (Only rendered when valid discount exists) */}
+    <article className="group relative flex flex-col justify-between h-full bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 p-4 sm:p-5 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/60 dark:hover:shadow-black/50 hover:border-slate-300 dark:hover:border-slate-700">
+      {/* Top: Media Area with subtle floating Wishlist & Discount */}
+      <div className="relative w-full aspect-4/3 max-h-48 sm:max-h-52 flex items-center justify-center p-2 mb-3 overflow-hidden">
+        {/* Discount Badge */}
         {discountInfo && (
-          <div className="absolute bottom-2.5 left-2.5 z-10 pointer-events-none">
-            <span className="inline-flex items-center text-caption font-bold text-brand-red bg-brand-red/10 border border-brand-red/20 px-2 py-0.5 rounded-full shadow-xs">
-              {discountInfo.savingsFormatted}
+          <div className="absolute top-0 left-0 z-10 pointer-events-none">
+            <span className="inline-flex items-center text-[11px] font-bold text-white bg-[#dc0303] px-2 py-0.5 rounded shadow-xs">
+              -{discountInfo.percent}%
             </span>
           </div>
         )}
 
-        {/* Product Image (Safe from overlap with p-5 padding) */}
-        <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
+        {/* Wishlist Button */}
+        <button
+          type="button"
+          onClick={handleToggleWishlist}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          aria-pressed={isWishlisted}
+          className={`absolute top-0 right-0 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+            isWishlisted
+              ? "text-brand-red bg-red-50 dark:bg-red-950/40"
+              : "text-slate-400 hover:text-brand-red bg-white/80 dark:bg-slate-800/80 opacity-0 group-hover:opacity-100 focus:opacity-100"
+          }`}
+        >
+          <Heart
+            className={`w-4 h-4 ${isWishlisted ? "fill-brand-red text-brand-red" : ""}`}
+            aria-hidden="true"
+          />
+        </button>
+
+        {/* Product Images with smooth crossfade on card hover */}
+        <Link
+          href={`/product/${product.slug}`}
+          className="relative w-full h-full flex items-center justify-center"
+        >
+          {/* Primary image */}
           <Image
-            src={product.image}
+            src={primaryImage}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             loading={priority ? "eager" : "lazy"}
             priority={priority}
-            className="object-contain p-1 mix-blend-multiply transition-transform duration-200 group-hover:scale-[1.03] motion-reduce:group-hover:scale-100"
+            className={`object-contain p-1 transition-all duration-500 ease-out group-hover:scale-105 ${
+              hasSecondary ? "group-hover:opacity-0" : ""
+            }`}
           />
-        </div>
+
+          {/* Secondary image (fades in on card hover) */}
+          {hasSecondary && secondaryImage && (
+            <Image
+              src={secondaryImage}
+              alt={`${product.name} alternate view`}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-contain p-1 transition-all duration-500 ease-out opacity-0 group-hover:opacity-100 group-hover:scale-105 absolute inset-0"
+            />
+          )}
+        </Link>
       </div>
 
-      {/* 3. Card Body (p-3.5 sm:p-4, 8-pt gap rhythm) */}
-      <div className="flex flex-col flex-1 p-3.5 sm:p-4 gap-2">
-        {/* Brand Caption */}
-        <div className="text-caption font-semibold uppercase tracking-[0.06em] text-muted-text truncate leading-none">
-          {product.brand || "Refurbished Laptop"}
-        </div>
-
-        {/* Title: 2 lines reserved for alignment */}
-        <h3
-          className="text-small font-semibold text-ink line-clamp-2 min-h-[2.5rem] leading-snug group-hover:text-brand-navy transition-colors"
-          title={product.name}
-        >
-          {product.name}
+      {/* Middle: Title & Bullet Specifications */}
+      <div className="flex flex-col flex-1">
+        {/* Product Title */}
+        <h3 className="font-bold text-[14px] sm:text-[15px] text-slate-900 dark:text-white leading-snug line-clamp-2 min-h-[2.6rem] group-hover:text-brand-navy dark:group-hover:text-primary transition-colors mb-3">
+          <Link href={`/product/${product.slug}`}>{product.name}</Link>
         </h3>
 
-        {/* Spec Chips (CPU, RAM, Storage - wrapped without mid-token truncation) */}
-        {specChips.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 my-0.5 max-h-14 overflow-hidden">
-            {specChips.map((chip) => (
-              <span
-                key={chip}
-                className="inline-flex items-center text-caption font-medium bg-surface-3 text-ink-2 px-2 py-0.5 rounded-full"
-              >
-                {chip}
+        {/* Spec Bullets */}
+        <ul className="space-y-1.5 mb-4 text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed">
+          {bulletSpecs.map((spec, i) => (
+            <li key={i} className="flex items-start gap-1.5">
+              <span className="text-slate-400 font-bold shrink-0 leading-normal">•</span>
+              <span className="line-clamp-1">{spec}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Bottom: Price + Action Buttons */}
+      <div className="mt-auto pt-2 border-t border-slate-100 dark:border-slate-800/80">
+        {/* Centered Red Price */}
+        <div className="text-center my-3">
+          {discountInfo && product.originalPrice && product.originalPrice > product.price && (
+            <div className="flex items-center justify-center gap-2 mb-0.5">
+              <span className="text-xs text-slate-400 line-through tabular-nums">
+                {Math.round(product.originalPrice).toLocaleString("en-BD")}৳
               </span>
-            ))}
+            </div>
+          )}
+          <div className="text-xl sm:text-[22px] font-bold text-[#dc0303] font-mono tracking-tight leading-none">
+            {priceFormatted}৳
           </div>
-        )}
+        </div>
 
-        {/* Price Row: Current price in brand-red + inline struck price + % pill */}
-        <div
-          className="flex items-baseline gap-2 flex-wrap mt-0.5"
-          aria-label={
-            discountInfo
-              ? `Price ৳${priceFormatted}, was ${formatBDT(product.originalPrice)}`
-              : `Price ৳${priceFormatted}`
-          }
+        {/* Buy Now Button with smooth background color change on card hover */}
+        <button
+          type="button"
+          onClick={handleBuyNow}
+          disabled={isOutOfStock}
+          className={`w-full py-2 sm:py-2.5 px-4 rounded-md text-sm font-semibold flex items-center justify-center gap-2 transition-all duration-300 ease-out ${
+            isOutOfStock
+              ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+              : "bg-[#edf2f9] text-[#002b60] group-hover:bg-[#002b60] group-hover:text-white hover:bg-[#001f47] group-hover:shadow-md active:scale-[0.98] dark:bg-slate-800 dark:text-blue-300 dark:group-hover:bg-[#003882] dark:group-hover:text-white dark:hover:bg-[#002860]"
+          }`}
         >
-          <span className="text-body @[12rem]:text-h3 font-bold text-brand-red tabular-nums leading-none">
-            <span className="text-[0.8em] font-normal mr-0.5 align-baseline" aria-hidden="true">
-              ৳
-            </span>
-            {priceFormatted}
+          <ShoppingCart
+            className="w-4 h-4 text-[#002b60] dark:text-blue-300 group-hover:text-white transition-colors duration-300 shrink-0"
+            aria-hidden="true"
+          />
+          <span className="transition-colors duration-300">
+            {isOutOfStock ? "Out of Stock" : "Buy Now"}
           </span>
+        </button>
 
-          {discountInfo && product.originalPrice && (
+        {/* Add to Compare Button */}
+        <button
+          type="button"
+          onClick={handleToggleComparison}
+          disabled={!canAddMore() && !isCompared}
+          className={`w-full py-1.5 mt-1.5 flex items-center justify-center gap-1.5 text-xs transition-colors ${
+            isCompared
+              ? "text-brand-navy dark:text-blue-400 font-semibold"
+              : !canAddMore()
+              ? "text-slate-300 dark:text-slate-600 cursor-not-allowed"
+              : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+          }`}
+          title={isCompared ? "Remove from comparison" : "Add to comparison"}
+        >
+          {isCompared ? (
             <>
-              <span className="text-small text-muted-text line-through tabular-nums">
-                {formatBDT(product.originalPrice)}
-              </span>
-              <span className="text-caption font-semibold text-success bg-success/10 px-1.5 py-0.5 rounded-sm">
-                −{discountInfo.percent}%
-              </span>
+              <CheckSquare className="w-3.5 h-3.5 text-emerald-600" />
+              <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Added to Compare</span>
+            </>
+          ) : (
+            <>
+              <PlusSquare className="w-3.5 h-3.5 text-slate-500" />
+              <span>Add to Compare</span>
             </>
           )}
-        </div>
-
-        {/* Stock & Trust Cue Line */}
-        <div className="flex items-center gap-1.5 text-caption mt-0.5">
-          {isOutOfStock ? (
-            <span className="text-muted-text font-medium">Out of stock</span>
-          ) : isLowStock ? (
-            <span className="text-warning font-medium flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" aria-hidden="true" />
-              Only {stockQty} left
-            </span>
-          ) : (
-            <span className="text-success font-medium flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-success" aria-hidden="true" />
-              In stock
-            </span>
-          )}
-
-          {trustCue && !isOutOfStock && (
-            <span className="text-muted-text font-normal truncate">
-              · {typeof trustCue === "string" ? trustCue.slice(0, 22) : "Tested & warrantied"}
-            </span>
-          )}
-        </div>
-
-        {/* 4. Action Row (Pinned to bottom, Third in Tab Order) */}
-        <div className="mt-auto pt-2">
-          <button
-            type="button"
-            tabIndex={0}
-            onClick={handleAddToCart}
-            disabled={isOutOfStock}
-            aria-label={
-              isOutOfStock
-                ? `${product.name} is out of stock`
-                : addedToCart
-                ? `Added ${product.name} to cart`
-                : `Add ${product.name} to cart`
-            }
-            className={`relative z-10 w-full h-11 px-4 rounded-[var(--radius-md)] text-small font-semibold flex items-center justify-center gap-2 transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-navy focus-visible:ring-offset-2 ${
-              isOutOfStock
-                ? "bg-surface-3 text-muted-text cursor-not-allowed border border-line"
-                : addedToCart
-                ? "bg-success text-white shadow-soft"
-                : "bg-brand-red hover:bg-brand-red-hover text-white shadow-soft hover:shadow-lift active:scale-[0.98]"
-            }`}
-          >
-            {addedToCart ? (
-              <>
-                <Check className="w-4 h-4" aria-hidden="true" />
-                <span aria-live="polite">Added ✓</span>
-              </>
-            ) : isOutOfStock ? (
-              <span>Out of stock</span>
-            ) : (
-              <>
-                <ShoppingBag className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span className="hidden @[10rem]:inline">Add to cart</span>
-                <span className="inline @[10rem]:hidden">Add</span>
-              </>
-            )}
-          </button>
-        </div>
+        </button>
       </div>
     </article>
   );

@@ -45,7 +45,7 @@ const Breadcrumb = () => {
       className="py-3 bg-gray-50/50 border-b border-gray-100"
     >
       <div className="container mx-auto px-4">
-        <ol className="flex items-center space-x-2 text-sm text-gray-500">
+        <ol className="flex items-center space-x-2 text-sm text-gray-500 overflow-x-auto scrollbar-none py-0.5">
           <li>
             <Link
               href="/"

@@ -638,7 +638,7 @@ export default function FilterSidebar({
 
       {/* Mobile Drawer Footer */}
       {isMobileDrawer && (
-        <div className="p-4 bg-white dark:bg-card border-t border-gray-200 dark:border-border sticky bottom-0 z-20 flex gap-2">
+        <div className="p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] bg-white dark:bg-card border-t border-gray-200 dark:border-border sticky bottom-0 z-20 flex gap-2">
           {isFiltered && (
             <button
               type="button"

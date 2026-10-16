@@ -1,6 +1,17 @@
 import { promises as fs } from "fs";
 import path from "path";
 
+async function getPrisma() {
+  try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const mod = await import("../prisma.ts").catch(() => import("@/lib/prisma"));
+    return mod.prisma;
+  } catch {
+    return null;
+  }
+}
+
 export interface MediaMetaRecord {
   fileId?: string;
   url?: string;
@@ -15,56 +26,125 @@ export interface MediaMetaRecord {
 
 const mediaMetaFilePath = path.join(process.cwd(), "app", "data", "media-meta.json");
 
+// In-memory cache for runtime performance and serverless resilience
+const memoryCache: Record<string, MediaMetaRecord> = {};
+
+function sanitizeKey(k: string): string {
+  return k.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 100);
+}
+
 /**
- * Safely reads media-meta.json.
+ * Safely reads media-meta.json and merges with memory cache.
  */
 export async function readMediaMeta(): Promise<Record<string, MediaMetaRecord>> {
+  const result: Record<string, MediaMetaRecord> = { ...memoryCache };
   try {
     const raw = await fs.readFile(mediaMetaFilePath, "utf-8");
-    return JSON.parse(raw);
+    const fileMeta = JSON.parse(raw);
+    return { ...fileMeta, ...result };
   } catch {
-    return {};
+    return result;
   }
 }
 
 /**
- * Atomically writes to media-meta.json.
+ * Safely writes to media-meta.json without throwing on read-only filesystems (EROFS).
  */
 export async function writeMediaMeta(meta: Record<string, MediaMetaRecord>): Promise<void> {
-  await fs.mkdir(path.dirname(mediaMetaFilePath), { recursive: true });
-  const tmp = `${mediaMetaFilePath}.${process.pid}.${Date.now()}.tmp`;
-  await fs.writeFile(tmp, JSON.stringify(meta, null, 2), "utf-8");
-  await fs.rename(tmp, mediaMetaFilePath);
+  Object.assign(memoryCache, meta);
+
+  try {
+    await fs.mkdir(path.dirname(mediaMetaFilePath), { recursive: true });
+    const tmp = `${mediaMetaFilePath}.${process.pid}.${Date.now()}.tmp`;
+    await fs.writeFile(tmp, JSON.stringify(meta, null, 2), "utf-8");
+    await fs.rename(tmp, mediaMetaFilePath);
+  } catch (err) {
+    // Expected on serverless hosts like Vercel (read-only filesystem)
+    const code = (err as NodeJS.ErrnoException)?.code;
+    if (code !== "EROFS" && code !== "EACCES" && code !== "EPERM") {
+      console.warn("[media/storage] writeMediaMeta filesystem warning:", err);
+    }
+  }
 }
 
 /**
  * Stores or updates metadata for an asset keyed by URL (and optionally fileId).
+ * Persists to memory, database (if reachable), and file backup (if writable).
  */
 export async function storeMediaMeta(urlOrKey: string, record: MediaMetaRecord): Promise<void> {
-  const meta = await readMediaMeta();
-  meta[urlOrKey] = {
-    ...meta[urlOrKey],
+  memoryCache[urlOrKey] = {
+    ...memoryCache[urlOrKey],
     ...record,
   };
+
   if (record.fileId) {
     const ikKey = `ik:${record.fileId}`;
-    meta[ikKey] = {
-      ...meta[ikKey],
+    memoryCache[ikKey] = {
+      ...memoryCache[ikKey],
       ...record,
     };
   }
-  await writeMediaMeta(meta);
+
+  // Best-effort database persistence via ProductOverride for serverless durability
+  if (record.fileId || record.url) {
+    try {
+      const db = await getPrisma();
+      if (db) {
+        const cleanKey = record.fileId || sanitizeKey(urlOrKey);
+        await db.productOverride.upsert({
+          where: { sku: `system:media:${cleanKey}` },
+          update: { data: record as never, isDeleted: false },
+          create: {
+            id: `system:media:${cleanKey}`,
+            sku: `system:media:${cleanKey}`,
+            data: record as never,
+            isDeleted: false,
+          },
+        });
+      }
+    } catch {
+      // Database write is best-effort
+    }
+  }
+
+  // Update file backup (safely catches EROFS)
+  const fullMeta = await readMediaMeta();
+  fullMeta[urlOrKey] = { ...fullMeta[urlOrKey], ...record };
+  if (record.fileId) {
+    fullMeta[`ik:${record.fileId}`] = { ...fullMeta[`ik:${record.fileId}`], ...record };
+  }
+  await writeMediaMeta(fullMeta);
 }
 
 /**
  * Retrieves metadata for an asset by URL, filename, or `ik:${fileId}`.
  */
 export async function getMediaMeta(urlOrKey: string): Promise<MediaMetaRecord | undefined> {
+  if (memoryCache[urlOrKey]) return memoryCache[urlOrKey];
+
+  const cleanUrl = urlOrKey.split("?")[0];
+  if (memoryCache[cleanUrl]) return memoryCache[cleanUrl];
+
+  // Try DB
+  try {
+    const db = await getPrisma();
+    if (db) {
+      const fileIdMatch = urlOrKey.startsWith("ik:") ? urlOrKey.slice(3) : sanitizeKey(urlOrKey);
+      const dbRecord = await db.productOverride.findUnique({
+        where: { sku: `system:media:${fileIdMatch}` },
+      });
+      if (dbRecord?.data && !dbRecord.isDeleted) {
+        const parsed = dbRecord.data as MediaMetaRecord;
+        memoryCache[urlOrKey] = parsed;
+        return parsed;
+      }
+    }
+  } catch {
+    // DB not available or table missing
+  }
+
   const meta = await readMediaMeta();
   if (meta[urlOrKey]) return meta[urlOrKey];
-
-  // Also check without query string
-  const cleanUrl = urlOrKey.split("?")[0];
   if (meta[cleanUrl]) return meta[cleanUrl];
 
   // Search by fileId or url substring
@@ -84,6 +164,35 @@ export async function getMediaMeta(urlOrKey: string): Promise<MediaMetaRecord | 
  * Removes metadata for an asset.
  */
 export async function deleteMediaMeta(urlOrKey: string): Promise<void> {
+  const cleanUrl = urlOrKey.split("?")[0];
+  const fileIdMatch = urlOrKey.startsWith("ik:") ? urlOrKey.slice(3) : sanitizeKey(urlOrKey);
+
+  delete memoryCache[urlOrKey];
+  delete memoryCache[cleanUrl];
+  for (const [key, value] of Object.entries(memoryCache)) {
+    if (
+      (value.url && value.url.split("?")[0] === cleanUrl) ||
+      (value.fileId && (urlOrKey === value.fileId || urlOrKey === `ik:${value.fileId}`))
+    ) {
+      delete memoryCache[key];
+    }
+  }
+
+  // Also remove from DB
+  try {
+    const db = await getPrisma();
+    if (db) {
+      await db.productOverride.updateMany({
+        where: {
+          sku: { in: [`system:media:${fileIdMatch}`, `system:media:${sanitizeKey(cleanUrl)}`] },
+        },
+        data: { isDeleted: true },
+      });
+    }
+  } catch {
+    // Best-effort
+  }
+
   const meta = await readMediaMeta();
   let modified = false;
 
@@ -91,22 +200,24 @@ export async function deleteMediaMeta(urlOrKey: string): Promise<void> {
     delete meta[urlOrKey];
     modified = true;
   }
-  const cleanUrl = urlOrKey.split("?")[0];
   if (meta[cleanUrl]) {
     delete meta[cleanUrl];
     modified = true;
   }
 
-  // Also delete associated `ik:${fileId}` if present
+  // Also delete associated `ik:${fileId}` or matching url
   for (const [key, value] of Object.entries(meta)) {
-    if (value.url && value.url.split("?")[0] === cleanUrl) {
+    if (
+      (value.url && value.url.split("?")[0] === cleanUrl) ||
+      (value.fileId && (urlOrKey === value.fileId || urlOrKey === `ik:${value.fileId}`))
+    ) {
       delete meta[key];
       modified = true;
     }
   }
 
   if (modified) {
-    await writeMediaMeta(meta).catch(() => {});
+    await writeMediaMeta(meta);
   }
 }
 
