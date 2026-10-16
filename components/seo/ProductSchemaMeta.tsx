@@ -2,6 +2,7 @@ import React from "react";
 import { Product } from "@/types/product";
 import { generateProductSummary } from "@/lib/product-summary";
 import { RETURN_POLICY_CONFIG } from "@/lib/return-policy-config";
+import { parseYoutubeId, youtubeEmbedUrl, youtubeThumbnail } from "@/lib/youtube";
 
 export interface ProductSchemaMetaProps {
   product?: Product;
@@ -14,6 +15,9 @@ export interface ProductSchemaMetaProps {
   availability?: "InStock" | "OutOfStock";
   url?: string;
   sku?: string;
+  condition?: string;
+  youtubeUrl?: string;
+  updatedAt?: string | Date;
 }
 
 export const ProductSchemaMeta: React.FC<ProductSchemaMetaProps> = ({
@@ -27,6 +31,9 @@ export const ProductSchemaMeta: React.FC<ProductSchemaMetaProps> = ({
   availability: propAvailability,
   url: propUrl,
   sku: propSku,
+  condition: propCondition,
+  youtubeUrl: propYoutubeUrl,
+  updatedAt: propUpdatedAt,
 }) => {
   const name = propName || product?.name || "";
   const sku = propSku || product?.sku || (product ? String(product.id) : "");
@@ -97,6 +104,41 @@ export const ProductSchemaMeta: React.FC<ProductSchemaMetaProps> = ({
     refundType: RETURN_POLICY_CONFIG.refundType,
   };
 
+  const rawCondition =
+    propCondition ||
+    (Array.isArray(product?.condition) ? product.condition[0] : (product as unknown as { condition?: string })?.condition);
+
+  const itemCondition =
+    rawCondition === "New"
+      ? "https://schema.org/NewCondition"
+      : rawCondition === "Refurbished"
+      ? "https://schema.org/RefurbishedCondition"
+      : "https://schema.org/UsedCondition";
+
+  // VideoObject JSON-LD when a valid YouTube link exists
+  const ytUrl = propYoutubeUrl || product?.youtubeUrl;
+  const ytId = parseYoutubeId(ytUrl);
+  let videoObject: Record<string, unknown> | undefined = undefined;
+
+  if (ytId) {
+    const rawUpdated =
+      propUpdatedAt ||
+      product?.updatedAt ||
+      product?.updated_at ||
+      product?.createdAt ||
+      product?.created_at;
+    const uploadDate = rawUpdated ? new Date(rawUpdated).toISOString() : new Date().toISOString();
+
+    videoObject = {
+      "@type": "VideoObject",
+      name: `${name} - Video Review & Demo`,
+      description: description || `Watch overview and performance demonstration of ${name} at Laptop Point BD.`,
+      thumbnailUrl: [youtubeThumbnail(ytId)],
+      uploadDate,
+      embedUrl: youtubeEmbedUrl(ytId),
+    };
+  }
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -108,7 +150,7 @@ export const ProductSchemaMeta: React.FC<ProductSchemaMetaProps> = ({
       "@type": "Brand",
       name: brandName,
     },
-    itemCondition: "https://schema.org/RefurbishedCondition",
+    itemCondition,
     offers: {
       "@type": "Offer",
       url: productUrl,
@@ -117,7 +159,7 @@ export const ProductSchemaMeta: React.FC<ProductSchemaMetaProps> = ({
       availability: inStock
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
-      itemCondition: "https://schema.org/RefurbishedCondition",
+      itemCondition,
       seller: {
         "@type": "Organization",
         "@id": "https://laptoppointbd.com/#organization",
@@ -126,6 +168,7 @@ export const ProductSchemaMeta: React.FC<ProductSchemaMetaProps> = ({
       },
       hasMerchantReturnPolicy: merchantReturnPolicy,
     },
+    ...(videoObject ? { subjectOf: videoObject } : {}),
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": productUrl,

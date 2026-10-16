@@ -108,6 +108,36 @@ export default function AdminAccessoriesPage() {
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
 
+  const [misfiled, setMisfiled] = useState<Array<{ id: number; sku: string; name: string }>>([]);
+  const [moving, setMoving] = useState(false);
+
+  const loadMisfiled = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/accessories/migrate", { cache: "no-store" });
+      const data = await res.json().catch(() => null);
+      setMisfiled(res.ok && Array.isArray(data?.items) ? data.items : []);
+    } catch {
+      setMisfiled([]);
+    }
+  }, []);
+
+  const moveMisfiled = async () => {
+    setMoving(true);
+    try {
+      const res = await fetch("/api/admin/accessories/migrate", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not move accessories");
+      const moved = Array.isArray(data.moved) ? data.moved.length : 0;
+      const skipped = Array.isArray(data.skipped) ? data.skipped.length : 0;
+      success(`Moved ${moved} accessor${moved === 1 ? "y" : "ies"}${skipped ? ` (${skipped} skipped)` : ""}`);
+      await Promise.all([load(), loadMisfiled()]);
+    } catch (err) {
+      toastError(err instanceof Error ? err.message : "Could not move accessories");
+    } finally {
+      setMoving(false);
+    }
+  };
+
   const load = useCallback(async () => {
     setLoading(true);
     setLoadError("");
@@ -125,7 +155,8 @@ export default function AdminAccessoriesPage() {
 
   useEffect(() => {
     load();
-  }, [load]);
+    loadMisfiled();
+  }, [load, loadMisfiled]);
 
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -323,6 +354,23 @@ export default function AdminAccessoriesPage() {
           ))}
         </select>
       </div>
+
+      {misfiled.length > 0 && (
+        <div
+          role="status"
+          className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-sm"
+        >
+          <p className="text-foreground">
+            <strong>{misfiled.length}</strong> accessor{misfiled.length === 1 ? "y was" : "ies were"} saved in the
+            laptop catalogue ({misfiled.slice(0, 3).map((m) => m.name).join(", ")}
+            {misfiled.length > 3 ? "…" : ""}). They will not appear on the Accessories page until moved.
+          </p>
+          <Button size="sm" onClick={moveMisfiled} disabled={moving}>
+            {moving && <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />}
+            Move to Accessories
+          </Button>
+        </div>
+      )}
 
       {loadError && (
         <div className="rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">

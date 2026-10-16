@@ -65,6 +65,11 @@ export interface AccessoryRecord {
   description: string;
   images: string[];
   badge?: string;
+  /** Public YouTube link shown on the accessory page. */
+  youtubeUrl?: string;
+  /** Free-text fields kept verbatim so the admin form round-trips. */
+  connectivity?: string;
+  keySpecs?: string;
   active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -80,3 +85,59 @@ export function categoryName(slug: string): string {
 }
 
 export const ACCESSORY_PLACEHOLDER = "/accessory-placeholder.svg";
+
+// ── Mapping from the admin product form's free-text category ────────────────
+
+/** Admin-form category / sub-category names (see lib/navigation ACCESSORY_CATEGORIES) → accessory slug. */
+const CATEGORY_ALIASES: Record<string, string> = {
+  "laptop bag": "bags-sleeves",
+  "laptop bags & sleeves": "bags-sleeves",
+  "bags & sleeves": "bags-sleeves",
+  "charger & adapter": "chargers-adapters",
+  "chargers & adapters": "chargers-adapters",
+  keyboard: "keyboards-mice",
+  mouse: "keyboards-mice",
+  "mouse & keyboards": "keyboards-mice",
+  "keyboards & mice": "keyboards-mice",
+  networking: "routers-networking",
+  routers: "routers-networking",
+  "routers & networking": "routers-networking",
+  battery: "batteries",
+  batteries: "batteries",
+  storage: "storage",
+  ssd: "storage",
+  hdd: "storage",
+  monitor: "other",
+  webcam: "other",
+  audio: "other",
+  "headphones & audio": "other",
+  "cooling pad": "other",
+  "laptop stand": "other",
+  "stands & cooling pads": "other",
+  "laptop skin": "other",
+  "cables & docks": "other",
+  accessories: "other",
+  accessory: "other",
+};
+
+const norm = (v: string | undefined | null) => (v ?? "").trim().toLowerCase();
+
+/** Resolve an accessory category slug from free-text category and/or sub-category; null if neither names one. */
+export function resolveAccessoryCategorySlug(category?: string, subCategory?: string): string | null {
+  for (const candidate of [subCategory, category]) {
+    const k = norm(candidate);
+    if (!k) continue;
+    const direct = ACCESSORY_CATEGORIES.find((c) => c.slug === k || norm(c.name) === k);
+    if (direct) return direct.slug;
+    if (CATEGORY_ALIASES[k]) return CATEGORY_ALIASES[k];
+  }
+  return null;
+}
+
+/** True when the admin-selected category means "this is an accessory, not a laptop". */
+export function isAccessoryCategoryName(category?: string): boolean {
+  const k = norm(category);
+  if (!k) return false;
+  if (k.includes("accessor") || k.includes("component") || k.includes("peripheral")) return true;
+  return resolveAccessoryCategorySlug(category) !== null;
+}

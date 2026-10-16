@@ -39,4 +39,18 @@ export interface RawProduct {
   };
   features: string[];
   images: string[];
+
+  // ── Optional fields written by the admin product form ──────────────────
+  /** Full grouped specifications exactly as entered in the admin form. */
+  specGroups?: Record<string, Record<string, string>>;
+  /** Public YouTube link (watch / youtu.be / shorts). */
+  youtubeUrl?: string;
+  tags?: string[];
+  featured?: boolean;
+  /** "active" shows on the storefront; "draft" and "archived" are hidden. */
+  statusValue?: "active" | "draft" | "archived";
+  subCategory?: string;
+  warranty?: { period?: string; type?: string; details?: string };
+  variantOptions?: Array<{ name: string; values: string[] }>;
+  variants?: Array<Record<string, unknown>>;
 }

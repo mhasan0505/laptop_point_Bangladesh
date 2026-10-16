@@ -42,6 +42,16 @@ const slugify = (text: string) => {
     .replace(/\-\-+/g, "-"); // Replace multiple - with single -
 };
 
+/** Draft and archived products stay in the admin but are never shown to customers. */
+export const isPublicRaw = (p: RawProduct): boolean =>
+  !p.statusValue || p.statusValue === "active";
+
+const warrantyLabel = (w: RawProduct["warranty"]): string | undefined => {
+  if (!w) return undefined;
+  const label = [w.period, w.type].filter(Boolean).join(" ").trim();
+  return label || w.details?.trim() || undefined;
+};
+
 export function mapRawToProduct(p: RawProduct): Product {
   const description = p.description;
   const mappedImages = resolveProductImages(p);
@@ -104,6 +114,10 @@ export function mapRawToProduct(p: RawProduct): Product {
     category: p.category || "Laptop",
     description: description,
     sku: p.sku || String(p.id),
+    youtubeUrl: p.youtubeUrl || undefined,
+    tags: p.tags && p.tags.length > 0 ? p.tags : undefined,
+    specGroups: p.specGroups && Object.keys(p.specGroups).length > 0 ? p.specGroups : undefined,
+    warranty: warrantyLabel(p.warranty),
   };
 }
 
@@ -116,7 +130,7 @@ function getLaptops(): Product[] {
       const { getCachedRawProducts } = require("@/lib/products-storage");
       const cached = getCachedRawProducts();
       if (cached && cached.length > 0) {
-        return cached.map(mapRawToProduct);
+        return cached.filter(isPublicRaw).map(mapRawToProduct);
       }
     } catch {
       // Ignore module loading errors if in edge or client runtime
@@ -131,13 +145,13 @@ function getLaptops(): Product[] {
       if (fs.existsSync(filePath)) {
         const raw = fs.readFileSync(filePath, "utf-8");
         const parsed = JSON.parse(raw) as RawProduct[];
-        return parsed.map(mapRawToProduct);
+        return parsed.filter(isPublicRaw).map(mapRawToProduct);
       }
     } catch {
       // fallback
     }
   }
-  return (productsRaw as RawProduct[]).map(mapRawToProduct);
+  return (productsRaw as RawProduct[]).filter(isPublicRaw).map(mapRawToProduct);
 }
 
 
@@ -146,7 +160,7 @@ export async function getLiveLaptops(): Promise<Product[]> {
     try {
       const { loadMergedRawProducts } = await import("@/lib/products-storage");
       const raw = await loadMergedRawProducts();
-      return raw.map(mapRawToProduct);
+      return raw.filter(isPublicRaw).map(mapRawToProduct);
     } catch (err) {
       console.warn("[getLiveLaptops] Database load fallback:", err);
     }

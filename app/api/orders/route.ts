@@ -114,6 +114,8 @@ async function parseCreateOrderBody(
   const rawProducts = await loadMergedRawProducts();
   const productLookup = new Map<string, (typeof rawProducts)[number]>();
   for (const p of rawProducts) {
+    // Draft / archived products can't be bought even with a stale cart.
+    if (p.statusValue && p.statusValue !== "active") continue;
     if (p.sku) productLookup.set(p.sku.toLowerCase().trim(), p);
     if (p.id != null) productLookup.set(String(p.id).toLowerCase().trim(), p);
   }

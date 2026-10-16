@@ -1,4 +1,4 @@
-import { mapRawToProduct } from "@/app/data/data";
+import { isPublicRaw, mapRawToProduct } from "@/app/data/data";
 import { loadMergedRawProducts } from "@/lib/products-storage";
 import { NextResponse } from "next/server";
 
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const rawList = await loadMergedRawProducts();
-    const products = rawList.map(mapRawToProduct);
+    const products = rawList.filter(isPublicRaw).map(mapRawToProduct);
     return NextResponse.json(products);
   } catch (error) {
     console.error("[GET /api/products] Error:", error);

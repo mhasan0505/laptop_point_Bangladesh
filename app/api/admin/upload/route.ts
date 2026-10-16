@@ -68,7 +68,7 @@ async function uploadToImageKit(
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireAdmin(request);
+  const auth = await requireAdmin(request, { roles: ["owner", "manager", "marketing"] });
   if (auth.error) return auth.error;
 
   try {

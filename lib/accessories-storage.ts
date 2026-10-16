@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { prisma } from "@/lib/prisma";
+import { parseYoutubeId } from "@/lib/youtube";
 import {
   ACCESSORY_CATEGORIES,
   ACCESSORY_CONDITIONS,
@@ -189,7 +190,19 @@ export function parseAccessoryInput(
   if (b.description !== undefined || mode === "create") out.description = str(b.description, 2000);
   if (b.badge !== undefined) out.badge = str(b.badge, 30) || undefined;
   if (b.compatibility !== undefined || mode === "create") out.compatibility = strList(b.compatibility, 20, 60);
+  if (b.connectivity !== undefined) out.connectivity = str(b.connectivity, 200);
+  if (b.keySpecs !== undefined) out.keySpecs = str(b.keySpecs, 300);
+  if (b.youtubeUrl !== undefined) {
+    const yt = str(b.youtubeUrl, 300);
+    if (yt && !parseYoutubeId(yt)) return { error: "Enter a valid YouTube link (youtube.com or youtu.be)" };
+    out.youtubeUrl = yt || undefined;
+  }
   if (b.specs !== undefined || mode === "create") out.specs = strList(b.specs, 12, 80);
+  // Highlights default to the two free-text spec fields when none were given.
+  if (b.specs === undefined && (out.connectivity || out.keySpecs)) {
+    const keyParts = (out.keySpecs ?? "").split(new RegExp("[;\\n,]"));
+    out.specs = strList([out.connectivity ?? "", ...keyParts], 12, 80);
+  }
   if (b.images !== undefined || mode === "create") {
     const imgs = strList(b.images, 8, 500);
     if (imgs.some((u) => !isSafeImage(u))) {
@@ -287,6 +300,9 @@ export async function createAccessory(input: AccessoryInput): Promise<AccessoryR
     description: input.description ?? "",
     images: input.images ?? [],
     badge: input.badge,
+    youtubeUrl: input.youtubeUrl,
+    connectivity: input.connectivity,
+    keySpecs: input.keySpecs,
     active: input.active ?? true,
     createdAt: now,
     updatedAt: now,

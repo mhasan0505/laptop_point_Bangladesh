@@ -12,6 +12,10 @@ export interface Product {
   inStock?: boolean;
   stockQty?: number;
   warranty?: string;
+  youtubeUrl?: string;
+  tags?: string[];
+  /** Grouped specifications from the admin form; preferred over flat `specs` when present. */
+  specGroups?: Record<string, Record<string, string>>;
   image: string | StaticImageData;
   images?: (string | StaticImageData)[];
   specs?: {

@@ -38,6 +38,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import ProductSpecTable from "@/components/product/ProductSpecTable";
+import YouTubeEmbed from "@/components/product/YouTubeEmbed";
+import { parseYoutubeId } from "@/lib/youtube";
 import ProductFaqSection from "@/components/product/ProductFaqSection";
 import { generateProductSummary } from "@/lib/product-summary";
 import { useRouter } from "next/navigation";
@@ -93,6 +95,7 @@ export default function ProductDetailsClient({
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [activeAnchor, setActiveAnchor] = useState("description");
+  const hasVideo = Boolean(parseYoutubeId(product.youtubeUrl));
 
   // Hover magnifier state
   const [isHovering, setIsHovering] = useState(false);
@@ -389,180 +392,6 @@ export default function ProductDetailsClient({
   const isWishlisted = isInWishlist(product.id);
   const isCompared = isInComparison(product.id);
 
-  // Derived structured specs
-  const structuredSpecs = useMemo(() => {
-    const raw = product.specs || {};
-    const brand = product.brand || "HP";
-    const name = product.name;
-
-    // Detect CPU
-    let processorBrand = "Intel";
-    if (/ryzen|amd/i.test(name) || /ryzen|amd/i.test(raw.processor || "")) {
-      processorBrand = "AMD";
-    } else if (/apple|m1|m2|m3/i.test(name)) {
-      processorBrand = "Apple";
-    }
-
-    let processorModel =
-      raw.processor ||
-      (brand === "HP" ? "Intel Core i5-8250U" : "Intel Core i5 Processor");
-    let processorFreq = "1.6 GHz up to 3.4 GHz, 6 MB Cache";
-    if (/i7/i.test(processorModel)) {
-      processorFreq = "1.8 GHz up to 4.0 GHz, 8 MB Cache";
-    } else if (/ryzen 5/i.test(processorModel)) {
-      processorFreq = "2.1 GHz up to 4.0 GHz, 8 MB Cache";
-    }
-
-    // Display
-    let displaySize = "14.0 Inch";
-    if (/13\.3/i.test(name) || /13\.3/i.test(raw.display || ""))
-      displaySize = "13.3 Inch";
-    else if (/15\.6/i.test(name) || /15\.6/i.test(raw.display || ""))
-      displaySize = "15.6 Inch";
-
-    let displayType = raw.displayType || "FHD IPS Anti-Glare LED Display";
-    let displayRes = "1920 x 1080 (Full HD)";
-    if (/touch/i.test(name) || raw.touchscreen) {
-      displayType += " (Touchscreen)";
-    }
-
-    return [
-      {
-        category: "PROCESSOR",
-        items: [
-          { label: "Processor Brand", value: processorBrand },
-          { label: "Processor Model", value: processorModel },
-          { label: "Processor Frequency", value: processorFreq },
-        ],
-      },
-      {
-        category: "DISPLAY",
-        items: [
-          { label: "Display Size", value: displaySize },
-          { label: "Display Type", value: displayType },
-          { label: "Display Resolution", value: displayRes },
-          {
-            label: "Touchscreen",
-            value: raw.touchscreen ? "Yes" : "No",
-          },
-        ],
-      },
-      {
-        category: "MEMORY",
-        items: [
-          { label: "RAM", value: `${selectedRam}` },
-          { label: "RAM Type", value: "DDR4 SDRAM" },
-          { label: "RAM Speed", value: "2400 MHz / 3200 MHz" },
-          { label: "Removable Slots", value: "2 x SODIMM Slots (Dual Channel)" },
-        ],
-      },
-      {
-        category: "STORAGE",
-        items: [
-          { label: "Storage Type", value: "M.2 PCIe NVMe SSD" },
-          { label: "Storage Capacity", value: `${selectedSsd}` },
-          { label: "Drive Interface", value: "PCIe Gen 3 x4 NVMe" },
-        ],
-      },
-      {
-        category: "GRAPHICS",
-        items: [
-          {
-            label: "Graphics Model",
-            value: raw.graphics || "Intel UHD Graphics 620",
-          },
-          { label: "Graphics Memory", value: "Shared" },
-        ],
-      },
-      {
-        category: "KEYBOARD & TOUCHPAD",
-        items: [
-          {
-            label: "Keyboard Type",
-            value: "Full-size Island-style Backlit Keyboard",
-          },
-          {
-            label: "Pointing Device",
-            value: "Precision Clickpad with Multi-touch Gestures Support",
-          },
-        ],
-      },
-      {
-        category: "CAMERA & AUDIO",
-        items: [
-          {
-            label: "WebCam",
-            value: "720p HD Camera with Integrated Dual Array Digital Mic",
-          },
-          {
-            label: "Speaker / Audio",
-            value: "Dual Stereo Speakers with Bang & Olufsen / Audio Boost",
-          },
-        ],
-      },
-      {
-        category: "NETWORK & CONNECTIVITY",
-        items: [
-          {
-            label: "Wi-Fi",
-            value: "Intel Dual Band Wireless-AC 8265 802.11a/b/g/n/ac (2x2) Wi-Fi",
-          },
-          { label: "Bluetooth", value: "Bluetooth 4.2 / 5.0 Combo" },
-        ],
-      },
-      {
-        category: "PORTS & SLOTS",
-        items: [
-          {
-            label: "USB Ports",
-            value: "2 x USB 3.1 Gen 1 (1 charging), 1 x Thunderbolt Type-C",
-          },
-          { label: "HDMI Port", value: "1 x HDMI 1.4b" },
-          { label: "Audio Jack", value: "1 x Headphone/Microphone Combo Jack" },
-          { label: "Ethernet (RJ-45)", value: "1 x RJ-45 Gigabit LAN" },
-        ],
-      },
-      {
-        category: "SECURITY",
-        items: [
-          { label: "Fingerprint Sensor", value: "Yes, Touch Fingerprint Sensor" },
-          { label: "Security Chip", value: "Firmware TPM 2.0" },
-        ],
-      },
-      {
-        category: "BATTERY & POWER",
-        items: [
-          {
-            label: "Battery Type",
-            value: raw.battery || "3-cell 50 Wh Long Life Li-ion",
-          },
-          { label: "Power Adapter", value: "65 W Smart AC Power Adapter" },
-        ],
-      },
-      {
-        category: "PHYSICAL SPECIFICATION",
-        items: [
-          { label: "Color", value: "Silver / Dark Ash Silver" },
-          { label: "Dimensions (W x D x H)", value: "31 x 22.93 x 1.77 cm" },
-          { label: "Weight", value: raw.weight || "1.33 kg" },
-        ],
-      },
-      {
-        category: "WARRANTY",
-        items: [
-          {
-            label: "Replacement Warranty",
-            value: "15 Days Replacement Guarantee",
-          },
-          {
-            label: "Service Warranty",
-            value: "2 Years Free Service Warranty",
-          },
-        ],
-      },
-    ];
-  }, [product, selectedRam, selectedSsd]);
-
   const smoothScrollTo = (id: string) => {
     setActiveAnchor(id);
     const el = document.getElementById(id);
@@ -763,52 +592,64 @@ export default function ProductDetailsClient({
               </div>
 
               {/* Key Features Box */}
-              <div className="bg-[#f0f5fc] dark:bg-card/70 border border-blue-100 dark:border-border rounded-lg p-3 text-xs">
-                <h4 className="font-bold text-[#002b60] dark:text-primary mb-2 text-xs">
-                  Key Features
-                </h4>
-                <ul className="space-y-1 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-[#002b60] font-bold">•</span>
-                    <span>
-                      <strong>Processor:</strong>{" "}
-                      {product.specs?.processor || "Intel Core i5 8th Gen"}
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-[#002b60] font-bold">•</span>
-                    <span>
-                      <strong>Display:</strong>{" "}
-                      {product.specs?.display || "13.3\" FHD IPS Anti-Glare LED Display"}
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-[#002b60] font-bold">•</span>
-                    <span>
-                      <strong>Memory:</strong> {selectedRam} DDR4 RAM
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-[#002b60] font-bold">•</span>
-                    <span>
-                      <strong>Storage:</strong> {selectedSsd} NVMe PCIe SSD
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-1.5">
-                    <span className="text-[#002b60] font-bold">•</span>
-                    <span>
-                      <strong>Special Feature:</strong> Bang & Olufsen Audio, Backlit Keyboard, Fingerprint Reader
-                    </span>
-                  </li>
-                </ul>
-                <button
-                  type="button"
-                  onClick={() => smoothScrollTo("specification")}
-                  className="mt-2 text-[11px] font-semibold text-[#dc0303] hover:underline cursor-pointer inline-block"
-                >
-                  View More Info ↓
-                </button>
-              </div>
+              {(() => {
+                const keyFeatureItems: Array<{ label: string; value: string }> = [];
+                if (product.specs?.processor) {
+                  keyFeatureItems.push({ label: "Processor", value: product.specs.processor });
+                }
+                if (product.specs?.display) {
+                  keyFeatureItems.push({ label: "Display", value: product.specs.display });
+                }
+                const activeRam = selectedRam || product.specs?.ram;
+                if (activeRam) {
+                  keyFeatureItems.push({ label: "Memory", value: activeRam });
+                }
+                const activeStorage = selectedSsd || product.specs?.storage;
+                if (activeStorage) {
+                  keyFeatureItems.push({ label: "Storage", value: activeStorage });
+                }
+                if (product.specs?.graphics) {
+                  keyFeatureItems.push({ label: "Graphics", value: product.specs.graphics });
+                }
+                if (product.warranty) {
+                  keyFeatureItems.push({ label: "Warranty", value: product.warranty });
+                }
+                if (product.grade) {
+                  keyFeatureItems.push({ label: "Condition", value: `Grade ${product.grade}` });
+                } else if (product.condition && product.condition.length > 0) {
+                  keyFeatureItems.push({ label: "Condition", value: product.condition.join(", ") });
+                }
+                if (product.features && product.features.length > 0) {
+                  keyFeatureItems.push({ label: "Special Features", value: product.features.join(", ") });
+                }
+
+                if (keyFeatureItems.length === 0) return null;
+
+                return (
+                  <div className="bg-[#f0f5fc] dark:bg-card/70 border border-blue-100 dark:border-border rounded-lg p-3 text-xs">
+                    <h4 className="font-bold text-[#002b60] dark:text-primary mb-2 text-xs">
+                      Key Features
+                    </h4>
+                    <ul className="space-y-1 text-gray-700 dark:text-gray-300">
+                      {keyFeatureItems.map((item) => (
+                        <li key={item.label} className="flex items-start gap-1.5">
+                          <span className="text-[#002b60] dark:text-primary font-bold">•</span>
+                          <span>
+                            <strong>{item.label}:</strong> {item.value}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      type="button"
+                      onClick={() => smoothScrollTo("specification")}
+                      className="mt-2 text-[11px] font-semibold text-[#dc0303] hover:underline cursor-pointer inline-block"
+                    >
+                      View More Info ↓
+                    </button>
+                  </div>
+                );
+              })()}
 
               {/* Variant Selectors */}
               <div className="space-y-2 pt-1 text-xs">
@@ -1104,6 +945,7 @@ export default function ProductDetailsClient({
         <div className="sticky top-16 z-30 mb-6 bg-white dark:bg-card border border-gray-200 dark:border-border rounded-lg shadow-xs px-2 py-1.5 flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide">
           {[
             { id: "description", label: "Description" },
+            ...(hasVideo ? [{ id: "video", label: "Video" }] : []),
             { id: "specification", label: "Specification" },
             { id: "emi-plans", label: "EMI Plans" },
             { id: "faqs", label: "FAQs" },
@@ -1168,6 +1010,21 @@ export default function ProductDetailsClient({
             </p>
           </div>
         </div>
+
+        {/* ── VIDEO (only when a valid YouTube link was added in admin) ── */}
+        {hasVideo && product.youtubeUrl && (
+          <div
+            id="video"
+            className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-5 sm:p-7 shadow-2xs mb-6 scroll-mt-28"
+          >
+            <h2 className="text-base sm:text-lg font-bold text-[#002b60] dark:text-foreground uppercase mb-4">
+              Product Video
+            </h2>
+            <div className="max-w-3xl">
+              <YouTubeEmbed url={product.youtubeUrl} title={product.name} />
+            </div>
+          </div>
+        )}
 
         {/* ── SECTION 2: SPECIFICATION ── */}
         <div

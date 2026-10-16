@@ -4,10 +4,13 @@ import { AdminQuickCreateModal } from "@/components/admin/AdminQuickCreateModal"
 import { Button } from "@/components/ui/button";
 import { SectionCard } from "@/components/admin/ui/SectionCard";
 import { StatusBadge } from "@/components/admin/ui/StatusBadge";
-import { FormField } from "@/components/admin/ui/FormField";
 import { AdminProduct } from "@/lib/admin-data";
 import { fetchAdminProducts } from "@/lib/admin-products-api";
-import { ACCESSORY_CATEGORIES } from "@/lib/navigation";
+import {
+  ACCESSORY_CATEGORIES as ACCESSORY_TYPES,
+  ACCESSORY_CONDITIONS,
+  isAccessoryCategoryName,
+} from "@/lib/accessory-types";
 import {
   ArrowDown,
   ArrowUp,
@@ -21,9 +24,7 @@ import {
   X,
   Sparkles,
   Layers,
-  Check,
   AlertCircle,
-  Copy,
   RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
@@ -32,7 +33,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "@/contexts/ToastContext";
 import { cn } from "@/lib/utils";
 
-const CONDITIONS = ["New", "Used", "Refurbished", "Open Box"];
 const STOCK_STATUSES = [
   "In Stock",
   "Limited Stock",
@@ -117,6 +117,7 @@ type ProductFormState = {
   color: string;
   connectivity: string;
   keySpecs: string;
+  compatibility: string;
   condition: string;
   grade: string;
   sku: string;
@@ -159,22 +160,28 @@ function deriveStockStatus(stock: number, lowStockThreshold: number) {
 }
 
 function isAccessoryCategory(category: string): boolean {
-  const key = category.trim().toLowerCase();
-  if (!key) return false;
-  if (
-    key === "accessories" ||
-    key.includes("accessor") ||
-    key.includes("component") ||
-    key.includes("peripheral")
-  ) {
-    return true;
-  }
-  return ACCESSORY_CATEGORIES.some((value) => value.toLowerCase() === key);
+  // One shared rule for the form, the API and the storefront (lib/accessory-types).
+  return isAccessoryCategoryName(category);
 }
+
+type RawSpecsRecord = Record<string, unknown> & {
+  processor?: string;
+  ram?: string;
+  storage?: string;
+  graphics?: string;
+  os?: string;
+  display?: string;
+  displayDetails?: { size?: string; resolution?: string; type?: string; touchscreen?: boolean };
+  portsList?: string[];
+  ports?: string;
+  battery?: string;
+  weight?: string;
+  dimensions?: string;
+};
 
 function parseInitialSpecs(initialProduct?: AdminProduct): Record<string, SpecRow[]> {
   const result: Record<string, SpecRow[]> = {};
-  const rawSpecs = (initialProduct?.specs as Record<string, any>) || {};
+  const rawSpecs = (initialProduct?.specs as RawSpecsRecord | undefined) || {};
 
   const isGrouped = Object.keys(rawSpecs).some(
     (key) => typeof rawSpecs[key] === "object" && rawSpecs[key] !== null && !Array.isArray(rawSpecs[key])
@@ -182,7 +189,7 @@ function parseInitialSpecs(initialProduct?: AdminProduct): Record<string, SpecRo
 
   for (const [group, defaultKeys] of Object.entries(DEFAULT_SPEC_GROUPS)) {
     const rows: SpecRow[] = [];
-    const existingGroup = isGrouped ? (rawSpecs[group] as Record<string, string> || {}) : {};
+    const existingGroup = isGrouped ? ((rawSpecs[group] as Record<string, string> | undefined) || {}) : {};
 
     for (const key of defaultKeys) {
       let val = existingGroup[key] || "";
@@ -270,15 +277,41 @@ function buildAutoProductName(
   return `${baseTitle}, ${detailClauses.join(", ")}`.replace(/\s+/g, " ").trim();
 }
 
+type RawVariantOption = { name?: string; values?: string[] };
+type RawVariantItem = {
+  id?: string;
+  sku?: string;
+  name?: string;
+  options?: Record<string, unknown>;
+  price?: number | string | null;
+  marketPrice?: number | string | null;
+  regularPrice?: number | string | null;
+  originalPrice?: number | string | null;
+  stockQty?: number | string;
+  stock?: number | string;
+  stockStatus?: string;
+  imageUrl?: string;
+  active?: boolean;
+};
+
 function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
   const isCallForPrice = initialProduct
     ? (initialProduct.price === null || initialProduct.price === undefined)
     : false;
 
-  const rawSpecs = (initialProduct?.specs as Record<string, any>) || {};
-  const periphSpecs = rawSpecs["Peripherals & Accessories"] || {};
-  const generalSpecs = rawSpecs["General"] || {};
-  const physicalSpecs = rawSpecs["Physical Specification"] || {};
+  const rawSpecs = (initialProduct?.specs as Record<string, Record<string, string> | string | undefined> | undefined) || {};
+  const periphSpecs: Record<string, string> =
+    typeof rawSpecs["Peripherals & Accessories"] === "object" && rawSpecs["Peripherals & Accessories"] !== null
+      ? (rawSpecs["Peripherals & Accessories"] as Record<string, string>)
+      : {};
+  const generalSpecs: Record<string, string> =
+    typeof rawSpecs["General"] === "object" && rawSpecs["General"] !== null
+      ? (rawSpecs["General"] as Record<string, string>)
+      : {};
+  const physicalSpecs: Record<string, string> =
+    typeof rawSpecs["Physical Specification"] === "object" && rawSpecs["Physical Specification"] !== null
+      ? (rawSpecs["Physical Specification"] as Record<string, string>)
+      : {};
 
   return {
     name: initialProduct?.name || "",
@@ -289,31 +322,32 @@ function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
     categoryId: initialProduct?.categoryId || "",
     subCategory:
       generalSpecs["Sub-Category"] ||
-      rawSpecs.subCategory ||
-      rawSpecs["Sub-Category"] ||
+      (typeof rawSpecs.subCategory === "string" ? rawSpecs.subCategory : "") ||
+      (typeof rawSpecs["Sub-Category"] === "string" ? rawSpecs["Sub-Category"] : "") ||
       "",
     series:
       generalSpecs["Series"] ||
-      rawSpecs.series ||
-      rawSpecs["Series"] ||
+      (typeof rawSpecs.series === "string" ? rawSpecs.series : "") ||
+      (typeof rawSpecs["Series"] === "string" ? rawSpecs["Series"] : "") ||
       "",
     productCode:
       generalSpecs["Product Code"] ||
-      rawSpecs.productCode ||
-      rawSpecs["Product Code"] ||
+      (typeof rawSpecs.productCode === "string" ? rawSpecs.productCode : "") ||
+      (typeof rawSpecs["Product Code"] === "string" ? rawSpecs["Product Code"] : "") ||
       "",
     color:
       physicalSpecs["Color"] ||
-      rawSpecs.color ||
+      (typeof rawSpecs.color === "string" ? rawSpecs.color : "") ||
       "",
     connectivity:
       periphSpecs["Connectivity & Interface"] ||
-      rawSpecs.connectivity ||
+      (typeof rawSpecs.connectivity === "string" ? rawSpecs.connectivity : "") ||
       "",
     keySpecs:
       periphSpecs["Key Specifications / Layout"] ||
-      rawSpecs.keySpecs ||
+      (typeof rawSpecs.keySpecs === "string" ? rawSpecs.keySpecs : "") ||
       "",
+    compatibility: periphSpecs["Compatible With"] || "",
     condition: initialProduct?.condition || "",
     grade: initialProduct?.grade || "",
     sku: initialProduct?.sku || "",
@@ -358,20 +392,20 @@ function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
       details: initialProduct?.warranty?.details || "",
     },
     variantOptionGroups: (() => {
-      const rawOptions = (initialProduct?.variantOptions as any) || [];
+      const rawOptions = (initialProduct?.variantOptions as RawVariantOption[] | undefined) || [];
       if (Array.isArray(rawOptions) && rawOptions.length > 0) {
-        return rawOptions.map((og: any, idx: number) => ({
+        return rawOptions.map((og, idx: number) => ({
           id: `opt-${idx}`,
           name: og.name || "",
           values: Array.isArray(og.values) ? og.values : [],
           rawInput: Array.isArray(og.values) ? og.values.join(", ") : "",
         }));
       }
-      const rawV = initialProduct?.variants || [];
+      const rawV = (initialProduct?.variants as RawVariantItem[] | undefined) || [];
       if (rawV.length > 0) {
         const extracted = new Map<string, Set<string>>();
-        rawV.forEach((v: any) => {
-          if (v.options && typeof v.options === "object") {
+        rawV.forEach((v) => {
+          if (v.options && typeof v.options === "object" && v.options !== null) {
             Object.entries(v.options).forEach(([k, val]) => {
               if (!extracted.has(k)) extracted.set(k, new Set());
               extracted.get(k)!.add(String(val));
@@ -393,13 +427,13 @@ function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
       }
       return [];
     })(),
-    variants: (initialProduct?.variants || []).map((v: any) => {
+    variants: ((initialProduct?.variants as RawVariantItem[] | undefined) || []).map((v) => {
       let opts = (typeof v.options === "object" && v.options !== null ? v.options : {}) as Record<string, string>;
       if (Object.keys(opts).length === 0 && v.name) {
         opts = { Configuration: v.name };
       }
       return {
-        id: v.id,
+        id: v.id || `var-${Math.random().toString(36).substring(2, 9)}`,
         sku: v.sku || "",
         options: opts,
         price: v.price !== undefined && v.price !== null ? String(v.price) : "",
@@ -442,6 +476,8 @@ export function ProductEditorForm({
   const [submitError, setSubmitError] = useState("");
   const [form, setForm] = useState<ProductFormState>(buildInitialState(initialProduct));
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const isAccessory = isAccessoryCategory(form.category);
+  const enableVariants = process.env.NEXT_PUBLIC_ENABLE_VARIANTS === "true";
   const [masterBrandsList, setMasterBrandsList] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const [masterCategoriesList, setMasterCategoriesList] = useState<Array<{ id: string; name: string; slug: string }>>([]);
   const [brandOptions, setBrandOptions] = useState<string[]>([]);
@@ -699,7 +735,11 @@ export function ProductEditorForm({
     }));
   };
 
-  const updateVariantRow = (index: number, field: keyof ProductFormVariant, value: any) => {
+  const updateVariantRow = <K extends keyof ProductFormVariant>(
+    index: number,
+    field: K,
+    value: ProductFormVariant[K]
+  ) => {
     setForm((prev) => ({
       ...prev,
       variants: prev.variants.map((v, idx) =>
@@ -761,15 +801,15 @@ export function ProductEditorForm({
         .catch(() => null),
     ]).then(([products, masters]) => {
       if (!active) return;
-      const loadedBrands = ((products || []) as any[]).map((product) => product.brand?.trim()).filter(Boolean) as string[];
-      const loadedCategories = ((products || []) as any[]).map((product) => product.category?.trim()).filter(Boolean) as string[];
-      const masterBrands = (masters?.brands || [])
-        .filter((b: any) => b.active !== false)
-        .map((b: any) => b.name?.trim())
+      const loadedBrands = ((products || []) as AdminProduct[]).map((product) => product.brand?.trim()).filter(Boolean) as string[];
+      const loadedCategories = ((products || []) as AdminProduct[]).map((product) => product.category?.trim()).filter(Boolean) as string[];
+      const masterBrands = ((masters?.brands || []) as Array<{ name?: string; active?: boolean }>)
+        .filter((b) => b.active !== false)
+        .map((b) => b.name?.trim())
         .filter(Boolean) as string[];
-      const masterCategories = (masters?.categories || [])
-        .filter((c: any) => c.active !== false)
-        .map((c: any) => c.name?.trim())
+      const masterCategories = ((masters?.categories || []) as Array<{ name?: string; active?: boolean }>)
+        .filter((c) => c.active !== false)
+        .map((c) => c.name?.trim())
         .filter(Boolean) as string[];
 
       setBrandOptions((current) => [...current, ...loadedBrands, ...masterBrands]);
@@ -845,11 +885,19 @@ export function ProductEditorForm({
     const match = masterCategoriesList.find(
       (c) => c.name.toLowerCase() === categoryName.trim().toLowerCase()
     );
-    setForm((prev) => ({
-      ...prev,
-      category: categoryName,
-      categoryId: match ? match.id : prev.categoryId && prev.category === categoryName ? prev.categoryId : "",
-    }));
+    setForm((prev) => {
+      // Switching between laptop and accessory changes which fields apply, so
+      // clear the ones whose options differ (sub-category, condition, grade).
+      const modeChanged = isAccessoryCategory(prev.category) !== isAccessoryCategory(categoryName);
+      return {
+        ...prev,
+        category: categoryName,
+        categoryId: match ? match.id : prev.categoryId && prev.category === categoryName ? prev.categoryId : "",
+        ...(modeChanged
+          ? { subCategory: "", condition: "", grade: "", variantOptionGroups: [], variants: [] }
+          : {}),
+      };
+    });
     setSubmitError("");
     setErrors((current) => {
       const next = { ...current };
@@ -941,7 +989,7 @@ export function ProductEditorForm({
   };
 
   const generateSku = () => {
-    const base = `${form.brand}-${form.model || form.name}`
+    const base = `${isAccessory ? "ACC-" : ""}${form.brand}-${form.model || form.name}`
       .toUpperCase()
       .replace(/[^A-Z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "")
@@ -1250,13 +1298,16 @@ export function ProductEditorForm({
     setDraggedImageIndex(null);
   };
 
-  const validate = (currentImages: string[]) => {
+  const validate = () => {
     const nextErrors: Record<string, string> = {};
 
     if (!form.name.trim()) nextErrors.name = "Product name is required";
     if (!form.brand.trim()) nextErrors.brand = "Brand is required";
     if (!form.sku.trim()) nextErrors.sku = "SKU is required";
     if (!form.category.trim()) nextErrors.category = "Category is required";
+    if (isAccessoryCategory(form.category) && !form.subCategory.trim()) {
+      nextErrors.subCategory = "Choose the accessory type so it appears in the right section";
+    }
 
     if (!form.callForPrice) {
       const price = Number(form.price);
@@ -1280,7 +1331,7 @@ export function ProductEditorForm({
       nextErrors.lowStockThreshold = "Low stock threshold must be a valid non-negative number";
     }
 
-    if (form.variants.length > 0) {
+    if (enableVariants && !isAccessory && form.variants.length > 0) {
       const seenSkus = new Set<string>();
       form.variants.forEach((v, index) => {
         const skuTrimmed = v.sku.trim();
@@ -1369,7 +1420,7 @@ export function ProductEditorForm({
       setImageUrls(currentImages);
     }
 
-    const nextErrors = validate(currentImages);
+    const nextErrors = validate();
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
       setSaving(false);
@@ -1398,6 +1449,7 @@ export function ProductEditorForm({
         finalSpecs["Peripherals & Accessories"] = {
           "Connectivity & Interface": form.connectivity.trim(),
           "Key Specifications / Layout": form.keySpecs.trim(),
+          "Compatible With": form.compatibility.trim(),
         };
       } else {
         for (const [groupName, rows] of Object.entries(form.specGroups)) {
@@ -1591,7 +1643,7 @@ export function ProductEditorForm({
                     if (autoNameEnabled) setAutoNameEnabled(false);
                     setField("name", event.target.value);
                   }}
-                  placeholder="e.g. Lenovo ThinkPad X1 Carbon Gen 10"
+                  placeholder={isAccessory ? "e.g. Dell 65W USB-C Charger" : "e.g. Lenovo ThinkPad X1 Carbon Gen 10"}
                   className={inputCls}
                 />
                 {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
@@ -1669,7 +1721,8 @@ export function ProductEditorForm({
 
               <div className="space-y-1.5">
                 <label className="block text-sm font-medium text-foreground">
-                  Sub-Category
+                  {isAccessory ? "Accessory Type" : "Sub-Category"}
+                  {isAccessory && <span className="text-red-500"> *</span>}
                 </label>
                 <div className="flex items-center gap-2">
                   <select
@@ -1678,23 +1731,29 @@ export function ProductEditorForm({
                     className={`${inputCls} flex-1`}
                   >
                     <option value="">-Select-</option>
-                    {normalizedSubCategoryOptions.map((sub) => (
+                    {(isAccessory
+                      ? ACCESSORY_TYPES.map((c) => c.name)
+                      : normalizedSubCategoryOptions
+                    ).map((sub) => (
                       <option key={sub} value={sub}>
                         {sub}
                       </option>
                     ))}
                   </select>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => openCreateModal("subCategory")}
-                    className="h-10 w-10 shrink-0 rounded-lg border-border"
-                    title="Add sub-category"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
+                  {!isAccessory && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => openCreateModal("subCategory")}
+                      className="h-10 w-10 shrink-0 rounded-lg border-border"
+                      title="Add sub-category"
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  )}
                 </div>
+                {errors.subCategory && <p className="text-red-500 text-xs mt-1">{errors.subCategory}</p>}
               </div>
 
               <div className="space-y-1.5">
@@ -1761,7 +1820,7 @@ export function ProductEditorForm({
                   className={inputCls}
                 >
                   <option value="">-Select-</option>
-                  {conditionOptions.map((cond) => (
+                  {(isAccessory ? [...ACCESSORY_CONDITIONS] : conditionOptions).map((cond) => (
                     <option key={cond} value={cond}>
                       {cond}
                     </option>
@@ -1769,21 +1828,23 @@ export function ProductEditorForm({
                 </select>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="block text-sm font-medium text-foreground">Grade</label>
-                <select
-                  value={form.grade}
-                  onChange={(event) => setField("grade", event.target.value)}
-                  className={inputCls}
-                >
-                  <option value="">-Select-</option>
-                  {gradeOptions.map((gr) => (
-                    <option key={gr} value={gr}>
-                      Grade {gr}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {!isAccessory && (
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-medium text-foreground">Grade</label>
+                  <select
+                    value={form.grade}
+                    onChange={(event) => setField("grade", event.target.value)}
+                    className={inputCls}
+                  >
+                    <option value="">-Select-</option>
+                    {gradeOptions.map((gr) => (
+                      <option key={gr} value={gr}>
+                        Grade {gr}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div className="space-y-1.5">
                 <label className="block text-sm font-medium text-foreground">Color</label>
@@ -1818,6 +1879,18 @@ export function ProductEditorForm({
                       value={form.connectivity}
                       onChange={(event) => setField("connectivity", event.target.value)}
                       placeholder="e.g. Wireless 2.4GHz + Bluetooth, USB Type-C"
+                      className={inputCls}
+                    />
+                  </div>
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="block text-xs font-semibold text-foreground">
+                      Compatible With
+                    </label>
+                    <textarea
+                      value={form.compatibility}
+                      onChange={(event) => setField("compatibility", event.target.value)}
+                      rows={3}
+                      placeholder={"One per line, e.g.\nDell Latitude 5420\nHP EliteBook 840 G8"}
                       className={inputCls}
                     />
                   </div>
@@ -2056,9 +2129,11 @@ export function ProductEditorForm({
               </div>
             </div>
 
-            {/* Variants Section */}
-            <div className="md:col-span-2 mt-8">
-              <SectionCard
+            {/* Variants Section (laptops only: accessories are sold as a single item) */}
+            {!isAccessory && (
+              enableVariants ? (
+                <div className="md:col-span-2 mt-8">
+                  <SectionCard
                 title={
                   <div className="flex items-center gap-2">
                     <Layers className="w-5 h-5 text-primary" />
@@ -2397,6 +2472,26 @@ export function ProductEditorForm({
                 </div>
               </SectionCard>
             </div>
+            ) : (
+              <div className="md:col-span-2 mt-8">
+                <div className="rounded-xl border border-dashed border-border bg-muted/30 p-5 text-sm text-muted-foreground flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2 font-medium text-foreground">
+                      <Layers className="w-4 h-4 text-primary" />
+                      <span>Product Variants & Options</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Product variations (RAM/Storage/Color) are currently disabled. Laptop configurations are sold as distinct standalone listings with explicit specifications.
+                    </p>
+                  </div>
+                  {form.variants.length > 0 && (
+                    <span className="text-xs text-muted-foreground bg-background px-2.5 py-1 rounded-md border border-border shrink-0 self-start sm:self-auto">
+                      {form.variants.length} stored variant{form.variants.length > 1 ? "s" : ""} preserved
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
 
             {/* Structured Grouped Specifications (Step 4 - Laptops Only) */}
             {!isAccessoryCategory(form.category) && (

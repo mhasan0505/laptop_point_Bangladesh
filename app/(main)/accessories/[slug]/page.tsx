@@ -1,5 +1,8 @@
 import AccessoryCard from "@/components/accessories/AccessoryCard";
 import AddToCartPanel from "@/components/accessories/AddToCartPanel";
+import YouTubeEmbed from "@/components/product/YouTubeEmbed";
+import ProductSchemaMeta from "@/components/seo/ProductSchemaMeta";
+import { parseYoutubeId } from "@/lib/youtube";
 import { getAccessoryByIdOrSlug, listPublicAccessories, toPublic } from "@/lib/accessories-storage";
 import { ACCESSORY_PLACEHOLDER, categoryName } from "@/lib/accessory-types";
 import { formatBDT } from "@/lib/format";
@@ -54,33 +57,20 @@ export default async function AccessoryDetailPage({ params }: Props) {
     .filter((a) => a.id !== accessory.id && a.category === accessory.category)
     .slice(0, 4);
 
-  const productJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: accessory.name,
-    sku: accessory.sku,
-    brand: { "@type": "Brand", name: accessory.brand },
-    image: images,
-    description: accessory.description || accessory.name,
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "BDT",
-      price: accessory.price,
-      availability: accessory.inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
-      itemCondition:
-        accessory.condition === "New"
-          ? "https://schema.org/NewCondition"
-          : "https://schema.org/UsedCondition",
-    },
-  };
-
   return (
     <div className="bg-surface pb-16">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      <ProductSchemaMeta
+        name={accessory.name}
+        sku={accessory.sku}
+        brand={accessory.brand}
+        image={images}
+        description={accessory.description || accessory.name}
+        price={accessory.price}
+        availability={accessory.inStock ? "InStock" : "OutOfStock"}
+        url={`https://laptoppointbd.com/accessories/${accessory.slug}`}
+        condition={accessory.condition}
+        youtubeUrl={record.youtubeUrl}
+        updatedAt={record.updatedAt}
       />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb" className="text-small text-muted-text">
@@ -217,6 +207,15 @@ export default async function AccessoryDetailPage({ params }: Props) {
             )}
           </div>
         </div>
+
+        {accessory.youtubeUrl && parseYoutubeId(accessory.youtubeUrl) && (
+          <section aria-labelledby="acc-video" className="mt-12 max-w-3xl">
+            <h2 id="acc-video" className="mb-3 text-h3 font-bold text-ink">
+              Product video
+            </h2>
+            <YouTubeEmbed url={accessory.youtubeUrl} title={accessory.name} />
+          </section>
+        )}
 
         {related.length > 0 && (
           <section aria-labelledby="related-acc" className="mt-16">

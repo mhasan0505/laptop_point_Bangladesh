@@ -1,5 +1,20 @@
 import { AdminProduct } from "@/lib/admin-data";
+import {
+  AccessoryConflictError,
+  createAccessory,
+  listAccessories,
+  parseAccessoryInput,
+} from "@/lib/accessories-storage";
+import { accessoryToAdminProduct, adminToAccessoryInput } from "@/lib/accessory-bridge";
+import { isAccessoryCategoryName } from "@/lib/accessory-types";
 import { requireAdmin } from "@/lib/auth-guard";
+import {
+  flatToGroups,
+  groupsToFlat,
+  isGroupedSpecs,
+  pruneGroups,
+  type SpecGroups,
+} from "@/lib/product-specs";
 import {
   allocateProductId,
   loadMergedRawProducts,
@@ -7,11 +22,35 @@ import {
   safeSyncManifest,
   saveRawProduct,
 } from "@/lib/products-storage";
+import { parseYoutubeId } from "@/lib/youtube";
 import { RawProduct } from "@/types/raw-product";
 import { NextRequest, NextResponse } from "next/server";
 
 export { resolveProductImages, safeSyncManifest as syncSkuToManifest };
 
+const isPlainObject = (v: unknown): v is Record<string, unknown> =>
+  typeof v === "object" && v !== null && !Array.isArray(v);
+
+/** Visibility chosen in the form ("Active" | "Draft" | "Archived"). */
+function parseVisibility(admin: { status?: string; statusValue?: string }): "active" | "draft" | "archived" {
+  for (const candidate of [admin.status, admin.statusValue]) {
+    const k = String(candidate ?? "").trim().toLowerCase();
+    if (k === "active" || k === "draft" || k === "archived") return k;
+  }
+  return "active";
+}
+
+/** Pull only the grouped part out of an admin `specs` object (ignores legacy flat keys). */
+function extractGroups(specs: AdminProduct["specs"]): SpecGroups | undefined {
+  if (!isGroupedSpecs(specs)) return undefined;
+  const groups: SpecGroups = {};
+  for (const [key, value] of Object.entries(specs as Record<string, unknown>)) {
+    if (key === "displayDetails") continue;
+    if (isPlainObject(value)) groups[key] = value as Record<string, string>;
+  }
+  const pruned = pruneGroups(groups);
+  return Object.keys(pruned).length > 0 ? pruned : undefined;
+}
 
 export function rawToAdminProduct(raw: RawProduct, currentStock?: number): AdminProduct {
   const stock = currentStock !== undefined ? currentStock : (raw.stock?.quantity ?? 0);
@@ -28,8 +67,16 @@ export function rawToAdminProduct(raw: RawProduct, currentStock?: number): Admin
     .filter(Boolean)
     .join(" ");
 
-  const salePrice = raw.pricing?.sale_price ?? (raw as any).price ?? 0;
-  const marketPrice = raw.pricing?.market_price ?? (raw as any).salePrice ?? salePrice;
+  const legacyRaw = raw as RawProduct & { price?: number; salePrice?: number };
+  const salePrice = raw.pricing?.sale_price ?? legacyRaw.price ?? 0;
+  const marketPrice = raw.pricing?.market_price ?? legacyRaw.salePrice ?? salePrice;
+
+  // Always hand the form grouped specs, derived from legacy flat data when needed,
+  // so editing an old product shows its real values instead of blank fields.
+  const groups: SpecGroups =
+    raw.specGroups && Object.keys(raw.specGroups).length > 0
+      ? raw.specGroups
+      : flatToGroups(raw.specs);
 
   return {
     id: String(raw.id),
@@ -41,6 +88,8 @@ export function rawToAdminProduct(raw: RawProduct, currentStock?: number): Admin
     grade: raw.grade || "A",
     price: salePrice,
     salePrice: marketPrice,
+    marketPrice,
+    regularPrice: marketPrice,
     pricing: {
       currency: raw.pricing?.currency || "BDT",
       sale_price: salePrice,
@@ -55,12 +104,17 @@ export function rawToAdminProduct(raw: RawProduct, currentStock?: number): Admin
     lowStockThreshold: 10,
 
     status,
-    statusValue: "active",
-    featured: false,
+    statusValue: raw.statusValue ?? "active",
+    featured: Boolean(raw.featured),
     sku: raw.sku || String(raw.id),
     description: typeof raw.description === "string" ? raw.description : (raw.description?.short || ""),
     fullDescription: typeof raw.description === "string" ? raw.description : (raw.description?.full || raw.description?.short || ""),
+    tags: raw.tags ?? [],
     features: raw.features || [],
+    youtubeUrl: raw.youtubeUrl,
+    warranty: raw.warranty,
+    variantOptions: raw.variantOptions,
+    variants: raw.variants as AdminProduct["variants"],
     specs: {
       processor: raw.specs?.processor || "",
       ram: raw.specs?.ram || "",
@@ -80,6 +134,7 @@ export function rawToAdminProduct(raw: RawProduct, currentStock?: number): Admin
       weight: raw.specs?.weight || "",
       dimensions: "",
       os: raw.specs?.os || "",
+      ...groups,
     },
     images: resolveProductImages(raw),
   };
@@ -89,25 +144,56 @@ export function adminToRawProduct(
   admin: Omit<AdminProduct, "id"> & { id?: string | number },
   numericId: number,
 ): RawProduct {
-  const portsList =
-    admin.specs?.portsList && admin.specs.portsList.length > 0
-      ? admin.specs.portsList
-      : admin.specs?.ports
-        ? admin.specs.ports
-            .split(",")
-            .map((p: string) => p.trim())
-            .filter(Boolean)
-        : [];
+  const groups = extractGroups(admin.specs);
+
+  // Grouped specs (new form) win; legacy flat keys are only used when no groups were sent.
+  let flat: RawProduct["specs"];
+  if (groups) {
+    flat = groupsToFlat(groups);
+  } else {
+    const portsList =
+      admin.specs?.portsList && admin.specs.portsList.length > 0
+        ? admin.specs.portsList
+        : admin.specs?.ports
+          ? admin.specs.ports
+              .split(",")
+              .map((p: string) => p.trim())
+              .filter(Boolean)
+          : [];
+    flat = {
+      processor: admin.specs?.processor?.trim() || "",
+      ram: admin.specs?.ram?.trim() || "",
+      storage: admin.specs?.storage?.trim() || "",
+      display: {
+        size: admin.specs?.displayDetails?.size?.trim() || "",
+        resolution: admin.specs?.displayDetails?.resolution?.trim() || "",
+        type: admin.specs?.displayDetails?.type?.trim() || "",
+        touchscreen: Boolean(admin.specs?.displayDetails?.touchscreen),
+      },
+      graphics: admin.specs?.graphics?.trim() || "",
+      ports: portsList,
+      weight: admin.specs?.weight?.trim() || "",
+      os: admin.specs?.os?.trim() || "",
+    };
+  }
 
   const marketPrice =
     admin.salePrice !== undefined && admin.salePrice > 0
       ? admin.salePrice
-      : admin.price;
+      : admin.marketPrice !== undefined && admin.marketPrice > 0
+        ? admin.marketPrice
+        : admin.price;
 
   const discount =
     marketPrice > admin.price
       ? Math.round(((marketPrice - admin.price) / marketPrice) * 100)
       : 0;
+
+  const warranty = admin.warranty
+    ? Object.fromEntries(
+        Object.entries(admin.warranty).filter(([, v]) => typeof v === "string" && v.trim()),
+      )
+    : undefined;
 
   return {
     id: numericId,
@@ -129,35 +215,53 @@ export function adminToRawProduct(
       status: admin.stockStatus || (admin.stock > 0 ? "In Stock" : "Out of Stock"),
       quantity: Number(admin.stock) || 0,
     },
-    specs: {
-      processor: admin.specs?.processor?.trim() || "",
-      ram: admin.specs?.ram?.trim() || "",
-      storage: admin.specs?.storage?.trim() || "",
-      display: {
-        size: admin.specs?.displayDetails?.size?.trim() || "",
-        resolution: admin.specs?.displayDetails?.resolution?.trim() || "",
-        type: admin.specs?.displayDetails?.type?.trim() || "",
-        touchscreen: Boolean(admin.specs?.displayDetails?.touchscreen),
-      },
-      graphics: admin.specs?.graphics?.trim() || "",
-      ports: portsList,
-      weight: admin.specs?.weight?.trim() || "",
-      os: admin.specs?.os?.trim() || "",
-    },
+    specs: flat,
     description: {
       short: admin.description?.trim() || "",
       full: admin.fullDescription?.trim() || admin.description?.trim() || "",
     },
     features: admin.features || [],
     images: admin.images && admin.images.length > 0 ? admin.images : ["/Hero_Image.png"],
+
+    specGroups: groups,
+    youtubeUrl: admin.youtubeUrl?.trim() || undefined,
+    tags: admin.tags?.map((t) => t.trim()).filter(Boolean),
+    featured: Boolean(admin.featured),
+    statusValue: parseVisibility(admin),
+    subCategory: groups?.General?.["Sub-Category"],
+    warranty: warranty && Object.keys(warranty).length > 0 ? warranty : undefined,
+    variantOptions: admin.variantOptions,
+    variants: admin.variants as RawProduct["variants"],
   };
+}
+
+/** Returns an error message when the payload is unusable, otherwise null. */
+export function validateAdminProductPayload(body: Partial<AdminProduct>): string | null {
+  const price = Number(body.price);
+  const stock = Number(body.stock ?? 0);
+  if (!Number.isFinite(price) || price <= 0) return "Price must be a number greater than 0";
+  if (!Number.isFinite(stock) || stock < 0 || !Number.isInteger(stock)) {
+    return "Stock must be a whole number of 0 or more";
+  }
+  if (body.sku !== undefined && !/^[A-Za-z0-9][A-Za-z0-9._-]{1,63}$/.test(String(body.sku).trim())) {
+    return "SKU must be 2–64 characters: letters, numbers, dot, dash or underscore";
+  }
+  const yt = body.youtubeUrl?.trim();
+  if (yt && !parseYoutubeId(yt)) return "Enter a valid YouTube link (youtube.com or youtu.be)";
+  return null;
 }
 
 // ─── GET /api/admin/products ──────────────────────────────────────────────────
 export async function GET() {
   try {
-    const rawProducts = await loadMergedRawProducts();
-    const adminProducts = rawProducts.map((p) => rawToAdminProduct(p, p.stock?.quantity));
+    const [rawProducts, accessories] = await Promise.all([
+      loadMergedRawProducts(),
+      listAccessories().catch(() => []),
+    ]);
+    const adminProducts = [
+      ...rawProducts.map((p) => rawToAdminProduct(p, p.stock?.quantity)),
+      ...accessories.map(accessoryToAdminProduct),
+    ];
     return NextResponse.json(adminProducts);
   } catch (error) {
     console.error("[GET /api/admin/products]", error);
@@ -183,32 +287,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const price = Number(body.price);
-    const stock = Number(body.stock ?? 0);
-    if (!Number.isFinite(price) || price <= 0) {
-      return NextResponse.json({ error: "Price must be a number greater than 0" }, { status: 400 });
-    }
-    if (!Number.isFinite(stock) || stock < 0 || !Number.isInteger(stock)) {
-      return NextResponse.json({ error: "Stock must be a whole number of 0 or more" }, { status: 400 });
-    }
-    if (!/^[A-Za-z0-9][A-Za-z0-9._-]{1,63}$/.test(String(body.sku).trim())) {
-      return NextResponse.json(
-        { error: "SKU must be 2–64 characters: letters, numbers, dot, dash or underscore" },
-        { status: 400 },
-      );
-    }
+    const invalid = validateAdminProductPayload(body);
+    if (invalid) return NextResponse.json({ error: invalid }, { status: 400 });
 
-    const rawProducts = await loadMergedRawProducts();
+    const sku = body.sku.trim();
+    const [rawProducts, accessories] = await Promise.all([
+      loadMergedRawProducts(),
+      listAccessories().catch(() => []),
+    ]);
 
-    // Check SKU collision
-    const existingWithSku = rawProducts.find(
-      (p) => p.sku.toLowerCase() === body.sku.trim().toLowerCase(),
-    );
-    if (existingWithSku) {
+    // SKUs are unique across laptops and accessories.
+    const clash =
+      rawProducts.some((p) => p.sku.toLowerCase() === sku.toLowerCase()) ||
+      accessories.some((a) => a.sku.toLowerCase() === sku.toLowerCase());
+    if (clash) {
       return NextResponse.json(
-        { error: `A product with SKU "${body.sku.trim()}" already exists` },
+        { error: `A product with SKU "${sku}" already exists` },
         { status: 409 },
       );
+    }
+
+    // Accessories live in their own catalogue so they appear on /accessories.
+    if (isAccessoryCategoryName(body.category)) {
+      const parsed = parseAccessoryInput(adminToAccessoryInput(body), "create");
+      if ("error" in parsed) return NextResponse.json({ error: parsed.error }, { status: 400 });
+      try {
+        const created = await createAccessory(parsed.data);
+        return NextResponse.json(accessoryToAdminProduct(created), { status: 201 });
+      } catch (err) {
+        if (err instanceof AccessoryConflictError) {
+          return NextResponse.json({ error: err.message }, { status: 409 });
+        }
+        throw err;
+      }
     }
 
     // Allocate next numeric ID (never reuses an id that was deleted earlier)
@@ -229,4 +340,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

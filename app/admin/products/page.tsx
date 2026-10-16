@@ -16,6 +16,7 @@ import {
   Search,
   CheckCircle2,
   Boxes,
+  Package,
   XCircle,
   X
 } from "lucide-react";
@@ -24,6 +25,8 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo, Suspense } from "react";
 import { useToast } from "@/contexts/ToastContext";
+import { cn } from "@/lib/utils";
+import { StockUpdateDialog } from "@/components/admin/StockUpdateDialog";
 import {
   Dialog,
   DialogContent,
@@ -33,33 +36,34 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-function ProductTableThumb({ src, alt }: { src: string; alt: string }) {
-  const [imgSrc, setImgSrc] = useState(src || "/images/placeholder-laptop.png");
+function ProductTableThumb({ src, alt, isAccessory }: { src: string; alt: string; isAccessory?: boolean }) {
+  const placeholder = isAccessory ? "/images/placeholder-accessory.png" : "/images/placeholder-laptop.png";
   const [hasError, setHasError] = useState(false);
+  const [lastSrc, setLastSrc] = useState(src);
 
-  useEffect(() => {
-    setImgSrc(src || "/images/placeholder-laptop.png");
+  if (src !== lastSrc) {
+    setLastSrc(src);
     setHasError(false);
-  }, [src]);
+  }
+
+  const effectiveSrc = hasError || !src ? placeholder : src;
 
   return (
     <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xs border border-border bg-zinc-50 dark:bg-zinc-900 p-0.5 flex items-center justify-center">
-      {hasError ? (
-        <Laptop className="w-5 h-5 text-muted-foreground opacity-60" />
+      {hasError && !placeholder ? (
+        isAccessory ? (
+          <Package className="w-5 h-5 text-muted-foreground opacity-60" />
+        ) : (
+          <Laptop className="w-5 h-5 text-muted-foreground opacity-60" />
+        )
       ) : (
         <Image
-          src={imgSrc}
+          src={effectiveSrc}
           alt={alt}
           fill
           className="object-contain p-0.5"
           sizes="40px"
-          onError={() => {
-            if (imgSrc !== "/images/placeholder-laptop.png") {
-              setImgSrc("/images/placeholder-laptop.png");
-            } else {
-              setHasError(true);
-            }
-          }}
+          onError={() => setHasError(true)}
         />
       )}
     </div>
@@ -128,6 +132,7 @@ const AdminProductsContent = () => {
 
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [searchTerm, setSearchTerm] = useState(urlSearch);
+  const [filterType, setFilterType] = useState<"All" | "laptops" | "accessories">("All");
   const [filterCategory, setFilterCategory] = useState("All");
   const [filterStock, setFilterStock] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
@@ -136,6 +141,13 @@ const AdminProductsContent = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<AdminProduct | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const [stockDialogOpen, setStockDialogOpen] = useState(false);
+  const [stockDialogProduct, setStockDialogProduct] = useState<{
+    id: string;
+    name: string;
+    currentStock: number;
+  } | null>(null);
 
   useEffect(() => {
     if (urlSearch) {
@@ -175,6 +187,14 @@ const AdminProductsContent = () => {
           (product.sku?.toLowerCase() || "").includes(searchLower) ||
           (product.brand?.toLowerCase() || "").includes(searchLower);
 
+        const isAcc = String(product.id).startsWith("acc-");
+        const matchesType =
+          filterType === "All"
+            ? true
+            : filterType === "accessories"
+              ? isAcc
+              : !isAcc;
+
         const matchesCategory =
           filterCategory === "All" || product.category === filterCategory;
 
@@ -188,21 +208,50 @@ const AdminProductsContent = () => {
                 ? effectiveStock > 0 && effectiveStock <= 10
                 : effectiveStock === 0;
 
-        return matchesSearch && matchesCategory && matchesStock;
+        return matchesSearch && matchesType && matchesCategory && matchesStock;
       })
       .filter((product, index, arr) => arr.findIndex((p) => p.id === product.id) === index);
-  }, [products, searchTerm, filterCategory, filterStock]);
+  }, [products, searchTerm, filterType, filterCategory, filterStock]);
 
   const stats = useMemo(() => {
     const total = products.length;
+    const totalLaptops = products.filter((p) => !String(p.id).startsWith("acc-")).length;
+    const totalAccessories = products.filter((p) => String(p.id).startsWith("acc-")).length;
     const inStock = products.filter((p) => getProductEffectiveStock(p) > 10).length;
     const lowStock = products.filter((p) => {
       const s = getProductEffectiveStock(p);
       return s > 0 && s <= 10;
     }).length;
     const outOfStock = products.filter((p) => getProductEffectiveStock(p) === 0).length;
-    return { total, inStock, lowStock, outOfStock };
+    return { total, totalLaptops, totalAccessories, inStock, lowStock, outOfStock };
   }, [products]);
+
+  const handleOpenStockDialog = (product: AdminProduct) => {
+    setStockDialogProduct({
+      id: product.id,
+      name: product.name,
+      currentStock: getProductEffectiveStock(product),
+    });
+    setStockDialogOpen(true);
+  };
+
+  const handleStockUpdateSuccess = async (newStock: number) => {
+    if (!stockDialogProduct) return;
+    try {
+      const res = await fetch(`/api/admin/products/${stockDialogProduct.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stock: newStock }),
+      });
+      if (!res.ok) throw new Error("Failed to update stock");
+      setProducts((prev) =>
+        prev.map((p) => (p.id === stockDialogProduct.id ? { ...p, stock: newStock } : p))
+      );
+      showSuccessToast(`Stock updated to ${newStock} for "${stockDialogProduct.name}"`);
+    } catch {
+      showErrorToast("Could not update stock quantity.");
+    }
+  };
 
   const getStatusBadge = (stock: number) => {
     if (stock === 0) {
@@ -338,7 +387,17 @@ const AdminProductsContent = () => {
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value as "All" | "laptops" | "accessories")}
+            className="h-9 rounded-sm border border-border bg-background px-3 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+          >
+            <option value="All">All Types ({stats.total})</option>
+            <option value="laptops">Laptops ({stats.totalLaptops})</option>
+            <option value="accessories">Accessories ({stats.totalAccessories})</option>
+          </select>
+
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
@@ -385,8 +444,10 @@ const AdminProductsContent = () => {
               </thead>
               <tbody className="divide-y divide-border">
                 {filteredProducts.map((product) => {
-                  const image = product.images?.[0] || "/images/placeholder-laptop.png";
-                  const salePrice = product.price || product.salePrice || 0;
+                  const isAccessory = String(product.id).startsWith("acc-");
+                  const image =
+                    product.images?.[0] ||
+                    (isAccessory ? "/images/placeholder-accessory.png" : "/images/placeholder-laptop.png");
 
                   return (
                     <tr
@@ -395,7 +456,7 @@ const AdminProductsContent = () => {
                     >
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <ProductTableThumb src={image} alt={product.name} />
+                          <ProductTableThumb src={image} alt={product.name} isAccessory={isAccessory} />
                           <div className="min-w-0">
                             <Link
                               href={`/admin/products/edit/${product.id}`}
@@ -411,10 +472,22 @@ const AdminProductsContent = () => {
                       </td>
 
                       <td className="py-3 px-4">
-                        <span className="font-semibold text-foreground block">
-                          {product.brand || "—"}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground">
+                        <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                          <span
+                            className={cn(
+                              "inline-flex items-center px-1.5 py-0.5 rounded-xs text-[9px] font-bold uppercase tracking-wider border",
+                              isAccessory
+                                ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20"
+                                : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
+                            )}
+                          >
+                            {isAccessory ? "Accessory" : "Laptop"}
+                          </span>
+                          <span className="font-semibold text-foreground">
+                            {product.brand || "—"}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-muted-foreground block">
                           {product.category || "General"}
                         </span>
                       </td>
@@ -429,6 +502,16 @@ const AdminProductsContent = () => {
 
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleOpenStockDialog(product)}
+                            className="h-7 w-7 p-0 rounded-xs border-border text-muted-foreground hover:text-foreground"
+                            title="Quick update stock"
+                          >
+                            <Package size={12} />
+                          </Button>
+
                           <Link href={`/admin/products/edit/${product.id}`}>
                             <Button
                               variant="outline"
@@ -500,6 +583,17 @@ const AdminProductsContent = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Stock Update Dialog */}
+      <StockUpdateDialog
+        isOpen={stockDialogOpen}
+        onClose={() => {
+          setStockDialogOpen(false);
+          setStockDialogProduct(null);
+        }}
+        product={stockDialogProduct}
+        onSuccess={handleStockUpdateSuccess}
+      />
     </div>
   );
 };

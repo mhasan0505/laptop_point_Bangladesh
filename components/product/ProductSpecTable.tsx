@@ -16,125 +16,131 @@ export function buildProductSpecCategories(
   selectedRam?: string,
   selectedSsd?: string
 ): SpecCategory[] {
+  // Specifications entered in the admin form are shown exactly as entered:
+  // no invented defaults for fields the shop did not fill in.
+  if (product.specGroups) {
+    const fromAdmin: SpecCategory[] = Object.entries(product.specGroups)
+      .filter(([group]) => group !== "General")
+      .map(([group, rows]) => ({
+        category: group.toUpperCase(),
+        items: Object.entries(rows)
+          .filter(([, value]) => String(value ?? "").trim().length > 0)
+          .map(([label, value]) => {
+            let displayVal = String(value);
+            if (label.toLowerCase().includes("installed ram") && selectedRam) {
+              displayVal = selectedRam;
+            } else if (label.toLowerCase().includes("installed storage") && selectedSsd) {
+              displayVal = selectedSsd;
+            }
+            return { label, value: displayVal };
+          }),
+      }))
+      .filter((group) => group.items.length > 0);
+
+    const conditionItems: Array<{ label: string; value: string }> = [];
+    if (product.grade) {
+      conditionItems.push({ label: "Condition Grade", value: `Grade ${product.grade}` });
+    } else if (product.condition && product.condition.length > 0) {
+      conditionItems.push({ label: "Condition", value: product.condition.join(", ") });
+    }
+    if (product.warranty) conditionItems.push({ label: "Warranty", value: product.warranty });
+    if (
+      conditionItems.length > 0 &&
+      !fromAdmin.some((g) => g.category === "WARRANTY" || g.category === "CONDITION & WARRANTY")
+    ) {
+      fromAdmin.push({ category: "CONDITION & WARRANTY", items: conditionItems });
+    }
+    if (fromAdmin.length > 0) return fromAdmin;
+  }
+
   const raw = product.specs || {};
-  const brand = product.brand || "HP";
-  const name = product.name;
+  const categories: SpecCategory[] = [];
 
-  // CPU
-  let processorBrand = "Intel";
-  if (/ryzen|amd/i.test(name) || /ryzen|amd/i.test(raw.processor || "")) {
-    processorBrand = "AMD";
-  } else if (/apple|m1|m2|m3/i.test(name)) {
-    processorBrand = "Apple";
+  // 1. Processor & Performance
+  const processorItems: Array<{ label: string; value: string }> = [];
+  if (raw.processor) {
+    processorItems.push({ label: "Processor", value: raw.processor });
+  }
+  if (raw.os) {
+    processorItems.push({ label: "Operating System", value: raw.os });
+  }
+  if (processorItems.length > 0) {
+    categories.push({ category: "PROCESSOR & PERFORMANCE", items: processorItems });
   }
 
-  const processorModel =
-    raw.processor ||
-    (brand === "HP" ? "Intel Core i5 Processor" : "Intel Core i5 Processor");
-
-  // Display
-  let displaySize = "14.0 Inch";
-  if (/13\.3/i.test(name) || /13\.3/i.test(raw.display || "")) {
-    displaySize = "13.3 Inch";
-  } else if (/15\.6/i.test(name) || /15\.6/i.test(raw.display || "")) {
-    displaySize = "15.6 Inch";
-  } else if (raw.display) {
-    displaySize = raw.display;
-  }
-
-  const displayType = raw.displayType || "FHD IPS Anti-Glare LED Display";
-  const displayRes = "1920 x 1080 (Full HD)";
-
-  // Ram & SSD (use selected variant if provided, otherwise product specs)
-  const activeRam = selectedRam || raw.ram || "8GB DDR4";
-  const activeSsd = selectedSsd || raw.storage || "256GB NVMe SSD";
-
-  // Condition & Grade
-  const conditionGrade = product.grade
-    ? `Grade ${product.grade}`
-    : product.condition && product.condition.length > 0
-    ? product.condition.join(", ")
-    : "Grade A (Pre-Owned)";
-
-  const warrantyGuarantee =
-    product.warranty || "15 Days Replacement Guarantee";
-  const serviceWarranty = "2 Years Free Service Warranty";
-
-  const categories: SpecCategory[] = [
-    {
-      category: "PROCESSOR & PERFORMANCE",
-      items: [
-        { label: "Processor Brand", value: processorBrand },
-        { label: "Processor Model", value: processorModel },
-        ...(raw.os ? [{ label: "Operating System", value: raw.os }] : []),
-      ],
-    },
-    {
+  // 2. Memory (RAM)
+  const activeRam = selectedRam || raw.ram;
+  if (activeRam) {
+    categories.push({
       category: "MEMORY (RAM)",
-      items: [
-        { label: "Installed RAM", value: activeRam },
-        { label: "RAM Type", value: "DDR4 SDRAM" },
-        { label: "RAM Slots", value: "Dual Channel SODIMM Slots (Upgradable)" },
-      ],
-    },
-    {
+      items: [{ label: "Installed RAM", value: activeRam }],
+    });
+  }
+
+  // 3. Storage
+  const activeSsd = selectedSsd || raw.storage;
+  if (activeSsd) {
+    categories.push({
       category: "STORAGE",
-      items: [
-        { label: "Installed Storage", value: activeSsd },
-        { label: "Storage Interface", value: "M.2 PCIe NVMe SSD" },
-        { label: "Storage Upgrade", value: "Upgradable up to 1TB / 2TB SSD" },
-      ],
-    },
-    {
-      category: "DISPLAY & GRAPHICS",
-      items: [
-        { label: "Display Size", value: displaySize },
-        { label: "Display Type", value: displayType },
-        { label: "Resolution", value: displayRes },
-        {
-          label: "Touchscreen",
-          value: raw.touchscreen ? "Yes (Touchscreen Enabled)" : "No",
-        },
-        {
-          label: "Graphics",
-          value: raw.graphics || "Intel Integrated Graphics",
-        },
-      ],
-    },
-    {
-      category: "PORTS & CONNECTIVITY",
-      items: [
-        {
-          label: "Ports",
-          value:
-            raw.ports && raw.ports.length > 0
-              ? raw.ports.join(", ")
-              : "USB 3.1, HDMI, Audio Combo Jack, RJ-45 LAN",
-        },
-        { label: "Wireless", value: "Wi-Fi Dual Band + Bluetooth" },
-      ],
-    },
-    {
-      category: "BATTERY & PHYSICAL",
-      items: [
-        {
-          label: "Battery Backup",
-          value: raw.battery || "Up to 3-4 Hours (Tested)",
-        },
-        { label: "Weight", value: raw.weight || "Approx 1.4 - 1.6 kg" },
-        { label: "Color", value: "Silver / Dark Ash Black" },
-      ],
-    },
-    {
-      category: "CONDITION & WARRANTY",
-      items: [
-        { label: "Condition Grade", value: conditionGrade },
-        { label: "Testing Status", value: "100% Tested & Certified Hardware" },
-        { label: "Replacement Warranty", value: warrantyGuarantee },
-        { label: "Service Warranty", value: serviceWarranty },
-      ],
-    },
-  ];
+      items: [{ label: "Installed Storage", value: activeSsd }],
+    });
+  }
+
+  // 4. Display & Graphics
+  const displayItems: Array<{ label: string; value: string }> = [];
+  if (raw.display) {
+    displayItems.push({ label: "Display", value: raw.display });
+  }
+  if (raw.displayType) {
+    displayItems.push({ label: "Display Type", value: raw.displayType });
+  }
+  if (raw.touchscreen !== undefined && raw.touchscreen !== null) {
+    displayItems.push({
+      label: "Touchscreen",
+      value: raw.touchscreen ? "Yes (Touchscreen Enabled)" : "No",
+    });
+  }
+  if (raw.graphics) {
+    displayItems.push({ label: "Graphics", value: raw.graphics });
+  }
+  if (displayItems.length > 0) {
+    categories.push({ category: "DISPLAY & GRAPHICS", items: displayItems });
+  }
+
+  // 5. Ports & Connectivity
+  const portsItems: Array<{ label: string; value: string }> = [];
+  if (raw.ports && raw.ports.length > 0) {
+    portsItems.push({ label: "Ports", value: raw.ports.join(", ") });
+  }
+  if (portsItems.length > 0) {
+    categories.push({ category: "PORTS & CONNECTIVITY", items: portsItems });
+  }
+
+  // 6. Battery & Physical
+  const physicalItems: Array<{ label: string; value: string }> = [];
+  if (raw.battery) {
+    physicalItems.push({ label: "Battery", value: raw.battery });
+  }
+  if (raw.weight) {
+    physicalItems.push({ label: "Weight", value: raw.weight });
+  }
+  if (physicalItems.length > 0) {
+    categories.push({ category: "BATTERY & PHYSICAL", items: physicalItems });
+  }
+
+  // 7. Condition & Warranty
+  const conditionItems: Array<{ label: string; value: string }> = [];
+  if (product.grade) {
+    conditionItems.push({ label: "Condition Grade", value: `Grade ${product.grade}` });
+  } else if (product.condition && product.condition.length > 0) {
+    conditionItems.push({ label: "Condition", value: product.condition.join(", ") });
+  }
+  if (product.warranty) {
+    conditionItems.push({ label: "Warranty", value: product.warranty });
+  }
+  if (conditionItems.length > 0) {
+    categories.push({ category: "CONDITION & WARRANTY", items: conditionItems });
+  }
 
   return categories;
 }
@@ -149,6 +155,14 @@ export default function ProductSpecTable({
     selectedRam,
     selectedSsd
   );
+
+  if (categories.length === 0) {
+    return (
+      <div className="border border-gray-200 dark:border-border rounded-lg p-6 text-center text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-card">
+        No detailed specifications available for this product yet.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -169,7 +183,7 @@ export default function ProductSpecTable({
                 >
                   <th
                     scope="row"
-                    className="px-4 py-2.5 font-semibold text-gray-600 dark:text-gray-400 w-1/3 align-top font-normal"
+                    className="px-4 py-2.5 font-normal text-gray-600 dark:text-gray-400 w-1/3 align-top font-normal"
                   >
                     {row.label}
                   </th>
