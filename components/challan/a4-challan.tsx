@@ -80,7 +80,7 @@ export function A4Challan({
   lines,
   notes,
   terms,
-  footerText = 'TECH DRIVE, © 2026',
+  footerText = 'LAPTOP POINT BD, © 2026',
 }: A4ChallanProps) {
   return (
     <>
@@ -154,13 +154,13 @@ export function A4Challan({
         <div className="border border-slate-200">
           {/* Header */}
           <div className="challan-main-grid grid grid-cols-[132px_1fr_210px] border-b border-slate-200">
-            <div className="flex items-center justify-center border-r border-slate-200 p-5">
+            <div className="flex items-center justify-center border-r border-slate-200 p-4">
               <Image
-                src="/logo_icons.png"
-                alt="Tech Drive logo"
-                width={96}
-                height={96}
-                className="h-auto w-20"
+                src="/Logo.webp"
+                alt="Laptop Point BD logo"
+                width={120}
+                height={40}
+                className="h-auto w-24 object-contain"
                 priority
               />
             </div>

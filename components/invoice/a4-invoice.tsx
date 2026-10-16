@@ -203,8 +203,8 @@ export function A4Invoice({
   discountTotal,
   shippingCost,
   previousDue,
-  newBalance,
-  isB2BLinked,
+  newBalance: _newBalance,
+  isB2BLinked: _isB2BLinked,
   currentBill,
   paidAmount,
   balanceDue,
@@ -214,7 +214,7 @@ export function A4Invoice({
   notes,
   payments,
   terms,
-  footerText = 'TECH DRIVE, © 2026',
+  footerText = 'LAPTOP POINT BD, © 2026',
 }: A4InvoiceProps) {
   const resolvedWords = amountInWords ?? buildAmountInWords(grandTotal)
   const isCompact = true
@@ -372,29 +372,29 @@ export function A4Invoice({
         }`}
       >
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="flex -rotate-12 flex-col items-center gap-3 opacity-[0.06]">
+          <div className="flex -rotate-12 flex-col items-center gap-3 opacity-[0.05]">
             <Image
-              src="/logo_icons.png"
-              alt="Tech Drive watermark"
-              width={220}
-              height={220}
-              className="h-auto w-44"
+              src="/Logo.webp"
+              alt="Laptop Point BD watermark"
+              width={260}
+              height={80}
+              className="h-auto w-52 object-contain"
             />
-            <p className="text-5xl font-extrabold uppercase tracking-[0.35em] text-slate-700">
-              Tech Drive
+            <p className="text-4xl font-extrabold uppercase tracking-[0.3em] text-slate-700">
+              Laptop Point BD
             </p>
           </div>
         </div>
 
         <div className="relative z-10 flex h-full flex-col border border-slate-200">
           <div className="invoice-main-grid grid grid-cols-[132px_1fr_210px] border-b border-slate-200 bg-white/90">
-            <div className="flex items-center justify-center border-r border-slate-200 p-5">
+            <div className="flex items-center justify-center border-r border-slate-200 p-4">
               <Image
-                src="/logo_icons.png"
-                alt="Tech Drive logo"
-                width={96}
-                height={96}
-                className="h-auto w-20"
+                src="/Logo.webp"
+                alt="Laptop Point BD logo"
+                width={120}
+                height={40}
+                className="h-auto w-24 object-contain"
                 priority
               />
             </div>
@@ -677,46 +677,7 @@ export function A4Invoice({
                 {resolvedWords.toUpperCase()}
               </div>
 
-              {/* Account Running Balance Summary (Visually Distinct) */}
-              {(previousDue !== undefined && previousDue !== null || newBalance !== undefined && newBalance !== null) && (
-                <div className="mt-3 rounded-md border border-slate-300 bg-slate-50/90 p-3 text-[11px]">
-                  <div className="flex items-center justify-between border-b border-slate-200 pb-1.5 font-bold text-slate-800">
-                    <span>Account Running Balance Summary</span>
-                    {isB2BLinked && (
-                      <span className="rounded bg-indigo-100 px-2 py-0.5 text-[9px] font-bold text-indigo-800 border border-indigo-200">
-                        Net B2B Balance
-                      </span>
-                    )}
-                  </div>
-                  <div className="mt-2 grid grid-cols-3 gap-3 text-center">
-                    <div className="rounded border border-slate-200 bg-white p-2">
-                      <span className="block text-[9px] font-sans font-semibold text-slate-500 uppercase tracking-wider">Previous Due</span>
-                      <span className="mt-0.5 block font-bold text-slate-900 text-xs tabular-nums">
-                        ৳{formatMoney(previousDue ?? 0)}
-                      </span>
-                    </div>
-                    <div className="rounded border border-slate-200 bg-white p-2">
-                      <span className="block text-[9px] font-sans font-semibold text-slate-500 uppercase tracking-wider">This Invoice</span>
-                      <span className="mt-0.5 block font-bold text-slate-900 text-xs tabular-nums">
-                        ৳{formatMoney(grandTotal)}
-                      </span>
-                    </div>
-                    <div className="rounded border border-indigo-200 bg-indigo-50/50 p-2">
-                      <span className="block text-[9px] font-sans font-semibold text-indigo-700 uppercase tracking-wider">New Balance</span>
-                      <span className="mt-0.5 block font-bold text-indigo-900 text-xs tabular-nums">
-                        ৳{formatMoney(newBalance ?? (toNumber(previousDue) + toNumber(grandTotal)))}
-                      </span>
-                    </div>
-                  </div>
-                  {isB2BLinked && (
-                    <p className="mt-1.5 text-[10px] italic text-slate-600">
-                      * Note: Running balance reflects Net B2B Balance across combined Customer (A/R) & Supplier (A/P) accounts.
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* Payment History (Positioned immediately after Account Running Balance Summary) */}
+              {/* Payment History */}
               {payments && payments.length > 0 && (
                 <div className="invoice-payments-block mt-3 mb-2">
                   <p className="text-[12px] font-semibold">Payment History</p>
