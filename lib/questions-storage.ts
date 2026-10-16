@@ -46,15 +46,18 @@ const DEFAULT_QUESTIONS: QuestionRecord[] = [
   },
 ];
 
+import { TtlCache } from "@/lib/cache/ttl-cache";
+
 const questionsFilePath = path.join(process.cwd(), "app", "data", "questions.json");
-let inMemoryQuestions: QuestionRecord[] | null = null;
+const questionsCache = new TtlCache<QuestionRecord[]>();
 
 export function resetQuestionsCache(): void {
-  inMemoryQuestions = null;
+  questionsCache.invalidate();
 }
 
 export async function readQuestions(): Promise<QuestionRecord[]> {
-  if (inMemoryQuestions) return inMemoryQuestions;
+  const cached = questionsCache.get();
+  if (cached) return cached;
 
   // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
   try {
@@ -62,8 +65,9 @@ export async function readQuestions(): Promise<QuestionRecord[]> {
       where: { sku: "system:questions" },
     });
     if (record && record.data && Array.isArray(record.data)) {
-      inMemoryQuestions = record.data as unknown as QuestionRecord[];
-      return inMemoryQuestions;
+      const list = record.data as unknown as QuestionRecord[];
+      questionsCache.set(list);
+      return list;
     }
   } catch (dbErr) {
     console.warn("[readQuestions] DB fetch warning:", dbErr);
@@ -74,7 +78,7 @@ export async function readQuestions(): Promise<QuestionRecord[]> {
     const raw = await fs.readFile(questionsFilePath, "utf-8");
     const parsed = JSON.parse(raw) as QuestionRecord[];
     if (Array.isArray(parsed) && parsed.length > 0) {
-      inMemoryQuestions = parsed;
+      questionsCache.set(parsed);
       return parsed;
     }
   } catch {
@@ -82,13 +86,14 @@ export async function readQuestions(): Promise<QuestionRecord[]> {
   }
 
   // 3. Fallback to default seeded
-  inMemoryQuestions = [...DEFAULT_QUESTIONS];
-  await writeQuestions(inMemoryQuestions).catch(() => {});
-  return inMemoryQuestions;
+  const fallback = [...DEFAULT_QUESTIONS];
+  questionsCache.set(fallback);
+  await writeQuestions(fallback).catch(() => {});
+  return fallback;
 }
 
 export async function writeQuestions(items: QuestionRecord[]): Promise<void> {
-  inMemoryQuestions = items;
+  questionsCache.set(items);
 
   // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {

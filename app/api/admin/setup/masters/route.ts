@@ -34,8 +34,10 @@ interface MastersDataFile {
   categories: MasterCategory[];
 }
 
+import { TtlCache } from "@/lib/cache/ttl-cache";
+
 const mastersFilePath = path.join(process.cwd(), "app", "data", "catalog-masters.json");
-let inMemoryMasters: MastersDataFile | null = null;
+const mastersCache = new TtlCache<MastersDataFile>();
 
 const DEFAULT_BRANDS: MasterBrand[] = [
   { id: "brand-hp", name: "HP", slug: "hp", logo: "/Hero/HP.png", website: "https://hp.com", sortOrder: 0, active: true },
@@ -58,11 +60,12 @@ const DEFAULT_CATEGORIES: MasterCategory[] = [
 ];
 
 export function resetMastersCache(): void {
-  inMemoryMasters = null;
+  mastersCache.invalidate();
 }
 
 async function readMasters(): Promise<MastersDataFile> {
-  if (inMemoryMasters) return inMemoryMasters;
+  const cached = mastersCache.get();
+  if (cached) return cached;
 
   // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
   try {
@@ -72,7 +75,7 @@ async function readMasters(): Promise<MastersDataFile> {
     if (rec && rec.data) {
       const parsed = rec.data as unknown as MastersDataFile;
       if (parsed && Array.isArray(parsed.brands) && Array.isArray(parsed.categories)) {
-        inMemoryMasters = parsed;
+        mastersCache.set(parsed);
         return parsed;
       }
     }
@@ -85,7 +88,7 @@ async function readMasters(): Promise<MastersDataFile> {
     const raw = await fs.readFile(mastersFilePath, "utf-8");
     const parsed = JSON.parse(raw) as MastersDataFile;
     if (parsed && Array.isArray(parsed.brands) && Array.isArray(parsed.categories)) {
-      inMemoryMasters = parsed;
+      mastersCache.set(parsed);
       return parsed;
     }
   } catch {
@@ -93,16 +96,18 @@ async function readMasters(): Promise<MastersDataFile> {
   }
 
   // 3. Fallback to default seeded
-  inMemoryMasters = {
+  const fallback: MastersDataFile = {
     brands: [...DEFAULT_BRANDS],
     categories: [...DEFAULT_CATEGORIES],
   };
-  await writeMasters(inMemoryMasters).catch(() => {});
-  return inMemoryMasters;
+  mastersCache.set(fallback);
+  await writeMasters(fallback).catch(() => {});
+  return fallback;
 }
 
 async function writeMasters(data: MastersDataFile): Promise<void> {
-  inMemoryMasters = data;
+  mastersCache.set(data);
+
 
   // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {

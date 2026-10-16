@@ -25,5 +25,7 @@ test("Read-only filesystem persistence acceptance test", () => {
   }
 
   assert.equal(result.status, 0, "test-readonly-persistence.mjs should exit with code 0");
-  assert.ok(result.stdout.includes("ALL 8/8 READ-ONLY PERSISTENCE TESTS PASSED"));
+  assert.ok(result.stdout.includes("ALL 9/9 READ-ONLY PERSISTENCE TESTS PASSED"));
+  assert.ok(result.stdout.includes("Cross-Instance Cache Coherence"));
 });
+

@@ -23,8 +23,13 @@ import { spawnSync } from "child_process";
 import path from "path";
 import process from "process";
 
+import { assertStagingDatabase } from "./lib/staging-guard.mjs";
+
 const BASE = process.env.TEST_URL || "http://localhost:3000";
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+
+// Staging database safety guard: refuse if server DB does not match allow-list
+await assertStagingDatabase({ serverUrl: BASE });
 
 console.log("==================================================================");
 console.log("   LAPTOP POINT BD — AUTOMATED VERIFICATION SUITE RUNNER");
@@ -43,6 +48,7 @@ if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
   console.error("Run with: node --env-file=.env.local scripts/check-all.mjs");
   process.exit(1);
 }
+
 
 const steps = [
   {

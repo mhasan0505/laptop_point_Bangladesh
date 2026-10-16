@@ -15,15 +15,18 @@ import {
   recoverFields,
 } from "./settings-base";
 
+import { TtlCache } from "@/lib/cache/ttl-cache";
+
 const settingsFilePath = path.join(process.cwd(), "app", "data", "settings.json");
-let inMemorySettingsCache: Record<string, unknown> | null = null;
+const settingsCache = new TtlCache<Record<string, unknown>>();
 
 export function resetSettingsCache(): void {
-  inMemorySettingsCache = null;
+  settingsCache.invalidate();
 }
 
 async function loadAllSettingsFile(): Promise<Record<string, unknown>> {
-  if (inMemorySettingsCache) return inMemorySettingsCache;
+  const cached = settingsCache.get();
+  if (cached) return cached;
 
   const merged: Record<string, unknown> = {};
 
@@ -53,12 +56,12 @@ async function loadAllSettingsFile(): Promise<Record<string, unknown>> {
     console.warn("[loadAllSettingsFile] DB settings fetch warning:", dbErr);
   }
 
-  inMemorySettingsCache = merged;
-  return inMemorySettingsCache;
+  settingsCache.set(merged);
+  return merged;
 }
 
 async function persistAllSettingsFile(data: Record<string, unknown>): Promise<void> {
-  inMemorySettingsCache = data;
+  settingsCache.set(data);
 
   try {
     await fs.mkdir(path.dirname(settingsFilePath), { recursive: true });

@@ -17,8 +17,13 @@
 // to ImageKit (folder /laptop-point/card). It can't be deleted from here; remove
 // it in the ImageKit dashboard if you care.
 
+import { assertStagingDatabase } from "./lib/staging-guard.mjs";
+
 const BASE = process.env.TEST_URL || "http://localhost:3000";
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+
+// Staging database safety guard: refuse if server DB does not match allow-list
+await assertStagingDatabase({ serverUrl: BASE });
 
 if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
   console.error("ERROR: ADMIN_EMAIL / ADMIN_PASSWORD are not set in the environment.");
@@ -28,6 +33,7 @@ if (!/localhost|127\.0\.0\.1/.test(BASE)) {
   console.error(`Refusing to run against non-local URL: ${BASE}`);
   process.exit(1);
 }
+
 
 const PNG_1x1 = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",

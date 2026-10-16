@@ -22,26 +22,50 @@ import fs from "node:fs";
 import path from "node:path";
 import assert from "node:assert/strict";
 
-// Safety check: Never run write tests against the remote dev database
-const dbUrl = process.env.DATABASE_URL || "";
-const isRemoteDevDb = dbUrl.includes("ep-wild-fog") || dbUrl.includes("neon.tech");
-const stagingHost = process.env.STAGING_DB_HOST;
-const isStagingDb = stagingHost && (dbUrl.includes(stagingHost) || (stagingHost === "localhost" && dbUrl.includes("127.0.0.1")));
+import { computeDbHostFingerprint, getAllowedFingerprints } from "./lib/staging-guard.mjs";
 
 console.log("==================================================================");
 console.log("  ACCEPTANCE TEST: READ-ONLY PRODUCTION PERSISTENCE (EROFS)");
 console.log("==================================================================");
 
+// Staging allow-list check: NO hardcoded database hosts
+const dbUrl = process.env.DATABASE_URL || "";
+const allowedFingerprints = getAllowedFingerprints();
+const localFp = dbUrl ? computeDbHostFingerprint(dbUrl) : "";
+const isAllowedDb = Boolean(localFp && allowedFingerprints.has(localFp));
+const isAcceptanceMode = process.argv.includes("--acceptance") || process.env.ACCEPTANCE_MODE === "1";
+
 let useSimulator = false;
-if (isRemoteDevDb && !isStagingDb) {
-  console.log("ℹ️  DATABASE_URL points to remote dev database. Activating in-process PostgreSQL adapter simulator to prevent remote DB writes.");
-  useSimulator = true;
-} else if (!dbUrl) {
-  console.log("ℹ️  No DATABASE_URL configured. Activating in-process PostgreSQL adapter simulator.");
-  useSimulator = true;
+if (isAllowedDb) {
+  try {
+    const parsed = new URL(dbUrl);
+    console.log(`✅ Using verified staging database: ${parsed.host}`);
+  } catch {
+    console.log(`✅ Using verified staging database: fingerprint ${localFp.slice(0, 16)}...`);
+  }
 } else {
-  console.log(`✅ Using verified staging database: ${new URL(dbUrl).host}`);
+  useSimulator = true;
 }
+
+if (useSimulator) {
+  console.log("\n******************************************************************");
+  console.log("*                                                                *");
+  console.log("*          ⚠️   SIMULATED (not a real database)   ⚠️              *");
+  console.log("*                                                                *");
+  console.log("*   The in-process adapter simulator was used as a CI fallback.  *");
+  console.log("*   This is NOT a real database verification run.                *");
+  console.log("*   To validate against a real database, configure               *");
+  console.log("*   STAGING_DB_HOST (or STAGING_DB_FINGERPRINT) in .env.test.   *");
+  console.log("*                                                                *");
+  console.log("******************************************************************\n");
+
+  if (isAcceptanceMode) {
+    console.error("❌ ACCEPTANCE MODE REFUSAL: Simulated database execution is prohibited in acceptance mode.");
+    console.error("Deploy a real staging database (Docker or Neon branch) and set STAGING_DB_HOST to verify.\n");
+    process.exit(2);
+  }
+}
+
 
 // ─────────────────────────────────────────────────────────────
 // 1. SIMULATE READ-ONLY FILESYSTEM (EROFS)
@@ -226,6 +250,8 @@ const {
   deleteBanner,
   readBanners,
   resetBannersCache,
+  getBannersCache,
+  setBannersCache,
 } = await import("../lib/banners/storage.ts");
 
 const {
@@ -252,9 +278,12 @@ const {
 
 const {
   createAdminUser,
+  updateAdminUser,
   deleteAdminUser,
   readAdminUsers,
   resetAdminUsersCache,
+  getAdminUsersCache,
+  setAdminUsersCache,
   verifyPassword,
 } = await import("../lib/admin-users-storage.ts");
 
@@ -266,13 +295,16 @@ const {
   resetMediaMetaCache,
 } = await import("../lib/media/storage.ts");
 
+const { TtlCache } = await import("../lib/cache/ttl-cache.ts");
+
 let passed = 0;
-let total = 8;
+let total = 9;
 
 function pass(name, detail = "") {
   console.log(`✅ [PASS] ${name} ${detail ? `(${detail})` : ""}`);
   passed++;
 }
+
 
 // ─────────────────────────────────────────────────────────────
 // TEST 1: PRODUCTS PERSISTENCE
@@ -499,9 +531,146 @@ assert.ok(!metaAfterDelete, "Media meta should be deleted from DB");
 pass("Media Alt Text", "storeMediaMeta, cold restart getMediaMeta & readMediaMeta, and delete verified");
 
 // ─────────────────────────────────────────────────────────────
+// TEST 9: CROSS-INSTANCE CACHE COHERENCE (TWO INSTANCES OVER SAME STORE)
+// ─────────────────────────────────────────────────────────────
+console.log("\n--- [9/9] Cross-Instance Cache Coherence (Two Instances Over Same Store) ---");
+
+// Instance A clock & cache
+let timeA = 1000000;
+const cacheBannersA = new TtlCache({ ttlMs: 15000, now: () => timeA });
+const cacheUsersA = new TtlCache({ ttlMs: 15000, now: () => timeA });
+
+// Instance B clock & cache
+let timeB = 1000000;
+const cacheBannersB = new TtlCache({ ttlMs: 15000, now: () => timeB });
+const cacheUsersB = new TtlCache({ ttlMs: 15000, now: () => timeB });
+
+// Case 1: Write on A -> B sees it after at most TTL
+// Step 1a: Instance A writes a banner
+setBannersCache(cacheBannersA);
+const twoInstanceBannerId = `banner-two-inst-${Date.now()}`;
+await saveBanner({
+  id: twoInstanceBannerId,
+  title: "Instance A Initial Banner",
+  placement: "home.hero",
+  active: true,
+  sortOrder: 99,
+  desktopAssetId: null,
+  desktopImageUrl: "/test-a.webp",
+  mobileAssetId: null,
+  mobileImageUrl: "/test-a.webp",
+  badgeText: null,
+  headline: "Instance A Initial Banner",
+  subtext: null,
+  ctaLabel: null,
+  linkHref: null,
+  theme: null,
+  startsAt: null,
+  endsAt: null,
+  targetBrandId: null,
+  targetCategoryId: null,
+});
+
+// Step 1b: Switch to Instance B. Instance B reads from shared store and caches it.
+setBannersCache(cacheBannersB);
+let bannersB = await readBanners();
+let bannerB = bannersB.find((b) => b.id === twoInstanceBannerId);
+assert.ok(bannerB, "Instance B should read initial banner from shared DB");
+assert.equal(bannerB.title, "Instance A Initial Banner");
+
+// Step 1c: Switch back to Instance A. Instance A updates the banner.
+setBannersCache(cacheBannersA);
+await saveBanner({
+  id: twoInstanceBannerId,
+  title: "Instance A Updated Banner v2",
+  placement: "home.hero",
+  active: true,
+  sortOrder: 99,
+  desktopAssetId: null,
+  desktopImageUrl: "/test-a.webp",
+  mobileAssetId: null,
+  mobileImageUrl: "/test-a.webp",
+  badgeText: null,
+  headline: "Instance A Updated Banner v2",
+  subtext: null,
+  ctaLabel: null,
+  linkHref: null,
+  theme: null,
+  startsAt: null,
+  endsAt: null,
+  targetBrandId: null,
+  targetCategoryId: null,
+});
+// A sees its update immediately
+let bannersA = await readBanners();
+assert.equal(bannersA.find((b) => b.id === twoInstanceBannerId)?.title, "Instance A Updated Banner v2");
+
+// Step 1d: Switch to Instance B before TTL expires (timeB + 5s). B still sees its cached v1.
+setBannersCache(cacheBannersB);
+timeB += 5000;
+bannersB = await readBanners();
+assert.equal(bannersB.find((b) => b.id === twoInstanceBannerId)?.title, "Instance A Initial Banner", "Instance B should serve cached value before TTL");
+
+// Step 1e: Advance Instance B's clock beyond TTL (timeB + 16s total = 21s elapsed).
+timeB += 16000;
+bannersB = await readBanners();
+assert.equal(bannersB.find((b) => b.id === twoInstanceBannerId)?.title, "Instance A Updated Banner v2", "Instance B must see Instance A's update once TTL expires");
+
+// Cleanup banner
+setBannersCache(cacheBannersA);
+await deleteBanner(twoInstanceBannerId);
+
+// Case 2: Staff deactivated on A is rejected on B within TTL
+// Step 2a: Instance A creates a staff user
+setAdminUsersCache(cacheUsersA);
+const twoInstStaffEmail = `staff-two-inst-${Date.now()}@laptoppointbd.com`;
+const twoInstStaff = await createAdminUser({
+  name: "Two Instance Staff",
+  email: twoInstStaffEmail,
+  role: "manager",
+  password: "SafePassword123!",
+});
+assert.equal(twoInstStaff.active, true);
+
+// Step 2b: Instance B reads staff user and caches active: true
+setAdminUsersCache(cacheUsersB);
+let usersB = await readAdminUsers();
+let staffOnB = usersB.find((u) => u.id === twoInstStaff.id);
+assert.ok(staffOnB, "Instance B should see new staff from shared DB");
+assert.equal(staffOnB.active, true);
+
+// Step 2c: Instance A deactivates staff member
+setAdminUsersCache(cacheUsersA);
+await updateAdminUser(twoInstStaff.id, { active: false });
+const usersA = await readAdminUsers();
+assert.equal(usersA.find((u) => u.id === twoInstStaff.id)?.active, false, "Instance A should reflect deactivation immediately");
+
+// Step 2d: Advance Instance B's clock past TTL (15s)
+setAdminUsersCache(cacheUsersB);
+timeB += 16000; // Past 15s TTL
+usersB = await readAdminUsers();
+staffOnB = usersB.find((u) => u.id === twoInstStaff.id);
+assert.ok(staffOnB);
+assert.equal(staffOnB.active, false, "Instance B must observe deactivated staff within TTL");
+
+// Auth gate simulation on Instance B: Active check fails within TTL
+const isRejectedOnB = !staffOnB || !staffOnB.active;
+assert.ok(isRejectedOnB, "Deactivated staff member must be rejected on Instance B within TTL");
+
+// Cleanup staff user
+await deleteAdminUser(twoInstStaff.id);
+
+pass("Cross-instance Cache Coherence", "write on A -> B sees after TTL; staff deactivated on A rejected on B within TTL");
+
+// Restore default caches
+resetBannersCache();
+resetAdminUsersCache();
+
+// ─────────────────────────────────────────────────────────────
 // FINAL REPORT
 // ─────────────────────────────────────────────────────────────
 console.log("\n==================================================================");
 console.log(`🎉 ALL ${passed}/${total} READ-ONLY PERSISTENCE TESTS PASSED!`);
 console.log(`🔒 Simulated EROFS write interceptions handled safely: ${erofsTriggerCount} times.`);
 console.log("==================================================================");
+

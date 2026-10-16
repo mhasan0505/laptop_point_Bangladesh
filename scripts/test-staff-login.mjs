@@ -29,12 +29,18 @@ if (fs.existsSync(".env.local")) {
   }
 }
 
+import { assertStagingDatabase } from "./lib/staging-guard.mjs";
+
 if (!process.env.ADMIN_PASSWORD) {
   console.error("ERROR: ADMIN_PASSWORD is unset. Please configure ADMIN_PASSWORD in your environment or .env.local before running this test.");
   process.exit(1);
 }
 
 const BASE_URL = process.env.TEST_URL || "http://localhost:3000";
+
+// Staging database safety guard: refuse if server DB does not match allow-list
+await assertStagingDatabase({ serverUrl: BASE_URL });
+
 
 function extractCookies(response) {
   const setCookies = response.headers.getSetCookie

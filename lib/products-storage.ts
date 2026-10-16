@@ -31,15 +31,22 @@ async function writeJsonAtomic(filePath: string, data: unknown): Promise<void> {
   await fs.rename(tmp, filePath);
 }
 
-let _memoryCachedRawProducts: RawProduct[] | null = null;
+import { TtlCache } from "@/lib/cache/ttl-cache";
+
+const productsCache = new TtlCache<RawProduct[]>();
 
 export function getCachedRawProducts(): RawProduct[] | null {
-  return _memoryCachedRawProducts;
+  return productsCache.get();
 }
 
 export function setCachedRawProducts(products: RawProduct[]): void {
-  _memoryCachedRawProducts = products;
+  productsCache.set(products);
 }
+
+export function resetCachedRawProducts(): void {
+  productsCache.invalidate();
+}
+
 
 /**
  * Load products with PostgreSQL overrides applied (merged with live Inventory stock).

@@ -43,12 +43,24 @@ export function verifyPassword(password: string, storedHash?: string): boolean {
   }
 }
 
+import { TtlCache } from "@/lib/cache/ttl-cache";
+
 const adminUsersFilePath = path.join(process.cwd(), "app", "data", "admin-users.json");
-let inMemoryUsers: AdminUserRecord[] | null = null;
+// Gated to <= 15s to ensure rapid cross-instance security revocation
+let adminUsersCache = new TtlCache<AdminUserRecord[]>({ ttlMs: 15000 });
+
+export function getAdminUsersCache(): TtlCache<AdminUserRecord[]> {
+  return adminUsersCache;
+}
+
+export function setAdminUsersCache(cache: TtlCache<AdminUserRecord[]>): void {
+  adminUsersCache = cache;
+}
 
 export function resetAdminUsersCache(): void {
-  inMemoryUsers = null;
+  adminUsersCache.invalidate();
 }
+
 
 function getDefaultOwner(): AdminUserRecord {
   const email = process.env.ADMIN_EMAIL || "admin@laptoppointbd.com";
@@ -71,7 +83,8 @@ async function writeJsonAtomic(filePath: string, data: unknown): Promise<void> {
 }
 
 export async function readAdminUsers(): Promise<AdminUserRecord[]> {
-  if (inMemoryUsers) return inMemoryUsers;
+  const cached = adminUsersCache.get();
+  if (cached) return cached;
 
   // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
   try {
@@ -79,8 +92,9 @@ export async function readAdminUsers(): Promise<AdminUserRecord[]> {
       where: { sku: "system:admin_users" },
     });
     if (record && record.data && Array.isArray(record.data) && record.data.length > 0) {
-      inMemoryUsers = record.data as unknown as AdminUserRecord[];
-      return inMemoryUsers;
+      const list = record.data as unknown as AdminUserRecord[];
+      adminUsersCache.set(list);
+      return list;
     }
   } catch (dbErr) {
     console.warn("[readAdminUsers] DB fetch warning:", dbErr);
@@ -92,8 +106,8 @@ export async function readAdminUsers(): Promise<AdminUserRecord[]> {
     if (raw && raw.trim().length > 0) {
       const parsed = JSON.parse(raw) as AdminUserRecord[];
       if (Array.isArray(parsed) && parsed.length > 0) {
-        inMemoryUsers = parsed;
-        return inMemoryUsers;
+        adminUsersCache.set(parsed);
+        return parsed;
       }
     }
   } catch {
@@ -101,13 +115,14 @@ export async function readAdminUsers(): Promise<AdminUserRecord[]> {
   }
 
   // 3. Fallback to default owner
-  inMemoryUsers = [getDefaultOwner()];
-  await writeAdminUsers(inMemoryUsers).catch(() => {});
-  return inMemoryUsers;
+  const fallback = [getDefaultOwner()];
+  adminUsersCache.set(fallback);
+  await writeAdminUsers(fallback).catch(() => {});
+  return fallback;
 }
 
 export async function writeAdminUsers(users: AdminUserRecord[]): Promise<void> {
-  inMemoryUsers = users;
+  adminUsersCache.set(users);
 
   // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {

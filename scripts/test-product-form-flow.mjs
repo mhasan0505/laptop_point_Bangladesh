@@ -12,8 +12,13 @@
 //   - changing a laptop's category to an accessory category moves it
 // All records use throwaway SKUs and are deleted at the end. No orders are placed.
 
+import { assertStagingDatabase } from "./lib/staging-guard.mjs";
+
 const BASE = process.env.TEST_URL || "http://localhost:3000";
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+
+// Staging database safety guard: refuse if server DB does not match allow-list
+await assertStagingDatabase({ serverUrl: BASE });
 
 if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
   console.error("ERROR: ADMIN_EMAIL / ADMIN_PASSWORD are not set in the environment.");
@@ -23,6 +28,7 @@ if (!/localhost|127\.0\.0\.1/.test(BASE)) {
   console.error(`Refusing to run against non-local URL: ${BASE}`);
   process.exit(1);
 }
+
 
 let passed = 0;
 let failed = 0;

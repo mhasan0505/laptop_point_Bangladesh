@@ -34,15 +34,18 @@ interface PowerDealStoreFile {
   deals: PowerDealItem[];
 }
 
+import { TtlCache } from "@/lib/cache/ttl-cache";
+
 const storeFilePath = path.join(process.cwd(), "app", "data", "power-deals.json");
-let inMemoryStore: PowerDealStoreFile | null = null;
+const powerDealsCache = new TtlCache<PowerDealStoreFile>();
 
 export function resetPowerDealsCache(): void {
-  inMemoryStore = null;
+  powerDealsCache.invalidate();
 }
 
 async function readStore(): Promise<PowerDealStoreFile> {
-  if (inMemoryStore) return inMemoryStore;
+  const cached = powerDealsCache.get();
+  if (cached) return cached;
 
   // 1. Try Prisma ProductOverride store FIRST (authoritative in production/serverless)
   try {
@@ -52,7 +55,7 @@ async function readStore(): Promise<PowerDealStoreFile> {
     if (record && record.data) {
       const parsed = record.data as unknown as PowerDealStoreFile;
       if (parsed && Array.isArray(parsed.deals)) {
-        inMemoryStore = parsed;
+        powerDealsCache.set(parsed);
         return parsed;
       }
     }
@@ -65,7 +68,7 @@ async function readStore(): Promise<PowerDealStoreFile> {
     const raw = await fs.readFile(storeFilePath, "utf-8");
     const parsed = JSON.parse(raw) as PowerDealStoreFile;
     if (parsed && Array.isArray(parsed.deals)) {
-      inMemoryStore = parsed;
+      powerDealsCache.set(parsed);
       return parsed;
     }
   } catch {
@@ -78,13 +81,13 @@ async function readStore(): Promise<PowerDealStoreFile> {
     deals: [...CURATED_POWER_DEALS],
   };
 
-  inMemoryStore = seeded;
+  powerDealsCache.set(seeded);
   await writeStore(seeded).catch(() => {});
   return seeded;
 }
 
 async function writeStore(data: PowerDealStoreFile): Promise<void> {
-  inMemoryStore = data;
+  powerDealsCache.set(data);
 
   // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {

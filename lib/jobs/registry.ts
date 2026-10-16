@@ -15,6 +15,7 @@ export interface JobRunRecord {
 }
 
 import { prisma } from "@/lib/prisma";
+import { TtlCache } from "@/lib/cache/ttl-cache";
 
 export const jobsRegistry: JobDefinition[] = [
   pruneOrphanUploadsJob,
@@ -22,14 +23,15 @@ export const jobsRegistry: JobDefinition[] = [
 ];
 
 const jobRunsFilePath = path.join(process.cwd(), "app", "data", "job-runs.json");
-let inMemoryJobRuns: JobRunRecord[] = [];
+const jobRunsCache = new TtlCache<JobRunRecord[]>();
 
 export function resetJobRunsCache(): void {
-  inMemoryJobRuns = [];
+  jobRunsCache.invalidate();
 }
 
 async function loadJobRuns(): Promise<JobRunRecord[]> {
-  if (inMemoryJobRuns.length > 0) return inMemoryJobRuns;
+  const cached = jobRunsCache.get();
+  if (cached) return cached;
 
   // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
   try {
@@ -37,8 +39,9 @@ async function loadJobRuns(): Promise<JobRunRecord[]> {
       where: { sku: "system:job_runs" },
     });
     if (record && record.data && Array.isArray(record.data)) {
-      inMemoryJobRuns = record.data as unknown as JobRunRecord[];
-      return inMemoryJobRuns;
+      const list = record.data as unknown as JobRunRecord[];
+      jobRunsCache.set(list);
+      return list;
     }
   } catch (dbErr) {
     console.warn("[loadJobRuns] DB fetch warning:", dbErr);
@@ -49,17 +52,18 @@ async function loadJobRuns(): Promise<JobRunRecord[]> {
     const raw = await fs.readFile(jobRunsFilePath, "utf-8");
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) {
-      inMemoryJobRuns = parsed;
+      jobRunsCache.set(parsed);
       return parsed;
     }
   } catch {
     // ignore
   }
-  return inMemoryJobRuns;
+  return [];
 }
 
 async function saveJobRuns(runs: JobRunRecord[]): Promise<void> {
-  inMemoryJobRuns = runs;
+  jobRunsCache.set(runs);
+
 
   // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {

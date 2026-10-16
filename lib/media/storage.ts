@@ -24,13 +24,15 @@ export interface MediaMetaRecord {
   createdAt?: string;
 }
 
+import { TtlCache } from "@/lib/cache/ttl-cache";
+
 const mediaMetaFilePath = path.join(process.cwd(), "app", "data", "media-meta.json");
 
-// In-memory cache for runtime performance and serverless resilience
-let memoryCache: Record<string, MediaMetaRecord> = {};
+// In-memory TTL cache for runtime performance and cross-instance coherence
+const mediaMetaCache = new TtlCache<Record<string, MediaMetaRecord>>();
 
 export function resetMediaMetaCache(): void {
-  memoryCache = {};
+  mediaMetaCache.invalidate();
 }
 
 function sanitizeKey(k: string): string {
@@ -41,6 +43,9 @@ function sanitizeKey(k: string): string {
  * Safely reads media-meta from DB overrides, static file, and memory cache.
  */
 export async function readMediaMeta(): Promise<Record<string, MediaMetaRecord>> {
+  const cached = mediaMetaCache.get();
+  if (cached) return { ...cached };
+
   const result: Record<string, MediaMetaRecord> = {};
 
   // 1. Static base from local file
@@ -83,15 +88,15 @@ export async function readMediaMeta(): Promise<Record<string, MediaMetaRecord>> 
     console.warn("[readMediaMeta] DB fetch warning:", dbErr);
   }
 
-  // 3. Merge active in-memory cache
-  return { ...result, ...memoryCache };
+  mediaMetaCache.set(result);
+  return { ...result };
 }
 
 /**
  * Safely writes to media-meta.json without throwing on read-only filesystems (EROFS).
  */
 export async function writeMediaMeta(meta: Record<string, MediaMetaRecord>): Promise<void> {
-  Object.assign(memoryCache, meta);
+  mediaMetaCache.set(meta);
 
   try {
     await fs.mkdir(path.dirname(mediaMetaFilePath), { recursive: true });
@@ -112,18 +117,21 @@ export async function writeMediaMeta(meta: Record<string, MediaMetaRecord>): Pro
  * Persists to memory, database (if reachable), and file backup (if writable).
  */
 export async function storeMediaMeta(urlOrKey: string, record: MediaMetaRecord): Promise<void> {
-  memoryCache[urlOrKey] = {
-    ...memoryCache[urlOrKey],
+  const current = (await readMediaMeta()) || {};
+  current[urlOrKey] = {
+    ...current[urlOrKey],
     ...record,
   };
 
   if (record.fileId) {
     const ikKey = `ik:${record.fileId}`;
-    memoryCache[ikKey] = {
-      ...memoryCache[ikKey],
+    current[ikKey] = {
+      ...current[ikKey],
       ...record,
     };
   }
+
+  mediaMetaCache.set(current);
 
   // Best-effort database persistence via ProductOverride for serverless durability
   if (record.fileId || record.url) {
@@ -148,47 +156,27 @@ export async function storeMediaMeta(urlOrKey: string, record: MediaMetaRecord):
   }
 
   // Update file backup (safely catches EROFS)
-  const fullMeta = await readMediaMeta();
-  fullMeta[urlOrKey] = { ...fullMeta[urlOrKey], ...record };
-  if (record.fileId) {
-    fullMeta[`ik:${record.fileId}`] = { ...fullMeta[`ik:${record.fileId}`], ...record };
-  }
-  await writeMediaMeta(fullMeta);
+  await writeMediaMeta(current);
 }
 
 /**
  * Retrieves metadata for an asset by URL, filename, or `ik:${fileId}`.
  */
 export async function getMediaMeta(urlOrKey: string): Promise<MediaMetaRecord | undefined> {
-  if (memoryCache[urlOrKey]) return memoryCache[urlOrKey];
-
-  const cleanUrl = urlOrKey.split("?")[0];
-  if (memoryCache[cleanUrl]) return memoryCache[cleanUrl];
-
-  // Try DB
-  try {
-    const db = await getPrisma();
-    if (db) {
-      const fileIdMatch = urlOrKey.startsWith("ik:") ? urlOrKey.slice(3) : sanitizeKey(urlOrKey);
-      const dbRecord = await db.productOverride.findUnique({
-        where: { sku: `system:media:${fileIdMatch}` },
-      });
-      if (dbRecord?.data && !dbRecord.isDeleted) {
-        const parsed = dbRecord.data as MediaMetaRecord;
-        memoryCache[urlOrKey] = parsed;
-        return parsed;
-      }
-    }
-  } catch {
-    // DB not available or table missing
+  const cached = mediaMetaCache.get();
+  if (cached) {
+    if (cached[urlOrKey]) return cached[urlOrKey];
+    const cleanUrl = urlOrKey.split("?")[0];
+    if (cached[cleanUrl]) return cached[cleanUrl];
   }
 
   const meta = await readMediaMeta();
+  const cleanUrl = urlOrKey.split("?")[0];
   if (meta[urlOrKey]) return meta[urlOrKey];
   if (meta[cleanUrl]) return meta[cleanUrl];
 
   // Search by fileId or url substring
-  for (const [key, value] of Object.entries(meta)) {
+  for (const [, value] of Object.entries(meta)) {
     if (value.fileId && (urlOrKey === value.fileId || urlOrKey === `ik:${value.fileId}`)) {
       return value;
     }
@@ -221,17 +209,6 @@ export async function deleteMediaMeta(urlOrKey: string): Promise<void> {
     skusToDelete.push(`system:media:${urlOrKey.slice(3)}`);
   }
 
-  delete memoryCache[urlOrKey];
-  delete memoryCache[cleanUrl];
-  for (const [key, value] of Object.entries(memoryCache)) {
-    if (
-      (value.url && value.url.split("?")[0] === cleanUrl) ||
-      (value.fileId && (urlOrKey === value.fileId || urlOrKey === `ik:${value.fileId}` || value.fileId === fileId))
-    ) {
-      delete memoryCache[key];
-    }
-  }
-
   // Also remove from DB
   try {
     const db = await getPrisma();
@@ -262,17 +239,20 @@ export async function deleteMediaMeta(urlOrKey: string): Promise<void> {
   for (const [key, value] of Object.entries(meta)) {
     if (
       (value.url && value.url.split("?")[0] === cleanUrl) ||
-      (value.fileId && (urlOrKey === value.fileId || urlOrKey === `ik:${value.fileId}`))
+      (value.fileId && (urlOrKey === value.fileId || urlOrKey === `ik:${value.fileId}` || value.fileId === fileId))
     ) {
       delete meta[key];
       modified = true;
     }
   }
 
+  mediaMetaCache.set(meta);
+
   if (modified) {
     await writeMediaMeta(meta);
   }
 }
+
 
 /**
  * Checks if an asset (by filename, URL, or id) is currently referenced

@@ -15,8 +15,11 @@
     "prisma:seed": "tsx prisma/seed.ts",
     "prisma:reset": "prisma migrate reset",
     "test": "node --test \"scripts/tests/*.test.mjs\"",
-    "validate:images": "node scripts/validate-product-images.mjs"
+    "validate:images": "node scripts/validate-product-images.mjs",
+    "staging:up": "docker compose -f docker-compose.staging.yml up -d",
+    "staging:down": "docker compose -f docker-compose.staging.yml down"
   },
+
   "dependencies": {
     "@google-analytics/data": "^7.0.0",
     "@googleapis/searchconsole": "^10.0.0",

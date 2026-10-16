@@ -20,13 +20,25 @@ export type RequireAdminResult =
   | { user: null; error: NextResponse };
 
 import { rateLimitStore } from "@/lib/rate-limit";
+import { resetAdminUsersCache } from "@/lib/admin-users-storage";
 
-const CACHE_TTL_MS = 30 * 1000; // <= 30s user freshness cache
+/**
+ * Effective Freshness & Cross-Instance Propagation Delay:
+ * - Admin/staff user records are cached in-memory for at most 15s (CACHE_TTL_MS <= 15000ms).
+ * - adminUsersCache in lib/admin-users-storage.ts has the same 15s TTL.
+ * - Local mutations immediately invalidate both caches.
+ * - Worst-case propagation delay across serverless instances is <= 15 seconds.
+ */
+const envTtl = process.env.DATA_CACHE_TTL_MS;
+const parsedTtl = envTtl !== undefined && !Number.isNaN(Number(envTtl)) ? Number(envTtl) : 15000;
+const CACHE_TTL_MS = Math.min(15000, Math.max(0, parsedTtl));
 
 /** Invalidate cache for a specific user (or all users) on account modification */
 export function invalidateUserCache(userId?: string) {
   rateLimitStore.invalidateUserCache(userId);
+  resetAdminUsersCache();
 }
+
 
 export async function requireAdmin(
   request: Request,

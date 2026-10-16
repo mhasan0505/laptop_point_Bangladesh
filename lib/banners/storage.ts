@@ -143,8 +143,18 @@ const DEFAULT_BANNERS: BannerRecord[] = [
   },
 ];
 
+import { TtlCache } from "@/lib/cache/ttl-cache";
+
 const bannersFilePath = path.join(process.cwd(), "app", "data", "banners.json");
-let inMemoryBanners: BannerRecord[] | null = null;
+let bannersCache = new TtlCache<BannerRecord[]>();
+
+export function getBannersCache(): TtlCache<BannerRecord[]> {
+  return bannersCache;
+}
+
+export function setBannersCache(cache: TtlCache<BannerRecord[]>): void {
+  bannersCache = cache;
+}
 
 function computeBannerStatus(b: BannerRecord): "live" | "scheduled" | "expired" | "off" {
   if (!b.active) return "off";
@@ -155,12 +165,14 @@ function computeBannerStatus(b: BannerRecord): "live" | "scheduled" | "expired" 
 }
 
 export function resetBannersCache(): void {
-  inMemoryBanners = null;
+  bannersCache.invalidate();
 }
 
+
 export async function readBanners(): Promise<BannerRecord[]> {
-  if (inMemoryBanners) {
-    return inMemoryBanners.map((b) => ({ ...b, status: computeBannerStatus(b) }));
+  const cached = bannersCache.get();
+  if (cached) {
+    return cached.map((b) => ({ ...b, status: computeBannerStatus(b) }));
   }
 
   // 1. Try DB ProductOverride FIRST (authoritative in production/serverless)
@@ -169,8 +181,9 @@ export async function readBanners(): Promise<BannerRecord[]> {
       where: { sku: "system:banners" },
     });
     if (record && record.data && Array.isArray(record.data)) {
-      inMemoryBanners = record.data as unknown as BannerRecord[];
-      return inMemoryBanners.map((b) => ({ ...b, status: computeBannerStatus(b) }));
+      const list = record.data as unknown as BannerRecord[];
+      bannersCache.set(list);
+      return list.map((b) => ({ ...b, status: computeBannerStatus(b) }));
     }
   } catch (dbErr) {
     console.warn("[readBanners] DB fetch warning:", dbErr);
@@ -181,7 +194,7 @@ export async function readBanners(): Promise<BannerRecord[]> {
     const raw = await fs.readFile(bannersFilePath, "utf-8");
     const parsed = JSON.parse(raw) as BannerRecord[];
     if (Array.isArray(parsed) && parsed.length > 0) {
-      inMemoryBanners = parsed;
+      bannersCache.set(parsed);
       return parsed.map((b) => ({ ...b, status: computeBannerStatus(b) }));
     }
   } catch {
@@ -189,13 +202,14 @@ export async function readBanners(): Promise<BannerRecord[]> {
   }
 
   // 3. Fallback to default seeded banners
-  inMemoryBanners = [...DEFAULT_BANNERS];
-  await writeBanners(inMemoryBanners).catch(() => {});
-  return inMemoryBanners.map((b) => ({ ...b, status: computeBannerStatus(b) }));
+  const fallback = [...DEFAULT_BANNERS];
+  bannersCache.set(fallback);
+  await writeBanners(fallback).catch(() => {});
+  return fallback.map((b) => ({ ...b, status: computeBannerStatus(b) }));
 }
 
 export async function writeBanners(banners: BannerRecord[]): Promise<void> {
-  inMemoryBanners = banners;
+  bannersCache.set(banners);
 
   // 1. Persist to PostgreSQL (source of truth for serverless instances)
   try {
