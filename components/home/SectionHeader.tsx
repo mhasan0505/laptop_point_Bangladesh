@@ -12,6 +12,7 @@ interface SectionHeaderProps {
   viewAllText?: string;
   viewAllLabel?: string;
   className?: string;
+  align?: "left" | "center";
 }
 
 export default function SectionHeader({
@@ -25,10 +26,47 @@ export default function SectionHeader({
   viewAllText,
   viewAllLabel,
   className = "",
+  align = "left",
 }: SectionHeaderProps) {
   const displayHeading = heading || title || "";
   const effectiveId = headingId || id;
   const linkLabel = viewAllLabel || viewAllText || "View all";
+
+  if (align === "center") {
+    return (
+      <div
+        className={`flex flex-col items-center text-center max-w-3xl mx-auto mb-8 sm:mb-10 ${className}`}
+      >
+        {eyebrow && (
+          <span className="block text-caption font-semibold tracking-wider text-brand-navy dark:text-primary uppercase mb-1.5">
+            {eyebrow}
+          </span>
+        )}
+        <h2
+          id={effectiveId}
+          className="text-h2 font-bold text-ink dark:text-foreground tracking-tight"
+        >
+          {displayHeading}
+        </h2>
+        {subheading && (
+          <p className="text-body text-ink-2 dark:text-muted-foreground mt-2 leading-relaxed max-w-2xl">
+            {subheading}
+          </p>
+        )}
+        {viewAllHref && (
+          <div className="mt-3.5">
+            <Link
+              href={viewAllHref}
+              className="inline-flex items-center gap-1.5 text-small font-semibold text-brand-navy hover:text-brand-red dark:text-primary dark:hover:text-brand-red transition-colors group"
+            >
+              <span>{linkLabel}</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div

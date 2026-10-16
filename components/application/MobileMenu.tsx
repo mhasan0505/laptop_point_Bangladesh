@@ -152,7 +152,7 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
           })
       : departmentMenuItems;
 
-  const activeNavLinks =
+  const activeNavLinks = (
     navigation && navigation.topNavMenus.length > 0
       ? navigation.topNavMenus
           .filter((item) => isCategoryHrefAvailable(item.href))
@@ -168,7 +168,16 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
               })),
             badge: item.badge,
           }))
-      : navigationLinks;
+      : navigationLinks
+  ).filter((item) => {
+    const lower = item.name.trim().toLowerCase();
+    return (
+      lower !== "home" &&
+      lower !== "compare" &&
+      lower !== "contact" &&
+      lower !== "contacts"
+    );
+  });
 
   // Lazy-load the lightweight search index the first time the menu opens —
   // mirrors the Header. The old implementation fetched "/api/products", an

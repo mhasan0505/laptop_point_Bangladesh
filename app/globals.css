@@ -406,7 +406,7 @@
 /* Global Mobile Viewport & Horizontal Overflow Guard */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
   -webkit-text-size-adjust: 100%;
 }

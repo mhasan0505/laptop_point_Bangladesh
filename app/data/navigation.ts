@@ -50,8 +50,6 @@ const rawNavigationLinks: NavItem[] = [
       { name: "Laptop Bags & Sleeves", href: "/accessories?category=bags-sleeves" },
     ],
   },
-  { name: "Compare", href: "/compare" },
-  { name: "Contact", href: "/contact" },
 ];
 
 export const navigationLinks: NavItem[] = rawNavigationLinks

@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowLeftRight,
   ChevronDown,
+  ChevronRight,
   Facebook,
   Heart,
   MapPin,
@@ -158,7 +159,7 @@ const Header = ({
   const cartCount = getCartCount();
   const wishlistCount = getWishlistCount();
 
-  const navLinks =
+  const navLinks = (
     navigation && navigation.topNavMenus.length > 0
       ? navigation.topNavMenus.map((item) => ({
           name: item.label,
@@ -167,10 +168,20 @@ const Header = ({
           submenu: item.dropdownItems?.map((s) => ({
             name: s.name,
             href: s.href,
+            icon: (s as unknown as { icon?: string }).icon,
           })),
           badge: item.badge,
         }))
-      : navigationLinks;
+      : navigationLinks
+  ).filter((item) => {
+    const lower = item.name.trim().toLowerCase();
+    return (
+      lower !== "home" &&
+      lower !== "compare" &&
+      lower !== "contact" &&
+      lower !== "contacts"
+    );
+  });
 
   const departmentItems =
     navigation && navigation.shopCategories.length > 0
@@ -293,9 +304,32 @@ const Header = ({
     };
   }, []);
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/95 shadow-[0_6px_24px_rgba(15,23,42,0.04)] backdrop-blur supports-backdrop-filter:bg-white/90">
-      <div className="border-b border-neutral-200 bg-primary text-xs text-white">
+    <header
+      className={`sticky top-0 z-50 border-b border-neutral-200/80 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/90 transition-all duration-300 ${
+        isScrolled
+          ? "shadow-[0_8px_30px_rgba(15,23,42,0.10)]"
+          : "shadow-[0_6px_24px_rgba(15,23,42,0.04)]"
+      }`}
+    >
+      <div
+        className={`border-b border-neutral-200 bg-primary text-xs text-white transition-all duration-300 ease-in-out ${
+          isScrolled
+            ? "max-h-0 opacity-0 overflow-hidden py-0 border-transparent"
+            : "max-h-12 opacity-100 py-0"
+        }`}
+      >
         <div className="container mx-auto px-3 sm:px-4">
           <div className="flex min-h-9 items-center justify-between gap-3 py-1.5">
             <p className="hidden truncate lg:block">
@@ -346,9 +380,19 @@ const Header = ({
 
       <div className="bg-white">
         <div className="container mx-auto px-3 sm:px-4">
-          <div className="grid min-h-22 grid-cols-[auto_1fr_auto] items-center gap-2 py-3 sm:gap-3 lg:gap-5">
+          <div
+            className={`grid grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-3 lg:gap-5 transition-all duration-300 ease-in-out ${
+              isScrolled ? "min-h-16 py-1.5 sm:py-2" : "min-h-20 sm:min-h-22 py-3"
+            }`}
+          >
             <Link href="/" className="shrink-0 pr-1 lg:pr-2">
-              <div className="relative h-10 w-34 sm:h-12 sm:w-40">
+              <div
+                className={`relative transition-all duration-300 ${
+                  isScrolled
+                    ? "h-8 w-28 sm:h-9 sm:w-34"
+                    : "h-10 w-34 sm:h-12 sm:w-40"
+                }`}
+              >
                 <Image
                   src="/Logo.webp"
                   alt="Laptop Point Bangladesh"
@@ -702,101 +746,101 @@ const Header = ({
         </div>
       </div>
 
-      <div className="hidden border-t border-neutral-200 bg-white lg:block">
+      <div className="hidden border-t border-neutral-200/70 bg-white/95 backdrop-blur-sm lg:block">
         <div className="container mx-auto px-3 sm:px-4">
-          <div className="flex min-h-14 items-center gap-6">
-            {/* ── ALL DEPARTMENTS DROPDOWN ─────────────────────────────── */}
-            <DropdownMenu
-              open={isDepartmentMenuOpen}
-              onOpenChange={setIsDepartmentMenuOpen}
-            >
-              <DropdownMenuTrigger asChild>
-                <button
-                  type="button"
+          <div className="flex h-12 xl:h-13 items-center justify-between gap-4">
+            {/* ── LEFT: ALL DEPARTMENTS + NAV LINKS + BRAND PILLS ───────── */}
+            <div className="flex items-center gap-2 xl:gap-3 flex-1 min-w-0">
+              {/* ── ALL DEPARTMENTS DROPDOWN ─────────────────────────────── */}
+              <DropdownMenu
+                open={isDepartmentMenuOpen}
+                onOpenChange={setIsDepartmentMenuOpen}
+              >
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    onMouseEnter={handleDepartmentMenuEnter}
+                    onMouseLeave={handleDepartmentMenuLeave}
+                    className="inline-flex h-9.5 xl:h-10 min-w-44 xl:min-w-50 items-center justify-between gap-2.5 rounded-xl bg-gradient-to-r from-[#002b60] to-[#0a3875] px-4 text-xs font-bold uppercase tracking-wider text-white shadow-xs outline-none transition-all hover:from-[#002047] hover:to-[#002b60] hover:shadow-md data-[state=open]:from-[#002047] data-[state=open]:to-[#002b60] shrink-0"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Menu className="h-4 w-4" />
+                      All Departments
+                    </span>
+                    <ChevronDown className="h-3.5 w-3.5 transition-transform data-[state=open]:rotate-180" />
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent
+                  align="start"
+                  sideOffset={8}
                   onMouseEnter={handleDepartmentMenuEnter}
                   onMouseLeave={handleDepartmentMenuLeave}
-                  className="inline-flex h-11 min-w-56 items-center justify-between gap-2 rounded-t-md bg-[#002b60] px-5 text-sm font-semibold text-white outline-none transition-colors hover:bg-[#002047] data-[state=open]:bg-[#002047]"
+                  className="w-64 overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/98 backdrop-blur-md p-1.5 shadow-[0_20px_50px_rgba(0,43,96,0.15)] ring-1 ring-black/5"
                 >
-                  <span className="inline-flex items-center gap-2">
-                    <Menu className="h-4 w-4" />
-                    All Departments
-                  </span>
-                  <ChevronDown className="h-4 w-4 transition-transform data-[state=open]:rotate-180" />
-                </button>
-              </DropdownMenuTrigger>
+                  {departmentItems.map((item) =>
+                    item.sub ? (
+                      <DropdownMenuSub key={item.name}>
+                        <DropdownMenuSubTrigger className="flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold text-neutral-700 focus:bg-[#002b60]/8 focus:text-[#002b60] data-[state=open]:bg-[#002b60]/8 data-[state=open]:text-[#002b60]">
+                          <span>{item.name}</span>
+                          {item.badge && (
+                            <span className="ml-2 rounded-full bg-[#dc0303] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                              {item.badge}
+                            </span>
+                          )}
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent
+                          sideOffset={8}
+                          className="w-56 overflow-hidden rounded-2xl border border-neutral-200/80 bg-white/98 backdrop-blur-md p-1.5 shadow-[0_20px_50px_rgba(0,43,96,0.15)] ring-1 ring-black/5"
+                        >
+                          {item.sub.map((section, si) => (
+                            <div key={section.title}>
+                              {si > 0 && (
+                                <DropdownMenuSeparator className="my-1 border-neutral-100" />
+                              )}
+                              <DropdownMenuLabel className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-wider text-neutral-400">
+                                {section.title}
+                              </DropdownMenuLabel>
+                              {section.items.map((subItem) => (
+                                <DropdownMenuItem key={subItem.name} asChild>
+                                  <Link
+                                    href={subItem.href}
+                                    className="cursor-pointer rounded-lg px-3 py-2 text-xs font-medium text-neutral-700 hover:bg-[#002b60]/8 hover:text-[#002b60] focus:bg-[#002b60]/8 focus:text-[#002b60]"
+                                  >
+                                    {subItem.name}
+                                  </Link>
+                                </DropdownMenuItem>
+                              ))}
+                            </div>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                    ) : (
+                      <DropdownMenuItem key={item.name} asChild>
+                        <Link
+                          href={item.href}
+                          className={`flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold focus:bg-[#002b60]/8 focus:text-[#002b60] ${
+                            item.badge
+                              ? "bg-[#002b60]/8 text-[#002b60] hover:bg-[#002b60]/12"
+                              : "text-neutral-700 hover:bg-neutral-50 hover:text-[#002b60]"
+                          }`}
+                        >
+                          <span>{item.name}</span>
+                          {item.badge && (
+                            <span className="rounded-full bg-[#dc0303] px-1.5 py-0.5 text-[10px] font-bold text-white">
+                              {item.badge}
+                            </span>
+                          )}
+                        </Link>
+                      </DropdownMenuItem>
+                    ),
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {/* ─────────────────────────────────────────────────────────── */}
 
-              <DropdownMenuContent
-                align="start"
-                sideOffset={0}
-                onMouseEnter={handleDepartmentMenuEnter}
-                onMouseLeave={handleDepartmentMenuLeave}
-                className="w-64 overflow-hidden rounded-none rounded-b-xl border border-neutral-200 bg-white p-0 shadow-[0_16px_44px_rgba(15,23,42,0.16)]"
-              >
-                {departmentItems.map((item) =>
-                  item.sub ? (
-                    <DropdownMenuSub key={item.name}>
-                      <DropdownMenuSubTrigger className="flex cursor-pointer items-center justify-between rounded-none px-4 py-3 text-sm font-medium text-neutral-700 focus:bg-neutral-50 focus:text-neutral-900 data-[state=open]:bg-neutral-50">
-                        <span>{item.name}</span>
-                        {item.badge && (
-                          <span className="ml-2 rounded bg-[#dc0303] px-1.5 py-0.5 text-xs font-bold text-white">
-                            {item.badge}
-                          </span>
-                        )}
-                      </DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent
-                        sideOffset={0}
-                        className="w-56 overflow-hidden rounded-xl border border-neutral-200 bg-white p-0 shadow-[0_16px_44px_rgba(15,23,42,0.16)]"
-                      >
-                        {item.sub.map((section, si) => (
-                          <div key={section.title}>
-                            {si > 0 && (
-                              <DropdownMenuSeparator className="my-0" />
-                            )}
-                            <DropdownMenuLabel className="px-4 pb-1 pt-3 text-xs font-bold uppercase tracking-wider text-neutral-400">
-                              {section.title}
-                            </DropdownMenuLabel>
-                            {section.items.map((subItem) => (
-                              <DropdownMenuItem key={subItem.name} asChild>
-                                <Link
-                                  href={subItem.href}
-                                  className="cursor-pointer rounded-none px-4 py-2 text-sm font-medium text-neutral-700 focus:bg-neutral-50"
-                                >
-                                  {subItem.name}
-                                </Link>
-                              </DropdownMenuItem>
-                            ))}
-                          </div>
-                        ))}
-                      </DropdownMenuSubContent>
-                    </DropdownMenuSub>
-                  ) : (
-                    <DropdownMenuItem key={item.name} asChild>
-                      <Link
-                        href={item.href}
-                        className={`flex cursor-pointer items-center justify-between rounded-none px-4 py-3 text-sm font-medium focus:bg-neutral-50 ${
-                          item.badge
-                            ? "bg-[#002b60]/10 text-[#002b60] hover:bg-[#002b60]/15 focus:bg-[#002b60]/15"
-                            : "text-neutral-700"
-                        }`}
-                      >
-                        <span>{item.name}</span>
-                        {item.badge && (
-                          <span className="rounded bg-[#dc0303] px-1.5 py-0.5 text-xs font-bold text-white">
-                            {item.badge}
-                          </span>
-                        )}
-                      </Link>
-                    </DropdownMenuItem>
-                  ),
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {/* ─────────────────────────────────────────────────────────── */}
-
-            <nav className="flex flex-wrap items-center gap-0">
-              {navLinks
-                .filter((link) => link.name !== "Home")
-                .map((link) => (
+              <nav className="flex items-center gap-0.5">
+                {navLinks.map((link) => (
                   <NavItem
                     key={link.name}
                     link={link}
@@ -805,7 +849,60 @@ const Header = ({
                     isMegaMenuHovered={isMegaMenuHovered}
                   />
                 ))}
-            </nav>
+              </nav>
+
+              {/* Direct Brand Quick Links */}
+              <div className="hidden 2xl:flex items-center gap-1.5 pl-3 border-l border-neutral-200/80">
+                {[
+                  { name: "HP", href: "/shop?brand=HP", logo: "/brands/hp.png" },
+                  { name: "Dell", href: "/shop?brand=Dell", logo: "/brands/dell.png" },
+                  { name: "Lenovo", href: "/shop?brand=Lenovo", logo: "/brands/lenovo.png" },
+                  { name: "Microsoft", href: "/shop?brand=Microsoft", logo: "/brands/microsoft.png" },
+                ].map((b) => (
+                  <Link
+                    key={b.name}
+                    href={b.href}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-neutral-50 hover:bg-[#002b60]/5 border border-neutral-200/70 hover:border-[#002b60]/30 text-xs font-semibold text-neutral-600 hover:text-[#002b60] transition-all group"
+                  >
+                    <Image
+                      src={b.logo}
+                      alt={b.name}
+                      width={14}
+                      height={14}
+                      className="w-3.5 h-3.5 object-contain group-hover:scale-110 transition-transform"
+                    />
+                    <span>{b.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* ── RIGHT: OTHER INFO (HOTLINE & SHOWROOM) ───────── */}
+            <div className="flex items-center gap-2 xl:gap-3 shrink-0">
+              <a
+                href="tel:+8801612182408"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-200/90 bg-neutral-50 hover:bg-neutral-100/90 px-3.5 py-1.5 text-xs font-semibold text-[#002b60] hover:border-[#002b60]/30 transition-all shadow-2xs group"
+                title="Direct hotline helpline for inquiries & orders"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                </span>
+                <Phone className="h-3.5 w-3.5 text-[#dc0303] group-hover:rotate-12 transition-transform" />
+                <span className="whitespace-nowrap">
+                  Hotline: <strong className="font-bold text-[#002b60]">01612-182408</strong>
+                </span>
+              </a>
+
+              <Link
+                href="/contact"
+                className="hidden xl:inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-neutral-600 hover:text-[#002b60] hover:bg-neutral-100 transition-colors whitespace-nowrap"
+                title="Visit our store in Mirpur 10, Dhaka"
+              >
+                <MapPin className="h-3.5 w-3.5 text-[#002b60]" />
+                <span>Mirpur 10 Outlet</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -836,7 +933,7 @@ interface NavLink {
   name: string;
   href: string;
   hasDropdown?: boolean;
-  submenu?: { name: string; href: string }[];
+  submenu?: { name: string; href: string; icon?: string }[];
   badge?: string;
 }
 
@@ -874,9 +971,10 @@ const NavItem = ({
   const handleMouseLeave = () => {
     closeTimerRef.current = setTimeout(() => {
       setIsHovered(false);
-      // Don't close MegaMenu on mouse leave - it should only close when clicking outside
-    }, 350);
+    }, 250);
   };
+
+  const isBrandsMenu = link.name === "Brands";
 
   return (
     <div
@@ -886,20 +984,22 @@ const NavItem = ({
     >
       <Link
         href={link.href}
-        className={`flex items-center rounded-md px-3 py-2 text-sm font-semibold tracking-[0.01em] transition-colors hover:bg-neutral-50 ${
-          isHovered ? "text-primary" : "text-neutral-700"
+        className={`relative flex items-center rounded-lg px-3 py-2 text-[13.5px] font-semibold tracking-[-0.01em] transition-all ${
+          isHovered
+            ? "text-[#002b60] bg-neutral-100/80"
+            : "text-neutral-700 hover:text-[#002b60] hover:bg-neutral-50"
         }`}
       >
-        {link.name}
+        <span>{link.name}</span>
         {link.hasDropdown && (
           <ChevronDown
-            className={`ml-1 w-4 h-4 transition-transform duration-200 ${
-              isHovered ? "rotate-180 text-[#dc0303]" : ""
+            className={`ml-1.5 w-3.5 h-3.5 text-neutral-400 transition-transform duration-200 ${
+              isHovered ? "rotate-180 text-[#002b60]" : ""
             }`}
           />
         )}
         {link.badge && (
-          <span className="ml-2 px-1.5 py-0.5 text-xs font-bold rounded-full bg-[#dc0303] text-white leading-none">
+          <span className="ml-2 px-1.5 py-0.5 text-[10px] font-extrabold uppercase rounded-full bg-gradient-to-r from-rose-500 to-red-600 text-white shadow-xs leading-none tracking-wider">
             {link.badge}
           </span>
         )}
@@ -909,30 +1009,130 @@ const NavItem = ({
       {link.hasDropdown && link.submenu && link.name !== "Categories" && (
         <motion.div
           ref={submenuRef}
-          initial={{ opacity: 0, y: 10, scale: 0.95 }}
+          initial={{ opacity: 0, y: 8, scale: 0.98 }}
           animate={
             isHovered
               ? { opacity: 1, y: 0, scale: 1 }
-              : { opacity: 0, y: 10, scale: 0.95 }
+              : { opacity: 0, y: 8, scale: 0.98 }
           }
-          transition={{ duration: 0.2 }}
-          className={`absolute left-0 top-full w-56 p-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50 origin-top-left ${
+          transition={{ duration: 0.18, ease: "easeOut" }}
+          className={`absolute left-0 top-[calc(100%+4px)] z-50 origin-top-left ${
             isHovered ? "pointer-events-auto" : "pointer-events-none"
+          } ${
+            isBrandsMenu
+              ? "w-[440px] p-4 bg-white/98 backdrop-blur-md rounded-2xl shadow-[0_24px_60px_rgba(0,43,96,0.16)] border border-neutral-200/80 ring-1 ring-black/5"
+              : "w-60 p-2 bg-white/98 backdrop-blur-md rounded-2xl shadow-[0_20px_45px_rgba(0,43,96,0.14)] border border-neutral-200/80 ring-1 ring-black/5"
           }`}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="flex flex-col gap-1">
-            {link.submenu.map((subItem) => (
-              <Link
-                key={subItem.name}
-                href={subItem.href}
-                className="block px-4 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-[#002b60]/10 hover:text-[#002b60] transition-colors font-medium"
-              >
-                {subItem.name}
-              </Link>
-            ))}
-          </div>
+          {isBrandsMenu ? (
+            <div>
+              <div className="flex items-center justify-between pb-3 mb-2.5 border-b border-neutral-100">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-2 w-2 rounded-full bg-[#dc0303]" />
+                  <span className="text-xs font-bold uppercase tracking-wider text-neutral-800">
+                    Official Brands
+                  </span>
+                </div>
+                <span className="text-[11px] font-medium text-neutral-400">
+                  Genuine Laptops & Warranty
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                {link.submenu
+                  .filter((sub) => sub.name !== "All Brands")
+                  .map((subItem) => (
+                    <Link
+                      key={subItem.name}
+                      href={subItem.href}
+                      className="group/brand flex items-center gap-2.5 p-2 rounded-xl hover:bg-neutral-50/90 border border-transparent hover:border-neutral-200/70 transition-all"
+                    >
+                      <div className="relative w-8 h-8 rounded-lg bg-neutral-50 group-hover/brand:bg-white border border-neutral-200/60 flex items-center justify-center p-1 shrink-0 transition-all group-hover/brand:shadow-2xs">
+                        {subItem.icon ? (
+                          <Image
+                            src={subItem.icon}
+                            alt={subItem.name}
+                            width={24}
+                            height={24}
+                            className="object-contain max-h-5 w-auto group-hover/brand:scale-110 transition-transform"
+                          />
+                        ) : (
+                          <span className="text-xs font-bold text-[#002b60]">
+                            {subItem.name.slice(0, 2)}
+                          </span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-neutral-800 group-hover/brand:text-[#002b60] transition-colors leading-tight">
+                          {subItem.name}
+                        </p>
+                        <p className="text-[10px] text-neutral-400 truncate">
+                          {subItem.name === "HP"
+                            ? "EliteBook & Pavilion"
+                            : subItem.name === "Dell"
+                            ? "Latitude & XPS"
+                            : subItem.name === "Lenovo"
+                            ? "ThinkPad & Yoga"
+                            : subItem.name === "Microsoft"
+                            ? "Surface Pro & Studio"
+                            : subItem.name === "Asus"
+                            ? "ZenBook & ROG"
+                            : subItem.name === "Acer"
+                            ? "Swift & Predator"
+                            : "Explore Laptops"}
+                        </p>
+                      </div>
+                      <ChevronRight className="w-3.5 h-3.5 text-neutral-300 opacity-0 group-hover/brand:opacity-100 group-hover/brand:translate-x-0.5 transition-all shrink-0" />
+                    </Link>
+                  ))}
+              </div>
+
+              <div className="mt-3 pt-2.5 border-t border-neutral-100">
+                <Link
+                  href="/shop"
+                  className="flex items-center justify-between px-3 py-2 rounded-xl bg-neutral-50/80 hover:bg-[#002b60]/5 text-xs font-bold text-[#002b60] border border-neutral-200/70 hover:border-[#002b60]/30 transition-all group/all"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#002b60] text-white text-[10px]">
+                      ★
+                    </span>
+                    <span>Browse All Brands & Collections</span>
+                  </span>
+                  <span className="text-neutral-400 group-hover/all:translate-x-1 group-hover/all:text-[#002b60] transition-all">
+                    →
+                  </span>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-1">
+              {link.submenu.map((subItem) => (
+                <Link
+                  key={subItem.name}
+                  href={subItem.href}
+                  className="group/item flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-neutral-700 rounded-xl hover:bg-[#002b60]/8 hover:text-[#002b60] transition-all"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    {subItem.icon && (
+                      <div className="relative w-5 h-5 rounded-md bg-neutral-100 flex items-center justify-center p-0.5 shrink-0">
+                        <Image
+                          src={subItem.icon}
+                          alt={subItem.name}
+                          width={16}
+                          height={16}
+                          className="object-contain"
+                        />
+                      </div>
+                    )}
+                    <span className="truncate">{subItem.name}</span>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-neutral-400 opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all shrink-0" />
+                </Link>
+              ))}
+            </div>
+          )}
         </motion.div>
       )}
     </div>

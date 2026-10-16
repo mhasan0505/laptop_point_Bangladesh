@@ -6,6 +6,7 @@
 export interface SubMenuItem {
   name: string;
   href: string;
+  icon?: string;
 }
 
 export interface NavItem {
@@ -47,6 +48,20 @@ const rawNavigationLinks: NavItem[] = [
       { name: "Discounts", href: "/shop?sort=discount" },
     ],
   },
+  {
+    name: "Brands",
+    href: "/shop",
+    hasDropdown: true,
+    submenu: [
+      { name: "HP", href: "/shop?brand=HP", icon: "/brands/hp.png" },
+      { name: "Dell", href: "/shop?brand=Dell", icon: "/brands/dell.png" },
+      { name: "Lenovo", href: "/shop?brand=Lenovo", icon: "/brands/lenovo.png" },
+      { name: "Microsoft", href: "/shop?brand=Microsoft", icon: "/brands/microsoft.png" },
+      { name: "Asus", href: "/shop?brand=Asus", icon: "/brands/asus.png" },
+      { name: "Acer", href: "/shop?brand=Acer", icon: "/brands/acer.png" },
+      { name: "All Brands", href: "/shop", icon: "/brands/all-brands.png" },
+    ],
+  },
   { name: "Deals", href: "/deals", badge: "HOT" },
   {
     name: "Accessories",
@@ -60,8 +75,6 @@ const rawNavigationLinks: NavItem[] = [
       { name: "Laptop Bags & Sleeves", href: "/accessories?category=bags-sleeves" },
     ],
   },
-  { name: "Compare", href: "/compare" },
-  { name: "Contact", href: "/contact" },
   { name: "EMI", href: "/EMI" },
 ];
 

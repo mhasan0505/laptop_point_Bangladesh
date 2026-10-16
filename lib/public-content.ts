@@ -131,7 +131,7 @@ export interface StorefrontNavigation {
     href?: string;
     badge?: string;
     badgeColor?: string;
-    dropdownItems?: Array<{ name: string; href: string }>;
+    dropdownItems?: Array<{ name: string; href: string; icon?: string }>;
   }>;
   categoryChips: Array<{
     id: string;
