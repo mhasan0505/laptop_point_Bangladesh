@@ -13,7 +13,7 @@ interface BlogPost {
   date: string;
   author: {
     name: string;
-    picture: string;
+    picture?: string;
   };
   category: string;
 }

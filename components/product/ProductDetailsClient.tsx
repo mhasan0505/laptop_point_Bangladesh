@@ -960,7 +960,7 @@ export default function ProductDetailsClient({
             },
             {
               id: "reviews",
-              label: `Reviews (${reviewsList.length + (product.reviews || 0)})`,
+              label: `Reviews (${reviewsList.length})`,
             },
           ].map((tab) => (
             <button

@@ -22,7 +22,6 @@ const posts = [
     date: "2024-03-15",
     author: {
       name: "Arif Islam",
-      picture: "https://randomuser.me/api/portraits/men/32.jpg",
     },
     category: "Guides",
   },
@@ -36,7 +35,6 @@ const posts = [
     date: "2024-03-10",
     author: {
       name: "Sonia Akter",
-      picture: "https://randomuser.me/api/portraits/women/44.jpg",
     },
     category: "Tips",
   },
@@ -50,7 +48,6 @@ const posts = [
     date: "2024-03-05",
     author: {
       name: "Rahim Ahmed",
-      picture: "https://randomuser.me/api/portraits/men/85.jpg",
     },
     category: "Buying Guide",
   },
@@ -64,7 +61,6 @@ const posts = [
     date: "2024-02-28",
     author: {
       name: "Tanvir Hasan",
-      picture: "https://randomuser.me/api/portraits/men/12.jpg",
     },
     category: "Reviews",
   },

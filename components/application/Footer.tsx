@@ -290,14 +290,11 @@ export default function Footer({
                     <span className="block text-white font-medium mb-1">
                       Our Store
                     </span>
-                    <p className="text-sm">
-                      Madbar Mansion, Shop-08,
-                      <br />
-                      Mirpur-10, Dhaka-1216
+                    <p className="text-sm whitespace-pre-line">
+                      {contact?.address ?? "Madbar Mansion, Shop-08,\nMirpur-10, Dhaka-1216"}
                     </p>
-                    <p>
-                      open: <span className="font-medium">Mon - Sat</span>,
-                      10:30 AM - 9:00
+                    <p className="text-xs text-gray-400 mt-1">
+                      Open: {contact?.hours ?? "Mon - Sat, 10:30 AM - 9:00 PM"}
                     </p>
                   </div>
                 </div>

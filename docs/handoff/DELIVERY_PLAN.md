@@ -114,10 +114,24 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
 
 
 ### Phase 6 — Content, Legal, and Brand Readiness
-- [ ] Audit and remove placeholder/mock content, fake ratings, and unverified badges.
-- [ ] Legal pages (`/privacy`, `/terms`, `/returns`, `/shipping`) rendered from Admin Policies with last-updated dates.
-- [ ] Single source of truth for Store Profile (name, logo, favicon, phone, address).
-- [ ] Real WhatsApp and Messenger links from Store Profile.
+- [x] **Audit & Removal of Placeholders, Mock Content & Fake Reviews**:
+  - Replaced mock user avatar images (`randomuser.me` and `images.unsplash.com` portraits in `TestimonialsSection.tsx`, `blog/page.tsx`, `blog/[slug]/page.tsx`) with zero-network initials badges (`getInitials`), eliminating unverified portraits and removing `randomuser.me` from `next.config.ts` remotePatterns and CSP `img-src`.
+  - Audited `ProductDetailsClient.tsx` to remove legacy fake review counts (`product.reviews`) and aligned tab counts strictly to verified reviews (`reviewsList.length`). Zero fake trust badges or "Lorem ipsum" strings in repository.
+  - Corrected dead links in `components/home/TrustRow.tsx` (`/warranty` -> `/returns`, `/about` -> `/returns`, `/payment-methods` -> `/EMI`).
+- [x] **Legal Pages & Admin Policy Overrides**:
+  - Bound legal routes (`/privacy`, `/terms`, `/returns`, `/shipping`) to `getStorefrontCommerce()` policies (`privacyPolicy`, `termsOfService`, `returnsPolicy`, `shippingPolicy`) saved in Admin Setup.
+  - Replaced SSR-breaking `new Date().toLocaleDateString()` with stable `January 15, 2026` static fallback dates, eliminating React hydration warnings while dynamically rendering owner policy updates immediately.
+- [x] **Single Source of Truth for Store Profile**:
+  - Configured `getStorefrontContact()` as single authority for store name, physical showroom address (Madbar Mansion, Shop-08, Mirpur-10, Dhaka-1216), hotline (`+880 1612-182408`), email, and opening hours across `Header.tsx`, `Footer.tsx`, `ContactClient.tsx`, `Map.tsx`, and `layout.tsx`.
+  - Centered showroom map accurately on Mirpur-10, Dhaka coordinates (`[23.8069, 90.3687]`) with shop address popup.
+  - Fixed brand asset paths in `lib/settings-base.ts` and `app/data/settings.json`: `/Logo.webp` (official logo), `/favicon.ico` (official favicon), and `/Hero_Image.png` (SEO share image). Verified physical files exist on disk with positive byte sizes.
+- [x] **Dynamic WhatsApp & Messenger Link Resolution**:
+  - Integrated `WhatsAppButton.tsx` with Store Profile phone numbers: automatically cleans and normalizes Bangladeshi phone numbers to international format (`8801...`) for `wa.me` links with URL-encoded default inquiries.
+  - Dynamically derives Facebook Messenger direct links (`https://m.me/{pageHandle}`) from the Store Profile Facebook URL.
+- [x] **Convenience Aliases & Linux Case Normalization**:
+  - Added permanent (301) redirects in `next.config.ts` for `/emi` -> `/EMI`, `/warranty` -> `/returns`, `/delivery` -> `/shipping`, `/about` -> `/contact`, `/contact-us` -> `/contact`, `/order-tracking` -> `/track-order`, and `/track` -> `/track-order`.
+- [x] **Automated Verification Suite**:
+  - Created `scripts/tests/phase6-brand-readiness.test.mjs` verifying Store Profile defaults, physical asset existence, stable legal dates, route redirects, and commerce policies. Full suite passes: `pnpm test` (99/99 passing), `tsc --noEmit` (0 errors), `pnpm lint` (0 errors).
 
 ### Phase 7 — UX, Accessibility, Performance, and SEO
 - [ ] Responsive QA across 375px, 768px, 1280px, 1536px breakpoints.

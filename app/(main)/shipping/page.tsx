@@ -16,9 +16,12 @@ export default async function ShippingInfo() {
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">
       <div className="container mx-auto px-6 sm:px-8 lg:px-12 max-w-4xl">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
           Shipping Information
         </h1>
+        <p className="text-gray-500 text-sm mb-8">
+          Last updated: January 15, 2026
+        </p>
 
         {commerce.shippingPolicy ? (
           <div className="prose prose-lg max-w-none whitespace-pre-line text-gray-700 leading-relaxed">
@@ -26,9 +29,6 @@ export default async function ShippingInfo() {
           </div>
         ) : (
           <div className="prose prose-lg max-w-none">
-          <p className="text-gray-600 mb-6">
-            Last updated: {new Date().toLocaleDateString()}
-          </p>
 
           <section className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">

@@ -15,7 +15,6 @@ const posts = [
     date: "2024-03-15",
     author: {
       name: "Arif Islam",
-      picture: "https://randomuser.me/api/portraits/men/32.jpg",
     },
     category: "Guides",
     content: `
@@ -49,7 +48,6 @@ const posts = [
     date: "2024-03-10",
     author: {
       name: "Sonia Akter",
-      picture: "https://randomuser.me/api/portraits/women/44.jpg",
     },
     category: "Tips",
     content: "<p>Content for maintaining your laptop...</p>",
@@ -119,13 +117,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </h1>
             <div className="flex items-center justify-center gap-6 text-sm md:text-base">
               <div className="flex items-center gap-2">
-                <Image
-                  src={post.author.picture}
-                  alt={post.author.name}
-                  width={32}
-                  height={32}
-                  className="rounded-full border-2 border-white"
-                />
+                <div className="w-8 h-8 rounded-full bg-white/20 text-white font-bold text-xs flex items-center justify-center border-2 border-white select-none">
+                  {post.author.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+                </div>
                 <span className="font-semibold">{post.author.name}</span>
               </div>
               <div className="flex items-center gap-2 text-gray-200">

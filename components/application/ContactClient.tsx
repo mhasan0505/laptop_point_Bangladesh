@@ -6,6 +6,7 @@ import { Clock, Loader2, Mail, MapPin, Phone, Send } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import type { StorefrontContact } from "@/lib/public-content";
 
 // Dynamically import map to avoid SSR issues
 const MapWithNoSSR = dynamic(() => import("@/components/application/Map"), {
@@ -20,7 +21,11 @@ type FormData = {
   _hp?: string;
 };
 
-export default function ContactClient() {
+export default function ContactClient({
+  contact,
+}: {
+  contact?: StorefrontContact;
+} = {}) {
   const [mountedAt] = useState(() => Date.now());
   const {
     register,
@@ -132,8 +137,8 @@ export default function ContactClient() {
                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">
                       Our Location
                     </h3>
-                    <p className="text-gray-900 font-medium">
-                      Madbar Mansion, Shop-08, Mirpur-10, Dhaka-1216
+                    <p className="text-gray-900 font-medium whitespace-pre-line">
+                      {contact?.address || "Madbar Mansion, Shop-08, Mirpur-10, Dhaka-1216"}
                     </p>
                     <p className="text-gray-600">Bangladesh</p>
                   </div>
@@ -147,11 +152,14 @@ export default function ContactClient() {
                     <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">
                       Phone Number
                     </h3>
-                    <p className="text-gray-900 font-medium">
-                      +880 1612-182408
-                    </p>
+                    <a
+                      href={`tel:${(contact?.hotline || "+8801612182408").replace(/[^0-9+]/g, "")}`}
+                      className="text-gray-900 font-medium hover:text-green-600 transition-colors block"
+                    >
+                      {contact?.hotline || "+880 1612-182408"}
+                    </a>
                     <p className="text-gray-500 text-sm">
-                      Mon-Sat 10.30 am-9.00 pm
+                      {contact?.hours || "Mon - Sat, 10:30 AM - 9:00 PM"}
                     </p>
                   </div>
                 </div>
@@ -165,10 +173,10 @@ export default function ContactClient() {
                       Email Address
                     </h3>
                     <a
-                      href="mailto:info@laptoppointbd.com"
+                      href={`mailto:${contact?.email || "info@laptoppointbd.com"}`}
                       className="text-gray-900 font-medium hover:text-blue-600 transition-colors"
                     >
-                      info@laptoppointbd.com
+                      {contact?.email || "info@laptoppointbd.com"}
                     </a>
                   </div>
                 </div>
@@ -182,7 +190,7 @@ export default function ContactClient() {
                       Working Hours
                     </h3>
                     <p className="text-gray-900 font-medium">
-                      Mon - Fri: 10:30 AM - 9:00 PM
+                      {contact?.hours || "Mon - Sat: 10:30 AM - 9:00 PM"}
                     </p>
                   </div>
                 </div>

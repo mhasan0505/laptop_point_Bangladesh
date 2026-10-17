@@ -2,8 +2,8 @@
   "store_profile": {
     "name": "Laptop Point BD",
     "tagline": "Exclusive Laptop Shop in Bangladesh",
-    "logo": "/icons/logo.png",
-    "favicon": "/favicon/favicon.ico",
+    "logo": "/Logo.webp",
+    "favicon": "/favicon.ico",
     "hotline": "+880 1612-182408",
     "salesPhone": "+880 1612-182408",
     "supportPhone": "+880 1830-515157",
@@ -30,7 +30,7 @@
     "titleTemplate": "%s | Laptop Point Bangladesh",
     "defaultTitle": "Laptop Point Bangladesh | Premium Used Laptops",
     "defaultDescription": "Best refurbished laptops in Bangladesh.",
-    "defaultShareImage": "/icons/logo.png",
+    "defaultShareImage": "/Hero_Image.png",
     "robotsRules": {
       "allow": [
         "/"

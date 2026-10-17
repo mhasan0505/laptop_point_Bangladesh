@@ -32,6 +32,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import type {
   MegaMenuFeaturedProduct,
+  StorefrontContact,
   StorefrontNavigation,
 } from "@/lib/public-content";
 import MegaMenu from "../navigation/MegaMenu";
@@ -79,9 +80,11 @@ const superDealMarqueeItems = [
 const Header = ({
   navigation,
   megaMenuFeatured,
+  contact,
 }: {
   navigation?: StorefrontNavigation;
   megaMenuFeatured?: Record<string, MegaMenuFeaturedProduct[]>;
+  contact?: StorefrontContact;
 }) => {
   const router = useRouter();
   const { getCartCount } = useCart();
@@ -454,15 +457,15 @@ const Header = ({
                 <span>Track Order</span>
               </Link>
               <a
-                href="tel:+8801612182408"
+                href={`tel:${(contact?.hotline || "+8801612182408").replace(/[^0-9+]/g, "")}`}
                 className="inline-flex items-center gap-1.5 hover:text-white transition-colors font-medium"
               >
                 <Phone className="h-3.5 w-3.5 text-white/70" />
-                <span className="hidden sm:inline">+880 1612-182408</span>
+                <span className="hidden sm:inline">{contact?.hotline || "+880 1612-182408"}</span>
               </a>
               <div className="flex items-center gap-1.5 pl-1.5 border-l border-white/10">
                 <Link
-                  href="https://www.facebook.com/laptoppointbd"
+                  href={contact?.social?.facebook || "https://www.facebook.com/laptoppointbd"}
                   target="_blank"
                   className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
                   aria-label="Facebook"
@@ -470,10 +473,10 @@ const Header = ({
                   <Facebook className="h-3.5 w-3.5" />
                 </Link>
                 <Link
-                  href="https://www.youtube.com/@LaptopPointBD"
+                  href={contact?.social?.youtube || "https://www.youtube.com/@LaptopPointBD"}
                   target="_blank"
                   className="p-1 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-colors"
-                  aria-label="Youtube"
+                  aria-label="YouTube"
                 >
                   <Youtube className="h-3.5 w-3.5" />
                 </Link>
@@ -1027,7 +1030,7 @@ const Header = ({
             {/* ── RIGHT: OTHER INFO (HOTLINE & SHOWROOM) ───────── */}
             <div className="flex items-center gap-2 xl:gap-3 shrink-0">
               <a
-                href="tel:+8801612182408"
+                href={`tel:${(contact?.hotline || "+8801612182408").replace(/[^0-9+]/g, "")}`}
                 className="inline-flex items-center gap-2 rounded-full border border-neutral-200/90 bg-neutral-50 hover:bg-neutral-100/90 px-3.5 py-1.5 text-xs font-semibold text-[#002b60] hover:border-[#002b60]/30 transition-all shadow-2xs group"
                 title="Direct hotline helpline for inquiries & orders"
               >
@@ -1037,7 +1040,7 @@ const Header = ({
                 </span>
                 <Phone className="h-3.5 w-3.5 text-[#dc0303] group-hover:rotate-12 transition-transform" />
                 <span className="whitespace-nowrap">
-                  Hotline: <strong className="font-bold text-[#002b60]">01612-182408</strong>
+                  Hotline: <strong className="font-bold text-[#002b60]">{contact?.hotline || "01612-182408"}</strong>
                 </span>
               </a>
 

@@ -15,8 +15,8 @@ import { navigationLinks } from "@/app/data/navigation";
 export const StoreProfileSchema = z.object({
   name: z.string().min(1).default("Laptop Point BD"),
   tagline: z.string().default("Exclusive Laptop Shop in Bangladesh"),
-  logo: z.string().default("/icons/logo.png"),
-  favicon: z.string().default("/favicon/favicon.ico"),
+  logo: z.string().default("/Logo.webp"),
+  favicon: z.string().default("/favicon.ico"),
   hotline: z.string().default("+880 1612-182408"),
   salesPhone: z.string().default("+880 1612-182408"),
   supportPhone: z.string().default("+880 1830-515157"),
@@ -319,7 +319,7 @@ export const SeoSchema = z.object({
   defaultDescription: z.string().default(
     "Find the best laptops in Bangladesh with detailed reviews and comparisons at Laptop Point BD."
   ),
-  defaultShareImage: z.string().default("/icons/logo.png"),
+  defaultShareImage: z.string().default("/Hero_Image.png"),
   robotsRules: z
     .object({
       allow: z.array(z.string()).default(["/"]),

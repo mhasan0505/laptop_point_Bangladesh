@@ -15,19 +15,19 @@ export default function TrustRow({
       icon: ShieldCheck,
       title: "Warranty Guaranteed",
       description: "15-day replacement & 2-year service warranty",
-      href: "/warranty",
+      href: "/returns",
     },
     {
       icon: CheckCircle2,
       title: "Tested & Certified",
       description: "Inspected by hardware engineers before delivery",
-      href: "/about",
+      href: "/returns",
     },
     {
       icon: CreditCard,
       title: "Flexible Payment",
       description: "bKash, Nagad, Visa, Mastercard & Cash on Delivery",
-      href: "/payment-methods",
+      href: "/EMI",
     },
     {
       icon: MapPin,

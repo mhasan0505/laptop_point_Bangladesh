@@ -4,9 +4,9 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 
-// Dhaka, Bangladesh coordinates - moved outside component to prevent re-creation
-const POSITION: [number, number] = [23.8103, 90.4125];
-const ZOOM = 15;
+// Dhaka Mirpur-10 Showroom coordinates (Madbar Mansion)
+const POSITION: [number, number] = [23.8069, 90.3687];
+const ZOOM = 16;
 
 const Map = () => {
   const mapRef = useRef<L.Map | null>(null);
@@ -47,9 +47,12 @@ const Map = () => {
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(mapRef.current);
 
-    // Add marker
     markerRef.current = L.marker(POSITION).addTo(mapRef.current);
-    markerRef.current.bindPopup("Laptop Point BD").openPopup();
+    markerRef.current
+      .bindPopup(
+        "<b>Laptop Point BD</b><br/>Madbar Mansion, Shop-08, Mirpur-10, Dhaka-1216"
+      )
+      .openPopup();
 
     isInitialized.current = true;
 

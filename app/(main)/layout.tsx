@@ -32,7 +32,11 @@ export default async function MainLayout({
       <WishlistProvider>
         <ComparisonProvider>
           <AnnouncementBar />
-          <Header navigation={navigation} megaMenuFeatured={megaMenuFeatured} />
+          <Header
+            navigation={navigation}
+            megaMenuFeatured={megaMenuFeatured}
+            contact={contact}
+          />
           <Breadcrumb />
           <main className="pb-20 lg:pb-0">{children}</main>
           <Footer contact={contact} footerLinks={navigation.footerLinks} />
@@ -40,7 +44,7 @@ export default async function MainLayout({
           <CookieConsent />
           <NewsletterPopup />
           <StickyMobileBar />
-          <WhatsAppButton />
+          <WhatsAppButton contact={contact} />
         </ComparisonProvider>
       </WishlistProvider>
     </CartProvider>

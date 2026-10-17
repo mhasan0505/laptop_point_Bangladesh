@@ -1,4 +1,5 @@
 import ContactClient from "@/components/application/ContactClient";
+import { getStorefrontContact } from "@/lib/public-content";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ContactPage() {
-  return <ContactClient />;
+export default async function ContactPage() {
+  const contact = await getStorefrontContact();
+  return <ContactClient contact={contact} />;
 }

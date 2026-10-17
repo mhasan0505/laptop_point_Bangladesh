@@ -1,13 +1,16 @@
 import { Quote } from "lucide-react";
-import Image from "next/image";
+
+const getInitials = (name: string) => {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+  return (name.slice(0, 2) || "LP").toUpperCase();
+};
 
 const testimonials = [
   {
     id: 1,
     name: "Rahim Ahmed",
     role: "Software Engineer",
-    image:
-      "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=200&auto=format&fit=crop",
     quote:
       "Laptop Point BD provided me with an authentic HP EliteBook. The condition was pristine, just like new. Their support team was helpful in guiding me to the right choice.",
   },
@@ -15,8 +18,6 @@ const testimonials = [
     id: 2,
     name: "Fatima Begum",
     role: "Student",
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
     quote:
       "I was looking for a budget-friendly laptop for my university work and found a great deal on a Dell Latitude. Delivery was fast and the packaging was secure.",
   },
@@ -24,8 +25,6 @@ const testimonials = [
     id: 3,
     name: "Tanvir Hasan",
     role: "Digital Marketer",
-    image:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop",
     quote:
       "Bought two laptops for our office and both perform exceptionally well. Having a clear warranty and responsive customer service gave us complete peace of mind.",
   },
@@ -68,15 +67,8 @@ export default function TestimonialsSection() {
                 </p>
               </blockquote>
               <figcaption className="flex items-center gap-3 pt-4 border-t border-line/60">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-line">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    sizes="40px"
-                    className="object-cover"
-                    unoptimized
-                  />
+                <div className="w-10 h-10 rounded-full bg-brand-navy/10 text-brand-navy font-bold text-xs flex items-center justify-center shrink-0 border border-brand-navy/20 select-none">
+                  {getInitials(item.name)}
                 </div>
                 <div>
                   <h3 className="text-small font-semibold text-ink">

@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { event as trackPixelEvent } from "@/lib/fpixel";
+import type { StorefrontContact } from "@/lib/public-content";
 
 // ── Official Brand Vector Icons ─────────────────────────────────────────────
 const WhatsAppIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
@@ -37,21 +38,44 @@ const MessengerIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
   </svg>
 );
 
-export default function WhatsAppButton() {
+export default function WhatsAppButton({
+  contact,
+}: {
+  contact?: StorefrontContact;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
 
-  // Contact details
-  const whatsappNumber = "8801612182408";
+  // Contact details derived from Store Profile single source of truth
+  const rawWa = contact?.whatsapp || contact?.hotline || "8801612182408";
+  const cleanWa = rawWa.replace(/[^0-9]/g, "");
+  const whatsappNumber = cleanWa.startsWith("880")
+    ? cleanWa
+    : cleanWa.startsWith("0")
+    ? `88${cleanWa}`
+    : cleanWa || "8801612182408";
+
   const defaultMessage =
     "Hi Laptop Point BD! I am interested in buying a laptop. Please share the latest stock and best price.";
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     defaultMessage,
   )}`;
 
-  // Facebook Messenger Direct link for https://www.facebook.com/laptoppointbd
-  const messengerUrl = "https://m.me/laptoppointbd";
-  const hotlinePhone = "+8801612182408";
+  // Facebook Messenger Direct link derived from Store Profile Facebook page URL
+  let messengerUrl = "https://m.me/laptoppointbd";
+  if (contact?.social?.facebook) {
+    try {
+      const fbUrl = contact.social.facebook.trim().replace(/\/+$/, "");
+      const handle = fbUrl.split("/").pop();
+      if (handle && handle !== "facebook.com" && handle !== "www.facebook.com") {
+        messengerUrl = `https://m.me/${handle}`;
+      }
+    } catch {
+      // fallback
+    }
+  }
+
+  const hotlinePhone = contact?.hotline || "+8801612182408";
 
   // Quick preset questions that shoppers ask in Bangladesh
   const quickQuestions = [

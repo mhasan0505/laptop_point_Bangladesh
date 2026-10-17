@@ -12,10 +12,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "randomuser.me",
-      },
-      {
-        protocol: "https",
         hostname: "cdn.sanity.io",
       },
       {
@@ -93,6 +89,62 @@ const nextConfig: NextConfig = {
       {
         source: "/products/hp",
         destination: "/shop",
+        permanent: true,
+      },
+      // Convenience aliases and Linux case normalization
+      {
+        source: "/emi",
+        destination: "/EMI",
+        permanent: true,
+      },
+      {
+        source: "/warranty",
+        destination: "/returns",
+        permanent: true,
+      },
+      {
+        source: "/delivery",
+        destination: "/shipping",
+        permanent: true,
+      },
+      {
+        source: "/about",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        source: "/contact-us",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        source: "/returns-refund",
+        destination: "/returns",
+        permanent: true,
+      },
+      {
+        source: "/privacy-policy",
+        destination: "/privacy",
+        permanent: true,
+      },
+      {
+        source: "/terms-and-conditions",
+        destination: "/terms",
+        permanent: true,
+      },
+      {
+        source: "/terms-of-service",
+        destination: "/terms",
+        permanent: true,
+      },
+      {
+        source: "/order-tracking",
+        destination: "/track-order",
+        permanent: true,
+      },
+      {
+        source: "/track",
+        destination: "/track-order",
         permanent: true,
       },
     ];
@@ -180,7 +232,7 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://unpkg.com",
               "style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com",
-              "img-src 'self' blob: data: https://ik.imagekit.io https://images.unsplash.com https://randomuser.me https://cdn.sanity.io https://*.tile.openstreetmap.org https://www.facebook.com https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://i.ytimg.com",
+              "img-src 'self' blob: data: https://ik.imagekit.io https://images.unsplash.com https://cdn.sanity.io https://*.tile.openstreetmap.org https://www.facebook.com https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://i.ytimg.com",
               "font-src 'self' data: https://fonts.gstatic.com",
               "connect-src 'self' https://ik.imagekit.io https://upload.imagekit.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.tile.openstreetmap.org",
               "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.facebook.com",
