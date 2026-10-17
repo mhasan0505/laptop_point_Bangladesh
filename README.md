@@ -1,331 +1,127 @@
-# 💻 Laptop Point Bangladesh
+# 💻 Laptop Point Bangladesh — Official E-Commerce Platform
 
-A modern, high-performance e-commerce platform specializing in premium refurbished laptops. Built with Next.js 16, TypeScript, and cutting-edge web technologies for an exceptional user experience.
+A high-performance, production-ready e-commerce platform specializing in premium refurbished and used laptops, original chargers, and computer accessories. Built with Next.js 16, TypeScript, Tailwind CSS v4, and PostgreSQL via Prisma 7.
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.1-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.4.2-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.x-61dafb?style=flat-square&logo=react)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
-[![Sanity](https://img.shields.io/badge/Sanity-CMS-f03e2f?style=flat-square&logo=sanity)](https://www.sanity.io/)
-
-## 🚀 Features
-
-### Customer Experience
-
-- **Smart Product Discovery**: Advanced filtering by brand, processor, RAM, storage, and price range
-- **Product Comparison**: Compare up to 3 laptops side-by-side with detailed specifications
-- **Wishlist & Cart**: Persistent shopping experience with localStorage integration
-- **Recently Viewed**: Track and display recently browsed products
-- **Interactive Product Gallery**: High-quality images with zoom and multiple views
-- **Real-time Stock Status**: Live inventory tracking
-- **SEO Optimized**: Dynamic meta tags, structured data, and sitemap generation
-
-### Business Features
-
-- **Admin Dashboard**: Comprehensive management for products, orders, inventory, and analytics
-- **Sanity CMS Integration**: Easy content management for blog posts and product updates
-- **Facebook Pixel**: Advanced conversion tracking and analytics
-- **Performance Monitoring**: Vercel Analytics and Speed Insights integration
-- **Responsive Design**: Optimized for mobile, tablet, and desktop
-- **Flash Sales Banner**: Promotional campaigns with countdown timers
-
-### Technical Highlights
-
-- **Server Components**: Leveraging Next.js App Router for optimal performance
-- **Image Optimization**: Next.js Image component with custom loader
-- **Type Safety**: Full TypeScript coverage across the codebase
-- **Modern UI**: Radix UI primitives with Tailwind CSS v4
-- **Animations**: Framer Motion for smooth, professional interactions
-- **Maps Integration**: Leaflet for store location display
-
-## 🛠️ Tech Stack
-
-### Core
-
-- **Framework**: Next.js 16.1 (App Router)
-- **Language**: TypeScript 5.x
-- **UI Library**: React 19.x
-- **Styling**: Tailwind CSS 4.1
-
-### Content & Data
-
-- **CMS**: Sanity 4.19
-- **Database**: MongoDB 7.0
-- **State Management**: React Context API
-
-### UI Components
-
-- **Component Library**: Radix UI (Dialog, Slot)
-- **Icons**: Lucide React
-- **Animations**: Framer Motion
-- **Carousel**: Swiper 12.x
-- **Maps**: Leaflet
-
-### Developer Experience
-
-- **Package Manager**: pnpm 10.28
-- **Linting**: ESLint 9
-- **CSS Processing**: PostCSS with Autoprefixer
-
-### Analytics & Monitoring
-
-- **Vercel Analytics**: User behavior tracking
-- **Speed Insights**: Performance monitoring
-- **Facebook Pixel**: Conversion tracking
-
-## 📦 Installation
-
-### Prerequisites
-
-- Node.js 20.x or higher
-- pnpm 10.x or higher
-
-### Setup
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/mhasan0505/laptop_point_Bangladesh.git
-cd laptop_point_Bangladesh
-```
-
-2. **Install dependencies**
-
-```bash
-pnpm install
-```
-
-3. **Environment Configuration**
-   Create a `.env.local` file in the root directory:
-
-```env
-# Sanity Configuration
-NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
-NEXT_PUBLIC_SANITY_DATASET=production
-SANITY_API_TOKEN=your_api_token
-
-# MongoDB (if applicable)
-MONGODB_URI=your_mongodb_connection_string
-
-# Facebook Pixel
-NEXT_PUBLIC_FACEBOOK_PIXEL_ID=your_pixel_id
-
-# Analytics
-NEXT_PUBLIC_VERCEL_ANALYTICS_ID=your_analytics_id
-```
-
-4. **Run the development server**
-
-```bash
-pnpm dev
-```
-
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 🏗️ Project Structure
-
-```
-laptop_point_bangladesh/
-├── app/
-│   ├── (main)/              # Public-facing pages
-│   │   ├── page.tsx         # Homepage
-│   │   ├── shop/            # Product listing & filtering
-│   │   ├── product/         # Product detail pages
-│   │   ├── cart/            # Shopping cart
-│   │   ├── checkout/        # Checkout process
-│   │   ├── compare/         # Product comparison
-│   │   ├── wishlist/        # User wishlist
-│   │   ├── blog/            # Blog posts
-│   │   └── ...
-│   ├── admin/               # Admin dashboard
-│   │   ├── products/        # Product management
-│   │   ├── orders/          # Order management
-│   │   ├── inventory/       # Stock management
-│   │   └── analytics/       # Business analytics
-│   ├── data/                # Product data & navigation
-│   ├── layout.tsx           # Root layout
-│   ├── globals.css          # Global styles
-│   └── providers.tsx        # Context providers
-├── components/
-│   ├── admin/               # Admin-specific components
-│   ├── application/         # Main app components
-│   ├── navigation/          # Navigation components
-│   ├── product/             # Product-related components
-│   ├── shop/                # Shop page components
-│   ├── seo/                 # SEO components
-│   └── ui/                  # Reusable UI components
-├── contexts/
-│   ├── CartContext.tsx      # Shopping cart state
-│   ├── WishlistContext.tsx  # Wishlist state
-│   └── ComparisonContext.tsx # Product comparison state
-├── lib/
-│   ├── utils.ts             # Utility functions
-│   ├── seo-config.ts        # SEO configuration
-│   ├── fpixel.js            # Facebook Pixel integration
-│   ├── sanity.client.ts     # Sanity client setup
-│   └── ...
-├── types/
-│   ├── product.ts           # Product type definitions
-│   ├── cart.ts              # Cart type definitions
-│   └── ...
-├── public/
-│   ├── products/            # Product images
-│   ├── brand_logo/          # Brand logos
-│   └── ...
-├── sanity/                  # Sanity CMS schemas
-├── docs/                    # Documentation
-└── scripts/                 # Build & utility scripts
-```
-
-## 🎨 Key Features Explained
-
-### Product Comparison
-
-Users can select up to 3 products and compare their specifications side-by-side including processor, RAM, storage, display, graphics, and more.
-
-### Recently Viewed Products
-
-Automatically tracks and displays the last 10 products a user has viewed, stored in localStorage for persistent experience.
-
-### Advanced Filtering
-
-- **Brand**: HP, Dell, Lenovo, Microsoft
-- **Processor**: Intel Core i5, i7, i9 (various generations)
-- **RAM**: 8GB, 16GB, 32GB, 64GB
-- **Storage**: 256GB, 512GB, 1TB, 2TB
-- **Price Range**: Dynamic price slider
-
-### Admin Dashboard
-
-Comprehensive backend for:
-
-- Product CRUD operations
-- Inventory management
-- Order processing
-- Sales analytics
-- Content management
-
-## 🔧 Available Scripts
-
-```bash
-# Development
-pnpm dev              # Start development server (Turbopack)
-
-# Production
-pnpm build            # Build for production
-pnpm start            # Start production server
-
-# Code Quality
-pnpm lint             # Run ESLint
-```
-
-## 📊 Performance Optimizations
-
-- **Image Optimization**: Automatic image compression and responsive sizing
-- **Code Splitting**: Route-based and component-based splitting
-- **Server Components**: Reduced client-side JavaScript
-- **Static Generation**: Pre-rendered pages for faster load times
-- **Font Optimization**: Automatic font subsetting and preloading
-- **Lazy Loading**: Images and components load on demand
-
-## 🔐 Security
-
-- Environment variables for sensitive data
-- Input validation and sanitization
-- Secure authentication for admin routes
-- HTTPS enforcement in production
-- Content Security Policy headers
-
-## 📱 Browser Support
-
-- Chrome/Edge (latest 2 versions)
-- Firefox (latest 2 versions)
-- Safari (latest 2 versions)
-- Mobile browsers (iOS Safari, Chrome Android)
-
-## 🚢 Deployment
-
-### Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Import project to Vercel
-3. Configure environment variables
-4. Deploy automatically on push
-
-```bash
-# Deploy to Vercel
-vercel --prod
-```
-
-### Manual Deployment
-
-```bash
-# Build
-pnpm build
-
-# Start production server
-pnpm start
-```
-
-## 🧪 Automated Testing & Verification
-
-Run the full end-to-end verification suite against your local development server:
-
-```bash
-node --env-file=.env.local scripts/check-all.mjs
-```
-
-### Suite Pipeline:
-1. **TypeScript Compilation**: `tsc --noEmit -p .` (0 errors required)
-2. **Server-Side Price Authority**: 4xx-only anti-spoofing tests (guaranteed zero DB writes)
-3. **Staff Login, RBAC 403 Guards & Trusted Tokens**: Tests session/trusted token separation, constant-time fingerprinting, role freshness, and 403 Forbidden enforcement
-4. **Upload Pipeline & File Security**: Verifies MIME/magic-byte sniffing, size limits, and ImageKit re-encoding
-5. **Catalogue Smoke Test**: Exercises accessory/laptop create, storefront indexing, duplicate SKU rejection, and cleanup
-6. **ImageKit Deletions & 409 Protection**: Unit tests API request signing, 409 conflict detection for in-use images, and metadata synchronization
-
-> [!IMPORTANT]
-> - Requires `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env.local` or environment.
-> - **Local server only**: The runner checks `TEST_URL` and explicitly refuses to run against any non-localhost URL to prevent accidental writes or state mutation on remote environments.
-
-## 📄 Documentation
-
-Detailed documentation is available in the `/docs` folder:
-
-- [SEO Implementation](docs/SEO_IMPLEMENTATION.md)
-- [Facebook Pixel Setup](docs/FACEBOOK_PIXEL_SETUP.md)
-- [Performance Optimization](docs/PERFORMANCE_OPTIMIZATION.md)
-- [Deployment Checklist](docs/DEPLOYMENT_CHECKLIST.md)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is proprietary software. All rights reserved.
-
-## 👥 Contact
-
-**Laptop Point Bangladesh**
-
-- Website: [laptoppointbd.com](https://laptoppointbd.com)
-- GitHub: [@mhasan0505](https://github.com/mhasan0505)
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/) - React framework
-- [Vercel](https://vercel.com/) - Hosting platform
-- [Sanity](https://www.sanity.io/) - Content management
-- [Tailwind CSS](https://tailwindcss.com/) - Styling framework
-- [Radix UI](https://www.radix-ui.com/) - UI primitives
+[![Prisma](https://img.shields.io/badge/Prisma-7.x-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-4169E1?style=flat-square&logo=postgresql)](https://neon.tech/)
+[![ImageKit](https://img.shields.io/badge/ImageKit-CDN-0070F3?style=flat-square)](https://imagekit.io/)
 
 ---
 
-Built with ❤️ by the Laptop Point Bangladesh team
+## 🚀 Key Features
+
+### Storefront Experience
+- **Smart Product Discovery**: Instant filtering by brand, processor, RAM, storage, price range, condition, and cosmetic grade.
+- **Product Comparison**: Side-by-side comparison of up to 3 laptops with full specification matrices.
+- **Interactive Photo & Video Gallery**: High-definition galleries with click-to-zoom and embedded hands-on YouTube video reviews.
+- **Dedicated Accessories Catalog (`/accessories`)**: Specialized catalog for chargers, bags, stands, and peripherals with pin type and wattage attributes.
+- **Authoritative Server Pricing**: Client-side prices ignored at checkout; strict validation against server catalog. Automatic free shipping threshold ($\ge ৳50,000$).
+- **Privacy-Preserving Order Tracking (`/track-order`)**: Real-time lookup by phone and order number with zero PII exposure and sliding-window rate limiting.
+- **Mobile First**: Sticky bottom navigation bar, tap targets $\ge 44$px, and WCAG 2.1 AA accessibility compliance.
+
+### Administration & Operations
+- **Role-Based Access Control (RBAC)**: Secure multi-role admin system (`owner`, `manager`, `marketing`, `support`) with session cookies and 15-minute rate-limit lockout.
+- **Adaptive Product Forms**: Dynamically switches form fields between Laptop specifications and Accessory attributes (wattage, pin type, compatible brands).
+- **Inventory Safety**: Hard stock decrement on checkout, audit logging in `InventoryLog`, and automatic stock restoration upon cancellation or return.
+- **A4 Document Printing**: Print-ready A4 Tax Invoices and Delivery Challans with BDT currency formatting and amounts in words ("Taka and Poisha").
+- **Flash Sales & Power Deals**: Scheduled countdown deals with automatic expiration via Vercel Cron.
+- **Customer Communications**: Contact form inquiry inbox (`/admin/messages`) with unread badge and verified product Q&A publishing (`/admin/questions`).
+
+---
+
+## 🛠️ Technology Stack
+
+- **Framework**: Next.js 16.4.2 (App Router, Webpack)
+- **Runtime**: Node.js 24 LTS
+- **Language**: TypeScript 5.x (Strict mode, zero `any` exceptions)
+- **Styling**: Tailwind CSS 4.x with CSS custom properties
+- **Database**: PostgreSQL on Neon Serverless with connection pooling
+- **ORM**: Prisma 7 with `@prisma/adapter-pg`
+- **Asset Storage & CDN**: ImageKit CDN with server-side MIME verification and WebP re-encoding
+- **Scheduler**: Vercel Cron (`vercel.json`) with constant-time secret verification
+
+---
+
+## 📦 Getting Started
+
+### Prerequisites
+- Node.js 24.x LTS
+- pnpm 10.x or higher
+
+### Local Setup
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/mhasan0505/laptop_point_Bangladesh.git
+   cd laptop_point_Bangladesh
+   ```
+2. **Install dependencies**:
+   ```bash
+   pnpm install
+   ```
+3. **Configure Environment**:
+   Copy `.env.example` to `.env.local` and provide your credentials:
+   ```env
+   DATABASE_URL="postgresql://user:pass@host/dbname?sslmode=require"
+   ADMIN_PASSWORD="your-strong-admin-password"
+   ADMIN_SESSION_SECRET="your-64-character-hex-secret"
+   IMAGEKIT_PUBLIC_KEY="public_..."
+   IMAGEKIT_PRIVATE_KEY="private_..."
+   IMAGEKIT_URL_ENDPOINT="https://ik.imagekit.io/..."
+   CRON_SECRET="your-cron-secret"
+   TRUSTED_PROXY="vercel"
+   ```
+4. **Run development server**:
+   ```bash
+   pnpm dev
+   ```
+   Navigate to [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 🧪 Testing & Verification Suites
+
+The codebase is protected by 112 automated unit and integration tests using Node.js native test runner:
+
+```bash
+# Run full automated test suite (112 tests)
+pnpm test
+
+# Run TypeScript compilation check (0 errors required)
+npx tsc --noEmit -p .
+
+# Run ESLint compliance check (0 errors)
+pnpm lint
+
+# Run automated database backup
+node scripts/backup-db.mjs
+```
+
+---
+
+## 📚 Client & Operations Documentation
+
+Comprehensive operational and technical guides are available in [`docs/handoff/`](docs/handoff/):
+
+- 📖 [**Store Administrator & Owner Manual**](docs/handoff/ADMIN_GUIDE.md): Click-by-click instructions for daily shop management, adding laptops/accessories, and printing invoices.
+- 🌅 [**Daily Operations Checklist**](docs/handoff/DAILY_CHECKLIST.md): Morning, midday dispatch, and evening routines.
+- 📅 [**Weekly Maintenance Checklist**](docs/handoff/WEEKLY_CHECKLIST.md): Physical inventory audits, deal rotations, and backups.
+- 🔧 [**Troubleshooting Guide**](docs/handoff/TROUBLESHOOTING.md): Quick solutions for uploads, logins, and order tracking.
+- 📋 [**Client Data Remediation Guide**](docs/handoff/CLIENT_DATA_REMEDIATION.md): Admin steps for fixing catalog anomalies.
+- 🔒 [**Credentials Transfer Template**](docs/handoff/CREDENTIALS_TRANSFER.md): Secure handover checklist for account ownership and password rotation.
+- ✍️ [**Acceptance Sign-Off Checklist**](docs/handoff/ACCEPTANCE_CHECKLIST.md): Formal client walkthrough and sign-off document.
+- 🏗️ [**Technical Handover Document**](docs/handoff/TECHNICAL_HANDOVER.md): Deep-dive architecture, environment variables, and deployment runbooks.
+- 💾 [**Database Backup & Restore Runbook**](docs/RUNBOOKS/DATABASE_BACKUP_RESTORE.md): PostgreSQL disaster recovery procedures.
+
+---
+
+## 🏢 Showroom & Contact Information
+
+**Laptop Point BD**  
+Madbar Mansion, Shop-08, 4th Floor, Senpara Parbata, Mirpur-10, Dhaka-1216  
+- **Hotline**: `+880 1612-182408`
+- **Email**: `laptoppointbd1@gmail.com`
+- **Website**: [laptoppointbd.com](https://laptoppointbd.com)

@@ -171,12 +171,21 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
   - Created `scripts/tests/phase8-safety-ops.test.mjs` (6/6 passing). Full test suite passes: `pnpm test` (112/112 passing), `tsc --noEmit` (0 errors), `pnpm lint` (0 errors).
 
 ### Phase 9 — Client Handoff Package
-- [ ] `ADMIN_GUIDE.md`: Step-by-step client management workflows.
-- [ ] `DAILY_CHECKLIST.md` and `WEEKLY_CHECKLIST.md`.
-- [ ] `TROUBLESHOOTING.md`.
-- [ ] `TECHNICAL_HANDOVER.md`: Architecture, env vars, rollback, tests, limitations.
-- [ ] `ACCEPTANCE_CHECKLIST.md`: Formal client sign-off checklist.
-- [ ] `CREDENTIALS_TRANSFER.md`: Credential rotation handover template.
+- [x] **Store Administrator Manual (`ADMIN_GUIDE.md`)**:
+  - Comprehensive, non-technical operational manual for the store owner covering login/lockout rules, adding laptops with specs, adding accessories with adaptive forms, price & stock edits, hiding items (Draft mode), photo recommendations, YouTube video reviews, homepage banners, power deals, Q&A replies, order processing (A4 invoice/challan printing, restocking cancellation), customer messages, staff role permissions (`owner`, `manager`, `marketing`, `support`), store profile & legal policies, and bulk price CSV workflows.
+- [x] **Operational Checklists (`DAILY_CHECKLIST.md` & `WEEKLY_CHECKLIST.md`)**:
+  - Daily routine: morning pending orders & customer phone confirmation, contact inquiries, Q&A checks, midday dispatch & invoice printing, evening walk-in stock synchronization.
+  - Weekly routine: physical showroom stock spot-checks, market rate reviews, power deal rotation, weekly JSON database backup, and staff access auditing.
+- [x] **Troubleshooting Runbook (`TROUBLESHOOTING.md`)**:
+  - Practical diagnostic steps for image upload failures (size, format, ImageKit keys), products not showing (draft status, zero stock, 15s cache delay), order tracking lookups, admin login lockout resolution (15-min lockout, network switching), and Vercel error log inspection.
+- [x] **Technical Handover Deep-Dive (`TECHNICAL_HANDOVER.md`)**:
+  - Updated with Sections 10-16: dual catalog architecture (laptops vs accessories), serverless cache TTL & persistence, RBAC auth model, image upload pipeline, complete environment variables reference table, Vercel deployment & instant rollback runbook, database backup & cron execution, test execution, known limitations, and third-party accounts transfer matrix.
+- [x] **Client Acceptance Sign-Off Checklist (`ACCEPTANCE_CHECKLIST.md`)**:
+  - Interactive walkthrough checklist covering storefront browsing, checkout money rules, admin inventory management, order fulfillment, contact forms, legal policies, and formal signature blocks.
+- [x] **Credentials & Account Handover Template (`CREDENTIALS_TRANSFER.md`)**:
+  - Zero-secret handover template covering account ownership transfer (Vercel, Neon, ImageKit, Domain, Google Search Console, GTM, Meta Pixel) and rotation checklist for `DATABASE_URL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, and `CRON_SECRET`.
+- [x] **Root README.md Refresh**:
+  - Replaced outdated legacy references with current production tech stack (Next.js 16.4.2, Prisma 7, PostgreSQL Neon, ImageKit, Node 24 LTS) and direct links to all handoff documentation.
 
 ### Phase 10 — Final Verification & Release Gate
 - [ ] Full test pass (`tsc`, `pnpm test`, lint, `scripts/check-all.mjs`).

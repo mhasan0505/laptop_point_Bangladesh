@@ -166,3 +166,147 @@ Currently, customer order placement and tracking rely on the public order tracki
    - `EMAIL_PROVIDER=resend|postmark|none`
 3. **Async Non-Blocking Execution**: Call notification dispatches using Next.js `after()` or detached promises so external telco or SMTP API latency never delays checkout HTTP 200 responses.
 
+---
+
+## 10. System Architecture & Dual Catalog Model
+
+The store is built on Next.js 16 (App Router, Webpack), React 19, Tailwind CSS v4, and Prisma 7 with PostgreSQL:
+
+### 10.1 Dual Catalog Architecture
+The store manages two distinct product types with specialized schemas:
+1. **Laptops (`Product` / `RawProduct`)**:
+   - **Data Stores**: Initial seed in `app/data/products.json`, dynamic overrides and custom products in PostgreSQL `ProductOverride` table (`system:products`), stock managed in `Inventory` table.
+   - **Schema**: Grouped technical specs (`SpecGroups`: Processor, Memory, Storage, Display, Graphics, Ports, Battery).
+   - **Visibility**: Filtered via `isPublicRaw()` — items marked `statusValue !== 'active'` (Draft or Archived) are excluded from the shop, search, sitemap, and checkout.
+2. **Accessories (`Accessory`)**:
+   - **Data Stores**: Initial seed in `app/data/accessories.json`, dynamic overrides in PostgreSQL `ProductOverride` (`system:accessories`).
+   - **Schema**: Specialized accessory attributes (output wattage, pin type, compatible brands, warranty).
+   - **Bridge Layer**: `lib/accessory-bridge.ts` enables the Admin Products interface to seamlessly manage both laptops and accessories from a single unified view.
+
+### 10.2 Persistence & Serverless Cache Layer
+- Because Vercel serverless instances feature a read-only filesystem and ephemeral lifetimes, all mutations persist directly to PostgreSQL.
+- To prevent database connection exhaustion, in-memory caches use `TtlCache` with a short TTL (`DATA_CACHE_TTL_MS`, 15 seconds).
+- Mutations immediately evict the local cache instance; peer instances achieve coherence within $\le 15$ seconds.
+
+### 10.3 Authentication & Authorization Model
+- Sessions are stored in HTTP-only, SameSite=Lax, Secure cookies encrypted via AES-GCM or HMAC using `ADMIN_SESSION_SECRET`.
+- Role-based access control enforces least privilege across four staff roles:
+  - `owner`: Unrestricted administrative authority.
+  - `manager`: Catalog, inventory, orders, customer messages, print documents.
+  - `marketing`: Products, banners, power deals, blog content.
+  - `support`: Orders status tracking, questions, customer messages.
+- Rate limiting enforces a 15-minute lockout after 5 consecutive failed login attempts.
+
+### 10.4 Image Upload Pipeline
+- Client uploads image binary to `/api/admin/upload`.
+- Server validates file size, magic bytes MIME sniffing (rejecting disguised executables or SVGs), and strips malicious metadata.
+- Re-encodes to optimized WebP format and uploads to ImageKit cloud storage (`/laptop-point/` folder).
+- File ID and CDN URL are returned and stored with the product record.
+
+---
+
+## 11. Production Environment Variables Reference
+
+| Variable | Required In Prod | Purpose | Example / Value |
+| :--- | :--- | :--- | :--- |
+| `DATABASE_URL` | **Yes** | Primary PostgreSQL connection with pooling | `postgresql://user:pass@ep-xyz.aws.neon.tech/laptoppoint?sslmode=require` |
+| `ADMIN_PASSWORD` | **Yes** | Master break-glass administrator password | Strong random string (minimum 16 chars) |
+| `ADMIN_SESSION_SECRET` | **Yes** | Encryption key for staff session cookies | Random 64-character hex string |
+| `IMAGEKIT_PUBLIC_KEY` | **Yes** | ImageKit client API public key | `public_...` |
+| `IMAGEKIT_PRIVATE_KEY` | **Yes** | ImageKit server API private key | `private_...` |
+| `IMAGEKIT_URL_ENDPOINT` | **Yes** | ImageKit CDN domain | `https://ik.imagekit.io/laptoppoint` |
+| `CRON_SECRET` | **Yes** | Bearer authentication for `/api/cron` | Random 32+ character hex string |
+| `TRUSTED_PROXY` | **Yes** | Reverse proxy mode for accurate client IP detection | `vercel` |
+| `ALLOW_PRODUCTION_SEED` | No (Safety) | Refuses destructive DB seeds unless explicitly `true` | `false` |
+| `DATA_CACHE_TTL_MS` | Optional | In-memory cache duration in milliseconds | `15000` (Default: 15s) |
+| `NEXT_PUBLIC_GTM_ID` | Optional | Google Tag Manager Container ID | `GTM-KXKXGWF6` |
+| `NEXT_PUBLIC_FB_PIXEL_ID` | Optional | Meta Pixel ID | `1676...` |
+
+---
+
+## 12. Deployment, Rollback & Verification Procedures
+
+### Deploying to Vercel
+1. Push committed code to GitHub `main` branch (or configured production branch).
+2. Vercel automatically detects Next.js, executes `pnpm build`, and runs the production deployment.
+3. Verify post-deploy health:
+   ```bash
+   curl -I https://laptoppointbd.com/api/health
+   ```
+   Confirm HTTP `200 OK` and `"status": "healthy"`.
+
+### Rollback Procedure
+If a regression or operational issue occurs in production:
+1. Open the **Vercel Dashboard → Deployments**.
+2. Locate the previous stable deployment commit.
+3. Click the three dots (`...`) and select **Instant Rollback**.
+4. Traffic is immediately redirected to the prior build within seconds without rebuilding.
+
+---
+
+## 13. Backup, Recovery & Background Jobs
+
+### Automated Backup
+Export database snapshot to timestamped JSON with SHA-256 integrity checksum:
+```bash
+node scripts/backup-db.mjs
+```
+Files are written to `backups/db-backup-YYYY-MM-DD.json` and `backups/db-backup-YYYY-MM-DD.json.sha256`.
+
+### Disaster Recovery Runbook
+Detailed instructions for restoring PostgreSQL using `pg_restore` or SQL dumps are documented in [`docs/RUNBOOKS/DATABASE_BACKUP_RESTORE.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/RUNBOOKS/DATABASE_BACKUP_RESTORE.md).
+
+### Background Jobs (Vercel Cron)
+- Scheduled in `vercel.json`: `"schedule": "0 * * * *"` (Hourly).
+- Endpoint `/api/cron` executes:
+  - `deal-expiry`: Checks and deactivates expired Power Deals and promotional banners.
+  - `prune-orphan-uploads`: Scans ImageKit uploads against active catalog references.
+
+---
+
+## 14. How to Run Tests & Verification Suites
+
+The codebase includes zero-regression automated test suites using Node.js native test runner:
+
+```bash
+# Run all automated tests (112 tests)
+pnpm test
+
+# Run TypeScript type check (0 errors)
+npx tsc --noEmit -p .
+
+# Run ESLint compliance check (0 errors)
+pnpm lint
+
+# Run specific phase test suite
+node --test scripts/tests/phase8-safety-ops.test.mjs
+node --test scripts/tests/phase7-ux-seo.test.mjs
+node --test scripts/tests/phase6-brand-readiness.test.mjs
+node --test scripts/tests/order-money-rules.test.mjs
+```
+
+---
+
+## 15. Known Limitations & Architecture Notes
+
+1. **Phase 1 Live Staging Write Verification**:
+   - As documented throughout development, write operations against a real PostgreSQL instance were verified using unit mocks and isolated simulators to protect the client's development database. Live write verification will be performed once the client provides an isolated staging database.
+2. **Transactional SMS & Email Providers**:
+   - Currently, order confirmation and tracking are delivered via on-screen invoices, challans, and the `/track-order` portal. External SMS or email dispatch requires the owner to activate a provider account (see Section 9).
+3. **Variants Architecture**:
+   - Product models are represented as discrete catalog SKUs with their specific RAM, SSD, and Grade configurations. Advanced multi-dimensional parent-child variant grouping is supported via schema flags (`NEXT_PUBLIC_ENABLE_VARIANTS=true`) but kept streamlined for ease of showroom inventory management.
+
+---
+
+## 16. Third-Party Accounts Transfer Matrix
+
+| Provider | Purpose | Status |
+| :--- | :--- | :--- |
+| **Vercel** | Production Next.js hosting & edge network | Ready for team invite / ownership transfer |
+| **Neon** | Serverless PostgreSQL database | Ready for project transfer |
+| **ImageKit** | Media asset storage and image optimization CDN | Ready for account transfer |
+| **Domain Registrar** | DNS nameservers for `laptoppointbd.com` | Client to point A / CNAME records to Vercel |
+| **Google Search Console** | Sitemap submission & Google search indexing | Ready for ownership verification |
+| **Google Analytics / GTM** | Web traffic & marketing analytics | Configured via `NEXT_PUBLIC_GTM_ID` |
+
+
