@@ -45,6 +45,51 @@ export async function requireAdmin(
   options?: RequireAdminOptions
 ): Promise<RequireAdminResult> {
   try {
+    // CSRF protection for state-changing requests (POST, PUT, PATCH, DELETE)
+    const method = request.method.toUpperCase();
+    const isStateChanging = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
+
+    if (isStateChanging) {
+      const secFetchSite = request.headers.get("sec-fetch-site");
+      if (secFetchSite === "cross-site") {
+        return {
+          user: null,
+          error: NextResponse.json(
+            { error: "Forbidden: cross-site request rejected" },
+            { status: 403 }
+          ),
+        };
+      }
+
+      const origin = request.headers.get("origin");
+      if (origin) {
+        try {
+          const originHost = new URL(origin).host;
+          const requestHost =
+            request.headers.get("x-forwarded-host") ||
+            request.headers.get("host");
+
+          if (requestHost && originHost.toLowerCase() !== requestHost.toLowerCase()) {
+            return {
+              user: null,
+              error: NextResponse.json(
+                { error: "Forbidden: origin mismatch (CSRF protection)" },
+                { status: 403 }
+              ),
+            };
+          }
+        } catch {
+          return {
+            user: null,
+            error: NextResponse.json(
+              { error: "Forbidden: invalid origin header" },
+              { status: 403 }
+            ),
+          };
+        }
+      }
+    }
+
     const session = await getAdminSession(request);
     if (!session) {
       return {
@@ -52,6 +97,7 @@ export async function requireAdmin(
         error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
       };
     }
+
 
     let resolvedRole: AdminRole = session.role;
     let resolvedEmail: string = session.email;

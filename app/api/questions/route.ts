@@ -1,4 +1,8 @@
-import { getClientIp } from "@/lib/rate-limit";
+import {
+  getClientIp,
+  checkQuestionSubmissionRateLimit,
+  verifyBotFriction,
+} from "@/lib/rate-limit";
 import { addQuestion, getQuestions } from "@/lib/questions-storage";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -7,21 +11,6 @@ export const dynamic = "force-dynamic";
 // Public product Q&A. Only answered questions are ever exposed here;
 // moderation/answering stays in /api/admin/questions.
 
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_PER_WINDOW = 5;
-const hits = new Map<string, number[]>();
-
-function allow(ip: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-  if (recent.length >= MAX_PER_WINDOW) {
-    hits.set(ip, recent);
-    return false;
-  }
-  recent.push(now);
-  hits.set(ip, recent);
-  return true;
-}
 
 export async function GET(request: NextRequest) {
   const slug = new URL(request.url).searchParams.get("productSlug");
@@ -48,10 +37,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    if (!allow(getClientIp(request))) {
+    const clientIp = getClientIp(request);
+    const rateCheck = checkQuestionSubmissionRateLimit(clientIp);
+    if (!rateCheck.allowed) {
       return NextResponse.json(
         { error: "Too many questions. Please try again in a few minutes." },
-        { status: 429 },
+        {
+          status: 429,
+          headers: { "Retry-After": String(rateCheck.retryAfterSeconds ?? 60) },
+        },
       );
     }
 
@@ -59,7 +53,19 @@ export async function POST(request: NextRequest) {
       string,
       unknown
     > | null;
+
+    if (body) {
+      const botCheck = verifyBotFriction(body);
+      if (botCheck.isBot) {
+        return NextResponse.json(
+          { error: "Automated submission rejected" },
+          { status: 400 }
+        );
+      }
+    }
+
     const productSlug = typeof body?.productSlug === "string" ? body.productSlug.trim() : "";
+
     const question = typeof body?.question === "string" ? body.question.trim() : "";
     const userName =
       typeof body?.userName === "string" ? body.userName.trim() : "";

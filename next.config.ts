@@ -175,6 +175,25 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: [
           {
+            key: "Content-Security-Policy-Report-Only",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://unpkg.com",
+              "style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com",
+              "img-src 'self' blob: data: https://ik.imagekit.io https://images.unsplash.com https://randomuser.me https://cdn.sanity.io https://*.tile.openstreetmap.org https://www.facebook.com https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://i.ytimg.com",
+              "font-src 'self' data: https://fonts.gstatic.com",
+              "connect-src 'self' https://ik.imagekit.io https://upload.imagekit.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.tile.openstreetmap.org",
+              "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.facebook.com",
+              "frame-ancestors 'self'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join("; "),
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
             key: "X-Content-Type-Options",
             value: "nosniff",
           },
@@ -192,7 +211,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Permissions-Policy",
-            value: "geolocation=(self), microphone=(), camera=()",
+            value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
           },
         ],
       },
@@ -201,3 +220,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+

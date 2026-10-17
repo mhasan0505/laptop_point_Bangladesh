@@ -211,23 +211,34 @@ export async function POST(request: Request) {
     user: sessionUser,
   });
 
-  // Signed HttpOnly admin session cookie (7 days)
-  response.cookies.set(ADMIN_SESSION_COOKIE, sessionToken, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7,
-  });
+  const isProd = process.env.NODE_ENV === "production";
 
-  // Signed HttpOnly trusted device cookie (30 days)
-  response.cookies.set(TRUSTED_DEVICE_COOKIE, trustedDeviceToken, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
-  });
+  if (response.cookies && typeof response.cookies.set === "function") {
+    // Signed HttpOnly admin session cookie (7 days)
+    response.cookies.set(ADMIN_SESSION_COOKIE, sessionToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: isProd,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    // Signed HttpOnly trusted device cookie (30 days)
+    response.cookies.set(TRUSTED_DEVICE_COOKIE, trustedDeviceToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: isProd,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+  } else {
+    // Standard Headers Set-Cookie fallback for environments where response.cookies is unpatched
+    const sessionCookieStr = `${ADMIN_SESSION_COOKIE}=${sessionToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 7}${isProd ? "; Secure" : ""}`;
+    const trustedCookieStr = `${TRUSTED_DEVICE_COOKIE}=${trustedDeviceToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 30}${isProd ? "; Secure" : ""}`;
+    response.headers.append("Set-Cookie", sessionCookieStr);
+    response.headers.append("Set-Cookie", trustedCookieStr);
+  }
+
 
     return response;
   } catch (error) {

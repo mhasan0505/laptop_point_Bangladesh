@@ -479,3 +479,81 @@ export function recordFailedOrderLookup(ip: string) {
   }
 }
 
+interface SlidingWindowRecord {
+  timestamps: number[];
+}
+
+function checkSlidingWindow(
+  map: Map<string, SlidingWindowRecord>,
+  ip: string,
+  maxAttempts: number,
+  windowMs: number
+): { allowed: boolean; retryAfterSeconds?: number } {
+  const now = Date.now();
+  const entry = map.get(ip) ?? { timestamps: [] };
+  const recent = entry.timestamps.filter((t) => now - t < windowMs);
+
+  if (recent.length >= maxAttempts) {
+    const oldest = recent[0];
+    const retryAfter = Math.max(1, Math.ceil((oldest + windowMs - now) / 1000));
+    map.set(ip, { timestamps: recent });
+    return { allowed: false, retryAfterSeconds: retryAfter };
+  }
+
+  recent.push(now);
+  map.set(ip, { timestamps: recent });
+  return { allowed: true };
+}
+
+const orderCreationAttempts = new Map<string, SlidingWindowRecord>();
+const questionSubmissionAttempts = new Map<string, SlidingWindowRecord>();
+const contactSubmissionAttempts = new Map<string, SlidingWindowRecord>();
+
+export function checkOrderCreationRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: number } {
+  return checkSlidingWindow(orderCreationAttempts, ip, 10, 10 * 60 * 1000); // 10 orders per 10m
+}
+
+export function checkQuestionSubmissionRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: number } {
+  return checkSlidingWindow(questionSubmissionAttempts, ip, 5, 10 * 60 * 1000); // 5 questions per 10m
+}
+
+export function checkContactSubmissionRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: number } {
+  return checkSlidingWindow(contactSubmissionAttempts, ip, 5, 10 * 60 * 1000); // 5 contact submits per 10m
+}
+
+/**
+ * Validates bot friction tokens:
+ * - Honeypot fields (_hp, hp_field, website, fax) must be empty.
+ * - Minimum submission time (_t): if present, must be >= minSeconds (default 2s) to block automated instant scripts.
+ */
+export function verifyBotFriction(
+  data: Record<string, unknown>,
+  options?: { minSeconds?: number }
+): { isBot: boolean; reason?: string } {
+  const honeypots = ["_hp", "hp_field", "website", "fax"];
+  for (const field of honeypots) {
+    const val = data[field];
+    if (typeof val === "string" && val.trim().length > 0) {
+      return { isBot: true, reason: `Honeypot field '${field}' was populated` };
+    }
+  }
+
+  const t = data._t;
+  if (t !== undefined && t !== null && t !== "") {
+    const timestamp = Number(t);
+    if (!Number.isNaN(timestamp)) {
+      const minMs = (options?.minSeconds ?? 2) * 1000;
+      const elapsed = Date.now() - timestamp;
+      if (elapsed < minMs) {
+        return { isBot: true, reason: "Form submitted unnaturally quickly (automated bot submission)" };
+      }
+      if (elapsed > 24 * 60 * 60 * 1000) {
+        return { isBot: true, reason: "Form submission token expired (older than 24 hours)" };
+      }
+    }
+  }
+
+  return { isBot: false };
+}
+
+

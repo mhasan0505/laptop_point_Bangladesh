@@ -1,5 +1,6 @@
-import sharp, { Metadata } from "sharp";
+import sharp, { type Metadata } from "sharp";
 import { MEDIA_PRESETS } from "./presets-config";
+
 import { UploadStageError, sanitizeDetail } from "./upload-errors";
 
 export * from "./presets-config";

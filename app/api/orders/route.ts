@@ -9,6 +9,12 @@ import { listAccessories } from "@/lib/accessories-storage";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
+import {
+  getClientIp,
+  checkOrderCreationRateLimit,
+  verifyBotFriction,
+} from "@/lib/rate-limit";
+
 
 // Business rules imported from lib/pricing.ts (single source of truth,
 // shared with the client cart context).
@@ -77,19 +83,40 @@ async function parseCreateOrderBody(
   const customerName = asOptionalString(body.customerName);
   const customerPhone = asOptionalString(body.customerPhone);
   const customerEmail = asOptionalString(body.customerEmail);
+  const address = asOptionalString(body.address);
+  const city = asOptionalString(body.city);
+  const district = asOptionalString(body.district);
+  const postalCode = asOptionalString(body.postalCode);
+  const notes = asOptionalString(body.notes);
 
-  if (!customerName || customerName.length < 2 || customerName.length > 120) {
-    return { error: "A valid customer name is required" };
+  if (!customerName || customerName.length < 2 || customerName.length > 100) {
+    return { error: "Customer name must be between 2 and 100 characters" };
   }
-  if (!customerPhone || customerPhone.length < 6 || customerPhone.length > 20) {
-    return { error: "A valid customer phone number is required" };
+  if (!customerPhone || customerPhone.length < 6 || customerPhone.length > 25) {
+    return { error: "Customer phone number must be between 6 and 25 characters" };
   }
   if (
     customerEmail &&
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)
+    (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail) || customerEmail.length > 100)
   ) {
-    return { error: "A valid customer email is required" };
+    return { error: "A valid customer email is required (max 100 characters)" };
   }
+  if (address && address.length > 250) {
+    return { error: "Address cannot exceed 250 characters" };
+  }
+  if (city && city.length > 60) {
+    return { error: "City cannot exceed 60 characters" };
+  }
+  if (district && district.length > 60) {
+    return { error: "District cannot exceed 60 characters" };
+  }
+  if (postalCode && postalCode.length > 30) {
+    return { error: "Postal code cannot exceed 30 characters" };
+  }
+  if (notes && notes.length > 500) {
+    return { error: "Notes cannot exceed 500 characters" };
+  }
+
 
   const rawPaymentMethod =
     typeof body.paymentMethod === "string"
@@ -315,6 +342,20 @@ export async function GET(request: NextRequest) {
 // Public checkout. Server validates the payload and atomically decrements
 // stock with a conditional updateMany guard (no TOCTOU overselling).
 export async function POST(request: NextRequest) {
+  const clientIp = getClientIp(request);
+
+  // 1. Per-IP Rate Limiting (max 10 orders per 10 minutes)
+  const rateCheck = checkOrderCreationRateLimit(clientIp);
+  if (!rateCheck.allowed) {
+    return NextResponse.json(
+      { error: "Too many order requests. Please try again later." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(rateCheck.retryAfterSeconds ?? 60) },
+      }
+    );
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -322,7 +363,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
+  // 2. Anti-bot friction check (honeypots & submission timing token)
+  if (isRecord(body)) {
+    const botCheck = verifyBotFriction(body);
+    if (botCheck.isBot) {
+      return NextResponse.json(
+        { error: "Automated submission rejected" },
+        { status: 400 }
+      );
+    }
+  }
+
   const commerce = await getStorefrontCommerce();
+
   const parsed = await parseCreateOrderBody(body, commerce);
   if ("error" in parsed) {
     return NextResponse.json(

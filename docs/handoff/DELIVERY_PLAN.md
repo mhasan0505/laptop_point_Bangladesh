@@ -13,7 +13,8 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
 | **Phase 1c** | Health DB Hardening & Audit | **Done** | `GET /api/admin/health/db` hardened (owner/manager session only, no tokens/headers), test suite (`541cb33`). |
 | **Phase 2** | Environments, Config & Secrets | **Done** | Full `.env.example`, `lib/env.ts` Zod validator, `instrumentation.ts`, unit tests, git secret audit, bundle leak scan on prod `.next` passing (`a675742`). |
 | **Phase 3** | Build, Deploy & Runtime Health | **Done** | `pnpm build` passed, route budget verified, `GET /api/health`, error boundaries (`app/error.tsx`, `not-found.tsx`, `global-error.tsx`, `admin/error.tsx`), CI workflow, structured logs (`lib/logger.ts`). |
-| **Phase 4** | Security Hardening Pass | **In Progress** | API route audit table (`docs/SECURITY.md`), rate limiting, CSRF, security headers, upload sniffing/sharp, audit. |
+| **Phase 4** | Security Hardening Pass | **Done** | API route audit table (`docs/SECURITY.md`), rate limiting, bot friction, CSRF, security headers, upload sniffing/sharp, lockout suite (`scripts/tests/*`). |
+
 | **Phase 5** | Catalogue, Orders & Money | **Pending** | Catalogue audit, order lifecycle end-to-end on staging, invoice/challan A4 print, checkout calculations. |
 | **Phase 6** | Content, Legal & Brand Readiness | **Pending** | Placeholder audit, policy pages rendered from DB, Store Profile single source of truth, WhatsApp/forms. |
 | **Phase 7** | UX, A11y, Performance, SEO | **Pending** | Responsive QA (375-1536px), axe accessibility audit, Lighthouse mobile scores, meta tags/sitemap/robots. |
@@ -83,12 +84,14 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
 
 
 ### Phase 4 — Security Hardening Pass
-- [ ] Complete API route audit table in `docs/SECURITY.md`.
-- [ ] Rate limiting & anti-abuse on public endpoints (`/api/orders`, `/api/questions`, newsletter/contact, `/api/admin/login`).
-- [ ] Security headers in `next.config.ts` (CSP report-only allow-list, HSTS, frame-ancestors, etc.).
-- [ ] Cookie hardening (`HttpOnly`, `SameSite=Lax`, `Secure`) and admin CSRF protection.
-- [ ] Upload pipeline security: MIME sniffing, 16 MB limit, sharp re-encode, `fileId` storage.
-- [ ] `pnpm audit --prod` and staff lockout verification.
+- [x] Complete API route audit table across all 42 routes in `docs/SECURITY.md`.
+- [x] Rate limiting & anti-abuse on public endpoints (`POST /api/orders`, `POST /api/questions`, `POST /api/contact`, `POST /api/admin/login`). Tested in `scripts/tests/public-abuse-protection.test.mjs`.
+- [x] Security headers in `next.config.ts` (CSP report-only allow-list, HSTS, frame-ancestors, X-Content-Type-Options, Referrer-Policy, Permissions-Policy). Tested in `scripts/tests/security-headers.test.mjs`.
+- [x] Cookie hardening (`HttpOnly`, `SameSite=Lax`, `Secure`) and admin CSRF protection (`Sec-Fetch-Site` and `Origin` validation in `requireAdmin`). Tested in `scripts/tests/csrf-admin.test.mjs`.
+- [x] Upload pipeline security: MIME sniffing, 16 MB limit, sharp WebP re-encoding, `fileId` storage. Tested in `scripts/tests/upload-security.test.mjs`.
+- [x] `pnpm audit --prod` dependency audit and blast radius analysis documented in `docs/SECURITY.md`.
+- [x] Staff lockout and trusted-device verification suite passing (`scripts/tests/lockout-regression.test.mjs`).
+
 
 ### Phase 5 — Catalogue, Orders, and Money Correctness
 - [ ] Run catalogue audit scripts and fix code causes; create client admin steps for data anomalies.

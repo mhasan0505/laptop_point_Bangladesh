@@ -17,9 +17,11 @@ type FormData = {
   email: string;
   subject: string;
   message: string;
+  _hp?: string;
 };
 
 export default function ContactClient() {
+  const [mountedAt] = useState(() => Date.now());
   const {
     register,
     handleSubmit,
@@ -37,25 +39,39 @@ export default function ContactClient() {
     setSubmitStatus(null);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log("Form submitted:", data);
-
-      setSubmitStatus({
-        success: true,
-        message: "Message sent successfully! We will get back to you shortly.",
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          _t: mountedAt,
+        }),
       });
-      reset();
+
+      const resJson = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setSubmitStatus({
+          success: false,
+          message: resJson.error || "Something went wrong. Please try again later.",
+        });
+      } else {
+        setSubmitStatus({
+          success: true,
+          message: resJson.message || "Message sent successfully! We will get back to you shortly.",
+        });
+        reset();
+      }
     } catch {
       setSubmitStatus({
         success: false,
-        message: "Something went wrong. Please try again later.",
+        message: "Network error. Please try again later.",
       });
     } finally {
       setIsSubmitting(false);
     }
   };
+
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -214,7 +230,18 @@ export default function ContactClient() {
               )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* Honeypot anti-bot hidden input */}
+                <input
+                  type="text"
+                  {...register("_hp")}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="hidden"
+                  style={{ display: "none" }}
+                  aria-hidden="true"
+                />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                   <div className="space-y-2">
                     <label
                       htmlFor="name"
