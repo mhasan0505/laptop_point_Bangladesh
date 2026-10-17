@@ -527,6 +527,12 @@ export function checkAdminMessagesRateLimit(ip: string): { allowed: boolean; ret
   return checkSlidingWindow(adminMessagesAttempts, ip, 60, 60 * 1000); // 60 requests per minute
 }
 
+const orderTrackingAttempts = new Map<string, SlidingWindowRecord>();
+
+export function checkOrderTrackingRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: number } {
+  return checkSlidingWindow(orderTrackingAttempts, ip, 15, 10 * 60 * 1000); // 15 requests per 10m
+}
+
 /**
  * Validates bot friction tokens:
  * - Honeypot fields (_hp, hp_field, website, fax) must be empty.

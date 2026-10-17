@@ -81,13 +81,6 @@ export default function AdminMessagesPage() {
         prev.map((m) => (m.id === id ? { ...m, status: newStatus } : m))
       );
 
-      // Recompute unread count
-      setMessages((current) => {
-        const updated = current.map((m) => (m.id === id ? { ...m, status: newStatus } : m));
-        setUnreadCount(updated.filter((m) => m.status === "unread").length);
-        return updated;
-      });
-
       showSuccessToast(`Message marked as ${newStatus}`);
     } catch (err: unknown) {
       console.error(err);
@@ -112,7 +105,6 @@ export default function AdminMessagesPage() {
       }
 
       setMessages((prev) => prev.filter((m) => m.id !== id));
-      setUnreadCount((prev) => Math.max(0, prev - (messages.find((m) => m.id === id)?.status === "unread" ? 1 : 0)));
       showSuccessToast("Message deleted successfully");
     } catch (err: unknown) {
       console.error(err);

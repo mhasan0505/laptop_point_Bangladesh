@@ -104,12 +104,14 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
 
 
 ### Phase 5 — Catalogue, Orders, and Money Correctness
-- [ ] Run catalogue audit scripts and fix code causes; create client admin steps for data anomalies.
-- [ ] Full order lifecycle on staging: creation, stock decrement, status transitions, cancellation restock with `InventoryLog`.
-- [ ] A4 Invoice and Challan formatting (BDT, Store Profile details, accessory line rendering).
-- [ ] Checkout money rules: server prices, free shipping, tax, payment instructions matching Commerce settings.
-- [ ] Customer order lookup (`/track-order` day-one build).
-- [ ] Draft/archived product visibility enforcement.
+- [x] **Catalogue Audit & Client Remediation Steps**: Executed `scripts/audit-catalogue.mjs` and `scripts/report-inventory-gaps.mjs`. Documented exact click-by-click admin steps for the shop owner in `docs/handoff/CLIENT_DATA_REMEDIATION.md` to fix data anomalies (misfiled Vention stand ID 47, blank specs on IDs 45 & 46, price typos on IDs 19, 26, 28, test order cancellation, and charger inventory/photos) without directly mutating production files.
+- [x] **Order Lifecycle & Stock Consistency**: Conditional atomic inventory decrement on order creation (`app/api/orders/route.ts`), audit trail logging via `InventoryLog` (`delta: -item.quantity`, `reason: "sale"`), status transitions (`app/api/orders/[id]/route.ts`), and automatic stock restoration upon cancellation or return (`reason: "cancellation" | "return"`, `inventoryDeducted: false`). Tested in `scripts/tests/order-money-rules.test.mjs` and guarded by `staging-guard.mjs`. *(Note: Phase 1 live DB write run remains unproven against a real database until a staging DB is provided).*
+- [x] **A4 Invoice & Delivery Challan Formatting**: Responsive printable documents (`components/invoice/a4-invoice.tsx`, `components/challan/a4-challan.tsx`, `/admin/orders/[id]/print`) with BDT currency formatting (`en-BD` locale), amount in words ("Taka and Poisha"), store contact information from Store Profile, barcode generation, terms & warranty disclosures, and accessory line rendering without throwing.
+- [x] **Checkout Money Rules & Server Price Authority**: Authoritative server pricing in `lib/pricing.ts` and `app/api/orders/route.ts`. Client cart unit prices are completely ignored. Automatic free shipping applied for subtotal $\ge ৳50,000$ (except VIP courier). Delivery zones calculated according to Commerce settings (`lib/delivery.ts`). Tax calculations support inclusive or exempt rules. Verified in `scripts/tests/order-money-rules.test.mjs`.
+- [x] **Privacy-Preserving Order Tracking (`/track-order`)**: Built on day one at `app/(main)/track-order/page.tsx` with client component `components/order/TrackOrderClient.tsx`. Backed by `app/api/orders/track/route.ts` with strict rate limiting (15 lookups per 10m per IP via sliding window), bot friction tokens, phone + order number exact matching, uniform 404 response to prevent enumeration, and zero PII exposure (returns status, timeline, tracking number; never returns customer name, phone, address, email, or item prices). Tested in `scripts/tests/track-order.test.mjs`.
+- [x] **Customer Communication Architecture**: Comprehensive comparison and integration roadmap for local Bangladesh SMS gateways (Greenweb BD, SSL Wireless, BulkSMSBD, Twilio) and transactional email providers (Resend, Postmark, SendGrid) with implementation effort estimates and non-blocking background dispatch blueprint documented in `docs/handoff/TECHNICAL_HANDOVER.md` (Section 9).
+- [x] **Draft/Archived Visibility Enforcement**: Enforced via `isPublicRaw` (`statusValue !== 'active'`) in `app/data/data.ts`. Draft and archived products are automatically excluded from public listings (`/api/products`), catalog grids, search indexing, and XML sitemaps (`app/sitemap.ts`). In addition, `POST /api/orders` rejects draft or archived products at checkout even if submitted from a stale cached client cart.
+
 
 ### Phase 6 — Content, Legal, and Brand Readiness
 - [ ] Audit and remove placeholder/mock content, fake ratings, and unverified badges.

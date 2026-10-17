@@ -223,7 +223,7 @@ export default function Footer({
                     columnTitle: "Support",
                     links: [
                       { label: "My Account", href: "/contact" },
-                      { label: "Order Tracking", href: "/cart" },
+                      { label: "Order Tracking", href: "/track-order" },
                       { label: "FAQs", href: "/contact" },
                       { label: "Contact Us", href: "/contact" },
                     ],

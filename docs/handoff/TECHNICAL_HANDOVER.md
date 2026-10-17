@@ -135,3 +135,34 @@ All environment variables are validated at server startup via `lib/env.ts` (invo
 - In Next.js 16 with Webpack builds, the native build CLI outputs compilation chunks without rendering the legacy route-by-route First Load JS terminal table.
 - To audit route bundle sizes against the $\le 250$ kB target in Phase 3, route chunk dependencies and gzipped asset sizes were computed via `scripts/calculate-route-sizes.cjs` by inspecting `.next/build-manifest.json` and summing the gzip sizes of shared runtime chunks (`webpack`, `main`, `framework`) and page-specific chunks.
 - **Source of Truth**: These calculated First Load JS sizes provide an engineering estimate. **Google Lighthouse Mobile Audits in Phase 7 are the ultimate source of truth** for real-world user performance, Core Web Vitals (LCP, INP, CLS), and runtime JavaScript execution budgets.
+
+---
+
+## 9. Customer Communication & Notification Architecture (SMS & Email)
+
+Currently, customer order placement and tracking rely on the public order tracking portal (`/track-order`) and order confirmation screens without sending external emails or SMS messages. When the client selects and registers with a messaging provider, integration should follow the architectural options evaluated below.
+
+### 9.1 Local Bangladesh SMS Gateways
+
+| Provider | Type & Coverage | Est. Unit Cost | Estimated Dev Effort | Strengths & Considerations |
+| :--- | :--- | :--- | :--- | :--- |
+| **Greenweb BD** | Local Aggregator (GP, Robi, BL, Teletalk) | ৳0.35 – ৳0.50 / SMS | **3 – 4 Hours** | **Recommended for Day One.** Simple REST API (token + to + message). Alphanumeric sender ID ("LaptopPoint") supported upon BTRC trade license verification. |
+| **SSL Wireless (SMS Plus)** | Tier-1 Telco Aggregator | ৳0.40 – ৳0.55 / SMS | **4 – 5 Hours** | Enterprise reliability, high throughput, automated DND list handling. Requires formal business contract. |
+| **BulkSMSBD (ElitBuzz)** | Local Aggregator | ৳0.30 – ৳0.45 / SMS | **3 – 4 Hours** | Cost-effective bulk rates; straightforward HTTP GET/POST API. |
+| **Twilio SMS** | International Global Carrier | ~$0.06 – $0.08 / SMS (~৳7–9) | **2 – 3 Hours** | Easiest developer SDK, but high per-message cost for domestic Bangladesh mobile subscribers and sender ID restrictions. |
+
+### 9.2 Transactional Email Providers
+
+| Provider | Integration Type | Free Tier / Pricing | Estimated Dev Effort | Strengths & Considerations |
+| :--- | :--- | :--- | :--- | :--- |
+| **Resend** | Native React Email SDK / HTTP API | Free: 3,000 emails/mo (100/day); then $20/mo | **2 – 3 Hours** | **Recommended.** Modern DX, built specifically for Next.js and React Email components. Simple domain DNS verification (SPF, DKIM, DMARC). |
+| **Postmark** | REST API / SMTP | Free trial: 100 emails; then $15/mo for 10k | **3 Hours** | Gold standard in transactional deliverability. Strict separation of marketing and transactional email streams. |
+| **SendGrid (Twilio)** | REST API / SMTP | Free: 100 emails/day; then $19.95/mo | **3 – 4 Hours** | Widely used, comprehensive analytics, slightly more complex DNS verification. |
+
+### 9.3 Recommended Integration Blueprint
+1. **Abstract Dispatcher**: Create `lib/notifications/dispatcher.ts` defining `sendOrderPlacedAlert(order)` and `sendStatusUpdateAlert(order)`.
+2. **Pluggable Drivers**: Guard provider calls behind environment variables:
+   - `SMS_PROVIDER=greenweb|sslwireless|none`
+   - `EMAIL_PROVIDER=resend|postmark|none`
+3. **Async Non-Blocking Execution**: Call notification dispatches using Next.js `after()` or detached promises so external telco or SMTP API latency never delays checkout HTTP 200 responses.
+

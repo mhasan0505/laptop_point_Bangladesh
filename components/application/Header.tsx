@@ -447,7 +447,7 @@ const Header = ({
                 <span className="hidden lg:inline">Store Locator</span>
               </Link>
               <Link
-                href="/contact"
+                href="/track-order"
                 className="hidden xl:inline-flex items-center gap-1.5 hover:text-white transition-colors"
               >
                 <Truck className="h-3.5 w-3.5 text-white/70" />
