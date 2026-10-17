@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - lp-new-version
       - upcoming-version
 
 jobs:
@@ -29,8 +30,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma Client
+        run: pnpm prisma:generate
+
+      - name: Type check (TypeScript)
+        run: npx tsc --noEmit -p .
+
+      - name: Run Test Suites
+        run: pnpm test
+
+      - name: Lint (ESLint)
+        run: pnpm lint
+
       - name: Validate product images
         run: pnpm validate:images
 
       - name: Build app
+        env:
+          DATABASE_URL: "postgresql://ci_user:ci_password@localhost:5432/ci_db?sslmode=disable"
+          ADMIN_SESSION_SECRET: "0123456789abcdef0123456789abcdef0123456789abcdef"
+          TRUSTED_PROXY: "vercel"
         run: pnpm build

@@ -96,3 +96,35 @@ All environment variables are validated at server startup via `lib/env.ts` (invo
   - Only variables prefixed with `NEXT_PUBLIC_` are exposed to browser JavaScript bundles (`NEXT_PUBLIC_GTM_ID`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_FB_PIXEL_ID`, `NEXT_PUBLIC_MAX_UPLOAD_MB`, `NEXT_PUBLIC_ENABLE_VARIANTS`, `NEXT_PUBLIC_BING_SITE_VERIFICATION`).
   - Private keys (`IMAGEKIT_PRIVATE_KEY`, `SETTINGS_ENCRYPTION_KEY`, `ADMIN_SESSION_SECRET`, `ADMIN_PASSWORD`, `DATABASE_URL`) are strictly isolated to server-side code.
 
+---
+
+## 7. Uptime Monitoring & Health Endpoints
+
+### Public Health Check (`GET /api/health`)
+- **Purpose**: Liveness and readiness monitoring for synthetic uptime checkers (e.g., BetterStack, Pingdom, UptimeRobot, Vercel Checks).
+- **Authentication**: None required (publicly queryable).
+- **Security Guarantees**: NEVER exposes hostnames, database connection strings, credentials, or stack traces.
+- **Cache-Control**: `no-store, no-cache, must-revalidate, max-age=0` (never cached by Vercel edge/CDN).
+- **Response Format (HTTP 200 OK / HTTP 503 Service Unavailable)**:
+  ```json
+  {
+    "status": "healthy",
+    "timestamp": "2026-10-17T09:00:00.000Z",
+    "uptimeSeconds": 1420,
+    "latencyMs": 12,
+    "version": "0.1.0",
+    "commit": "a675742",
+    "checks": {
+      "database": true,
+      "imagekit": true,
+      "env": true
+    }
+  }
+  ```
+- **Recommended Monitor Configuration**:
+  - URL: `https://laptoppointbd.com/api/health`
+  - Interval: Every 60 seconds.
+  - Expected Status: `200`.
+  - Alert trigger: 2 consecutive failures or latency $> 5000$ms.
+
+

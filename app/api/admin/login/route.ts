@@ -23,6 +23,7 @@ import {
   resetLoginRateLimit,
 } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 function compareEnvPassword(provided: string, expected: string): boolean {
   try {
@@ -175,6 +176,12 @@ export async function POST(request: Request) {
 
   // 3. Handle credential verification failure
   if (!sessionUser) {
+    logger.logLoginFailure({
+      reason: "invalid_credentials",
+      ip,
+      email,
+      userAgent: request.headers.get("user-agent") || undefined,
+    });
     // Record failure (failures from trusted devices or non-locked attempts count toward caps)
     const delayMs = recordFailedLogin(ip, email);
     // Progressive delay sleep: min(200ms * 2^(n-1), 3000ms)
@@ -186,6 +193,12 @@ export async function POST(request: Request) {
 
   // 4. Success: reset rate limit counters for this IP & email
   resetLoginRateLimit(ip, email);
+  logger.logLoginSuccess({
+    userId: sessionUser.userId,
+    role: sessionUser.role,
+    ip,
+    email: sessionUser.email,
+  });
 
   const sessionToken = await createAdminSession(sessionUser);
   const trustedDeviceToken = await createTrustedDeviceToken(

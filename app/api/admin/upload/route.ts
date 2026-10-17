@@ -11,6 +11,7 @@ import {
   findAssetUsages,
   deleteFromImageKit,
 } from "@/lib/media/storage";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -22,6 +23,13 @@ const IMAGEKIT_TIMEOUT_MS = 20_000;
 type Storage = "imagekit" | "local";
 
 function fail(status: number, stage: string, error: string, extra?: Record<string, unknown>) {
+  logger.logUploadError({
+    stage,
+    error,
+    fileName: extra?.fileName as string | undefined,
+    sizeBytes: extra?.sizeBytes as number | undefined,
+    mimeType: extra?.mimeType as string | undefined,
+  });
   return NextResponse.json({ error, stage, detail: error, ...extra }, { status });
 }
 
@@ -163,6 +171,14 @@ export async function POST(request: NextRequest) {
           console.warn("[api/admin/upload] storeMediaMeta warning (upload succeeded):", metaErr);
         }
 
+        logger.logUploadSuccess({
+          fileId: ik.fileId,
+          storage: "imagekit",
+          fileName: ik.name,
+          sizeBytes: processed.mainBytes,
+          url: ik.url,
+        });
+
         return NextResponse.json({
           url: ik.url,
           fileId: ik.fileId,
@@ -204,6 +220,13 @@ export async function POST(request: NextRequest) {
       );
       const failedVariants = variantResults.filter((r) => r.status === "rejected").length;
       if (failedVariants > 0) warnings.push(`${failedVariants} responsive variant(s) could not be saved.`);
+
+      logger.logUploadSuccess({
+        storage: "local",
+        fileName: mainFilename,
+        sizeBytes: processed.mainBytes,
+        url: `/uploads/${mainFilename}`,
+      });
 
       return NextResponse.json({
         url: `/uploads/${mainFilename}`,

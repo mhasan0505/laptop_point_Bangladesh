@@ -8,6 +8,7 @@ import { loadMergedRawProducts } from "@/lib/products-storage";
 import { listAccessories } from "@/lib/accessories-storage";
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 // Business rules imported from lib/pricing.ts (single source of truth,
 // shared with the client cart context).
@@ -443,6 +444,18 @@ export async function POST(request: NextRequest) {
         }
 
         return newOrder;
+      });
+
+      logger.logOrderCreated({
+        orderNumber: order.orderNumber,
+        totalAmount: computedTotal,
+        subtotal: computedSubtotal,
+        shippingCost: computedShipping,
+        paymentMethod: orderInput.paymentMethod,
+        itemCount: orderInput.items.reduce((sum, item) => sum + item.quantity, 0),
+        customerEmail: orderInput.customerEmail,
+        customerPhone: orderInput.customerPhone,
+        city: orderInput.city,
       });
 
       return NextResponse.json(

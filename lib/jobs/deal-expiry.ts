@@ -11,7 +11,7 @@ export const dealExpiryJob: JobDefinition = {
   run: async (): Promise<JobResult> => {
     const now = new Date();
     let expiredBannersCount = 0;
-    let expiredPowerDealsCount = 0;
+    const expiredPowerDealsCount = 0;
 
     // 1. Expire Banner items where endsAt <= now and active == true
     try {
