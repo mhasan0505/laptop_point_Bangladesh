@@ -6,6 +6,7 @@ import {
   VALID_STATUSES,
 } from "@/lib/orders";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 // ─── GET /api/orders/[id] ─────────────────────────────────────────────────────
 // Accepts either the cuid `id` or the human-readable `orderNumber` (admin only)
@@ -155,6 +156,20 @@ export async function PATCH(
     if (!updated) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
+
+    logger.logAdminAudit({
+      actorEmail: auth.user.email,
+      actorRole: auth.user.role,
+      action: "order_status_update",
+      targetId: updated.orderNumber || updated.id,
+      targetType: "order",
+      details: {
+        newStatus: status,
+        note,
+        trackingNumber,
+      },
+    });
+
     return NextResponse.json(updated);
   } catch (error) {
     if (

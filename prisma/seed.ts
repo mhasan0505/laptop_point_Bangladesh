@@ -24,6 +24,24 @@ async function main() {
     throw new Error("DATABASE_URL is not set");
   }
 
+  // Safety guard: refuse to seed remote/production database unless explicitly authorized
+  const dbUrl = process.env.DATABASE_URL;
+  let hostname = "";
+  try {
+    hostname = new URL(dbUrl).hostname.toLowerCase();
+  } catch {
+    // raw host
+  }
+  const isLocal = hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".local");
+  const allowProdSeed = process.env.ALLOW_PRODUCTION_SEED === "true";
+
+  if (!isLocal && !allowProdSeed) {
+    console.error(`\n❌ SAFETY REFUSAL: Target database host (${hostname}) is not a local database.`);
+    console.error("To seed a remote/production database, explicitly set ALLOW_PRODUCTION_SEED=true.");
+    console.error("Aborting seed to protect existing database records.\n");
+    process.exit(1);
+  }
+
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {

@@ -195,6 +195,64 @@ export const logger = {
     });
   },
 
+  /**
+   * Log critical order creation failure for operational alerting.
+   */
+  logOrderFailure(params: {
+    error: string;
+    subtotal?: number;
+    shippingCost?: number;
+    paymentMethod?: string;
+    itemCount?: number;
+    customerEmail?: string;
+    customerPhone?: string;
+  }) {
+    emitLog({
+      level: "error",
+      category: "order",
+      action: "order_failed",
+      timestamp: new Date().toISOString(),
+      data: {
+        alert: true,
+        severity: "critical",
+        error: params.error,
+        subtotal: params.subtotal,
+        shippingCost: params.shippingCost,
+        paymentMethod: params.paymentMethod,
+        itemCount: params.itemCount,
+        customerEmailMasked: maskEmail(params.customerEmail),
+        customerPhoneMasked: maskPhone(params.customerPhone),
+      },
+    });
+  },
+
+  /**
+   * Log administrative audit trail for modifications to products, stock, or orders.
+   */
+  logAdminAudit(params: {
+    actorEmail?: string;
+    actorRole?: string;
+    action: string;
+    targetId: string | number;
+    targetType: "product" | "order" | "inventory" | "settings";
+    details?: Record<string, unknown>;
+  }) {
+    emitLog({
+      level: "info",
+      category: "system",
+      action: "admin_audit",
+      timestamp: new Date().toISOString(),
+      data: {
+        actorEmailMasked: maskEmail(params.actorEmail),
+        actorRole: params.actorRole || "unknown",
+        action: params.action,
+        targetId: String(params.targetId),
+        targetType: params.targetType,
+        details: params.details || {},
+      },
+    });
+  },
+
   warn(action: string, data?: Record<string, unknown>) {
     emitLog({
       level: "warn",

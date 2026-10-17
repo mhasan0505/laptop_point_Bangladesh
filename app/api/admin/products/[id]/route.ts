@@ -24,6 +24,7 @@ import {
   rawToAdminProduct,
   validateAdminProductPayload,
 } from "../route";
+import { logger } from "@/lib/logger";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -79,6 +80,14 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
         // Write the new record first so a failure can never lose the item.
         await saveRawProduct(raw);
         await deleteAccessory(existingAcc.id);
+        logger.logAdminAudit({
+          actorEmail: auth.user.email,
+          actorRole: auth.user.role,
+          action: "product_converted_to_laptop",
+          targetId: String(numericId),
+          targetType: "product",
+          details: { previousAccessoryId: existingAcc.id, sku: raw.sku },
+        });
         return NextResponse.json(rawToAdminProduct(raw));
       }
 
@@ -91,6 +100,14 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
       try {
         const updated = await updateAccessory(existingAcc.id, parsed.data);
         if (!updated) return NextResponse.json({ error: `Product with ID ${id} not found` }, { status: 404 });
+        logger.logAdminAudit({
+          actorEmail: auth.user.email,
+          actorRole: auth.user.role,
+          action: "product_updated",
+          targetId: existingAcc.id,
+          targetType: "product",
+          details: { category: updated.category, price: updated.price, stock: updated.stock },
+        });
         return NextResponse.json(accessoryToAdminProduct(updated));
       } catch (err) {
         if (err instanceof AccessoryConflictError) {
@@ -137,6 +154,14 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
       if ("error" in parsed) return NextResponse.json({ error: parsed.error }, { status: 400 });
       const created = await createAccessory(parsed.data);
       await deleteRawProduct(String(numericId));
+      logger.logAdminAudit({
+        actorEmail: auth.user.email,
+        actorRole: auth.user.role,
+        action: "product_converted_to_accessory",
+        targetId: created.id,
+        targetType: "product",
+        details: { previousLaptopId: numericId, sku: created.sku },
+      });
       return NextResponse.json(accessoryToAdminProduct(created));
     }
 
@@ -161,6 +186,20 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
 
     // Save to PostgreSQL (ProductOverride and Inventory) + safe local sync
     await saveRawProduct(updatedRaw);
+
+    logger.logAdminAudit({
+      actorEmail: auth.user.email,
+      actorRole: auth.user.role,
+      action: "product_updated",
+      targetId: String(numericId),
+      targetType: "product",
+      details: {
+        sku: updatedRaw.sku,
+        name: updatedRaw.name,
+        price: updatedRaw.pricing?.sale_price,
+        stock: body.stock ?? updatedRaw.stock?.quantity,
+      },
+    });
 
     return NextResponse.json(rawToAdminProduct(updatedRaw));
   } catch (error) {
@@ -195,6 +234,14 @@ export async function DELETE(request: NextRequest, { params }: Ctx) {
     if (!deleted) {
       return NextResponse.json({ error: `Product with ID ${id} not found` }, { status: 404 });
     }
+
+    logger.logAdminAudit({
+      actorEmail: auth.user.email,
+      actorRole: auth.user.role,
+      action: "product_deleted",
+      targetId: id,
+      targetType: "product",
+    });
 
     return NextResponse.json({ success: true, deletedId: id });
   } catch (error) {

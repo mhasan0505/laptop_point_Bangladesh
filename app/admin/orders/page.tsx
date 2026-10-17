@@ -841,6 +841,28 @@ function OrdersPageContent() {
                   <p className="text-muted-foreground mt-0.5">{selectedOrder.notes}</p>
                 </div>
               )}
+
+              {/* Status History & Audit Trail */}
+              {selectedOrder.statusHistory && selectedOrder.statusHistory.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Status History & Audit Trail
+                  </p>
+                  <div className="rounded-md border border-border bg-background/60 p-3 space-y-2 text-xs">
+                    {selectedOrder.statusHistory.map((hist, i) => (
+                      <div key={hist.id || i} className="flex items-start justify-between border-b border-border/50 pb-1.5 last:border-0 last:pb-0">
+                        <div>
+                          <span className="font-semibold text-foreground">{hist.status}</span>
+                          {hist.note && <p className="text-[11px] text-muted-foreground">{hist.note}</p>}
+                        </div>
+                        <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-2">
+                          {hist.createdAt ? new Date(hist.createdAt).toLocaleString("en-GB") : ""}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>

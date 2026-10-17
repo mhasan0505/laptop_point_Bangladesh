@@ -547,7 +547,15 @@ export async function POST(request: NextRequest) {
       if (error instanceof InsufficientStockError) {
         return NextResponse.json({ error: error.message }, { status: 409 });
       }
-      console.error("[POST /api/orders]", error);
+      logger.logOrderFailure({
+        error: error instanceof Error ? error.message : "Unknown order creation failure",
+        subtotal: computedSubtotal,
+        shippingCost: computedShipping,
+        paymentMethod: orderInput.paymentMethod,
+        itemCount: orderInput.items.reduce((sum, item) => sum + item.quantity, 0),
+        customerEmail: orderInput.customerEmail,
+        customerPhone: orderInput.customerPhone,
+      });
       return NextResponse.json(
         { error: "Failed to create order" },
         { status: 500 },

@@ -25,6 +25,7 @@ import {
 import { parseYoutubeId } from "@/lib/youtube";
 import { RawProduct } from "@/types/raw-product";
 import { NextRequest, NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export { resolveProductImages, safeSyncManifest as syncSkuToManifest };
 
@@ -313,6 +314,14 @@ export async function POST(request: NextRequest) {
       if ("error" in parsed) return NextResponse.json({ error: parsed.error }, { status: 400 });
       try {
         const created = await createAccessory(parsed.data);
+        logger.logAdminAudit({
+          actorEmail: auth.user.email,
+          actorRole: auth.user.role,
+          action: "product_created",
+          targetId: created.id,
+          targetType: "product",
+          details: { sku: created.sku, name: created.name, price: created.price, category: created.category },
+        });
         return NextResponse.json(accessoryToAdminProduct(created), { status: 201 });
       } catch (err) {
         if (err instanceof AccessoryConflictError) {
@@ -331,6 +340,14 @@ export async function POST(request: NextRequest) {
     await saveRawProduct(newRawProduct);
 
     const createdAdminProduct = rawToAdminProduct(newRawProduct);
+    logger.logAdminAudit({
+      actorEmail: auth.user.email,
+      actorRole: auth.user.role,
+      action: "product_created",
+      targetId: createdAdminProduct.id,
+      targetType: "product",
+      details: { sku: newRawProduct.sku, name: newRawProduct.name, price: newRawProduct.pricing?.sale_price, category: newRawProduct.category },
+    });
     return NextResponse.json(createdAdminProduct, { status: 201 });
   } catch (error) {
     console.error("[POST /api/admin/products]", error);

@@ -154,11 +154,21 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
   - Created `scripts/tests/phase7-ux-seo.test.mjs` (7/7 passing). Full repository suite passes: `pnpm test` (106/106 passing), `tsc --noEmit` (0 errors), `pnpm lint` (0 errors).
 
 ### Phase 8 — Data Safety, Backups, and Operations
-- [ ] Automated database backup script (`scripts/backup-db.mjs`) and restore runbook.
-- [ ] Idempotent seed script with production destructive safety guards.
-- [ ] Scheduled background jobs via Vercel Cron.
-- [ ] Health monitoring and order failure alerting.
-- [ ] Admin audit trail logging for price/stock/order modifications.
+- [x] **Automated Database Backup Utility & Runbook**:
+  - `scripts/backup-db.mjs`: Exports all core tables (`Inventory`, `InventoryLog`, `Order`, `ProductOverride`, `AdminUser`, `AdminSession`) to a timestamped JSON file with SHA-256 integrity checksum (`.json.sha256`). Includes `--verify` mode for non-mutating connection checks. Never logs or prints `DATABASE_URL`.
+  - `docs/RUNBOOKS/DATABASE_BACKUP_RESTORE.md`: Detailed disaster recovery runbook covering native PostgreSQL `pg_dump` binary/plain formats, restore procedures, schema migration, and 7-day/4-week backup retention policy.
+- [x] **Idempotent Seed Script with Production Safety Guard**:
+  - Hardened `prisma/seed.ts` with hostname safety checks: automatically aborts with a clear `SAFETY REFUSAL` if target database is not local/localhost unless explicitly authorized with `ALLOW_PRODUCTION_SEED=true`. Protects remote/staging/production data against accidental overwrites.
+- [x] **Vercel Cron & Scheduled Background Jobs**:
+  - `vercel.json`: Configured hourly cron schedule (`"0 * * * *"`) invoking `/api/cron`.
+  - `app/api/cron/route.ts`: Protected endpoint verifying `CRON_SECRET` using constant-time buffer comparison (`crypto.timingSafeEqual`) to prevent timing attacks. Automatically triggers registered background jobs (`deal-expiry`, `prune-orphan-uploads`) and returns execution status.
+- [x] **Operational Alerting & Audit Logging**:
+  - Extended `lib/logger.ts` with `logOrderFailure`: structured critical alerts (`severity: "critical"`, `alert: true`) masking customer phone and email while capturing order failure details for monitoring ingestion (Vercel Logs / Sentry).
+  - Extended `lib/logger.ts` with `logAdminAudit`: records administrative actions (who, when, what, target ID, role) with masked actor emails.
+  - Wired `logAdminAudit` into product creation (`POST /api/admin/products`), product updates and deletions (`PUT`/`DELETE /api/admin/products/[id]`), inventory adjustments (`PATCH /api/inventory/[productId]`), and order status updates (`PATCH /api/orders/[id]`).
+  - Added Order Status History & Audit Trail timeline display in the admin order inspection dialog (`app/admin/orders/page.tsx`).
+- [x] **Automated Verification Suite**:
+  - Created `scripts/tests/phase8-safety-ops.test.mjs` (6/6 passing). Full test suite passes: `pnpm test` (112/112 passing), `tsc --noEmit` (0 errors), `pnpm lint` (0 errors).
 
 ### Phase 9 — Client Handoff Package
 - [ ] `ADMIN_GUIDE.md`: Step-by-step client management workflows.

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
+import { logger } from "@/lib/logger";
 
 // ─── GET /api/inventory/[productId] ──────────────────────────────────────────
 export async function GET(
@@ -95,6 +96,22 @@ export async function PATCH(
         },
       }),
     ]);
+
+    logger.logAdminAudit({
+      actorEmail: auth.user.email,
+      actorRole: auth.user.role,
+      action: "inventory_adjustment",
+      targetId: productId,
+      targetType: "inventory",
+      details: {
+        sku: existing.sku,
+        previousQuantity: existing.quantity,
+        newQuantity,
+        delta: newQuantity - existing.quantity,
+        reason,
+        note,
+      },
+    });
 
     return NextResponse.json(updated);
   } catch (error) {
