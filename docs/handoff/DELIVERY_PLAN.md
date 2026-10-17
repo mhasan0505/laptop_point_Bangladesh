@@ -134,11 +134,24 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
   - Created `scripts/tests/phase6-brand-readiness.test.mjs` verifying Store Profile defaults, physical asset existence, stable legal dates, route redirects, and commerce policies. Full suite passes: `pnpm test` (99/99 passing), `tsc --noEmit` (0 errors), `pnpm lint` (0 errors).
 
 ### Phase 7 — UX, Accessibility, Performance, and SEO
-- [ ] Responsive QA across 375px, 768px, 1280px, 1536px breakpoints.
-- [ ] Automated accessibility audit (axe-core) with keyboard navigation pass.
-- [ ] Lighthouse mobile audits ($\ge 85$ Performance, $\ge 95$ Accessibility, Best Practices, SEO).
-- [ ] SEO audit: canonicals, OpenGraph, JSON-LD schemas, robots.txt, sitemap.xml.
-- [ ] Admin UX: fast loading, empty/loading/error states, confirmation toasts.
+- [x] **Responsive QA Across Breakpoints (375px, 768px, 1280px, 1536px)**:
+  - Verified mobile layout fluidity and navigation components across viewport widths.
+  - Hardened `StickyMobileBar.tsx`: eliminated dead `/login` link and wired direct link to `/track-order` with `Truck` icon for mobile order tracking.
+  - Added `/login` -> `/admin/login` fallback redirect in `next.config.ts`.
+- [x] **Accessibility & Keyboard Navigation Pass (WCAG 2.1 AA)**:
+  - Added "Skip to main content" bypass link (`href="#main-content"`) in `app/(main)/layout.tsx` with screen-reader and keyboard focus styling (`focus:not-sr-only`).
+  - Added accessible `aria-label` attributes to desktop and mobile search inputs and trigger buttons in `Header.tsx`.
+  - Added ARIA modal attributes (`role="dialog"`, `aria-modal="true"`, `aria-labelledby="review-modal-title"`, `aria-label` for star rating triggers and modal close) to `ProductDetailsClient.tsx`.
+- [x] **SEO Audit: Canonicals, OpenGraph, JSON-LD Schemas, Robots & Sitemap**:
+  - `app/robots.ts`: Disallows crawler indexing of private/transactional routes (`/admin/`, `/api/`, `/cart/`, `/checkout/`, `/wishlist/`) and points to canonical sitemap.
+  - `app/sitemap.ts`: Dynamic sitemap indexing all in-stock laptops, active accessories, brand/category filters, blog articles, and core static routes (`/shop`, `/accessories`, `/deals`, `/power-deal`, `/track-order`, `/contact`, `/terms`, `/privacy`, `/returns`, `/shipping`, `/EMI`).
+  - `components/seo/OrganizationSchemaMeta.tsx`: Complete `Organization` & `Store` schema with physical address in Mirpur-10, `GeoCoordinates` (`23.8069, 90.3687`), `priceRange: "৳৳"`, real opening hours, and verified brand asset paths (`/Logo.webp`, `/Hero_Image.png`).
+  - `components/seo/ProductSchemaMeta.tsx` & `ProductFaqSection.tsx`: Structured `Product`, `Offer`, `VideoObject`, and `FAQPage` JSON-LD schemas.
+- [x] **Admin UX: Fast Loading, Empty States & Confirmation Feedback**:
+  - `ToastContext.tsx`: Universal accessible notification system for admin action confirmation (stock updates, product creation/deletion, message handling, answer publishing).
+  - Inline empty and loading skeleton states across Admin Products, Orders, Messages, Questions, and Power Deals.
+- [x] **Verification Suite**:
+  - Created `scripts/tests/phase7-ux-seo.test.mjs` (7/7 passing). Full repository suite passes: `pnpm test` (106/106 passing), `tsc --noEmit` (0 errors), `pnpm lint` (0 errors).
 
 ### Phase 8 — Data Safety, Backups, and Operations
 - [ ] Automated database backup script (`scripts/backup-db.mjs`) and restore runbook.

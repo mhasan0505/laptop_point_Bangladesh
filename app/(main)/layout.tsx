@@ -31,6 +31,12 @@ export default async function MainLayout({
     <CartProvider>
       <WishlistProvider>
         <ComparisonProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-[#002b60] focus:font-semibold focus:shadow-xl focus:rounded-md focus:ring-2 focus:ring-[#002b60] focus:outline-none"
+          >
+            Skip to main content
+          </a>
           <AnnouncementBar />
           <Header
             navigation={navigation}
@@ -38,7 +44,9 @@ export default async function MainLayout({
             contact={contact}
           />
           <Breadcrumb />
-          <main className="pb-20 lg:pb-0">{children}</main>
+          <main id="main-content" tabIndex={-1} className="pb-20 lg:pb-0 focus:outline-none">
+            {children}
+          </main>
           <Footer contact={contact} footerLinks={navigation.footerLinks} />
           <ComparisonBar />
           <CookieConsent />

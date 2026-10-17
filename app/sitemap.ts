@@ -2,7 +2,7 @@ import { getLiveLaptops } from "@/app/data/data";
 import { listPublicAccessories } from "@/lib/accessories-storage";
 import { ACCESSORY_CATEGORIES } from "@/lib/accessory-types";
 import { SEO_CONFIG } from "@/lib/seo-config";
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 import fs from "fs";
 import path from "path";
 
@@ -148,6 +148,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: catalogDate,
       changeFrequency: "monthly" as const,
       priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/deals`,
+      lastModified: catalogDate,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/power-deal`,
+      lastModified: catalogDate,
+      changeFrequency: "daily" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/track-order`,
+      lastModified: catalogDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
     },
     {
       url: `${baseUrl}/terms`,

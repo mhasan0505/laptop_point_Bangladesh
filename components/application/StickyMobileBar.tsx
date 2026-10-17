@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@/contexts/CartContext";
-import { Grid, Home, Phone, ShoppingCart, User } from "lucide-react";
+import { Grid, Home, Phone, ShoppingCart, Truck } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -15,7 +15,7 @@ const StickyMobileBar = () => {
     { name: "Shop", href: "/shop", icon: Grid },
     { name: "Call", href: "tel:+8801612182408", icon: Phone, isAction: true }, // Special styling for Call
     { name: "Cart", href: "/cart", icon: ShoppingCart, count: cartCount },
-    { name: "Account", href: "/login", icon: User },
+    { name: "Track", href: "/track-order", icon: Truck },
   ];
 
   return (

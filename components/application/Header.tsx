@@ -530,6 +530,7 @@ const Header = ({
                     <Input
                       ref={searchInputRef}
                       type="text"
+                      aria-label="Search laptops and accessories"
                       placeholder="Search products..."
                       className="w-full rounded-xl border border-gray-200 bg-white/90 py-3.5 pl-12 pr-10 text-base shadow-sm focus:border-primary/70 focus:ring-1 focus:ring-primary/20 focus:outline-none"
                       autoFocus
@@ -658,6 +659,7 @@ const Header = ({
                 >
                   <button
                     type="button"
+                    aria-label="Search laptops and accessories"
                     onClick={() => setIsSearchExpanded(true)}
                     className="flex min-w-0 flex-1 items-center pl-3"
                   >

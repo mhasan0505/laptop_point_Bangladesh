@@ -18,10 +18,16 @@ export default async function OrganizationSchemaMeta() {
     "@id": `${baseUrl}/#organization`,
     name: contact.name || "Laptop Point BD",
     url: baseUrl,
-    logo: `${baseUrl}/icons/logo.png`,
-    image: `${baseUrl}/icons/logo.png`,
+    logo: `${baseUrl}/Logo.webp`,
+    image: `${baseUrl}/Hero_Image.png`,
+    priceRange: "৳৳",
     description:
       "Showroom and retailer of certified refurbished, pre-owned and new laptops in Mirpur-10, Dhaka-1216, Bangladesh.",
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 23.8069,
+      longitude: 90.3687,
+    },
   };
 
   if (contact.hotline) {

@@ -1347,12 +1347,19 @@ export default function ProductDetailsClient({
       {/* ── REVIEW MODAL ── */}
       {isReviewModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="bg-white dark:bg-card rounded-xl max-w-md w-full p-6 shadow-2xl border border-gray-200 dark:border-border">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="review-modal-title"
+            className="bg-white dark:bg-card rounded-xl max-w-md w-full p-6 shadow-2xl border border-gray-200 dark:border-border"
+          >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-bold uppercase text-[#dc0303]">
+              <h3 id="review-modal-title" className="text-sm font-bold uppercase text-[#dc0303]">
                 Write a Review
               </h3>
               <button
+                type="button"
+                aria-label="Close review modal"
                 onClick={() => setIsReviewModalOpen(false)}
                 className="text-gray-400 hover:text-gray-700"
               >
@@ -1374,6 +1381,7 @@ export default function ProductDetailsClient({
                       <button
                         key={s}
                         type="button"
+                        aria-label={`Rate ${s} out of 5 stars`}
                         onClick={() => setReviewRating(s)}
                         className="cursor-pointer"
                       >

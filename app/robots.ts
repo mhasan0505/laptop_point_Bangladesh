@@ -1,4 +1,4 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 // Toggle to disallow AI training scrapers (GPTBot, ClaudeBot, Google-Extended)
 // while allowing AI search agents (OAI-SearchBot, ChatGPT-User, PerplexityBot, Claude-SearchBot, Claude-User)

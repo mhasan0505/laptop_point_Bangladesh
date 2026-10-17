@@ -1,6 +1,6 @@
-import { Product } from "@/types/product";
+import type { Product } from "@/types/product";
 export type { Product } from "@/types/product";
-import { RawProduct } from "@/types/raw-product";
+import type { RawProduct } from "@/types/raw-product";
 import productsRaw from "./products.json";
 import imageManifest from "./product-image-manifest.json";
 

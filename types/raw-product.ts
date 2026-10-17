@@ -1,3 +1,5 @@
+export const RawProduct = {};
+
 export interface RawProduct {
   id: number;
   sku: string;

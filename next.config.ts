@@ -147,6 +147,11 @@ const nextConfig: NextConfig = {
         destination: "/track-order",
         permanent: true,
       },
+      {
+        source: "/login",
+        destination: "/admin/login",
+        permanent: false,
+      },
     ];
   },
   async headers() {
