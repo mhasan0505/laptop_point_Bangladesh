@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { validateEnvConfig } from "@/lib/env";
+import packageJson from "@/package.json";
 
 export const dynamic = "force-dynamic";
 
 /**
  * Public Health & Runtime Liveness Check
  * Used by external uptime monitors (e.g. BetterStack, Pingdom, Vercel Checks).
- * Does not require authentication and NEVER exposes database credentials or internal secrets.
+ * Does not require authentication and NEVER exposes database credentials, hostnames, or internal secrets.
  */
 export async function GET() {
   const startedAt = Date.now();
@@ -33,18 +35,16 @@ export async function GET() {
       process.env.IMAGEKIT_URL_ENDPOINT
   );
 
-  const envValidated = Boolean(
-    process.env.DATABASE_URL &&
-      process.env.ADMIN_SESSION_SECRET &&
-      process.env.ADMIN_SESSION_SECRET.length >= 32
-  );
+  // Use the canonical fail-fast environment validator (true only if 0 configuration errors reported)
+  const envValidation = validateEnvConfig(process.env);
+  const envValidated = envValidation.errors.length === 0;
 
   const payload = {
     status: dbOk ? "healthy" : "degraded",
     timestamp: new Date().toISOString(),
     uptimeSeconds: Math.floor(process.uptime()),
     latencyMs: Date.now() - startedAt,
-    version: "0.1.0",
+    version: packageJson.version,
     commit: process.env.VERCEL_GIT_COMMIT_SHA || process.env.GIT_COMMIT || "local",
     checks: {
       database: dbOk,
@@ -60,3 +60,4 @@ export async function GET() {
     },
   });
 }
+

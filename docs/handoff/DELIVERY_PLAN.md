@@ -62,6 +62,26 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
 - [x] Error handling: `app/error.tsx`, `app/not-found.tsx`, `app/global-error.tsx`, and admin error boundary `app/admin/error.tsx` implemented without stack trace leaks.
 - [x] Structured server logging without PII (`lib/logger.ts`) integrated into order creation, admin login, and media upload routes. Tested in `scripts/tests/logger.test.mjs`.
 
+#### Phase 3b — CI Hardening, Lint Transparency & Health API Integration
+- [x] **CI Node 24**: Updated `.github/workflows/ci.yml` to `node-version: 24` to support Node native TypeScript strip-types without external compilation. Added toolchain version print step (`node --version`, `pnpm --version`).
+- [x] **Strict `no-explicit-any` Rule Re-enabled**: `@typescript-eslint/no-explicit-any: "error"` re-enabled globally in `eslint.config.mjs`. Strictly scoped allow-list of 30 legacy files containing un-migrated types. Any new file will fail CI if `any` is introduced.
+- [x] **Rules Downgraded to Warnings (Transparency Record)**:
+  - `react-hooks/set-state-in-effect`: Experimental React 19 / Compiler rule in `eslint-plugin-react-hooks` flagging synchronous `setState()` in `useEffect`. Downgraded to warning to support client-side hydration patterns (`setHydrated(true)`).
+  - `react-hooks/preserve-manual-memoization`: Experimental React 19 / Compiler rule flagging manual `useMemo`/`useCallback` patterns. Downgraded to warning.
+  - `@typescript-eslint/no-unused-vars`: Downgraded to warning to avoid halting CI builds on non-critical imports.
+- [x] **Why `scripts/**` is Ignored in ESLint**: `scripts/**` contains standalone Node.js CLI verification tools, database migration utilities, audit scripts, and custom test runners (`.cjs` and `.mjs`) executed via Node directly rather than Next.js/React App Router browser code. They rely on Node-native APIs (`node:fs`, `node:test`, `node:crypto`) and do not run in production client bundles.
+- [x] **Total Warnings per Rule (`pnpm lint` Report)**:
+  - `@typescript-eslint/no-explicit-any`: 105 warnings (strictly within the 30 legacy files allow-list)
+  - `@typescript-eslint/no-unused-vars`: 54 warnings
+  - `react-hooks/exhaustive-deps`: 6 warnings
+  - `react-hooks/set-state-in-effect`: 5 warnings
+  - `react-hooks/preserve-manual-memoization`: 3 warnings
+  - `@next/next/no-img-element`: 2 warnings
+  - **Total**: 175 warnings, 0 errors.
+- [x] **`/api/health` Real Env Integration**: Connected `validateEnvConfig(process.env).errors.length === 0` to `checks.env`. Reads version directly from `package.json`. Maintains boolean `checks.imagekit`. Zero secrets, hostnames, or error details exposed. Unit test updated in `scripts/tests/health-api.test.mjs`.
+- [x] **Handover Document Disclosure**: Plainly recorded in `docs/handoff/TECHNICAL_HANDOVER.md` (Section 8) that First Load JS sizes were computed via `scripts/calculate-route-sizes.cjs` and that Lighthouse (Phase 7) is the ultimate source of truth.
+
+
 ### Phase 4 — Security Hardening Pass
 - [ ] Complete API route audit table in `docs/SECURITY.md`.
 - [ ] Rate limiting & anti-abuse on public endpoints (`/api/orders`, `/api/questions`, newsletter/contact, `/api/admin/login`).

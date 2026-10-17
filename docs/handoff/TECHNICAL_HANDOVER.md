@@ -127,4 +127,11 @@ All environment variables are validated at server startup via `lib/env.ts` (invo
   - Expected Status: `200`.
   - Alert trigger: 2 consecutive failures or latency $> 5000$ms.
 
+---
 
+## 8. JavaScript Bundle Budgets & Performance Measurement
+
+### Measurement Methodology Disclosure
+- In Next.js 16 with Webpack builds, the native build CLI outputs compilation chunks without rendering the legacy route-by-route First Load JS terminal table.
+- To audit route bundle sizes against the $\le 250$ kB target in Phase 3, route chunk dependencies and gzipped asset sizes were computed via `scripts/calculate-route-sizes.cjs` by inspecting `.next/build-manifest.json` and summing the gzip sizes of shared runtime chunks (`webpack`, `main`, `framework`) and page-specific chunks.
+- **Source of Truth**: These calculated First Load JS sizes provide an engineering estimate. **Google Lighthouse Mobile Audits in Phase 7 are the ultimate source of truth** for real-world user performance, Core Web Vitals (LCP, INP, CLS), and runtime JavaScript execution budgets.

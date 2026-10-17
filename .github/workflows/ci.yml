@@ -21,11 +21,16 @@ jobs:
         with:
           version: 12
 
-      - name: Setup Node.js
+      - name: Setup Node.js 24 (Native TypeScript strip-types support)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: pnpm
+
+      - name: Print toolchain versions
+        run: |
+          node --version
+          pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
