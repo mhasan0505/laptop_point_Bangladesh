@@ -22,30 +22,22 @@ export function computeDbHostFingerprint(urlOrHost: string): string {
 
 /**
  * Protected endpoint returning SHA-256 fingerprint of the server's DATABASE_URL host.
+ * Strictly accepts ONLY an active admin session cookie with role 'owner' or 'manager'.
  * Never leaks the connection string, credentials, or plaintext hostname.
  */
 export async function GET(request: NextRequest) {
-  // Authentication check:
-  // 1. Active Admin session cookie
-  // 2. OR Bearer token / x-staging-guard-token matching configured admin secrets
+  // Authentication check: Accept ONLY an active admin session cookie
   const session = await getAdminSession(request);
-  const authHeader = request.headers.get("authorization") || "";
-  const bearerToken = authHeader.replace(/^Bearer\s+/i, "").trim();
-  const guardHeader = request.headers.get("x-staging-guard-token") || "";
-  const token = bearerToken || guardHeader;
-
-  const validSecrets = [
-    process.env.STAGING_GUARD_TOKEN,
-    process.env.ADMIN_SESSION_SECRET,
-    process.env.ADMIN_SETUP_SECRET,
-    process.env.ADMIN_PASSWORD,
-    process.env.CRON_SECRET,
-  ].filter((s): s is string => Boolean(s && s.length > 0));
-
-  const isAuthorized = Boolean(session || (token && validSecrets.includes(token)));
-
-  if (!isAuthorized) {
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Authorization check: Require role owner or manager
+  if (session.role !== "owner" && session.role !== "manager") {
+    return NextResponse.json(
+      { error: "Forbidden: requires role owner or manager" },
+      { status: 403 }
+    );
   }
 
   const dbUrl = process.env.DATABASE_URL || "";
@@ -60,3 +52,4 @@ export async function GET(request: NextRequest) {
     fingerprint,
   });
 }
+

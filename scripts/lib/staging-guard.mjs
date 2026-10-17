@@ -104,9 +104,34 @@ export async function verifyStagingGuard(options = {}) {
       const headers = {
         accept: "application/json",
       };
-      if (token) {
-        headers["x-staging-guard-token"] = token;
-        headers["authorization"] = `Bearer ${token}`;
+      let sessionCookie = options.cookie || "";
+
+      // If no cookie was provided, attempt to authenticate using environment admin credentials
+      if (!sessionCookie && options.autoLogin !== false && process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+        try {
+          const loginUrl = `${serverUrl.replace(/\/+$/, "")}/api/admin/login`;
+          const loginRes = await fetch(loginUrl, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              email: process.env.ADMIN_EMAIL,
+              password: process.env.ADMIN_PASSWORD,
+            }),
+            signal: controller.signal,
+          });
+          if (loginRes.ok) {
+            const rawCookies = loginRes.headers.getSetCookie
+              ? loginRes.headers.getSetCookie()
+              : [loginRes.headers.get("set-cookie") || ""];
+            sessionCookie = rawCookies.map((c) => c.split(";")[0]).join("; ");
+          }
+        } catch {
+          // ignore login error; health request will fail with 401
+        }
+      }
+
+      if (sessionCookie) {
+        headers["cookie"] = sessionCookie;
       }
 
       response = await fetch(healthUrl, {
@@ -114,6 +139,7 @@ export async function verifyStagingGuard(options = {}) {
         headers,
         signal: controller.signal,
       });
+
       clearTimeout(timer);
     } catch (fetchErr) {
       const err = new Error(`SERVER_UNREACHABLE: Could not connect to staging guard at ${healthUrl} (${fetchErr.message}).`);

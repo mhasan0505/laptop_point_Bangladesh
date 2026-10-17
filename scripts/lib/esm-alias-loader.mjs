@@ -31,6 +31,14 @@ export async function resolve(specifier, context, nextResolve) {
       url: "data:text/javascript,export function revalidatePath(){}; export function revalidateTag(){}; export const unstable_cache = (fn) => fn;",
     };
   }
+  if (specifier === "next/server") {
+    return {
+      format: "module",
+      shortCircuit: true,
+      url: "data:text/javascript,export class NextResponse extends Response { static json(body, init = {}) { const headers = new Headers(init.headers); headers.set('content-type', 'application/json'); return new Response(JSON.stringify(body), { ...init, headers }); } }; export class NextRequest extends Request {};",
+    };
+  }
+
   let target = specifier;
   if (specifier.startsWith("@/")) {
     const subpath = specifier.slice(2);
