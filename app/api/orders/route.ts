@@ -364,13 +364,19 @@ export async function POST(request: NextRequest) {
   }
 
   // 2. Anti-bot friction check (honeypots & submission timing token)
+  let isSuspect = false;
   if (isRecord(body)) {
-    const botCheck = verifyBotFriction(body);
+    // Tighten minSeconds to 3 for checkout
+    const botCheck = verifyBotFriction(body, { minSeconds: 3 });
     if (botCheck.isBot) {
       return NextResponse.json(
         { error: "Automated submission rejected" },
         { status: 400 }
       );
+    }
+    // Tolerant for API clients missing _t, but record suspect flag in log
+    if (body._t === undefined || body._t === null || body._t === "") {
+      isSuspect = true;
     }
   }
 
@@ -509,6 +515,7 @@ export async function POST(request: NextRequest) {
         customerEmail: orderInput.customerEmail,
         customerPhone: orderInput.customerPhone,
         city: orderInput.city,
+        suspect: isSuspect,
       });
 
       return NextResponse.json(

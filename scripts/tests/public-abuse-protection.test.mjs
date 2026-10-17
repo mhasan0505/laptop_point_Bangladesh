@@ -7,6 +7,7 @@ await import("../lib/register.mjs");
 const { POST: postQuestion } = await import("../../app/api/questions/route.ts");
 const { POST: postContact } = await import("../../app/api/contact/route.ts");
 const { POST: postOrder } = await import("../../app/api/orders/route.ts");
+const { POST: postNewsletter } = await import("../../app/api/newsletter/route.ts");
 
 test("Public Abuse Protection & Bot Friction", async (t) => {
   await t.test("1. Contact Form: Rejects bot submissions via honeypot", async () => {
@@ -131,4 +132,76 @@ test("Public Abuse Protection & Bot Friction", async (t) => {
     const json = await res.json();
     assert.match(json.error, /between 2 and 100 characters/i);
   });
+
+  await t.test("8. Orders Form: Rejects submission submitted faster than 3 seconds (minSeconds: 3)", async () => {
+    const now = Date.now();
+    const req = new Request("http://localhost:3000/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customerName: "Speedy Bot",
+        customerPhone: "01711111111",
+        _t: now - 1500, // 1.5 seconds elapsed (< 3s threshold)
+        items: [{ productId: "test", quantity: 1 }],
+      }),
+    });
+
+    const res = await postOrder(req);
+    assert.equal(res.status, 400, "Must reject order submitted in under 3 seconds");
+    const json = await res.json();
+    assert.match(json.error, /automated submission rejected/i);
+  });
+
+  await t.test("9. Orders Form: Tolerant of API clients without _t (does not reject with 400 bot error)", async () => {
+    const req = new Request("http://localhost:3000/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        customerName: "A", // triggers normal validation error (< 2 chars), not bot rejection
+        customerPhone: "01711111111",
+        items: [{ productId: "test", quantity: 1 }],
+        // _t intentionally omitted
+      }),
+    });
+
+    const res = await postOrder(req);
+    // Must proceed past bot check and fail at normal validation, NOT bot friction
+    assert.equal(res.status, 400);
+    const json = await res.json();
+    assert.match(json.error, /between 2 and 100 characters/i, "Must not be blocked by bot check when _t is omitted");
+  });
+
+  await t.test("10. Newsletter Form: Rejects bot honeypots", async () => {
+    const req = new Request("http://localhost:3000/api/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "bot@spammer.org",
+        _hp: "bot-payload-here",
+      }),
+    });
+
+    const res = await postNewsletter(req);
+    assert.equal(res.status, 400, "Must reject newsletter with honeypot");
+    const json = await res.json();
+    assert.match(json.error, /automated submission rejected/i);
+  });
+
+  await t.test("11. Newsletter Form: Accepts valid subscription with timing token", async () => {
+    const now = Date.now();
+    const req = new Request("http://localhost:3000/api/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "subscriber@example.com",
+        _t: now - 3000, // 3s elapsed
+      }),
+    });
+
+    const res = await postNewsletter(req);
+    assert.equal(res.status, 200, "Must accept legitimate newsletter subscription");
+    const json = await res.json();
+    assert.equal(json.ok, true);
+  });
 });
+

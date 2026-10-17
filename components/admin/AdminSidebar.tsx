@@ -10,6 +10,7 @@ import { Cable,
   Image as ImageIcon,
   LayoutDashboard,
   type LucideIcon,
+  Mail,
   MessageSquare,
   PanelsTopLeft,
   Settings,
@@ -22,7 +23,7 @@ import { Cable,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface SubItem {
   href: string;
@@ -51,6 +52,24 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentTab = searchParams ? searchParams.get("tab") : null;
+
+  const [unreadMessages, setUnreadMessages] = useState<number>(0);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch("/api/admin/messages")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (isMounted && data && typeof data.unreadCount === "number") {
+          setUnreadMessages(data.unreadCount);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, [pathname]);
 
   const [openSubMenus, setOpenSubMenus] = useState<Record<string, boolean>>({
     "/admin/setup": true,
@@ -94,6 +113,12 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
           href: "/admin/orders",
           label: "Orders & Delivery",
           icon: Truck,
+        },
+        {
+          href: "/admin/messages",
+          label: "Customer Messages",
+          icon: Mail,
+          badge: unreadMessages > 0 ? `${unreadMessages} New` : undefined,
         },
         {
           href: "/admin/media",
@@ -304,7 +329,9 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
                       <span
                         className={cn(
                           "px-1.5 py-0.5 text-[9px] font-bold rounded-md uppercase tracking-wider",
-                          item.badge === "Hot"
+                          item.badge.includes("New")
+                            ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 font-bold"
+                            : item.badge === "Hot"
                             ? "bg-rose-500/10 text-rose-600 dark:text-rose-400"
                             : "bg-[#57BA47]/15 text-[#57BA47]"
                         )}

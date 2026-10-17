@@ -92,6 +92,16 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
 - [x] `pnpm audit --prod` dependency audit and blast radius analysis documented in `docs/SECURITY.md`.
 - [x] Staff lockout and trusted-device verification suite passing (`scripts/tests/lockout-regression.test.mjs`).
 
+#### Phase 4b — Contact Form Persistence, Bot Friction, Next.js 16.4.2 & Production Audit
+- [x] **Contact Messages Persistence**: `POST /api/contact` persists messages into `system:contact_messages` key in `ProductOverride`, capped at 2,000 oldest dropped, SHA-256 IP hash (no raw IP), truncated user agent (max 150 chars), DB-first with fallback to `app/data/contact-messages.json`, EROFS-safe, and 15s TTL cache. Returns 200 only upon successful persistence; 500 with user-friendly error on storage failure. Honeypots rejected with 400 without storing.
+- [x] **Admin Messages Inbox (`/admin/messages`)**: Full responsive inbox for owner/manager/support with KPI cards (Total, Unread, Read, Handled), full-text search, status tabs, mark read/handled, delete, and mailto reply. Protected by CSRF origin verification and 60 req/min rate limit.
+- [x] **Admin Sidebar Unread Badge**: Live unread counter badge (`X New`) displayed on Customer Messages nav item with Mail icon.
+- [x] **Bot Friction**: Added render timestamp `_t` and honeypot `_hp` across Checkout (`CheckoutClient.tsx`), Product Q&A (`ProductQA.tsx`, `ProductDetailsClient.tsx`), and Newsletter (`NewsletterPopup.tsx`, `Footer.tsx`). Backend tightens `minSeconds` to 3 for checkout, while remaining tolerant of API clients without `_t` by logging `suspect: true` in structured logs.
+- [x] **Next.js 16.4.2 Upgrade**: Upgraded `next` to latest patched 16.x release (`16.4.2`), resolving all 5 CVEs (GHSA-4jqv-mc3x-m676, GHSA-39w2-rjm5-chcv, GHSA-f87g-xv8r-7p7x, GHSA-mcj8-r9mp-w47p, GHSA-cjq9-62q9-8jv4). Lockfile updated.
+- [x] **Verification Suite**: `tsc` (0 errors), `pnpm test` (83/83 passing), `pnpm lint` (0 errors), `pnpm build` (115/115 pages generated, exit code 0), and manual route smoke test (`scripts/smoke-test-routes.mjs`) all verified.
+- [x] **Production Audit Analysis**: `pnpm audit --prod` findings analyzed. Zero direct advisories for `next`, `prisma`, `@prisma/*`, `sharp`, `pg`, `zod`, `react`, `swiper`, `leaflet`, `recharts`. Transitive advisories through `@vercel/*` (Nuxt/Vue peers) and `prisma` CLI confirmed unreachable in Next.js production serverless runtime.
+- [x] **Cleanup**: Deleted `scripts/scratch-test.mjs`.
+
 
 ### Phase 5 — Catalogue, Orders, and Money Correctness
 - [ ] Run catalogue audit scripts and fix code causes; create client admin steps for data anomalies.

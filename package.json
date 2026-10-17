@@ -19,7 +19,6 @@
     "staging:up": "docker compose -f docker-compose.staging.yml up -d",
     "staging:down": "docker compose -f docker-compose.staging.yml down"
   },
-
   "dependencies": {
     "@google-analytics/data": "^7.0.0",
     "@googleapis/searchconsole": "^10.0.0",
@@ -37,7 +36,7 @@
     "jose": "^6.2.12",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.577.0",
-    "next": "^16.1.6",
+    "next": "^16.4.2",
     "pg": "^8.20.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",

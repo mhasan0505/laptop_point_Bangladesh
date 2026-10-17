@@ -5,7 +5,6 @@ import {
   Check,
   Copy,
   Gift,
-  Phone,
   ShieldCheck,
   Sparkles,
   Tag,
@@ -31,11 +30,43 @@ const WhatsAppMiniIcon = ({ className = "w-4 h-4" }: { className?: string }) => 
 export default function NewsletterPopup() {
   const [isVisible, setIsVisible] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [mountedAt] = useState(() => Date.now());
+  const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [subscribeStatus, setSubscribeStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [subscribeMsg, setSubscribeMsg] = useState("");
 
   const couponCode = "LPDEAL5K";
   const whatsappUrl = `https://wa.me/8801612182408?text=${encodeURIComponent(
     `Hi Laptop Point BD! I want to claim the Super Deal Offer with coupon code ${couponCode}. Please share the available laptop models!`,
   )}`;
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setSubscribeStatus("submitting");
+    setSubscribeMsg("");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          _hp: honeypot,
+          _t: mountedAt,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to subscribe");
+      setSubscribeStatus("success");
+      setSubscribeMsg("Coupon & deal alerts sent to your email!");
+      setEmail("");
+      setHoneypot("");
+    } catch (err) {
+      setSubscribeStatus("error");
+      setSubscribeMsg(err instanceof Error ? err.message : "Subscription failed");
+    }
+  };
 
   useEffect(() => {
     // Check if user has already dismissed the offer within the last 24 hours
@@ -254,6 +285,43 @@ export default function NewsletterPopup() {
                       )}
                     </button>
                   </div>
+
+                  {/* Email newsletter subscription with bot friction */}
+                  <form onSubmit={handleNewsletterSubmit} className="mt-3.5 space-y-1.5">
+                    <input
+                      type="text"
+                      name="_hp"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      className="hidden"
+                      style={{ display: "none" }}
+                      aria-hidden="true"
+                    />
+                    <div className="flex gap-1.5">
+                      <input
+                        type="email"
+                        required
+                        placeholder="Enter email to get deal alerts"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="flex-1 px-3 py-1.5 text-xs rounded-xl border border-neutral-200 bg-neutral-50/70 focus:bg-white focus:outline-none focus:border-[#002b60] transition-colors"
+                      />
+                      <button
+                        type="submit"
+                        disabled={subscribeStatus === "submitting"}
+                        className="px-3 py-1.5 bg-[#002b60] text-white text-xs font-bold rounded-xl hover:bg-[#002047] transition-colors disabled:opacity-60 cursor-pointer"
+                      >
+                        {subscribeStatus === "submitting" ? "..." : "Subscribe"}
+                      </button>
+                    </div>
+                    {subscribeMsg && (
+                      <p className={`text-[10px] ${subscribeStatus === "success" ? "text-emerald-600 font-bold" : "text-rose-500"}`}>
+                        {subscribeMsg}
+                      </p>
+                    )}
+                  </form>
                 </div>
 
                 {/* Action Buttons */}

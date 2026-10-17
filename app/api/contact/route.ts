@@ -1,9 +1,11 @@
+import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import {
   getClientIp,
   checkContactSubmissionRateLimit,
   verifyBotFriction,
 } from "@/lib/rate-limit";
+import { addContactMessage } from "@/lib/contact-messages-storage";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +22,7 @@ const contactSchema = z.object({
 /**
  * POST /api/contact
  * Public contact form endpoint with per-IP rate limiting, bot friction (honeypot + minimum submit time),
- * and strict server-side validation.
+ * strict server-side validation, and durable storage in system:contact_messages store.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -49,7 +51,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid request payload" }, { status: 400 });
     }
 
-    // 2. Anti-bot friction check
+    // 2. Anti-bot friction check (honeypots & submission timing token)
     const botCheck = verifyBotFriction(rawBody as Record<string, unknown>);
     if (botCheck.isBot) {
       return NextResponse.json(
@@ -65,7 +67,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: firstError }, { status: 400 });
     }
 
-    // For a deliverable store, contact requests are logged / recorded
+    // 4. Compute privacy-preserving IP hash (SHA-256) and extract truncated User-Agent
+    const ipHash = crypto.createHash("sha256").update(clientIp).digest("hex");
+    const userAgent = (request.headers.get("user-agent") || "unknown").slice(0, 150);
+
+    // 5. Persist submission to system:contact_messages store (DB-first, capped at 2000, EROFS-safe)
+    try {
+      await addContactMessage({
+        name: result.data.name,
+        email: result.data.email,
+        subject: result.data.subject,
+        message: result.data.message,
+        ipHash,
+        userAgent,
+      });
+    } catch (persistError) {
+      console.error("[POST /api/contact] Storage persistence error:", persistError);
+      return NextResponse.json(
+        { error: "Unable to save your message right now. Please try again shortly or reach us directly via WhatsApp." },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json({
       ok: true,
       message: "Message received successfully. We will contact you shortly.",
@@ -78,3 +101,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

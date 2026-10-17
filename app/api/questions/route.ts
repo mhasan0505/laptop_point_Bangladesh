@@ -4,6 +4,7 @@ import {
   verifyBotFriction,
 } from "@/lib/rate-limit";
 import { addQuestion, getQuestions } from "@/lib/questions-storage";
+import { logger } from "@/lib/logger";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
       unknown
     > | null;
 
+    let isSuspect = false;
     if (body) {
       const botCheck = verifyBotFriction(body);
       if (botCheck.isBot) {
@@ -61,6 +63,13 @@ export async function POST(request: NextRequest) {
           { error: "Automated submission rejected" },
           { status: 400 }
         );
+      }
+      if (body._t === undefined || body._t === null || body._t === "") {
+        isSuspect = true;
+        logger.warn("Public question submission suspect: missing _t render timestamp", {
+          ip: getClientIp(request),
+          productSlug: typeof body?.productSlug === "string" ? body.productSlug : "unknown",
+        });
       }
     }
 

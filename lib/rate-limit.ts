@@ -521,6 +521,12 @@ export function checkContactSubmissionRateLimit(ip: string): { allowed: boolean;
   return checkSlidingWindow(contactSubmissionAttempts, ip, 5, 10 * 60 * 1000); // 5 contact submits per 10m
 }
 
+const adminMessagesAttempts = new Map<string, SlidingWindowRecord>();
+
+export function checkAdminMessagesRateLimit(ip: string): { allowed: boolean; retryAfterSeconds?: number } {
+  return checkSlidingWindow(adminMessagesAttempts, ip, 60, 60 * 1000); // 60 requests per minute
+}
+
 /**
  * Validates bot friction tokens:
  * - Honeypot fields (_hp, hp_field, website, fax) must be empty.

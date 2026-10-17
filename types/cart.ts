@@ -48,6 +48,8 @@ export interface CheckoutFormData {
   // Additional
   orderNotes?: string;
   agreeToTerms: boolean;
+  _hp?: string;
+  _t?: number | string;
 }
 
 export type PaymentMethod = "cod" | "bkash" | "nagad" | "card" | "emi";

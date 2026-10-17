@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface FooterContact {
   hotline: string;
@@ -20,7 +21,7 @@ interface FooterContact {
   social: { facebook: string; instagram: string; tiktok: string; youtube: string };
 }
 
-const digitsOnly = (v: string) => v.replace(/[^d+]/g, "");
+const digitsOnly = (v: string) => v.replace(/[^\d+]/g, "");
 
 export default function Footer({
   contact,
@@ -33,6 +34,39 @@ export default function Footer({
   }>;
 }) {
   const currentYear = new Date().getFullYear();
+
+  const [mountedAt] = useState(() => Date.now());
+  const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [msg, setMsg] = useState("");
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setStatus("submitting");
+    setMsg("");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          _hp: honeypot,
+          _t: mountedAt,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to subscribe");
+      setStatus("success");
+      setMsg("Thank you for subscribing!");
+      setEmail("");
+      setHoneypot("");
+    } catch (err) {
+      setStatus("error");
+      setMsg(err instanceof Error ? err.message : "Subscription failed");
+    }
+  };
 
   const paymentMethods = [
     { src: "/payment_logo/bkash.png", alt: "bKash", name: "bKash" },
@@ -120,7 +154,7 @@ export default function Footer({
               </div>
             </div>
 
-            {/* Newsletter (Optional Placeholder) */}
+            {/* Newsletter Subscription */}
             <div className="w-full md:w-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-100 max-w-md">
               <h4 className="font-semibold text-gray-900 mb-2">
                 Subscribe to our Newsletter
@@ -128,16 +162,41 @@ export default function Footer({
               <p className="text-gray-500 text-sm mb-4">
                 Get the latest updates dealing with new products and trends.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <form onSubmit={handleNewsletterSubmit} className="space-y-2">
                 <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+                  type="text"
+                  name="_hp"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="hidden"
+                  style={{ display: "none" }}
+                  aria-hidden="true"
                 />
-                <button className="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors w-full sm:w-auto">
-                  Subscribe
-                </button>
-              </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="email"
+                    required
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === "submitting"}
+                    className="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors w-full sm:w-auto disabled:opacity-60 cursor-pointer"
+                  >
+                    {status === "submitting" ? "Subscribing..." : "Subscribe"}
+                  </button>
+                </div>
+                {msg && (
+                  <p className={`text-xs ${status === "success" ? "text-emerald-600 font-medium" : "text-rose-500"}`}>
+                    {msg}
+                  </p>
+                )}
+              </form>
             </div>
           </div>
         </div>

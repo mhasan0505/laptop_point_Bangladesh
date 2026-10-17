@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   CreditCard,
   Smartphone,
-  Truck,
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
@@ -55,6 +54,7 @@ export default function CheckoutClient({
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [mountedAt] = useState(() => Date.now());
 
   useEffect(() => {
     if (items.length > 0) {
@@ -73,11 +73,8 @@ export default function CheckoutClient({
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<CheckoutFormData>();
-
-  const cityValue = watch("city");
 
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true);
@@ -98,6 +95,8 @@ export default function CheckoutClient({
           paymentMethod: selectedPayment,
           shippingMethod: selectedZone,
           notes: data.orderNotes,
+          _hp: data._hp,
+          _t: mountedAt,
           items: items.map((item) => ({
             productId: item.id,
             sku: item.id,
@@ -235,6 +234,16 @@ export default function CheckoutClient({
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Honeypot anti-bot input */}
+          <input
+            type="text"
+            {...register("_hp")}
+            tabIndex={-1}
+            autoComplete="off"
+            className="hidden"
+            style={{ display: "none" }}
+            aria-hidden="true"
+          />
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               {/* Customer Information */}

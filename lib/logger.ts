@@ -54,6 +54,7 @@ export const logger = {
     customerEmail?: string;
     customerPhone?: string;
     city?: string;
+    suspect?: boolean;
   }) {
     emitLog({
       level: "info",
@@ -70,6 +71,7 @@ export const logger = {
         city: params.city || "unknown",
         customerEmailMasked: maskEmail(params.customerEmail),
         customerPhoneMasked: maskPhone(params.customerPhone),
+        suspect: Boolean(params.suspect),
       },
     });
   },
@@ -167,6 +169,39 @@ export const logger = {
         sizeBytes: params.sizeBytes,
         url: params.url,
       },
+    });
+  },
+
+  /**
+   * Log suspect bot/submission activity (e.g. missing _t render token).
+   */
+  logSuspectSubmission(params: {
+    form: string;
+    ip?: string;
+    reason: string;
+    metadata?: Record<string, unknown>;
+  }) {
+    emitLog({
+      level: "warn",
+      category: "system",
+      action: "suspect_submission",
+      timestamp: new Date().toISOString(),
+      data: {
+        form: params.form,
+        ip: params.ip || "unknown",
+        reason: params.reason,
+        metadata: params.metadata || {},
+      },
+    });
+  },
+
+  warn(action: string, data?: Record<string, unknown>) {
+    emitLog({
+      level: "warn",
+      category: "system",
+      action,
+      timestamp: new Date().toISOString(),
+      data: data || {},
     });
   },
 };

@@ -162,6 +162,8 @@ export default function ProductDetailsClient({
   const [isQuestionModalOpen, setIsQuestionModalOpen] = useState(false);
   const [questionName, setQuestionName] = useState("");
   const [questionText, setQuestionText] = useState("");
+  const [questionHoneypot, setQuestionHoneypot] = useState("");
+  const [questionMountedAt] = useState(() => Date.now());
   const [isSubmittingQuestion, setIsSubmittingQuestion] = useState(false);
   const [questionSuccess, setQuestionSuccess] = useState(false);
 
@@ -340,6 +342,8 @@ export default function ProductDetailsClient({
           productSlug: product.slug,
           userName: questionName.trim() || "Customer",
           question: questionText,
+          _hp: questionHoneypot,
+          _t: questionMountedAt,
         }),
       });
       if (res.ok) {
@@ -349,6 +353,7 @@ export default function ProductDetailsClient({
           setIsQuestionModalOpen(false);
           setQuestionText("");
           setQuestionName("");
+          setQuestionHoneypot("");
         }, 1800);
       }
     } catch {
@@ -1284,6 +1289,17 @@ export default function ProductDetailsClient({
               </div>
             ) : (
               <form onSubmit={handleSubmitQuestion} className="space-y-3 text-xs">
+                <input
+                  type="text"
+                  name="_hp"
+                  value={questionHoneypot}
+                  onChange={(e) => setQuestionHoneypot(e.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  className="hidden"
+                  style={{ display: "none" }}
+                  aria-hidden="true"
+                />
                 <div>
                   <label className="block font-semibold mb-1">Your Name</label>
                   <input

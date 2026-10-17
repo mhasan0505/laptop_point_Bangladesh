@@ -17,6 +17,8 @@ export default function ProductQA({ productSlug }: { productSlug: string }) {
   const [items, setItems] = useState<PublicQuestion[] | null>(null);
   const [userName, setUserName] = useState("");
   const [question, setQuestion] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [mountedAt] = useState(() => Date.now());
   const [state, setState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
 
@@ -39,7 +41,13 @@ export default function ProductQA({ productSlug }: { productSlug: string }) {
       const res = await fetch("/api/questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productSlug, userName, question }),
+        body: JSON.stringify({
+          productSlug,
+          userName,
+          question,
+          _hp: honeypot,
+          _t: mountedAt,
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Could not send your question");
@@ -96,6 +104,17 @@ export default function ProductQA({ productSlug }: { productSlug: string }) {
         </div>
 
         <form onSubmit={submit} className="mt-8 grid gap-3 border-t pt-6">
+          <input
+            type="text"
+            name="_hp"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            tabIndex={-1}
+            autoComplete="off"
+            className="hidden"
+            style={{ display: "none" }}
+            aria-hidden="true"
+          />
           <h3 className="font-semibold">Ask about this laptop</h3>
           <label className="grid gap-1 text-sm">
             <span className="text-gray-600">Your name (optional)</span>
