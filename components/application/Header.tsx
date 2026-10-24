@@ -362,12 +362,8 @@ const Header = ({
 
   useEffect(() => {
     const handleScroll = () => {
-      const y = window.scrollY;
-      setIsScrolled((prev) => {
-        if (!prev && y > 40) return true;
-        if (prev && y < 15) return false;
-        return prev;
-      });
+      const scrolled = window.scrollY > 20;
+      setIsScrolled((prev) => (prev !== scrolled ? scrolled : prev));
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -375,20 +371,9 @@ const Header = ({
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-50 border-b border-neutral-200/80 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/90 transition-all duration-300 ${
-        isScrolled
-          ? "shadow-[0_8px_30px_rgba(15,23,42,0.10)]"
-          : "shadow-[0_6px_24px_rgba(15,23,42,0.04)]"
-      }`}
-    >
-      <div
-        className={`border-b border-white/10 bg-linear-to-r from-[#001e42] via-[#002b60] to-[#001e42] text-xs text-white transition-all duration-300 ease-in-out ${
-          isScrolled
-            ? "max-h-0 opacity-0 overflow-hidden py-0 border-transparent"
-            : "max-h-12 opacity-100 py-0"
-        }`}
-      >
+    <>
+      {/* ── TOP UTILITY & SUPER DEALS MARQUEE TICKER (scrolls with page) ── */}
+      <div className="border-b border-white/10 bg-linear-to-r from-[#001e42] via-[#002b60] to-[#001e42] text-xs text-white">
         <div className="container mx-auto px-3 sm:px-4">
           <div className="flex min-h-9 items-center justify-between gap-2 sm:gap-4 py-1.5">
             {/* ── LEFT/CENTER: SUPER DEALS MARQUEE TICKER ───────────────── */}
@@ -486,21 +471,19 @@ const Header = ({
         </div>
       </div>
 
-      <div className="bg-white">
-        <div className="container mx-auto px-3 sm:px-4">
-          <div
-            className={`grid grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-3 lg:gap-5 transition-all duration-300 ease-in-out ${
-              isScrolled ? "min-h-16 py-1.5 sm:py-2" : "min-h-20 sm:min-h-22 py-3"
-            }`}
-          >
-            <Link href="/" className="shrink-0 pr-1 lg:pr-2">
-              <div
-                className={`relative transition-all duration-300 ${
-                  isScrolled
-                    ? "h-8 w-28 sm:h-9 sm:w-34"
-                    : "h-10 w-34 sm:h-12 sm:w-40"
-                }`}
-              >
+      {/* ── STICKY MAIN NAVIGATION (Butter-smooth, zero jitter, zero layout shift) ── */}
+      <header
+        className={`sticky top-0 z-50 border-b border-neutral-200/80 bg-white/95 backdrop-blur supports-backdrop-filter:bg-white/90 transition-shadow duration-200 ${
+          isScrolled
+            ? "shadow-[0_8px_30px_rgba(15,23,42,0.08)]"
+            : "shadow-[0_2px_8px_rgba(15,23,42,0.03)]"
+        }`}
+      >
+        <div className="bg-white">
+          <div className="container mx-auto px-3 sm:px-4">
+            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-3 lg:gap-5 min-h-18 sm:min-h-20 py-2 sm:py-2.5">
+              <Link href="/" className="shrink-0 pr-1 lg:pr-2">
+                <div className="relative h-9 w-32 sm:h-11 sm:w-38">
                 <Image
                   src="/Logo.webp"
                   alt="Laptop Point Bangladesh"
@@ -1078,6 +1061,7 @@ const Header = ({
         featuredProducts={megaMenuFeatured}
       />
     </header>
+    </>
   );
 };
 
