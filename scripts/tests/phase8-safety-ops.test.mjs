@@ -9,6 +9,7 @@ await import("../lib/register.mjs");
 
 const { logger, maskEmail, maskPhone } = await import("../../lib/logger.ts");
 const { GET: cronHandler } = await import("../../app/api/cron/route.ts");
+const { validateEnvConfig } = await import("../../lib/env.ts");
 
 test("Phase 8: Data Safety, Backups, and Operations Verification", async (t) => {
   await t.test("1. vercel.json cron configuration is valid", () => {
@@ -24,23 +25,31 @@ test("Phase 8: Data Safety, Backups, and Operations Verification", async (t) => 
     assert.equal(cron.schedule, "0 * * * *", "Cron schedule must be hourly (0 * * * *)");
   });
 
-  await t.test("2. Vercel Cron endpoint enforces CRON_SECRET authentication", async () => {
+  await t.test("2. Vercel Cron endpoint fails closed on unset secret and enforces authentication", async () => {
     const originalSecret = process.env.CRON_SECRET;
     try {
-      process.env.CRON_SECRET = "test-cron-secret-12345";
+      // A. Unset secret fails closed with 503
+      delete process.env.CRON_SECRET;
+      const unsetReq = new Request("http://localhost:3000/api/cron");
+      const unsetRes = await cronHandler(unsetReq);
+      assert.equal(unsetRes.status, 503, "Unset CRON_SECRET must return 503");
+      const unsetJson = await unsetRes.json();
+      assert.equal(unsetJson.error, "Cron not configured");
 
-      // 1. Missing or invalid Authorization header returns 401
+      // B. Wrong secret returns 401
+      process.env.CRON_SECRET = "test-cron-secret-12345";
       const unauthReq = new Request("http://localhost:3000/api/cron", {
         headers: { authorization: "Bearer wrong-secret" },
       });
       const unauthRes = await cronHandler(unauthReq);
       assert.equal(unauthRes.status, 401, "Invalid bearer token must return 401");
 
+      // C. Missing authorization header returns 401
       const noHeaderReq = new Request("http://localhost:3000/api/cron");
       const noHeaderRes = await cronHandler(noHeaderReq);
       assert.equal(noHeaderRes.status, 401, "Missing authorization header must return 401");
 
-      // 2. Matching Authorization header returns 200
+      // D. Matching Authorization header returns 200
       const authReq = new Request("http://localhost:3000/api/cron", {
         headers: { authorization: "Bearer test-cron-secret-12345" },
       });
@@ -50,6 +59,32 @@ test("Phase 8: Data Safety, Backups, and Operations Verification", async (t) => 
       const json = await authRes.json();
       assert.equal(json.ok, true, "Cron response must indicate ok: true");
       assert.ok(Array.isArray(json.jobsRun), "Cron response must return jobsRun array");
+
+      // E. Production env validation requires CRON_SECRET
+      const prodCheckMissing = validateEnvConfig({
+        NODE_ENV: "production",
+        DATABASE_URL: "postgresql://localhost:5432/db",
+        ADMIN_PASSWORD: "SuperSecurePassword123!",
+        ADMIN_SESSION_SECRET: "a".repeat(32),
+        TRUSTED_PROXY: "vercel",
+      }, true);
+      assert.ok(
+        prodCheckMissing.errors.some((e) => e.includes("CRON_SECRET")),
+        "validateEnvConfig must require CRON_SECRET in production"
+      );
+
+      const prodCheckValid = validateEnvConfig({
+        NODE_ENV: "production",
+        DATABASE_URL: "postgresql://localhost:5432/db",
+        ADMIN_PASSWORD: "SuperSecurePassword123!",
+        ADMIN_SESSION_SECRET: "a".repeat(32),
+        TRUSTED_PROXY: "vercel",
+        CRON_SECRET: "valid-secret-token-321",
+      }, true);
+      assert.ok(
+        !prodCheckValid.errors.some((e) => e.includes("CRON_SECRET")),
+        "validateEnvConfig must accept valid CRON_SECRET in production"
+      );
     } finally {
       process.env.CRON_SECRET = originalSecret;
     }
@@ -86,9 +121,34 @@ test("Phase 8: Data Safety, Backups, and Operations Verification", async (t) => 
       "backup-db.mjs must never print DATABASE_URL"
     );
 
-    // Verify restore runbook exists
+    // Verify backup directory path validation refuses public/, app/, and tracked paths
+    const { validateBackupDirectory } = await import("../backup-db.mjs");
+    assert.equal(typeof validateBackupDirectory, "function", "validateBackupDirectory must be exported");
+
+    assert.throws(
+      () => validateBackupDirectory("public/backups"),
+      /cannot be inside 'public\/' or 'app\/'/,
+      "Must refuse backup paths inside public/"
+    );
+
+    assert.throws(
+      () => validateBackupDirectory("app/data/backups"),
+      /cannot be inside 'public\/' or 'app\/'/,
+      "Must refuse backup paths inside app/"
+    );
+
+    // backups/ is git-ignored, so it must succeed
+    const validDir = validateBackupDirectory("backups");
+    assert.ok(validDir.endsWith("backups"), "Git-ignored backups directory must be accepted");
+
+    // Verify restore runbook exists and documents customer PII and encryption
     const runbookPath = path.join(process.cwd(), "docs/RUNBOOKS/DATABASE_BACKUP_RESTORE.md");
     assert.ok(fs.existsSync(runbookPath), "Disaster recovery runbook must exist");
+    const runbookContent = fs.readFileSync(runbookPath, "utf-8");
+    assert.ok(
+      runbookContent.includes("CUSTOMER PII") && runbookContent.includes("Encryption Required"),
+      "Runbook must state backups contain customer PII and must be stored encrypted"
+    );
   });
 
   await t.test("5. Structured logging utilities format alerts and audit trails without PII leaks", () => {

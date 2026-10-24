@@ -6,6 +6,13 @@
 
 ---
 
+> [!CAUTION]
+> **CUSTOMER PII AND DATA PRIVACY NOTICE**:
+> Database backups contain sensitive customer personally identifiable information (PII) including full names, phone numbers, delivery addresses, and order history.
+> - **Never commit backups to version control**: All backup output paths MUST be strictly ignored by `.gitignore`.
+> - **Never store backups in public/ or app/**: Exposing backup archives over HTTP is a critical data breach.
+> - **Encryption Required**: All persistent and off-site backup snapshots MUST be stored encrypted at rest (e.g. AES-256 encrypted tarballs or server-side encrypted S3/GCS buckets) and encrypted in transit.
+
 ## 1. Automated Application Backup
 
 The repository includes a dedicated, zero-dependency backup script: [`scripts/backup-db.mjs`](file:///d:/ARTYX%20DIGITAL/lp-new-version/scripts/backup-db.mjs). It exports all core operational tables (`Inventory`, `InventoryLog`, `Order`, `ProductOverride`, `AdminUser`, `AdminSession`) to a timestamped JSON snapshot with SHA-256 integrity checksums.

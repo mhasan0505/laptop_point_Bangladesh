@@ -424,13 +424,14 @@ const ShopContent = ({
                   {activeTags.map((tag) => (
                     <span
                       key={tag.label}
-                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-[#dc0303] border border-red-200 dark:bg-red-950/30 dark:border-red-900/40"
+                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-800 border border-red-200 dark:bg-red-950/30 dark:border-red-900/40 dark:text-red-300"
                     >
                       {tag.label}
                       <button
                         onClick={tag.onRemove}
                         className="hover:opacity-75 ml-0.5 cursor-pointer"
                         title="Remove filter"
+                        aria-label={`Remove filter ${tag.label}`}
                       >
                         <X className="w-3 h-3" />
                       </button>

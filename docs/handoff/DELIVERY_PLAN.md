@@ -15,12 +15,12 @@ This document tracks all 10 phases required to make Laptop Point BD fully delive
 | **Phase 3** | Build, Deploy & Runtime Health | **Done** | `pnpm build` passed, route budget verified, `GET /api/health`, error boundaries (`app/error.tsx`, `not-found.tsx`, `global-error.tsx`, `admin/error.tsx`), CI workflow, structured logs (`lib/logger.ts`). |
 | **Phase 4** | Security Hardening Pass | **Done** | API route audit table (`docs/SECURITY.md`), rate limiting, bot friction, CSRF, security headers, upload sniffing/sharp, lockout suite (`scripts/tests/*`). |
 
-| **Phase 5** | Catalogue, Orders & Money | **Pending** | Catalogue audit, order lifecycle end-to-end on staging, invoice/challan A4 print, checkout calculations. |
-| **Phase 6** | Content, Legal & Brand Readiness | **Pending** | Placeholder audit, policy pages rendered from DB, Store Profile single source of truth, WhatsApp/forms. |
-| **Phase 7** | UX, A11y, Performance, SEO | **Pending** | Responsive QA (375-1536px), axe accessibility audit, Lighthouse mobile scores, meta tags/sitemap/robots. |
-| **Phase 8** | Data Safety, Backups & Ops | **Pending** | Backup/restore runbook & script, seed guard, Vercel cron jobs, uptime monitoring, admin audit trail. |
-| **Phase 9** | Client Handoff Package | **In Progress** | `ADMIN_GUIDE.md`, `DAILY_CHECKLIST.md`, `WEEKLY_CHECKLIST.md`, `TROUBLESHOOTING.md`, `TECHNICAL_HANDOVER.md`. |
-| **Phase 10** | Final Verification & Release Gate | **Pending** | Final release report (`RELEASE_REPORT.md`), full test pass, go/no-go recommendation. |
+| **Phase 5** | Catalogue, Orders & Money | **Done** (Staging E2E Pending) | Catalogue audit completed, invoice/challan A4 print verified, checkout calculations verified. Real order lifecycle on staging pending staging DB. |
+| **Phase 6** | Content, Legal & Brand Readiness | **Done** | Zero placeholders, policies rendered from DB, store profile unified, WhatsApp floating widget & dynamic forms verified (`e9e7555`). |
+| **Phase 7** | UX, A11y, Performance, SEO | **Done** (Real Audits Verified) | Real axe-core scans (17 routes), Playwright responsive checks across 4 viewports (0 overflows on 72 checks), Lighthouse mobile audits, meta tags/sitemap/robots. |
+| **Phase 8** | Data Safety, Backups & Ops | **Done** | Fail-closed `/api/cron`, backup directory validation & PII encryption runbook, seed guard, structured logging alerts (`1e6184d`). |
+| **Phase 9** | Client Handoff Package | **Done** | Complete handoff suite in `docs/handoff/`: `ADMIN_GUIDE.md`, `DAILY_CHECKLIST.md`, `WEEKLY_CHECKLIST.md`, `TROUBLESHOOTING.md`, `TECHNICAL_HANDOVER.md`. |
+| **Phase 10** | Final Verification & Release Gate | **In Progress** | Release report (`RELEASE_REPORT.md`), real HTTP smoke tests passed, honest go/no-go recommendation with blocking release conditions. |
 
 ---
 

@@ -515,5 +515,82 @@
     "userAgent": "unknown",
     "createdAt": "2026-10-17T10:28:00.893Z",
     "status": "unread"
+  },
+  {
+    "id": "msg-1792252408007-laxzo",
+    "name": "User 0",
+    "email": "rate-test-0@example.com",
+    "subject": "General Inquiry",
+    "message": "Inquiry message number 0 for rate limiting check",
+    "ipHash": "eeef46cedcc4a45a213a9fdd89227ef51ca2f7076e178e146c2e9e119cd7e0b1",
+    "userAgent": "unknown",
+    "createdAt": "2026-10-17T15:53:28.007Z",
+    "status": "unread"
+  },
+  {
+    "id": "msg-1792252408013-1jo5m",
+    "name": "User 1",
+    "email": "rate-test-1@example.com",
+    "subject": "General Inquiry",
+    "message": "Inquiry message number 1 for rate limiting check",
+    "ipHash": "eeef46cedcc4a45a213a9fdd89227ef51ca2f7076e178e146c2e9e119cd7e0b1",
+    "userAgent": "unknown",
+    "createdAt": "2026-10-17T15:53:28.013Z",
+    "status": "unread"
+  },
+  {
+    "id": "msg-1792252408015-wlmxf",
+    "name": "User 2",
+    "email": "rate-test-2@example.com",
+    "subject": "General Inquiry",
+    "message": "Inquiry message number 2 for rate limiting check",
+    "ipHash": "eeef46cedcc4a45a213a9fdd89227ef51ca2f7076e178e146c2e9e119cd7e0b1",
+    "userAgent": "unknown",
+    "createdAt": "2026-10-17T15:53:28.015Z",
+    "status": "unread"
+  },
+  {
+    "id": "msg-1792252408018-kngoh",
+    "name": "User 3",
+    "email": "rate-test-3@example.com",
+    "subject": "General Inquiry",
+    "message": "Inquiry message number 3 for rate limiting check",
+    "ipHash": "eeef46cedcc4a45a213a9fdd89227ef51ca2f7076e178e146c2e9e119cd7e0b1",
+    "userAgent": "unknown",
+    "createdAt": "2026-10-17T15:53:28.018Z",
+    "status": "unread"
+  },
+  {
+    "id": "msg-1792252408020-l61kz",
+    "name": "User 4",
+    "email": "rate-test-4@example.com",
+    "subject": "General Inquiry",
+    "message": "Inquiry message number 4 for rate limiting check",
+    "ipHash": "eeef46cedcc4a45a213a9fdd89227ef51ca2f7076e178e146c2e9e119cd7e0b1",
+    "userAgent": "unknown",
+    "createdAt": "2026-10-17T15:53:28.020Z",
+    "status": "unread"
+  },
+  {
+    "id": "msg-1792252408309-0wkiv",
+    "name": "Rahim Chowdhury",
+    "email": "rahim@example.com",
+    "subject": "Product Inquiry",
+    "message": "Do you have the ThinkPad T14 Gen 3 in stock today?",
+    "ipHash": "b23a6a8439c0dde5515893e7c90c1e3233b8616e634470f20dc4928bcf3609bc",
+    "userAgent": "unknown",
+    "createdAt": "2026-10-17T15:53:28.309Z",
+    "status": "unread"
+  },
+  {
+    "id": "msg-1792252408319-pwr10",
+    "name": "Newsletter Subscriber",
+    "email": "subscriber@example.com",
+    "subject": "Newsletter Subscription",
+    "message": "Subscriber signed up for promotional discounts and news (suspect: false).",
+    "ipHash": "b23a6a8439c0dde5515893e7c90c1e3233b8616e634470f20dc4928bcf3609bc",
+    "userAgent": "unknown",
+    "createdAt": "2026-10-17T15:53:28.319Z",
+    "status": "unread"
   }
 ]

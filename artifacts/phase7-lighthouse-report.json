@@ -1,0 +1,70 @@
+[
+  {
+    "name": "home",
+    "url": "http://localhost:3005/",
+    "scores": {
+      "performance": 36,
+      "accessibility": 89,
+      "bestPractices": 92,
+      "seo": 100
+    },
+    "metrics": {
+      "lcp": "15.0 s",
+      "cls": "0",
+      "fcp": "1.7 s",
+      "speedIndex": "9.2 s",
+      "tbt": "3,020 ms"
+    }
+  },
+  {
+    "name": "shop",
+    "url": "http://localhost:3005/shop",
+    "scores": {
+      "performance": 39,
+      "accessibility": 89,
+      "bestPractices": 92,
+      "seo": 92
+    },
+    "metrics": {
+      "lcp": "8.7 s",
+      "cls": "0",
+      "fcp": "1.6 s",
+      "speedIndex": "6.7 s",
+      "tbt": "2,940 ms"
+    }
+  },
+  {
+    "name": "product",
+    "url": "http://localhost:3005/product/hp-probook-440-g3-business-laptop",
+    "scores": {
+      "performance": 59,
+      "accessibility": 84,
+      "bestPractices": 92,
+      "seo": 92
+    },
+    "metrics": {
+      "lcp": "2.8 s",
+      "cls": "0.004",
+      "fcp": "1.4 s",
+      "speedIndex": "7.2 s",
+      "tbt": "3,630 ms"
+    }
+  },
+  {
+    "name": "accessories",
+    "url": "http://localhost:3005/accessories",
+    "scores": {
+      "performance": 60,
+      "accessibility": 88,
+      "bestPractices": 92,
+      "seo": 100
+    },
+    "metrics": {
+      "lcp": "2.8 s",
+      "cls": "0",
+      "fcp": "1.4 s",
+      "speedIndex": "6.9 s",
+      "tbt": "2,730 ms"
+    }
+  }
+]

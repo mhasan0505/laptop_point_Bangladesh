@@ -27,13 +27,51 @@ const TABLES = [
   "AdminSession",
 ];
 
+import { execFileSync } from "node:child_process";
+
+export function validateBackupDirectory(backupDir, repoRoot = process.cwd()) {
+  const resolvedDir = path.resolve(backupDir);
+  const resolvedRoot = path.resolve(repoRoot);
+  const rel = path.relative(resolvedRoot, resolvedDir).replace(/\\/g, "/");
+  const lowerRel = rel.toLowerCase();
+
+  // 1. Refuse if inside public/ or app/
+  if (
+    lowerRel === "public" ||
+    lowerRel.startsWith("public/") ||
+    lowerRel === "app" ||
+    lowerRel.startsWith("app/")
+  ) {
+    throw new Error(
+      `Security violation: Backup directory cannot be inside 'public/' or 'app/' (attempted: ${backupDir})`
+    );
+  }
+
+  // 2. Refuse if inside repo and not git-ignored
+  if (!rel.startsWith("..") && !path.isAbsolute(rel) && rel !== "") {
+    const dirWithSlash = rel.endsWith("/") ? rel : rel + "/";
+    try {
+      execFileSync("git", ["check-ignore", "-q", dirWithSlash], {
+        stdio: "ignore",
+      });
+    } catch {
+      throw new Error(
+        `Security violation: Backup destination '${backupDir}' is inside the repository but is NOT ignored by .gitignore. Customer PII must never be stored in tracked repository paths.`
+      );
+    }
+  }
+
+  return resolvedDir;
+}
+
 export async function runBackup(options = {}) {
   const databaseUrl = options.databaseUrl || process.env.DATABASE_URL;
   if (!databaseUrl) {
     throw new Error("DATABASE_URL is not set in environment or .env.local");
   }
 
-  const backupDir = options.backupDir || path.join(process.cwd(), "backups");
+  const rawBackupDir = options.backupDir || path.join(process.cwd(), "backups");
+  const backupDir = validateBackupDirectory(rawBackupDir);
   await fs.mkdir(backupDir, { recursive: true });
 
   const pool = new Pool({

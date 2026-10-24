@@ -531,6 +531,7 @@ export default function ProductDetailsClient({
                     {galleryImages.map((img, idx) => (
                       <button
                         key={idx}
+                        aria-label={`View image ${idx + 1} of ${galleryImages.length}`}
                         onClick={() => setActiveImageIndex(idx)}
                         className={`relative w-14 h-14 rounded border p-1 bg-white shrink-0 transition-all ${
                           idx === safeImageIndex

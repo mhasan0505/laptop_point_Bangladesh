@@ -356,9 +356,9 @@ export default function Footer({
                   href="https://artyx.digital"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#dc0303] hover:text-red-400 transition-colors"
+                  className="text-red-400 hover:text-red-300 font-medium transition-colors"
                 >
-                  <span className="text-[#dc0303]">Artyx Digital</span>
+                  <span>Artyx Digital</span>
                 </a>
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">

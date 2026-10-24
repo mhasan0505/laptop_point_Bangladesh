@@ -222,15 +222,14 @@ export async function saveRawProduct(raw: RawProduct): Promise<void> {
   // 3. Update local products.json (local dev environment only)
   try {
     const baseList = await loadBaseProductsJson();
-    const index = baseList.findIndex(
-      (p) => String(p.id) === String(numericId) || p.sku.toLowerCase() === raw.sku.toLowerCase(),
+    // Remove ALL existing entries that share the same numeric id OR the new SKU.
+    // A plain findIndex + splice would miss cases where the same id appears under a
+    // different (old) SKU after a SKU rename, which is exactly what causes duplicates.
+    const filtered = baseList.filter(
+      (p) => String(p.id) !== String(numericId) && p.sku.toLowerCase() !== raw.sku.toLowerCase(),
     );
-    if (index !== -1) {
-      baseList[index] = raw;
-    } else {
-      baseList.unshift(raw);
-    }
-    await writeJsonAtomic(productsFilePath, baseList);
+    filtered.unshift(raw);
+    await writeJsonAtomic(productsFilePath, filtered);
     filePersisted = true;
   } catch (fsErr: any) {
     // In serverless / read-only environments (e.g. Vercel / AWS Lambda), the filesystem is immutable

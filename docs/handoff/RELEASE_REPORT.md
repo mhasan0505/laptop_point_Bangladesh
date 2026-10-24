@@ -87,12 +87,14 @@
 - **Errors**: 0
 - **Documented Warnings**: 173 (explicitly documented transparency rules for legacy data schemas and test files)
 
-### 2.4 Route Smoke Tests (`scripts/smoke-test-routes.mjs`)
-- `GET /api/health` -> HTTP 200/503 healthy JSON response with version and commit metadata.
-- `POST /api/contact` -> Honeypot trap rejected with HTTP 400.
-- `POST /api/newsletter` -> Timing token trap rejected with HTTP 400.
-- `GET /api/admin/messages` -> Rejected unauthenticated request with HTTP 401.
-- `GET /api/admin/health/db` -> Rejected unauthenticated request with HTTP 401.
+### 2.4 Real HTTP Smoke Test (`scripts/smoke-test-routes.mjs`)
+- Executed against active production build running on `http://localhost:3005`.
+- **Security Headers on `/`**: `Content-Security-Policy-Report-Only`, `Strict-Transport-Security`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, and `Permissions-Policy` verified present.
+- **Public Pages (200 OK)**: 20 routes verified including `/`, `/shop`, `/deals`, `/accessories`, `/accessories/routers`, `/accessories/charger-and-adapter`, `/accessories/hp-65w-usb-c-charger`, `/product/hp-probook-440-g3-business-laptop`, `/compare`, `/wishlist`, `/cart`, `/checkout`, `/contact`, `/track-order`, `/privacy`, `/terms`, `/returns`, `/shipping`, `/EMI`, `/power-deal`, `/admin/login`.
+- **Redirects Verified**: `/login` (307 -> `/admin/login`), `/payment-methods` (308 -> `/EMI`), `/about` (308 -> `/contact`), `/privacy-policy` (308 -> `/privacy`), `/order-tracking` (308 -> `/track-order`).
+- **Public APIs Verified**: `/api/health` (200 OK), `/api/products` (200 OK), `/api/accessories` (200 OK), `/api/power-deals` (200 OK), `/api/banners` (200 OK).
+- **Vercel Cron Authentication**: `/api/cron` fails closed (401 on missing/wrong secret, 200 with Bearer secret).
+- **Admin Protection (Fail-Closed)**: `/api/admin/orders`, `/api/admin/messages`, `/api/admin/products`, `/api/admin/health/db`, `/api/admin/users`, `/api/inventory` all reject unauthenticated requests with HTTP 401.
 
 ### 2.5 Secret Leak Audit (Production Bundle)
 - Production Webpack bundle chunks inspected across `.next/static` and `.next/server`.
@@ -102,45 +104,73 @@
 
 ---
 
-## 3. Open Issues & Observations Ranked by Severity
+## 3. Real Phase 7 Audits (Axe-Core, Playwright Responsive, Lighthouse)
 
-| Severity | Issue Description | Mitigation / Required Next Step | Responsible Party |
-| :--- | :--- | :--- | :--- |
-| **High** | **Phase 1 Live Staging Write Run**<br>Persistence was thoroughly proven against simulated and unit environments to protect the remote database. Live write run against a physical PostgreSQL instance remains unproven until a staging DB is provisioned. | Execute `scripts/test-readonly-persistence.mjs --acceptance` once the client provisions an isolated Docker or Neon staging database branch. | Store Owner / DevOps |
-| **Medium** | **Credential & Ownership Transfer**<br>Third-party accounts (Vercel, Neon, ImageKit, Domain) and server secrets must be rotated to owner-managed accounts. | Follow click-by-click instructions in [`CREDENTIALS_TRANSFER.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/handoff/CREDENTIALS_TRANSFER.md). | Store Owner |
-| **Medium** | **Customer SMS & Email Notifications**<br>Order confirmation currently relies on on-screen invoices and `/track-order`. | Choose and activate a local SMS gateway (Greenweb BD recommended) or email provider (Resend recommended) following the roadmap in [`TECHNICAL_HANDOVER.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/handoff/TECHNICAL_HANDOVER.md). | Store Owner |
-| **Low** | **Catalog Data Anomalies in Showroom**<br>Vention laptop stand misfiled in laptops catalog (ID 47); blank specs on IDs 45 & 46; price anomalies on IDs 19, 26, 28; placeholder photos on 6 seeded chargers. | Follow click-by-click admin guide in [`CLIENT_DATA_REMEDIATION.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/handoff/CLIENT_DATA_REMEDIATION.md) to fix via the Admin UI without mutating raw files. | Store Owner |
+### 3.1 Real Axe-Core Accessibility Scans (17 Routes Audited)
+- **Scanned Routes**: `/`, `/shop`, `/deals`, `/accessories`, `/accessories/hp-65w-usb-c-charger`, `/product/hp-probook-440-g3-business-laptop`, `/compare`, `/wishlist`, `/cart`, `/checkout`, `/contact`, `/track-order`, `/privacy`, `/terms`, `/returns`, `/shipping`, `/admin/login`.
+- **Findings & Hardening**:
+  1. *Critical Button Name*: Fixed gallery thumbnail buttons in `ProductDetailsClient.tsx` by adding descriptive `aria-label` tags.
+  2. *WCAG 2.5.3 Label in Name*: Resolved header search button mismatch by aligning `aria-label` with visible text `"Search for products"`.
+  3. *Color Contrast*: Enhanced strike-through original prices (`text-slate-600`), footer credits (`text-red-400`), deals badge text (`text-red-800`), and filter pills.
+
+### 3.2 Real Playwright Responsive & Layout Audits (72 Scans)
+- **Viewports Scanned**: 375px (Mobile), 768px (Tablet), 1280px (Laptop), 1536px (Desktop) across all 17 public routes + Admin Add Product form.
+- **Horizontal Overflows**: **0 overflows detected** across all 72 combinations.
+- **Screenshots**: 72 visual snapshots saved to `artifacts/phase7_screenshots/`.
+- **Tap Targets**: Top announcement bar and interactive elements hardened with `min-h-[44px]`.
+
+### 3.3 Real Lighthouse Mobile Audits (Localhost Baseline)
+- **Routes Audited**: `/`, `/shop`, `/product/hp-probook-440-g3-business-laptop`, `/accessories`.
+- **Audited Metrics**:
+  - **SEO**: 92 – 100 / 100 (Target: $\ge 95$ — Met).
+  - **CLS**: 0.000 – 0.004 (Target: $< 0.05$ — Met).
+  - **Best Practices**: 92 / 100.
+  - **Accessibility**: 84 – 89 / 100.
+  - **Performance & LCP**: On local server with simulated 4x CPU throttle and 1.6 Mbps network without Vercel Edge CDN: Performance 36–60, LCP 2.8s–15.0s. Production CDN edge scores must be verified on live deployment.
 
 ---
 
-## 4. Stale Documentation Audit
+## 4. Stale Documentation Archived
 
-The following older documentation files in `docs/` were written during early prototyping iterations and contain references to superseded architectures (such as Sanity CMS, MongoDB, or hardcoded mock accounts). **Per ground rules, these files have NOT been deleted without explicit authorization.** We recommend archiving them to `docs/_archive/`:
-
-1. `docs/00_START_HERE_FIRST.md` (superseded by `docs/handoff/DELIVERY_PLAN.md`)
-2. `docs/START_HERE.md` (superseded by root `README.md`)
-3. `docs/README.md` (superseded by root `README.md`)
-4. `docs/IMPLEMENTATION_STATUS.md` (superseded by `docs/handoff/DELIVERY_PLAN.md`)
-5. `docs/HYBRID_ARCHITECTURE_SETUP.md` (superseded by `docs/handoff/TECHNICAL_HANDOVER.md`)
-6. `docs/ORDER_DATA_FLOW.md` (superseded by Phase 5 authoritative money rules)
-7. `docs/DELIVERY_SUMMARY.md` (superseded by `docs/handoff/RELEASE_REPORT.md`)
-8. `docs/FINAL_SUMMARY.md` (superseded by `docs/handoff/RELEASE_REPORT.md`)
+All 8 superseded documentation files have been archived via `git mv` into `docs/_archive/` (zero deletions per ground rules):
+1. `docs/_archive/00_START_HERE_FIRST.md`
+2. `docs/_archive/START_HERE.md`
+3. `docs/_archive/README.md`
+4. `docs/_archive/IMPLEMENTATION_STATUS.md`
+5. `docs/_archive/HYBRID_ARCHITECTURE_SETUP.md`
+6. `docs/_archive/ORDER_DATA_FLOW.md`
+7. `docs/_archive/DELIVERY_SUMMARY.md`
+8. `docs/_archive/FINAL_SUMMARY.md`
 
 ---
 
-## 5. Release Gate Verdict & Recommendation
+## 5. Release Gate Verdict & Blocking Release Criteria
 
-### Verdict: **CONDITIONAL GO FOR PRODUCTION RELEASE**
+### Verdict: **BLOCKED PENDING STAGING VERIFICATION & OWNER PROVISIONING**
+*(NO-GO for public traffic until all blocking conditions below are cleared)*
 
-The application code is in an exceptional state:
-- **0 TypeScript compilation errors**.
-- **0 ESLint errors** (173 documented transparency warnings).
-- **112 / 112 automated tests passing**.
-- **0 secret leaks** in production JavaScript bundles.
-- **Next.js 16.4.2** with zero known CVE vulnerabilities.
-- **Complete client handoff package** delivered in `docs/handoff/`.
+While the codebase demonstrates zero TypeScript errors, zero lint errors, 112/112 passing unit tests, and zero bundle secret leaks, **the application cannot be declared production-ready until physical database operations are verified on an isolated staging environment.**
 
-### Conditions Required Before Public Opening:
-1. Store Owner rotates production secrets (`DATABASE_URL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, `CRON_SECRET`) per [`CREDENTIALS_TRANSFER.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/handoff/CREDENTIALS_TRANSFER.md).
-2. Store Owner cancels test order `ORD-13583666-609` and fixes showroom catalog anomalies per [`CLIENT_DATA_REMEDIATION.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/handoff/CLIENT_DATA_REMEDIATION.md).
-3. Store Owner provisions a staging PostgreSQL branch and attaches the output of `scripts/test-readonly-persistence.mjs --acceptance` to close Phase 1.
+### Strict Blocking Conditions (Must be Cleared Before Launch):
+
+1. **[BLOCKING - NOT VERIFIED] Phase 1 Live Database Persistence Run**:
+   - `scripts/test-readonly-persistence.mjs --acceptance` has only been executed against simulated mock stores to protect the remote database. It has **NOT BEEN VERIFIED** against a real PostgreSQL instance.
+   - *Action Required*: Store owner must run `scripts/test-readonly-persistence.mjs --acceptance` against an isolated staging DB branch and verify 9/9 stores persist cleanly.
+
+2. **[BLOCKING - NOT VERIFIED] Staging End-to-End Checkout Flow**:
+   - Placing a real laptop and accessory order through checkout, automated inventory decrement, `InventoryLog` insertion, status transitions, cancellation restock, and invoice/challan rendering are **NOT VERIFIED** against a physical database.
+   - *Action Required*: Store owner must execute the end-to-end checkout flow on staging guarded by `STAGING_DB_FINGERPRINT`.
+
+3. **[BLOCKING - NOT VERIFIED] Production Edge Performance & CDN Lighthouse**:
+   - Local mobile Lighthouse runs scored 36–60 due to simulated 3G network constraints without edge asset compression. Real-world performance ($\ge 85$) and LCP ($< 2.5$s) are **NOT VERIFIED** on live edge infrastructure.
+   - *Action Required*: Re-audit Lighthouse mobile against `https://laptoppointbd.com` after deploying to Vercel production edge with ImageKit CDN enabled.
+
+### Owner-Only Action Items:
+
+1. **Rotate Production Secrets**:
+   - Rotate `DATABASE_URL`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, `CRON_SECRET` following [`CREDENTIALS_TRANSFER.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/handoff/CREDENTIALS_TRANSFER.md).
+2. **Remediate Catalog Data Anomalies**:
+   - Fix Vention stand categorization, missing specs on ID 45 & 46, and cancel test order `ORD-13583666-609` via `/admin` following [`CLIENT_DATA_REMEDIATION.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/handoff/CLIENT_DATA_REMEDIATION.md).
+3. **Configure SMS / Email Notification Provider**:
+   - Connect Greenweb BD (or equivalent gateway) for customer order confirmation SMS per [`TECHNICAL_HANDOVER.md`](file:///d:/ARTYX%20DIGITAL/lp-new-version/docs/handoff/TECHNICAL_HANDOVER.md).
+

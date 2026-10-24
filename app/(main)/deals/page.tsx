@@ -64,7 +64,7 @@ export default async function DealsPage({ searchParams }: DealsPageProps) {
   return (
     <div className="pb-16">
       <header className="mx-auto w-full max-w-[95%] pt-10">
-        <p className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-600">
+        <p className="inline-flex items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-red-800">
           <Flame size={14} /> Limited stock
         </p>
         <h1 className="mt-3 text-3xl font-extrabold tracking-tight md:text-5xl">

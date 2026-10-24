@@ -184,6 +184,21 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
       updatedRaw.specGroups = existing.specGroups;
     }
 
+    // If the SKU was changed, delete the OLD ProductOverride row so it no longer
+    // appears in loadMergedRawProducts. saveRawProduct will create a fresh row
+    // under the new SKU via upsert.
+    if (updatedRaw.sku.toLowerCase() !== existing.sku.toLowerCase()) {
+      try {
+        const { prisma } = await import("@/lib/prisma");
+        await prisma.productOverride.updateMany({
+          where: { sku: existing.sku },
+          data: { isDeleted: true },
+        });
+      } catch (dbErr) {
+        console.warn("[PUT /api/admin/products/[id]] Old SKU override cleanup warning:", dbErr);
+      }
+    }
+
     // Save to PostgreSQL (ProductOverride and Inventory) + safe local sync
     await saveRawProduct(updatedRaw);
 

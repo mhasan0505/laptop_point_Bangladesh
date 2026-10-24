@@ -1,0 +1,5527 @@
+{
+  "overflows": [],
+  "smallTapTargets": [
+    {
+      "page": "home",
+      "path": "/",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "home",
+      "path": "/",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "home",
+      "path": "/",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "home",
+      "path": "/",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "shop",
+      "path": "/shop",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "shop",
+      "path": "/shop",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "shop",
+      "path": "/shop",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "shop",
+      "path": "/shop",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "deals",
+      "path": "/deals",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "deals",
+      "path": "/deals",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "deals",
+      "path": "/deals",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "deals",
+      "path": "/deals",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "accessories",
+      "path": "/accessories",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "accessories",
+      "path": "/accessories",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "accessories",
+      "path": "/accessories",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "accessories",
+      "path": "/accessories",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "accessory-detail",
+      "path": "/accessories/hp-65w-usb-c-charger",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "accessory-detail",
+      "path": "/accessories/hp-65w-usb-c-charger",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "accessory-detail",
+      "path": "/accessories/hp-65w-usb-c-charger",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "accessory-detail",
+      "path": "/accessories/hp-65w-usb-c-charger",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "product-detail",
+      "path": "/product/hp-probook-440-g3-business-laptop",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "product-detail",
+      "path": "/product/hp-probook-440-g3-business-laptop",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "product-detail",
+      "path": "/product/hp-probook-440-g3-business-laptop",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "product-detail",
+      "path": "/product/hp-probook-440-g3-business-laptop",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "compare",
+      "path": "/compare",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "compare",
+      "path": "/compare",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "compare",
+      "path": "/compare",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "compare",
+      "path": "/compare",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "wishlist",
+      "path": "/wishlist",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "wishlist",
+      "path": "/wishlist",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "wishlist",
+      "path": "/wishlist",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "wishlist",
+      "path": "/wishlist",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "cart",
+      "path": "/cart",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "checkout",
+      "path": "/checkout",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "checkout",
+      "path": "/checkout",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "checkout",
+      "path": "/checkout",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "checkout",
+      "path": "/checkout",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "contact",
+      "path": "/contact",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "contact",
+      "path": "/contact",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "contact",
+      "path": "/contact",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "contact",
+      "path": "/contact",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "track-order",
+      "path": "/track-order",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "track-order",
+      "path": "/track-order",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "track-order",
+      "path": "/track-order",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "track-order",
+      "path": "/track-order",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "privacy",
+      "path": "/privacy",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "privacy",
+      "path": "/privacy",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "privacy",
+      "path": "/privacy",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "privacy",
+      "path": "/privacy",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "terms",
+      "path": "/terms",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "terms",
+      "path": "/terms",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "terms",
+      "path": "/terms",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "terms",
+      "path": "/terms",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "returns",
+      "path": "/returns",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "returns",
+      "path": "/returns",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "returns",
+      "path": "/returns",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "returns",
+      "path": "/returns",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "shipping",
+      "path": "/shipping",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "shipping",
+      "path": "/shipping",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "shipping",
+      "path": "/shipping",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "shipping",
+      "path": "/shipping",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "a",
+          "text": "Skip to main content",
+          "width": 1,
+          "height": 1,
+          "selector": "sr-only focus:not-sr-only focus:fixed fo"
+        },
+        {
+          "tag": "a",
+          "text": "SUPER DEALS\n→",
+          "width": 131,
+          "height": 20,
+          "selector": "hidden sm:inline-flex items-center gap-1"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "⚡\nIN STOCK\nHP EliteBook, Dell ",
+          "width": 431,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "💳\n0% EMI\n3 to 12 Months Flexi",
+          "width": 414,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🛡️\nWARRANTY\n15 Days Replaceme",
+          "width": 472,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "📍\nSHOWROOM\nMirpur-10 Showroom",
+          "width": 529,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🔥\nSUPER DEAL\nExtra Up to ৳5,0",
+          "width": 475,
+          "height": 20,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        },
+        {
+          "tag": "a",
+          "text": "🎁\nFREE GIFTS\nLaptop Bag + Wir",
+          "width": 494,
+          "height": 19,
+          "selector": "inline-flex items-center gap-2 text-[12p"
+        }
+      ]
+    },
+    {
+      "page": "admin-login",
+      "path": "/admin/login",
+      "width": 375,
+      "count": 4,
+      "targets": [
+        {
+          "tag": "input",
+          "text": "",
+          "width": 293,
+          "height": 40,
+          "selector": "h-10 w-full rounded-sm border border-bor"
+        },
+        {
+          "tag": "input",
+          "text": "",
+          "width": 293,
+          "height": 40,
+          "selector": "h-10 w-full rounded-sm border border-bor"
+        },
+        {
+          "tag": "button",
+          "text": "Show password",
+          "width": 15,
+          "height": 15,
+          "selector": "absolute right-3 top-1/2 -translate-y-1/"
+        },
+        {
+          "tag": "button",
+          "text": "Sign In to Admin Portal",
+          "width": 293,
+          "height": 40,
+          "selector": "inline-flex items-center justify-center "
+        }
+      ]
+    },
+    {
+      "page": "admin-login",
+      "path": "/admin/login",
+      "width": 768,
+      "count": 4,
+      "targets": [
+        {
+          "tag": "input",
+          "text": "",
+          "width": 294,
+          "height": 40,
+          "selector": "h-10 w-full rounded-sm border border-bor"
+        },
+        {
+          "tag": "input",
+          "text": "",
+          "width": 294,
+          "height": 40,
+          "selector": "h-10 w-full rounded-sm border border-bor"
+        },
+        {
+          "tag": "button",
+          "text": "Show password",
+          "width": 15,
+          "height": 15,
+          "selector": "absolute right-3 top-1/2 -translate-y-1/"
+        },
+        {
+          "tag": "button",
+          "text": "Sign In to Admin Portal",
+          "width": 294,
+          "height": 40,
+          "selector": "inline-flex items-center justify-center "
+        }
+      ]
+    },
+    {
+      "page": "admin-login",
+      "path": "/admin/login",
+      "width": 1280,
+      "count": 4,
+      "targets": [
+        {
+          "tag": "input",
+          "text": "",
+          "width": 294,
+          "height": 40,
+          "selector": "h-10 w-full rounded-sm border border-bor"
+        },
+        {
+          "tag": "input",
+          "text": "",
+          "width": 294,
+          "height": 40,
+          "selector": "h-10 w-full rounded-sm border border-bor"
+        },
+        {
+          "tag": "button",
+          "text": "Show password",
+          "width": 15,
+          "height": 15,
+          "selector": "absolute right-3 top-1/2 -translate-y-1/"
+        },
+        {
+          "tag": "button",
+          "text": "Sign In to Admin Portal",
+          "width": 294,
+          "height": 40,
+          "selector": "inline-flex items-center justify-center "
+        }
+      ]
+    },
+    {
+      "page": "admin-login",
+      "path": "/admin/login",
+      "width": 1536,
+      "count": 4,
+      "targets": [
+        {
+          "tag": "input",
+          "text": "",
+          "width": 294,
+          "height": 40,
+          "selector": "h-10 w-full rounded-sm border border-bor"
+        },
+        {
+          "tag": "input",
+          "text": "",
+          "width": 294,
+          "height": 40,
+          "selector": "h-10 w-full rounded-sm border border-bor"
+        },
+        {
+          "tag": "button",
+          "text": "Show password",
+          "width": 15,
+          "height": 15,
+          "selector": "absolute right-3 top-1/2 -translate-y-1/"
+        },
+        {
+          "tag": "button",
+          "text": "Sign In to Admin Portal",
+          "width": 294,
+          "height": 40,
+          "selector": "inline-flex items-center justify-center "
+        }
+      ]
+    },
+    {
+      "page": "admin-add-product-laptop",
+      "path": "/admin/products/new",
+      "width": 375,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "button",
+          "text": "Toggle menu",
+          "width": 36,
+          "height": 36,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "a",
+          "text": "ADMIN",
+          "width": 202,
+          "height": 36,
+          "selector": "flex items-center gap-2.5"
+        },
+        {
+          "tag": "button",
+          "text": "Search...",
+          "width": 144,
+          "height": 32,
+          "selector": "group relative flex items-center justify"
+        },
+        {
+          "tag": "a",
+          "text": "Add",
+          "width": 66,
+          "height": 32,
+          "selector": ""
+        },
+        {
+          "tag": "button",
+          "text": "Add",
+          "width": 66,
+          "height": 32,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "button",
+          "text": "Sign out of admin",
+          "width": 36,
+          "height": 32,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "a",
+          "text": "",
+          "width": 36,
+          "height": 36,
+          "selector": ""
+        },
+        {
+          "tag": "button",
+          "text": "",
+          "width": 36,
+          "height": 36,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "button",
+          "text": "🪄 Regenerate Title",
+          "width": 114,
+          "height": 16,
+          "selector": "text-xs text-blue-600 hover:text-blue-50"
+        },
+        {
+          "tag": "input",
+          "text": "",
+          "width": 343,
+          "height": 42,
+          "selector": "w-full px-3.5 py-2.5 bg-background borde"
+        }
+      ]
+    },
+    {
+      "page": "admin-add-product-laptop",
+      "path": "/admin/products/new",
+      "width": 768,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "button",
+          "text": "Search...\nCtrlK",
+          "width": 224,
+          "height": 32,
+          "selector": "group relative flex items-center justify"
+        },
+        {
+          "tag": "a",
+          "text": "Add Product",
+          "width": 115,
+          "height": 36,
+          "selector": ""
+        },
+        {
+          "tag": "button",
+          "text": "Add Product",
+          "width": 115,
+          "height": 36,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "a",
+          "text": "View Store",
+          "width": 107,
+          "height": 36,
+          "selector": ""
+        },
+        {
+          "tag": "button",
+          "text": "View Store",
+          "width": 107,
+          "height": 36,
+          "selector": "items-center justify-center whitespace-n"
+        },
+        {
+          "tag": "button",
+          "text": "Sign Out",
+          "width": 92,
+          "height": 36,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "a",
+          "text": "ADMIN",
+          "width": 191,
+          "height": 36,
+          "selector": "flex items-center gap-2.5"
+        },
+        {
+          "tag": "a",
+          "text": "Dashboard\nLIVE",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        },
+        {
+          "tag": "a",
+          "text": "Products",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        },
+        {
+          "tag": "a",
+          "text": "Accessories",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        }
+      ]
+    },
+    {
+      "page": "admin-add-product-laptop",
+      "path": "/admin/products/new",
+      "width": 1280,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "button",
+          "text": "Search...\nCtrlK",
+          "width": 224,
+          "height": 32,
+          "selector": "group relative flex items-center justify"
+        },
+        {
+          "tag": "a",
+          "text": "Add Product",
+          "width": 115,
+          "height": 36,
+          "selector": ""
+        },
+        {
+          "tag": "button",
+          "text": "Add Product",
+          "width": 115,
+          "height": 36,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "a",
+          "text": "View Store",
+          "width": 107,
+          "height": 36,
+          "selector": ""
+        },
+        {
+          "tag": "button",
+          "text": "View Store",
+          "width": 107,
+          "height": 36,
+          "selector": "items-center justify-center whitespace-n"
+        },
+        {
+          "tag": "button",
+          "text": "Sign Out",
+          "width": 92,
+          "height": 36,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "a",
+          "text": "ADMIN",
+          "width": 191,
+          "height": 36,
+          "selector": "flex items-center gap-2.5"
+        },
+        {
+          "tag": "a",
+          "text": "Dashboard\nLIVE",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        },
+        {
+          "tag": "a",
+          "text": "Products",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        },
+        {
+          "tag": "a",
+          "text": "Accessories",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        }
+      ]
+    },
+    {
+      "page": "admin-add-product-laptop",
+      "path": "/admin/products/new",
+      "width": 1536,
+      "count": 10,
+      "targets": [
+        {
+          "tag": "button",
+          "text": "Search...\nCtrlK",
+          "width": 224,
+          "height": 32,
+          "selector": "group relative flex items-center justify"
+        },
+        {
+          "tag": "a",
+          "text": "Add Product",
+          "width": 115,
+          "height": 36,
+          "selector": ""
+        },
+        {
+          "tag": "button",
+          "text": "Add Product",
+          "width": 115,
+          "height": 36,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "a",
+          "text": "View Store",
+          "width": 107,
+          "height": 36,
+          "selector": ""
+        },
+        {
+          "tag": "button",
+          "text": "View Store",
+          "width": 107,
+          "height": 36,
+          "selector": "items-center justify-center whitespace-n"
+        },
+        {
+          "tag": "button",
+          "text": "Sign Out",
+          "width": 92,
+          "height": 36,
+          "selector": "inline-flex items-center justify-center "
+        },
+        {
+          "tag": "a",
+          "text": "ADMIN",
+          "width": 191,
+          "height": 36,
+          "selector": "flex items-center gap-2.5"
+        },
+        {
+          "tag": "a",
+          "text": "Dashboard\nLIVE",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        },
+        {
+          "tag": "a",
+          "text": "Products",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        },
+        {
+          "tag": "a",
+          "text": "Accessories",
+          "width": 207,
+          "height": 32,
+          "selector": "w-full flex items-center justify-between"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "home_375px.png",
+    "home_768px.png",
+    "home_1280px.png",
+    "home_1536px.png",
+    "shop_375px.png",
+    "shop_768px.png",
+    "shop_1280px.png",
+    "shop_1536px.png",
+    "deals_375px.png",
+    "deals_768px.png",
+    "deals_1280px.png",
+    "deals_1536px.png",
+    "accessories_375px.png",
+    "accessories_768px.png",
+    "accessories_1280px.png",
+    "accessories_1536px.png",
+    "accessory-detail_375px.png",
+    "accessory-detail_768px.png",
+    "accessory-detail_1280px.png",
+    "accessory-detail_1536px.png",
+    "product-detail_375px.png",
+    "product-detail_768px.png",
+    "product-detail_1280px.png",
+    "product-detail_1536px.png",
+    "compare_375px.png",
+    "compare_768px.png",
+    "compare_1280px.png",
+    "compare_1536px.png",
+    "wishlist_375px.png",
+    "wishlist_768px.png",
+    "wishlist_1280px.png",
+    "wishlist_1536px.png",
+    "cart_375px.png",
+    "cart_768px.png",
+    "cart_1280px.png",
+    "cart_1536px.png",
+    "checkout_375px.png",
+    "checkout_768px.png",
+    "checkout_1280px.png",
+    "checkout_1536px.png",
+    "contact_375px.png",
+    "contact_768px.png",
+    "contact_1280px.png",
+    "contact_1536px.png",
+    "track-order_375px.png",
+    "track-order_768px.png",
+    "track-order_1280px.png",
+    "track-order_1536px.png",
+    "privacy_375px.png",
+    "privacy_768px.png",
+    "privacy_1280px.png",
+    "privacy_1536px.png",
+    "terms_375px.png",
+    "terms_768px.png",
+    "terms_1280px.png",
+    "terms_1536px.png",
+    "returns_375px.png",
+    "returns_768px.png",
+    "returns_1280px.png",
+    "returns_1536px.png",
+    "shipping_375px.png",
+    "shipping_768px.png",
+    "shipping_1280px.png",
+    "shipping_1536px.png",
+    "admin-login_375px.png",
+    "admin-login_768px.png",
+    "admin-login_1280px.png",
+    "admin-login_1536px.png",
+    "admin-add-product-laptop_375px.png",
+    "admin-add-product-laptop_768px.png",
+    "admin-add-product-laptop_1280px.png",
+    "admin-add-product-laptop_1536px.png"
+  ]
+}

@@ -82,7 +82,7 @@ test("Phase 6: Content, Legal, and Brand Readiness Verification", async (t) => {
       assert.equal(found.permanent, true, `Redirect for ${src} must be permanent (301)`);
     };
 
-    checkRedirect("/emi", "/EMI");
+    checkRedirect("/payment-methods", "/EMI");
     checkRedirect("/warranty", "/returns");
     checkRedirect("/delivery", "/shipping");
     checkRedirect("/about", "/contact");

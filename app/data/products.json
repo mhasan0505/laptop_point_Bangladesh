@@ -1100,122 +1100,59 @@
   },
   {
     "id": 21,
-    "sku": "LEN-X1C-11TH-020",
-    "name": "Lenovo ThinkPad X1 Carbon (Gen 9) i7",
+    "sku": "LENOVO-THINKPAD-X1-CARBON-GEN-9",
+    "name": "Lenovo ThinkPad X1 Carbon Gen 9 Ultrabook Laptop, 14.0 inch 1920 x 1200 (16:10) IPS Anti-Glare, Intel Core i7-1165G7 (11th Gen), 16GB LPDDR4 4267MHz RAM, 512GB NVMe SSD, Windows 11 Pro",
     "brand": "Lenovo",
+    "grade": "LIKE NEW",
     "model": "ThinkPad X1 Carbon Gen 9",
-    "category": "Ultrabook",
-    "condition": "Used",
-    "grade": "Premium",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 61000,
-      "market_price": 75000,
-      "discount_percentage": 19,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 2
-    },
     "specs": {
-      "processor": "Intel Core i7-1165G7 (11th Gen)",
-      "ram": "16GB DD4",
-      "storage": "512GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1200 (16:10)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "Intel Iris Xe Graphics",
+      "os": "Windows 11 Pro",
+      "ram": "16GB LPDDR4 4267MHz",
       "ports": [
         "2x Thunderbolt 4",
         "2x USB-A",
         "HDMI 2.0"
       ],
       "weight": "1.13 kg",
-      "os": "Windows 11 Pro"
-    },
-    "description": {
-      "short": "Redesigned Gen 9 flagship with 16:10 display and i7 power.",
-      "full": "**What is the main design change in the Gen 9 X1 Carbon?**\n The Gen 9 model introduces a new 16:10 aspect ratio screen. This taller display provides more vertical space, making it better for productivity tasks like reading documents, coding, and browsing the web. \n\n**How powerful is it?**\n It's a powerhouse in an impossibly thin and light chassis. Powered by a high-performance 11th Gen Intel Core i7 processor and advanced Iris Xe graphics, it offers desktop-class performance on the go. \n\n**Who should buy this flagship model?**\n This is for users who demand the absolute best in portability, performance, and design. It’s ideal for executives, power users, and anyone who wants a no-compromise ultrabook experience."
-    },
-    "features": [
-      "16:10 Aspect Ratio",
-      "Core i7 Power",
-      "Thunderbolt 4",
-      "Flagship Model"
-    ],
-    "images": [
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/main.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/front.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/back.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/close.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/image.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/image1.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/imageg.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/keyborad.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-X1-core-i7/keyborad1.jpg"
-    ]
-  },
-  {
-    "id": 32,
-    "sku": "MS-SL3-I5-021",
-    "name": "Microsoft Surface Laptop 3 (i5)",
-    "brand": "Microsoft",
-    "grade": "A+",
-    "model": "Surface Laptop 3",
-    "specs": {
-      "os": "Windows 11 Home/Pro",
-      "ram": "8GB LPDDR4x",
-      "ports": [
-        "1x USB-C",
-        "1x USB-A",
-        "Surface Connect",
-        "Headphone Jack"
-      ],
-      "weight": "1.25 kg",
       "display": {
-        "size": "13.5 inch",
-        "type": "PixelSense Touch",
-        "resolution": "2256 x 1504 (2K)",
+        "size": "14.0 inch",
+        "type": "IPS Anti-Glare",
+        "resolution": "1920 x 1200 (16:10)",
         "touchscreen": true
       },
-      "storage": "256GB SSD",
-      "graphics": "Intel Iris Plus Graphics",
-      "processor": "Intel Core i5-1035G7 (10th Gen)"
+      "storage": "512GB NVMe SSD",
+      "graphics": "Intel Iris Xe Graphics",
+      "processor": "Intel Core i7-1165G7 (11th Gen)"
     },
     "stock": {
       "status": "In Stock",
-      "quantity": 6
+      "quantity": 3
     },
     "images": [
-      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/main.png",
-      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/front.png",
-      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/side.png",
-      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/port.png",
-      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/back.png",
-      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/keyborad.png"
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/lenovo-thinkpad-x1-carbon-gen-9-Custom-Mac-BD_jUjbt7LbW.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/lenovo-thinkpad-x1-carbon-Custom-Mac-BD_f37f7296-21b0-4e6f-902c-b775342368c0_1CVSitNvE.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/Thinkpad-x1-carbon-Custom-Mac-BD_wCMyrRYMOl.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/e92a46db-9384-46a3-913f-7ecc439b9c81_7OhVPn4VL.jpg",
+      "https://ik.imagekit.io/creativeartix/laptop-point/products/thinkpad-x1-carbon-gen-9-01-500x500_hJmvjAvUj.webp"
     ],
     "pricing": {
       "currency": "BDT",
-      "sale_price": 41500,
-      "market_price": 48000,
+      "sale_price": 64500,
+      "market_price": 75000,
       "tax_included": true,
       "discount_percentage": 14
     },
     "category": "Ultrabook",
     "features": [
-      "2K PixelSense Display",
-      "3:2 Aspect Ratio",
-      "Premium Aluminum",
-      "Touchscreen"
+      "Intel Core i7-1165G7 (11th Gen)",
+      "16GB LPDDR4 4267MHz",
+      "512GB NVMe SSD",
+      "Lenovo ThinkPad X1 Carbon Gen 9 Ultrabook Laptop, 14.0 inch 1920 x 1200 (16:10) IPS Anti-Glare, Intel Core i7-1165G7 (11th Gen), 16GB LPDDR4 4267MHz RAM, 512GB NVMe SSD, Windows 11 Pro"
     ],
     "condition": "Used",
     "description": {
-      "full": "**What is the standout feature of the Surface Laptop 3?**\n The display. It features a stunningly sharp, high-resolution 2K PixelSense touchscreen with a 3:2 aspect ratio, which is taller than typical laptop screens and perfect for documents, web browsing, and creative work. \n\n**How is the build quality and design?**\n The design is minimalist and incredibly sleek, with a premium aluminum finish that rivals the build quality of a MacBook Air. It also has one of the best trackpads on a Windows laptop. \n\n**Who is this laptop for?**\n It's for users who value premium design, a superior screen, and a great user experience for everyday tasks. It’s a stylish and portable choice for students and professionals.",
-      "short": "Sleek, minimalist design with a stunning 2K touchscreen."
+      "full": "Processor Type\n\nIntel Core i7 1185G7 11th Generation\n\nProcessor Speed\n\n11th Generation Up to 4.80Ghz\n\nScreen Size\n\n\t14″ WUXGA (1920×1200) IPS, Anti-glare, Low Blue Light\n\nRAM\n\n16GB DDR4 4267 Mhz\n\nStorage\n\n512 GB Nvme\n\nDisk Type\n\nSSD Nvme\n\nGraphics Card\n\nIntel Irish Xe 16 GB Graphics\n\nAudio/Speaker\n\nDolby Atmos\n\nNetworking\n\nWi-Fi 6E AX211 802.11AX 2 x 2, Bluetooth V5.1\n\nWebcam\n\nFHD RGB with webcam privacy shutter\n\nBattery\n\n4-Cell\n\nKeyboard\n\nSpill-Resistant, Backlit with white LED lighting, Air intake key\n\nSoftware\n\nWindows\n\nDimensions (W x D x H)\n\n14.96 x 315.6 x 222.5mm\n\nProduct Weight (Kg)\n\nStarting at 1.12 Kg",
+      "short": "𝐌𝐎𝐃𝐄𝐋:\nLenovo ThinkPad X1 Carbon - Gen 9\n𝐏𝐑𝐎𝐂𝐄𝐒𝐒𝐎𝐑:\nIntel Core i7-1185G7\n𝐒𝐏𝐄𝐄𝐃:\nUpTo 4.80GHz, 12MB Cache\n𝐑𝐀𝐌:\n16GB LPDDR4 4267MHz\n𝐒𝐓𝐎𝐑𝐀𝐆𝐄:\n512GB NVM Express Drive\n𝐃𝐈𝐒𝐏𝐋𝐀𝐘:\n14 inch FHD (1920*1200) Display Touch"
     }
   },
   {
@@ -1797,66 +1734,62 @@
   },
   {
     "id": 32,
-    "sku": "LEN-T490S-I5-032",
-    "name": "Lenovo ThinkPad T490s i5 8th Gen 8/256",
-    "brand": "Lenovo",
-    "model": "ThinkPad T490s",
-    "category": "Ultrabook",
-    "condition": "Used",
-    "grade": "Like New",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 26900,
-      "market_price": 31500,
-      "discount_percentage": 15,
-      "tax_included": true
+    "sku": "MS-SL3-I5-021",
+    "name": "Microsoft Surface Laptop 3 (i5)",
+    "brand": "Microsoft",
+    "grade": "A+",
+    "model": "Surface Laptop 3",
+    "specs": {
+      "os": "Windows 11 Home/Pro",
+      "ram": "8GB LPDDR4x",
+      "ports": [
+        "1x USB-C",
+        "1x USB-A",
+        "Surface Connect",
+        "Headphone Jack"
+      ],
+      "weight": "1.25 kg",
+      "display": {
+        "size": "13.5 inch",
+        "type": "PixelSense Touch",
+        "resolution": "2256 x 1504 (2K)",
+        "touchscreen": true
+      },
+      "storage": "256GB SSD",
+      "graphics": "Intel Iris Plus Graphics",
+      "processor": "Intel Core i5-1035G7 (10th Gen)"
     },
     "stock": {
       "status": "In Stock",
-      "quantity": 4
+      "quantity": 6
     },
-    "specs": {
-      "processor": "Intel Core i5-8365U (8th Gen)",
-      "ram": "8GB DDR4",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "14.0 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "IPS Anti-Glare",
-        "touchscreen": false
-      },
-      "graphics": "Intel UHD Graphics 620",
-      "ports": [
-        "Thunderbolt 3",
-        "2x USB 3.1",
-        "HDMI",
-        "RJ-45",
-        "Audio Combo"
-      ],
-      "weight": "1.35 kg",
-      "os": "Windows 10/11 Pro"
-    },
-    "description": {
-      "short": "Ultra-thin business ultrabook with excellent keyboard and portability.",
-      "full": "**What makes the T490s special?**\nThe T490s is ThinkPad's thinnest standard business laptop, packed into a lightweight 1.35kg chassis without sacrificing performance or the legendary keyboard comfort.\n\n**Who is this for?**\nIt's ideal for frequent travelers, remote workers, and business professionals who prioritize portability without compromising durability.\n\n**What are the standout features?**\nWith modern Thunderbolt 3, comprehensive ports, and an exceptional keyboard, it delivers professional-grade connectivity and ergonomic comfort in an impossibly slim form factor."
-    },
-    "features": [
-      "Ultra-thin Design (1.35kg)",
-      "Legendary Keyboard",
-      "Thunderbolt 3",
-      "Mil-Spec Durability"
-    ],
     "images": [
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/main.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/front.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/back.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/fullSize.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/side1.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/side2.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/port.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/port2.jpg",
-      "/products/lenovo/Lenovo-Thinkpad-T490s-code-i5-8th-gen-8-256/port3.jpg"
-    ]
+      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/main.png",
+      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/front.png",
+      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/side.png",
+      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/port.png",
+      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/back.png",
+      "/products/microsoft/Microsoft-Surface-laptop-3-code-i5/keyborad.png"
+    ],
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 41500,
+      "market_price": 48000,
+      "tax_included": true,
+      "discount_percentage": 14
+    },
+    "category": "Ultrabook",
+    "features": [
+      "2K PixelSense Display",
+      "3:2 Aspect Ratio",
+      "Premium Aluminum",
+      "Touchscreen"
+    ],
+    "condition": "Used",
+    "description": {
+      "full": "**What is the standout feature of the Surface Laptop 3?**\n The display. It features a stunningly sharp, high-resolution 2K PixelSense touchscreen with a 3:2 aspect ratio, which is taller than typical laptop screens and perfect for documents, web browsing, and creative work. \n\n**How is the build quality and design?**\n The design is minimalist and incredibly sleek, with a premium aluminum finish that rivals the build quality of a MacBook Air. It also has one of the best trackpads on a Windows laptop. \n\n**Who is this laptop for?**\n It's for users who value premium design, a superior screen, and a great user experience for everyday tasks. It’s a stylish and portable choice for students and professionals.",
+      "short": "Sleek, minimalist design with a stunning 2K touchscreen."
+    }
   },
   {
     "id": 33,
@@ -2250,63 +2183,6 @@
     "description": {
       "full": "Model\nSurface Go 2\nBrand\tMicrosoft\nLaptop Type\tStandard\nProcessor Type\t11th Gen Intel Core i5-1135G7\nProcessor Speed\tUp to 4.20 GHz\nScreen Size\t12.4\" PixelSense Touch\nRAM\t16GB LPDDR4x\nStorage  256 GB NVMe SSD\nGraphics Card\tIntel Iris Xe Graphics\nAudio/Speaker\tDolby Audio Premium\nNetworking\tWi-Fi 6, Bluetooth 5.0\nWebcam\tYes\nBattery\tUp to 5 hours of typical device usage\nPorts\tUSB-C, USB-A, 3.5 mm headphone jack\nDimensions (W x D x H)\t278.2 x 206.2 x 15.7mm\nProduct Weight (Kg)\t1.127kg",
       "short": "Processor: Intel Core i5 11th Gen - Up to 4.20 GHz\n\nMemory: 16 GB DDR4 4200 MHz\n\nStorage: 256GB PCIe NVMe SSD\n\nGraphics: Intel Iris Xe Graphics\n\nDisplay: 12.4″ PixelSense Multi-Touch Display (1536×1024)"
-    }
-  },
-  {
-    "id": 21,
-    "sku": "LENOVO-THINKPAD-X1-CARBON-GEN-9",
-    "name": "Lenovo ThinkPad X1 Carbon Gen 9 Ultrabook Laptop, 14.0 inch 1920 x 1200 (16:10) IPS Anti-Glare, Intel Core i7-1165G7 (11th Gen), 16GB LPDDR4 4267MHz RAM, 512GB NVMe SSD, Windows 11 Pro",
-    "brand": "Lenovo",
-    "grade": "LIKE NEW",
-    "model": "ThinkPad X1 Carbon Gen 9",
-    "specs": {
-      "os": "Windows 11 Pro",
-      "ram": "16GB LPDDR4 4267MHz",
-      "ports": [
-        "2x Thunderbolt 4",
-        "2x USB-A",
-        "HDMI 2.0"
-      ],
-      "weight": "1.13 kg",
-      "display": {
-        "size": "14.0 inch",
-        "type": "IPS Anti-Glare",
-        "resolution": "1920 x 1200 (16:10)",
-        "touchscreen": true
-      },
-      "storage": "512GB NVMe SSD",
-      "graphics": "Intel Iris Xe Graphics",
-      "processor": "Intel Core i7-1165G7 (11th Gen)"
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 3
-    },
-    "images": [
-      "https://ik.imagekit.io/creativeartix/laptop-point/products/lenovo-thinkpad-x1-carbon-gen-9-Custom-Mac-BD_jUjbt7LbW.webp",
-      "https://ik.imagekit.io/creativeartix/laptop-point/products/lenovo-thinkpad-x1-carbon-Custom-Mac-BD_f37f7296-21b0-4e6f-902c-b775342368c0_1CVSitNvE.webp",
-      "https://ik.imagekit.io/creativeartix/laptop-point/products/Thinkpad-x1-carbon-Custom-Mac-BD_wCMyrRYMOl.webp",
-      "https://ik.imagekit.io/creativeartix/laptop-point/products/e92a46db-9384-46a3-913f-7ecc439b9c81_7OhVPn4VL.jpg",
-      "https://ik.imagekit.io/creativeartix/laptop-point/products/thinkpad-x1-carbon-gen-9-01-500x500_hJmvjAvUj.webp"
-    ],
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 64500,
-      "market_price": 75000,
-      "tax_included": true,
-      "discount_percentage": 14
-    },
-    "category": "Ultrabook",
-    "features": [
-      "Intel Core i7-1165G7 (11th Gen)",
-      "16GB LPDDR4 4267MHz",
-      "512GB NVMe SSD",
-      "Lenovo ThinkPad X1 Carbon Gen 9 Ultrabook Laptop, 14.0 inch 1920 x 1200 (16:10) IPS Anti-Glare, Intel Core i7-1165G7 (11th Gen), 16GB LPDDR4 4267MHz RAM, 512GB NVMe SSD, Windows 11 Pro"
-    ],
-    "condition": "Used",
-    "description": {
-      "full": "Processor Type\n\nIntel Core i7 1185G7 11th Generation\n\nProcessor Speed\n\n11th Generation Up to 4.80Ghz\n\nScreen Size\n\n\t14″ WUXGA (1920×1200) IPS, Anti-glare, Low Blue Light\n\nRAM\n\n16GB DDR4 4267 Mhz\n\nStorage\n\n512 GB Nvme\n\nDisk Type\n\nSSD Nvme\n\nGraphics Card\n\nIntel Irish Xe 16 GB Graphics\n\nAudio/Speaker\n\nDolby Atmos\n\nNetworking\n\nWi-Fi 6E AX211 802.11AX 2 x 2, Bluetooth V5.1\n\nWebcam\n\nFHD RGB with webcam privacy shutter\n\nBattery\n\n4-Cell\n\nKeyboard\n\nSpill-Resistant, Backlit with white LED lighting, Air intake key\n\nSoftware\n\nWindows\n\nDimensions (W x D x H)\n\n14.96 x 315.6 x 222.5mm\n\nProduct Weight (Kg)\n\nStarting at 1.12 Kg",
-      "short": "𝐌𝐎𝐃𝐄𝐋:\nLenovo ThinkPad X1 Carbon - Gen 9\n𝐏𝐑𝐎𝐂𝐄𝐒𝐒𝐎𝐑:\nIntel Core i7-1185G7\n𝐒𝐏𝐄𝐄𝐃:\nUpTo 4.80GHz, 12MB Cache\n𝐑𝐀𝐌:\n16GB LPDDR4 4267MHz\n𝐒𝐓𝐎𝐑𝐀𝐆𝐄:\n512GB NVM Express Drive\n𝐃𝐈𝐒𝐏𝐋𝐀𝐘:\n14 inch FHD (1920*1200) Display Touch"
     }
   }
 ]

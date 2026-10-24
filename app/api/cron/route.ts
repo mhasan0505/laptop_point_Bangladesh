@@ -7,19 +7,21 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   const cronSecret = process.env.CRON_SECRET;
 
-  if (cronSecret) {
-    const authHeader = request.headers.get("authorization") || "";
-    const expected = `Bearer ${cronSecret}`;
+  if (!cronSecret || cronSecret.trim().length === 0) {
+    return NextResponse.json({ error: "Cron not configured" }, { status: 503 });
+  }
 
-    const authBuffer = Buffer.from(authHeader);
-    const expectedBuffer = Buffer.from(expected);
+  const authHeader = request.headers.get("authorization") || "";
+  const expected = `Bearer ${cronSecret}`;
 
-    if (
-      authBuffer.length !== expectedBuffer.length ||
-      !crypto.timingSafeEqual(authBuffer, expectedBuffer)
-    ) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const authBuffer = Buffer.from(authHeader);
+  const expectedBuffer = Buffer.from(expected);
+
+  if (
+    authBuffer.length !== expectedBuffer.length ||
+    !crypto.timingSafeEqual(authBuffer, expectedBuffer)
+  ) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const results: Array<{ jobId: string; ok: boolean; message?: string }> = [];

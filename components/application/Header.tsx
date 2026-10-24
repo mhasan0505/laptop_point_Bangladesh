@@ -416,7 +416,7 @@ const Header = ({
                       <Link
                         key={idx}
                         href={deal.href}
-                        className="inline-flex items-center gap-2 text-[12px] font-medium text-white/90 hover:text-white transition-colors group/deal cursor-pointer"
+                        className="inline-flex items-center gap-2 text-[12px] font-medium text-white/90 hover:text-white transition-colors group/deal cursor-pointer min-h-[44px] py-2"
                       >
                         <span className="text-xs">{deal.icon}</span>
                         <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/90 border border-white/15">
@@ -530,7 +530,7 @@ const Header = ({
                     <Input
                       ref={searchInputRef}
                       type="text"
-                      aria-label="Search laptops and accessories"
+                      aria-label="Search for products, laptops and accessories"
                       placeholder="Search products..."
                       className="w-full rounded-xl border border-gray-200 bg-white/90 py-3.5 pl-12 pr-10 text-base shadow-sm focus:border-primary/70 focus:ring-1 focus:ring-primary/20 focus:outline-none"
                       autoFocus
@@ -659,7 +659,7 @@ const Header = ({
                 >
                   <button
                     type="button"
-                    aria-label="Search laptops and accessories"
+                    aria-label="Search for products, laptops and accessories"
                     onClick={() => setIsSearchExpanded(true)}
                     className="flex min-w-0 flex-1 items-center pl-3"
                   >

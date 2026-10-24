@@ -230,7 +230,7 @@ export default function HomeProductCard({
         <div className="text-center my-3">
           {discountInfo && product.originalPrice && product.originalPrice > product.price && (
             <div className="flex items-center justify-center gap-2 mb-0.5">
-              <span className="text-xs text-slate-400 line-through tabular-nums">
+              <span className="text-xs text-slate-600 dark:text-slate-400 line-through tabular-nums">
                 {Math.round(product.originalPrice).toLocaleString("en-BD")}৳
               </span>
             </div>

@@ -12,6 +12,7 @@
 /.next/
 /out/
 build
+/backups/
 
 # misc
 .DS_Store

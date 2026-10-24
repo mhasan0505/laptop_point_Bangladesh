@@ -91,9 +91,9 @@ const nextConfig: NextConfig = {
         destination: "/shop",
         permanent: true,
       },
-      // Convenience aliases and Linux case normalization
+      // Convenience aliases
       {
-        source: "/emi",
+        source: "/payment-methods",
         destination: "/EMI",
         permanent: true,
       },

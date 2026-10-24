@@ -135,6 +135,10 @@ export function validateEnvConfig(
     if (!env.TRUSTED_PROXY) {
       errors.push("[PRODUCTION] TRUSTED_PROXY must be set to 'vercel', 'cloudflare', or 'xff' in production.");
     }
+
+    if (!env.CRON_SECRET || env.CRON_SECRET.trim().length === 0) {
+      errors.push("[PRODUCTION] CRON_SECRET is required in production for authenticated background jobs.");
+    }
   }
 
   return {

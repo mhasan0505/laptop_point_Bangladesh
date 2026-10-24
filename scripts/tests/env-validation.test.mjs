@@ -14,6 +14,7 @@ test("Environment Configuration & Fail-Fast Validation (Phase 2)", async (t) => 
     ADMIN_PASSWORD: "SuperSecureProductionPassword2026!#",
     ADMIN_SESSION_SECRET: "0123456789abcdef0123456789abcdef0123456789abcdef",
     TRUSTED_PROXY: "vercel",
+    CRON_SECRET: "valid-vercel-cron-secret-12345",
     DATA_CACHE_TTL_MS: "15000",
     RATE_LIMIT_STORE: "memory",
     ALLOW_LOCAL_UPLOADS: "0",

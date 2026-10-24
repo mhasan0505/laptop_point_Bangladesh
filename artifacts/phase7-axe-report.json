@@ -1,0 +1,470 @@
+[
+  {
+    "name": "home",
+    "path": "/",
+    "url": "http://localhost:3005/",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 24,
+        "selector": "section[aria-labelledby=\"new-arrivals-heading\"] > .sm\\:px-6.lg\\:px-8.max-w-7xl > .gap-3\\.5.sm\\:gap-6.lg\\:grid-cols-4 > article:nth-child(1) > .border-slate-100.dark\\:border-slate-800\\/80.mt-auto > .my-3.text-center > .mb-0\\.5.gap-2.justify-center > .line-through.tabular-nums.text-xs"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "shop",
+    "path": "/shop",
+    "url": "http://localhost:3005/shop",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 41,
+        "selector": "article:nth-child(1) > .mt-auto.border-slate-100.dark\\:border-slate-800\\/80 > .my-3.text-center > .mb-0\\.5.gap-2.justify-center > .line-through.tabular-nums.text-xs"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "deals",
+    "path": "/deals",
+    "url": "http://localhost:3005/deals",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 42,
+        "selector": ".bg-red-50"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "accessories",
+    "path": "/accessories",
+    "url": "http://localhost:3005/accessories",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 6,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "accessory-detail",
+    "path": "/accessories/hp-65w-usb-c-charger",
+    "url": "http://localhost:3005/accessories/hp-65w-usb-c-charger",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 5,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "product-detail",
+    "path": "/product/hp-probook-440-g3-business-laptop",
+    "url": "http://localhost:3005/product/hp-probook-440-g3-business-laptop",
+    "violationsCount": 3,
+    "critical": 1,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "description": "Ensure buttons have discernible text",
+        "help": "Buttons must have discernible text",
+        "nodes": 4,
+        "selector": ".border-\\[\\#dc0303\\].w-14.h-14"
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 23,
+        "selector": ".dark\\:hover\\:text-primary.hover\\:text-\\[\\#002b60\\][href=\"/\"]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "compare",
+    "path": "/compare",
+    "url": "http://localhost:3005/compare",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "wishlist",
+    "path": "/wishlist",
+    "url": "http://localhost:3005/wishlist",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "cart",
+    "path": "/cart",
+    "url": "http://localhost:3005/cart",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "checkout",
+    "path": "/checkout",
+    "url": "http://localhost:3005/checkout",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "contact",
+    "path": "/contact",
+    "url": "http://localhost:3005/contact",
+    "violationsCount": 1,
+    "critical": 0,
+    "serious": 1,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "track-order",
+    "path": "/track-order",
+    "url": "http://localhost:3005/track-order",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "privacy",
+    "path": "/privacy",
+    "url": "http://localhost:3005/privacy",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "terms",
+    "path": "/terms",
+    "url": "http://localhost:3005/terms",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "returns",
+    "path": "/returns",
+    "url": "http://localhost:3005/returns",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "shipping",
+    "path": "/shipping",
+    "url": "http://localhost:3005/shipping",
+    "violationsCount": 2,
+    "critical": 0,
+    "serious": 2,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".hover\\:text-red-400 > .text-\\[\\#dc0303\\]"
+      },
+      {
+        "id": "label-content-name-mismatch",
+        "impact": "serious",
+        "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+        "help": "Elements must have their visible text as part of their accessible name",
+        "nodes": 1,
+        "selector": "button[aria-label=\"Search laptops and accessories\"]"
+      }
+    ]
+  },
+  {
+    "name": "admin-login",
+    "path": "/admin/login",
+    "url": "http://localhost:3005/admin/login",
+    "violationsCount": 1,
+    "critical": 0,
+    "serious": 1,
+    "moderate": 0,
+    "minor": 0,
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "selector": ".gap-1\\.5"
+      }
+    ]
+  }
+]
