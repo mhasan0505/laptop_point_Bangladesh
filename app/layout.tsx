@@ -16,20 +16,14 @@ export const viewport: Viewport = {
 
 const inter = Inter({
   variable: "--font-inter",
-  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
-  preload: true,
-  fallback: ["system-ui", "arial"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
-  weight: ["400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
-  preload: true,
-  fallback: ["ui-monospace", "monospace"],
 });
 
 import { getStorefrontSeo, getStorefrontTracking } from "@/lib/public-content";
