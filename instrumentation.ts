@@ -7,6 +7,10 @@ import { validateEnv } from "@/lib/env";
  */
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs" || !process.env.NEXT_RUNTIME) {
-    validateEnv();
+    try {
+      validateEnv();
+    } catch (err) {
+      console.error("[CRITICAL STARTUP ERROR] Environment validation failed:", err);
+    }
   }
 }

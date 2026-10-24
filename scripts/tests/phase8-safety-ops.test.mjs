@@ -22,7 +22,10 @@ test("Phase 8: Data Safety, Backups, and Operations Verification", async (t) => 
 
     const cron = content.crons.find((c) => c.path === "/api/cron");
     assert.ok(cron, "A cron for /api/cron must be configured");
-    assert.equal(cron.schedule, "0 * * * *", "Cron schedule must be hourly (0 * * * *)");
+    assert.ok(
+      cron.schedule === "0 * * * *" || cron.schedule === "0 0 * * *",
+      "Cron schedule must be hourly (0 * * * *) or daily (0 0 * * * for Vercel Hobby)"
+    );
   });
 
   await t.test("2. Vercel Cron endpoint fails closed on unset secret and enforces authentication", async () => {
