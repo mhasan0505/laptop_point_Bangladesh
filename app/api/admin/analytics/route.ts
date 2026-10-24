@@ -3,7 +3,7 @@ import { fetchUnifiedAnalytics } from "@/lib/analytics";
 import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
-export const revalidate = 1800;
+export const dynamic = "force-dynamic";
 
 // GET /api/admin/analytics?range=7d|30d|90d&refresh=true
 export async function GET(request: NextRequest) {
