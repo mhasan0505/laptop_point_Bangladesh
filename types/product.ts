@@ -50,8 +50,27 @@ export interface Product {
     full: string;
   };
   slug: string;
+  variantOptions?: ProductVariantOption[];
+  variants?: ProductVariant[];
   updated_at?: string | Date;
   updatedAt?: string | Date;
   created_at?: string | Date;
   createdAt?: string | Date;
+}
+
+export interface ProductVariant {
+  id?: string;
+  sku?: string;
+  options: Record<string, string>;
+  price: number;
+  marketPrice?: number;
+  stockQty?: number;
+  stockStatus?: string;
+  imageUrl?: string;
+  active?: boolean;
+}
+
+export interface ProductVariantOption {
+  name: string;
+  values: string[];
 }

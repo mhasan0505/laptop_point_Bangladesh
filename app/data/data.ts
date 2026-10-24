@@ -118,6 +118,20 @@ export function mapRawToProduct(p: RawProduct): Product {
     tags: p.tags && p.tags.length > 0 ? p.tags : undefined,
     specGroups: p.specGroups && Object.keys(p.specGroups).length > 0 ? p.specGroups : undefined,
     warranty: warrantyLabel(p.warranty),
+    variantOptions: p.variantOptions && p.variantOptions.length > 0 ? p.variantOptions : undefined,
+    variants: Array.isArray(p.variants) && p.variants.length > 0
+      ? (p.variants as any[]).map((v) => ({
+          id: v.id ? String(v.id) : undefined,
+          sku: v.sku ? String(v.sku) : undefined,
+          options: v.options && typeof v.options === "object" ? v.options : {},
+          price: typeof v.price === "number" ? v.price : Number(v.price) || salePrice,
+          marketPrice: typeof v.marketPrice === "number" ? v.marketPrice : Number(v.marketPrice) || marketPrice,
+          stockQty: typeof v.stockQty === "number" ? v.stockQty : Number(v.stockQty) || 0,
+          stockStatus: v.stockStatus || undefined,
+          imageUrl: v.imageUrl || undefined,
+          active: v.active !== false,
+        }))
+      : undefined,
   };
 }
 

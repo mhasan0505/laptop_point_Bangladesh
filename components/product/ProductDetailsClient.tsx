@@ -102,57 +102,73 @@ export default function ProductDetailsClient({
   const [hoverPos, setHoverPos] = useState({ x: 50, y: 50 });
   const mainImgRef = useRef<HTMLDivElement>(null);
 
-  // Variant selections (RAM & SSD)
-  const initialRam = useMemo(() => {
-    const raw = product.specs?.ram || "";
-    if (/32/i.test(raw)) return "32GB";
-    if (/16/i.test(raw)) return "16GB";
-    return "8GB";
-  }, [product.specs?.ram]);
+  // Real variants check
+  const hasVariants = Boolean(
+    (product.variants && product.variants.length > 0) ||
+    (product.variantOptions && product.variantOptions.length > 0)
+  );
 
-  const initialSsd = useMemo(() => {
-    const raw = product.specs?.storage || "";
-    if (/1\s*TB/i.test(raw)) return "1TB";
-    if (/512/i.test(raw)) return "512GB";
-    return "256GB";
-  }, [product.specs?.storage]);
+  // Build option groups from uploaded product data
+  const variantOptionGroups = useMemo(() => {
+    if (product.variantOptions && product.variantOptions.length > 0) {
+      return product.variantOptions;
+    }
+    if (product.variants && product.variants.length > 0) {
+      const groupMap = new Map<string, Set<string>>();
+      for (const v of product.variants) {
+        if (v.options) {
+          for (const [key, val] of Object.entries(v.options)) {
+            if (!groupMap.has(key)) groupMap.set(key, new Set());
+            if (val) groupMap.get(key)!.add(val);
+          }
+        }
+      }
+      return Array.from(groupMap.entries()).map(([name, vals]) => ({
+        name,
+        values: Array.from(vals),
+      }));
+    }
+    return [];
+  }, [product.variantOptions, product.variants]);
 
-  const [selectedRam, setSelectedRam] = useState(initialRam);
-  const [selectedSsd, setSelectedSsd] = useState(initialSsd);
+  // Initial selected options derived from real variants
+  const initialSelectedOptions = useMemo(() => {
+    const initial: Record<string, string> = {};
+    if (product.variants && product.variants.length > 0) {
+      const firstActive = product.variants.find((v) => v.active !== false) || product.variants[0];
+      if (firstActive?.options) {
+        Object.assign(initial, firstActive.options);
+      }
+    }
+    for (const group of variantOptionGroups) {
+      if (!initial[group.name] && group.values.length > 0) {
+        initial[group.name] = group.values[0];
+      }
+    }
+    return initial;
+  }, [product.variants, variantOptionGroups]);
 
-  // RAM and SSD Options
-  const ramOptions = [
-    { label: "8GB", delta: 0 },
-    { label: "16GB", delta: 2500 },
-    { label: "32GB", delta: 6000 },
-  ];
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(initialSelectedOptions);
 
-  const ssdOptions = [
-    { label: "256GB", delta: 0 },
-    { label: "512GB", delta: 2000 },
-    { label: "1TB", delta: 5000 },
-  ];
+  // Active matched variant from uploaded variants
+  const activeVariant = useMemo(() => {
+    if (!product.variants || product.variants.length === 0) return null;
+    return (
+      product.variants.find((v) => {
+        if (!v.options) return false;
+        return Object.entries(selectedOptions).every(
+          ([k, val]) => v.options[k] === val
+        );
+      }) || product.variants[0]
+    );
+  }, [product.variants, selectedOptions]);
 
-  // Base RAM/SSD deltas
-  const ramDelta = useMemo(() => {
-    const found = ramOptions.find((r) => r.label === selectedRam);
-    const base = ramOptions.find((r) => r.label === initialRam);
-    return (found?.delta || 0) - (base?.delta || 0);
-  }, [selectedRam, initialRam]);
-
-  const ssdDelta = useMemo(() => {
-    const found = ssdOptions.find((s) => s.label === selectedSsd);
-    const base = ssdOptions.find((s) => s.label === initialSsd);
-    return (found?.delta || 0) - (base?.delta || 0);
-  }, [selectedSsd, initialSsd]);
-
-  const currentPrice = product.price + ramDelta + ssdDelta;
-  const regularPrice =
-    (product.originalPrice || product.price + 3000) + ramDelta + ssdDelta;
+  const currentPrice = activeVariant ? activeVariant.price : product.price;
+  const regularPrice = activeVariant?.marketPrice || product.originalPrice || currentPrice;
   const discountPercentage =
     regularPrice > currentPrice
       ? Math.round(((regularPrice - currentPrice) / regularPrice) * 100)
-      : 0;
+      : product.discount || 0;
 
   // Recently viewed products
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
@@ -280,26 +296,32 @@ export default function ProductDetailsClient({
 
   // Add to cart
   const handleAddToCart = () => {
+    const variantSuffix =
+      hasVariants && Object.keys(selectedOptions).length > 0
+        ? ` (${Object.values(selectedOptions).join(", ")})`
+        : "";
+    const cartItemId = activeVariant?.id
+      ? `${product.id}-${activeVariant.id}`
+      : activeVariant?.sku
+      ? `${product.id}-${activeVariant.sku}`
+      : `${product.id}`;
+
     addToCart(
       {
-        id: `${product.id}-${selectedRam}-${selectedSsd}`,
-        name: `${product.name} (${selectedRam}, ${selectedSsd})`,
+        id: cartItemId,
+        name: `${product.name}${variantSuffix}`,
         brand: product.brand || "",
         price: currentPrice,
         originalPrice: regularPrice,
-        image: currentImageSrc,
-        specs: {
-          ...product.specs,
-          ram: selectedRam,
-          storage: selectedSsd,
-        },
+        image: activeVariant?.imageUrl || currentImageSrc,
+        specs: product.specs,
       },
       quantity,
     );
 
     trackAddToCart({
-      id: product.id.toString(),
-      name: product.name,
+      id: cartItemId,
+      name: `${product.name}${variantSuffix}`,
       price: currentPrice,
       quantity,
       category: product.category || product.brand || "Laptop",
@@ -310,19 +332,25 @@ export default function ProductDetailsClient({
 
   // Buy now: adds to cart and immediately navigates to checkout
   const handleBuyNow = () => {
+    const variantSuffix =
+      hasVariants && Object.keys(selectedOptions).length > 0
+        ? ` (${Object.values(selectedOptions).join(", ")})`
+        : "";
+    const cartItemId = activeVariant?.id
+      ? `${product.id}-${activeVariant.id}`
+      : activeVariant?.sku
+      ? `${product.id}-${activeVariant.sku}`
+      : `${product.id}`;
+
     addToCart(
       {
-        id: `${product.id}-${selectedRam}-${selectedSsd}`,
-        name: `${product.name} (${selectedRam}, ${selectedSsd})`,
+        id: cartItemId,
+        name: `${product.name}${variantSuffix}`,
         brand: product.brand || "",
         price: currentPrice,
         originalPrice: regularPrice,
-        image: currentImageSrc,
-        specs: {
-          ...product.specs,
-          ram: selectedRam,
-          storage: selectedSsd,
-        },
+        image: activeVariant?.imageUrl || currentImageSrc,
+        specs: product.specs,
       },
       quantity,
     );
@@ -564,7 +592,12 @@ export default function ProductDetailsClient({
             {/* 2. Middle Details Column (lg:col-span-5) */}
             <div className="lg:col-span-5 flex flex-col gap-3">
               <h1 className="text-base sm:text-lg font-bold text-gray-900 dark:text-foreground uppercase leading-snug">
-                {product.name} (RAM: {selectedRam}, SSD: {selectedSsd})
+                {product.name}
+                {hasVariants && Object.keys(selectedOptions).length > 0 && (
+                  <span className="text-sm font-normal text-muted-foreground ml-2">
+                    ({Object.entries(selectedOptions).map(([k, v]) => `${k}: ${v}`).join(", ")})
+                  </span>
+                )}
               </h1>
 
               {/* Meta Chips */}
@@ -606,11 +639,13 @@ export default function ProductDetailsClient({
                 if (product.specs?.display) {
                   keyFeatureItems.push({ label: "Display", value: product.specs.display });
                 }
-                const activeRam = selectedRam || product.specs?.ram;
+                const activeRam = (hasVariants && selectedOptions["RAM"]) || product.specs?.ram;
                 if (activeRam) {
                   keyFeatureItems.push({ label: "Memory", value: activeRam });
                 }
-                const activeStorage = selectedSsd || product.specs?.storage;
+                const activeStorage =
+                  (hasVariants && (selectedOptions["Storage"] || selectedOptions["SSD"])) ||
+                  product.specs?.storage;
                 if (activeStorage) {
                   keyFeatureItems.push({ label: "Storage", value: activeStorage });
                 }
@@ -657,54 +692,39 @@ export default function ProductDetailsClient({
                 );
               })()}
 
-              {/* Variant Selectors */}
-              <div className="space-y-2 pt-1 text-xs">
-                {/* RAM Selector */}
-                <div className="flex items-center gap-2">
-                  <span className="w-10 font-bold text-gray-700 dark:text-gray-300">
-                    RAM:
-                  </span>
-                  <div className="flex gap-2">
-                    {ramOptions.map((opt) => (
-                      <button
-                        key={opt.label}
-                        type="button"
-                        onClick={() => setSelectedRam(opt.label)}
-                        className={`px-3 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
-                          selectedRam === opt.label
-                            ? "bg-[#002b60] text-white border-[#002b60] shadow-xs"
-                            : "bg-white dark:bg-card border-gray-300 dark:border-border text-gray-700 dark:text-gray-300 hover:border-[#002b60]"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
+              {/* Variant Selectors (Only shown if product was uploaded with real variants) */}
+              {hasVariants && variantOptionGroups.length > 0 && (
+                <div className="space-y-2 pt-1 text-xs">
+                  {variantOptionGroups.map((group) => (
+                    <div key={group.name} className="flex items-center gap-2">
+                      <span className="w-16 font-bold text-gray-700 dark:text-gray-300">
+                        {group.name}:
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {group.values.map((val) => (
+                          <button
+                            key={val}
+                            type="button"
+                            onClick={() =>
+                              setSelectedOptions((prev) => ({
+                                ...prev,
+                                [group.name]: val,
+                              }))
+                            }
+                            className={`px-3 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
+                              selectedOptions[group.name] === val
+                                ? "bg-[#002b60] text-white border-[#002b60] shadow-xs"
+                                : "bg-white dark:bg-card border-gray-300 dark:border-border text-gray-700 dark:text-gray-300 hover:border-[#002b60]"
+                            }`}
+                          >
+                            {val}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-
-                {/* SSD Selector */}
-                <div className="flex items-center gap-2">
-                  <span className="w-10 font-bold text-gray-700 dark:text-gray-300">
-                    SSD:
-                  </span>
-                  <div className="flex gap-2">
-                    {ssdOptions.map((opt) => (
-                      <button
-                        key={opt.label}
-                        type="button"
-                        onClick={() => setSelectedSsd(opt.label)}
-                        className={`px-3 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
-                          selectedSsd === opt.label
-                            ? "bg-[#002b60] text-white border-[#002b60] shadow-xs"
-                            : "bg-white dark:bg-card border-gray-300 dark:border-border text-gray-700 dark:text-gray-300 hover:border-[#002b60]"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              )}
 
               {/* Price Line */}
               <div className="pt-2 flex items-baseline gap-2">
@@ -803,7 +823,7 @@ export default function ProductDetailsClient({
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <a
-                    href={`https://wa.me/8801701561395?text=Hello%20Laptop%20Point%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}`}
+                    href={`https://wa.me/8801612182408?text=Hello%20Laptop%20Point%2C%20I%20want%20to%20order%20${encodeURIComponent(product.name)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-[#25D366] font-bold hover:underline"
@@ -821,11 +841,11 @@ export default function ProductDetailsClient({
                     Messenger
                   </a>
                   <a
-                    href="tel:+8801701561395"
+                    href="tel:+8801612182408"
                     className="inline-flex items-center gap-1.5 text-gray-700 dark:text-gray-300 font-bold hover:underline"
                   >
                     <Phone className="w-3.5 h-3.5" />
-                    01701-561395
+                    01612-182408
                   </a>
                 </div>
               </div>
@@ -1043,8 +1063,12 @@ export default function ProductDetailsClient({
 
           <ProductSpecTable
             product={product}
-            selectedRam={selectedRam}
-            selectedSsd={selectedSsd}
+            selectedRam={hasVariants ? selectedOptions["RAM"] : undefined}
+            selectedSsd={
+              hasVariants
+                ? selectedOptions["Storage"] || selectedOptions["SSD"]
+                : undefined
+            }
           />
         </div>
 
