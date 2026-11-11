@@ -12,6 +12,7 @@ const { GET: getAdminMessages } = await import("../../app/api/admin/messages/rou
 const { PATCH: patchAdminMessage, DELETE: deleteAdminMessage } = await import("../../app/api/admin/messages/[id]/route.ts");
 const {
   getContactMessages,
+  writeContactMessages,
   resetContactMessagesCache,
 } = await import("../../lib/contact-messages-storage.ts");
 const { createAdminUser, deleteAdminUser } = await import("../../lib/admin-users-storage.ts");
@@ -19,6 +20,7 @@ const { createAdminSession, ADMIN_SESSION_COOKIE } = await import("../../lib/adm
 
 test("Contact Messages & Admin Inbox Workflow", async (t) => {
   resetContactMessagesCache();
+  const initialMessages = await getContactMessages();
 
   const ownerToken = await createAdminSession({
     userId: "usr-owner-1",
@@ -49,6 +51,8 @@ test("Contact Messages & Admin Inbox Workflow", async (t) => {
     if (supportUser?.id) {
       await deleteAdminUser(supportUser.id).catch(() => {});
     }
+    await writeContactMessages(initialMessages).catch(() => {});
+    resetContactMessagesCache();
   });
 
   await t.test("1. Submission is stored with IP hash, truncated UA, and status 'unread'", async () => {

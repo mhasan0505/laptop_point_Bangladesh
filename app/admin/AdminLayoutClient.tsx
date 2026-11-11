@@ -5,6 +5,7 @@ import { AdminAdvancedSearchBar } from "@/components/admin/AdminAdvancedSearchBa
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { AdminAuthProvider, useAdminAuth } from "@/contexts/AdminAuthContext";
+import { ToastProvider } from "@/contexts/ToastContext";
 import {
   ExternalLink,
   LogOut,
@@ -227,7 +228,9 @@ function AdminShell({ children }: { children: ReactNode }) {
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <AdminAuthProvider>
-      <AdminShell>{children}</AdminShell>
+      <ToastProvider>
+        <AdminShell>{children}</AdminShell>
+      </ToastProvider>
     </AdminAuthProvider>
   );
 }

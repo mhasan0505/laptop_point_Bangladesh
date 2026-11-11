@@ -19,6 +19,18 @@ interface ToastContextValue {
 
 const ToastContext = createContext<ToastContextValue | undefined>(undefined);
 
+const NOOP_TOAST: ToastContextValue = {
+  success: (msg: string) => {
+    if (process.env.NODE_ENV !== "production") console.log("[Toast success]", msg);
+  },
+  error: (msg: string) => {
+    if (process.env.NODE_ENV !== "production") console.error("[Toast error]", msg);
+  },
+  info: (msg: string) => {
+    if (process.env.NODE_ENV !== "production") console.info("[Toast info]", msg);
+  },
+};
+
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
@@ -48,8 +60,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     [addToast],
   );
 
+  const contextValue = React.useMemo<ToastContextValue>(
+    () => ({ success, error, info }),
+    [success, error, info]
+  );
+
   return (
-    <ToastContext.Provider value={{ success, error, info }}>
+    <ToastContext.Provider value={contextValue}>
       {children}
       <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none">
         {toasts.map((toast) => (
@@ -92,13 +109,5 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
 export function useToast(): ToastContextValue {
   const context = useContext(ToastContext);
-  if (!context) {
-    // Graceful fallback if used outside provider
-    return {
-      success: (msg: string) => console.log("[Toast success]", msg),
-      error: (msg: string) => console.error("[Toast error]", msg),
-      info: (msg: string) => console.info("[Toast info]", msg),
-    };
-  }
-  return context;
+  return context ?? NOOP_TOAST;
 }

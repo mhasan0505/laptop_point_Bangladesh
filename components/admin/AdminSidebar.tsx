@@ -57,17 +57,24 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
 
   useEffect(() => {
     let isMounted = true;
-    fetch("/api/admin/messages")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (isMounted && data && typeof data.unreadCount === "number") {
-          setUnreadMessages(data.unreadCount);
-        }
-      })
-      .catch(() => {});
+
+    const fetchCount = () => {
+      fetch("/api/admin/messages")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (isMounted && data && typeof data.unreadCount === "number") {
+            setUnreadMessages(data.unreadCount);
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchCount();
+    window.addEventListener("admin:messages-updated", fetchCount);
 
     return () => {
       isMounted = false;
+      window.removeEventListener("admin:messages-updated", fetchCount);
     };
   }, [pathname]);
 
