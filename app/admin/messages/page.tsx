@@ -183,6 +183,8 @@ export default function AdminMessagesPage() {
 
     loadInitial();
 
+
+    
     return () => {
       isMounted = false;
     };
