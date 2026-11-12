@@ -45,14 +45,16 @@ export default function CartItem({ item }: CartItemProps) {
             </p>
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={() => setShowRemoveConfirm(false)}
-                className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="flex-1 min-h-[44px] px-4 py-2 border border-border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleRemove}
-                className="flex-1 px-4 py-2 bg-[#dc0303] text-white rounded-lg hover:bg-[#b80202] transition-colors"
+                className="flex-1 min-h-[44px] px-4 py-2 bg-[#dc0303] text-white rounded-lg hover:bg-[#b80202] active:scale-95 transition-all cursor-pointer"
               >
                 Remove
               </button>
@@ -87,8 +89,9 @@ export default function CartItem({ item }: CartItemProps) {
               <p className="text-sm text-muted-foreground">{item.brand}</p>
             </div>
             <button
+              type="button"
               onClick={() => setShowRemoveConfirm(true)}
-              className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-[#dc0303]"
+              className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors text-[#dc0303] active:scale-90 cursor-pointer"
               aria-label="Remove item"
             >
               <Trash2 className="w-5 h-5" />
@@ -143,22 +146,24 @@ export default function CartItem({ item }: CartItemProps) {
             {/* Quantity Controls */}
             <div className="flex items-center gap-3">
               <span className="text-sm text-muted-foreground">Quantity:</span>
-              <div className="flex items-center border border-border rounded-lg">
+              <div className="flex items-center border border-border rounded-lg bg-gray-50/50 dark:bg-muted/30">
                 <button
+                  type="button"
                   onClick={() => handleQuantityChange(item.quantity - 1)}
                   disabled={item.quantity <= 1}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-l-lg"
+                  className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed active:scale-90 transition-all rounded-l-lg cursor-pointer"
                   aria-label="Decrease quantity"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="px-4 py-2 min-w-12 text-center font-medium">
+                <span className="px-3 py-2 min-w-10 text-center font-semibold text-sm">
                   {item.quantity}
                 </span>
                 <button
+                  type="button"
                   onClick={() => handleQuantityChange(item.quantity + 1)}
                   disabled={item.quantity >= 10}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-r-lg"
+                  className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed active:scale-90 transition-all rounded-r-lg cursor-pointer"
                   aria-label="Increase quantity"
                 >
                   <Plus className="w-4 h-4" />

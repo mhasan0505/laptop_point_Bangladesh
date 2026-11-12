@@ -160,7 +160,7 @@ export default function CheckoutClient({
             </p>
             <Link
               href="/"
-              className="flex items-center gap-2 bg-gradient-to-r from-primary to-primary/90 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
+              className="flex items-center gap-2 bg-[#dc0303] hover:bg-[#b80202] text-white px-8 py-3 min-h-[44px] rounded-xl font-bold shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer"
             >
               <ArrowLeft className="w-5 h-5" />
               Continue Shopping
@@ -486,7 +486,7 @@ export default function CheckoutClient({
                             key={zone.id}
                             type="button"
                             onClick={() => setSelectedZone(zone.id)}
-                            className={`p-3.5 text-left border rounded-lg transition-all ${
+                            className={`p-3.5 min-h-[48px] text-left border rounded-xl transition-all cursor-pointer active:scale-98 ${
                               selectedZone === zone.id
                                 ? "border-primary bg-primary/5 ring-1 ring-primary"
                                 : "border-border hover:border-primary/50"
@@ -522,7 +522,7 @@ export default function CheckoutClient({
                         type="button"
                         onClick={() => setSelectedPayment(method.id)}
                         aria-pressed={selectedPayment === method.id}
-                        className={`flex items-center gap-4 p-4 border-2 rounded-lg transition-all ${
+                        className={`flex items-center gap-4 p-4 min-h-[64px] border-2 rounded-xl transition-all cursor-pointer active:scale-98 ${
                           selectedPayment === method.id
                             ? "border-primary bg-primary/5"
                             : "border-border hover:border-primary/50"
@@ -573,19 +573,19 @@ export default function CheckoutClient({
 
               {/* Terms and Place Order */}
               <div className="bg-white dark:bg-card rounded-xl border border-border/30 p-6">
-                <label className="flex items-start gap-3 mb-6 cursor-pointer">
+                <label className="flex items-start gap-3 mb-6 cursor-pointer py-1 select-none">
                   <input
                     type="checkbox"
                     {...register("agreeToTerms", {
                       required: "You must agree to the terms",
                     })}
-                    className="mt-1 w-4 h-4 text-primary rounded border-border focus:ring-primary"
+                    className="mt-1 w-4 h-4 text-[#dc0303] rounded border-border focus:ring-[#dc0303] cursor-pointer accent-[#dc0303]"
                   />
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-muted-foreground leading-normal">
                     I have read and agree to the website{" "}
                     <Link
                       href="/terms"
-                      className="font-medium text-primary hover:underline"
+                      className="font-medium text-[#002b60] dark:text-primary hover:underline"
                       target="_blank"
                     >
                       terms and conditions
@@ -593,7 +593,7 @@ export default function CheckoutClient({
                     and{" "}
                     <Link
                       href="/privacy"
-                      className="font-medium text-primary hover:underline"
+                      className="font-medium text-[#002b60] dark:text-primary hover:underline"
                       target="_blank"
                     >
                       privacy policy
@@ -618,7 +618,7 @@ export default function CheckoutClient({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-primary to-primary/90 text-white py-3.5 sm:py-4 rounded-xl text-base sm:text-lg font-bold tracking-wide hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full min-h-[48px] bg-[#dc0303] hover:bg-[#b80202] text-white py-3.5 sm:py-4 rounded-xl text-base sm:text-lg font-bold tracking-wide shadow-md hover:shadow-lg active:scale-98 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? "Placing Order..." : "Place Order"}
                 </button>

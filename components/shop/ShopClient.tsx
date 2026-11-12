@@ -295,8 +295,9 @@ const ShopContent = ({
                   )}
                 </div>
                 <button
+                  type="button"
                   onClick={() => setIsMobileFilterOpen(false)}
-                  className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted"
+                  className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted active:scale-90 transition-all cursor-pointer"
                   aria-label="Close filters"
                 >
                   <X className="w-5 h-5" />
@@ -348,9 +349,9 @@ const ShopContent = ({
                   variant="outline"
                   size="sm"
                   onClick={() => setIsMobileFilterOpen(true)}
-                  className="lg:hidden gap-2 h-9 text-xs font-semibold rounded-md border-gray-300"
+                  className="lg:hidden gap-2 min-h-[44px] h-11 px-3.5 text-xs font-semibold rounded-lg border-gray-300 dark:border-border active:scale-95 transition-transform"
                 >
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#dc0303]" />
+                  <SlidersHorizontal className="w-4 h-4 text-[#dc0303]" />
                   <span>Filters</span>
                   {activeFilterCount > 0 && (
                     <span className="w-5 h-5 rounded-full bg-[#dc0303] text-white text-[10px] font-bold flex items-center justify-center">
@@ -360,7 +361,7 @@ const ShopContent = ({
                 </Button>
 
                 {/* Sort Dropdown */}
-                <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-muted/40 border border-gray-300 dark:border-border rounded-md px-2.5 py-1.5">
+                <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-muted/40 border border-gray-300 dark:border-border rounded-lg px-2.5 min-h-[44px]">
                   <ArrowDownUp className="w-3.5 h-3.5 text-muted-foreground" />
                   <label htmlFor="shop-sort" className="sr-only">
                     Sort laptops by

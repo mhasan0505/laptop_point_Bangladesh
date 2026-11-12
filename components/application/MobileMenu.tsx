@@ -295,15 +295,14 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
                 />
               </div>
 
-              <motion.button
-                whileHover={{ scale: 1.08, rotate: 90 }}
-                whileTap={{ scale: 0.88 }}
+              <button
+                type="button"
                 onClick={onClose}
                 aria-label="Close menu"
-                className="rounded-full p-2 text-slate-400 ring-1 ring-white/10 transition-colors hover:bg-white/10 hover:text-white"
+                className="h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-slate-300 ring-1 ring-white/15 transition-all hover:bg-white/10 hover:text-white active:scale-90 cursor-pointer"
               >
                 <X className="h-5 w-5" />
-              </motion.button>
+              </button>
             </div>
 
             {/* ── Search Bar ── */}
@@ -446,48 +445,58 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
                             : "border-slate-150 bg-white hover:border-slate-300"
                         }`}
                       >
-                        <div
-                          className="flex cursor-pointer items-center gap-3 px-3 py-3"
-                          onClick={() =>
-                            submenu && submenu.length > 0
-                              ? toggleSubmenu(menuKey)
-                              : onClose()
-                          }
-                        >
-                          {/* Icon pill */}
-                          <span
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ring-1 ${colors.bg} ${colors.icon} ${colors.ring}`}
+                        {submenu && submenu.length > 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => toggleSubmenu(menuKey)}
+                            aria-expanded={isOpen}
+                            className="w-full flex items-center justify-between gap-3 px-3.5 py-3 min-h-[44px] text-left cursor-pointer active:bg-slate-50 transition-colors"
                           >
-                            {icon}
-                          </span>
-
+                            <div className="flex items-center gap-3 min-w-0 flex-1">
+                              {/* Icon pill */}
+                              <span
+                                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ring-1 ${colors.bg} ${colors.icon} ${colors.ring}`}
+                              >
+                                {icon}
+                              </span>
+                              <span className="text-sm font-semibold text-slate-800 truncate">
+                                {item.name}
+                              </span>
+                              {item.badge && (
+                                <span className="ml-1 text-base leading-none">
+                                  {item.badge}
+                                </span>
+                              )}
+                            </div>
+                            <span
+                              className={`text-slate-400 transition-transform duration-200 ${
+                                isOpen ? "rotate-90" : ""
+                              }`}
+                            >
+                              <ChevronRight className="h-4 w-4" />
+                            </span>
+                          </button>
+                        ) : (
                           <Link
                             href={item.href}
-                            className="flex-1 text-sm font-semibold text-slate-800"
-                            onClick={(e) => {
-                              if (submenu && submenu.length > 0)
-                                e.preventDefault();
-                              else onClose();
-                            }}
+                            onClick={onClose}
+                            className="w-full flex items-center gap-3 px-3.5 py-3 min-h-[44px] text-left cursor-pointer active:bg-slate-50 transition-colors"
                           >
-                            {item.name}
+                            <span
+                              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ring-1 ${colors.bg} ${colors.icon} ${colors.ring}`}
+                            >
+                              {icon}
+                            </span>
+                            <span className="text-sm font-semibold text-slate-800 flex-1 truncate">
+                              {item.name}
+                            </span>
                             {item.badge && (
-                              <span className="ml-2 text-base leading-none">
+                              <span className="ml-1 text-base leading-none">
                                 {item.badge}
                               </span>
                             )}
                           </Link>
-
-                          {submenu && submenu.length > 0 && (
-                            <motion.span
-                              animate={{ rotate: isOpen ? 90 : 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="text-slate-400"
-                            >
-                              <ChevronRight className="h-4 w-4" />
-                            </motion.span>
-                          )}
-                        </div>
+                        )}
 
                         {/* Submenu */}
                         <AnimatePresence initial={false}>
@@ -503,13 +512,13 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
                               className="overflow-hidden"
                             >
                               <div className="border-t border-slate-100 bg-slate-50/80 px-3 pb-2 pt-1.5">
-                                <div className="ml-3 flex flex-col gap-0.5 border-l-2 border-slate-200 pl-3">
+                                <div className="ml-3 flex flex-col gap-1 border-l-2 border-slate-200 pl-3">
                                   {submenu.map((sub) => (
                                     <Link
                                       key={sub.name}
                                       href={sub.href}
                                       onClick={onClose}
-                                      className="rounded-lg px-2 py-2 text-sm text-slate-500 transition-colors hover:bg-white hover:text-slate-900"
+                                      className="rounded-lg px-2.5 py-2.5 min-h-[44px] flex items-center text-sm font-medium text-slate-600 transition-colors hover:bg-white hover:text-slate-900 active:bg-white"
                                     >
                                       {sub.name}
                                     </Link>
@@ -552,24 +561,41 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
                             : "border-slate-150 bg-white hover:border-slate-300"
                         }`}
                       >
-                        <div
-                          className="flex cursor-pointer items-center justify-between px-4 py-3"
-                          onClick={() =>
-                            item.submenu && item.submenu.length > 0
-                              ? toggleSubmenu(menuKey)
-                              : onClose()
-                          }
-                        >
+                        {item.submenu && item.submenu.length > 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => toggleSubmenu(menuKey)}
+                            aria-expanded={isOpen}
+                            className="w-full flex items-center justify-between gap-2 px-4 py-3 min-h-[44px] text-left cursor-pointer active:bg-slate-50 transition-colors"
+                          >
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <span className="text-sm font-medium text-slate-700 truncate">
+                                {item.name}
+                              </span>
+                              {item.badge && (
+                                <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
+                                  <Flame className="h-2.5 w-2.5 fill-current" />
+                                  {item.badge}
+                                </span>
+                              )}
+                            </div>
+                            <span
+                              className={`text-slate-400 transition-transform duration-200 ${
+                                isOpen ? "rotate-90" : ""
+                              }`}
+                            >
+                              <ChevronRight className="h-4 w-4" />
+                            </span>
+                          </button>
+                        ) : (
                           <Link
                             href={item.href}
-                            className="flex flex-1 items-center gap-2 text-sm font-medium text-slate-700"
-                            onClick={(e) => {
-                              if (item.submenu && item.submenu.length > 0)
-                                e.preventDefault();
-                              else onClose();
-                            }}
+                            onClick={onClose}
+                            className="w-full flex items-center justify-between gap-2 px-4 py-3 min-h-[44px] text-left cursor-pointer active:bg-slate-50 transition-colors"
                           >
-                            {item.name}
+                            <span className="text-sm font-medium text-slate-700 flex-1 truncate">
+                              {item.name}
+                            </span>
                             {item.badge && (
                               <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
                                 <Flame className="h-2.5 w-2.5 fill-current" />
@@ -577,17 +603,7 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
                               </span>
                             )}
                           </Link>
-
-                          {item.submenu && item.submenu.length > 0 && (
-                            <motion.span
-                              animate={{ rotate: isOpen ? 90 : 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="text-slate-400"
-                            >
-                              <ChevronRight className="h-4 w-4" />
-                            </motion.span>
-                          )}
-                        </div>
+                        )}
 
                         <AnimatePresence initial={false}>
                           {isOpen && item.submenu && (
@@ -602,13 +618,13 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
                               className="overflow-hidden"
                             >
                               <div className="border-t border-slate-100 bg-slate-50/80 px-3 pb-2 pt-1.5">
-                                <div className="ml-3 flex flex-col gap-0.5 border-l-2 border-slate-200 pl-3">
+                                <div className="ml-3 flex flex-col gap-1 border-l-2 border-slate-200 pl-3">
                                   {item.submenu.map((sub) => (
                                     <Link
                                       key={sub.name}
                                       href={sub.href}
                                       onClick={onClose}
-                                      className="rounded-lg px-2 py-2 text-sm text-slate-500 transition-colors hover:bg-white hover:text-slate-900"
+                                      className="rounded-lg px-2.5 py-2.5 min-h-[44px] flex items-center text-sm font-medium text-slate-600 transition-colors hover:bg-white hover:text-slate-900 active:bg-white"
                                     >
                                       {sub.name}
                                     </Link>

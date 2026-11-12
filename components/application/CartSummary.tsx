@@ -80,9 +80,10 @@ export default function CartSummary() {
             />
           </div>
           <button
+            type="button"
             onClick={handleApplyCoupon}
             disabled={!couponCode.trim() || couponApplied}
-            className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+            className="min-h-[44px] px-5 py-2.5 bg-[#002b60] text-white rounded-lg hover:bg-[#002047] disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-all font-semibold text-xs cursor-pointer"
           >
             Apply
           </button>
@@ -121,7 +122,7 @@ export default function CartSummary() {
       {/* Total */}
       <div className="flex justify-between items-center mb-6">
         <span className="text-lg font-semibold">Total</span>
-        <span className="text-2xl font-bold text-primary">
+        <span className="text-2xl font-bold text-[#002b60] dark:text-white">
           {formatBDT(total)}
         </span>
       </div>
@@ -129,7 +130,7 @@ export default function CartSummary() {
       {/* Checkout Button */}
       <Link
         href="/checkout"
-        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-primary/90 text-white py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 group"
+        className="w-full min-h-[48px] flex items-center justify-center gap-2 bg-[#dc0303] hover:bg-[#b80202] text-white py-3.5 px-4 rounded-xl font-bold shadow-md hover:shadow-lg active:scale-98 transition-all duration-200 group"
       >
         Proceed to Checkout
         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

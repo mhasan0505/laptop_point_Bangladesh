@@ -26,7 +26,7 @@ export default function CartPage() {
             </p>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 min-h-[44px] bg-[#dc0303] text-white font-bold rounded-xl hover:bg-[#b80202] active:scale-95 transition-all shadow-md"
             >
               <ShoppingBag className="w-5 h-5" />
               Start Shopping
@@ -44,7 +44,7 @@ export default function CartPage() {
         <div className="mb-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-[#002b60] dark:hover:text-white transition-colors mb-4 min-h-[40px] py-1"
           >
             <ArrowLeft className="w-4 h-4" />
             Continue Shopping

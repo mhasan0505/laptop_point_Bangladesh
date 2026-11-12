@@ -154,13 +154,16 @@ export default function Footer({
               </div>
             </div>
 
-            {/* Newsletter Subscription */}
-            <div className="w-full md:w-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-100 max-w-md">
-              <h4 className="font-semibold text-gray-900 mb-2">
-                Subscribe to our Newsletter
-              </h4>
-              <p className="text-gray-500 text-sm mb-4">
-                Get the latest updates dealing with new products and trends.
+            {/* Minimal Newsletter Subscription */}
+            <div className="w-full md:w-auto bg-white p-5 sm:p-6 rounded-2xl shadow-soft border border-slate-200/80 max-w-md">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse" />
+                <h4 className="font-bold text-ink text-sm sm:text-base">
+                  Subscribe to our Newsletter
+                </h4>
+              </div>
+              <p className="text-muted-text text-xs sm:text-sm mb-4 leading-relaxed">
+                Receive weekly discount drops, new arrivals &amp; exclusive member deals.
               </p>
               <form onSubmit={handleNewsletterSubmit} className="space-y-2">
                 <input
@@ -174,25 +177,25 @@ export default function Footer({
                   style={{ display: "none" }}
                   aria-hidden="true"
                 />
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-2.5">
                   <input
                     type="email"
                     required
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+                    className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#002b60]/20 focus:border-[#002b60] text-xs sm:text-sm bg-slate-50/50 focus:bg-white transition-all text-ink placeholder:text-muted-text"
                   />
                   <button
                     type="submit"
                     disabled={status === "submitting"}
-                    className="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors w-full sm:w-auto disabled:opacity-60 cursor-pointer"
+                    className="px-5 py-2.5 bg-[#002b60] hover:bg-[#002047] text-white text-xs sm:text-sm font-semibold rounded-xl transition-all shadow-xs hover:shadow-sm w-full sm:w-auto disabled:opacity-60 cursor-pointer shrink-0 active:scale-95"
                   >
                     {status === "submitting" ? "Subscribing..." : "Subscribe"}
                   </button>
                 </div>
                 {msg && (
-                  <p className={`text-xs ${status === "success" ? "text-emerald-600 font-medium" : "text-rose-500"}`}>
+                  <p className={`text-xs font-medium pt-1 ${status === "success" ? "text-emerald-600" : "text-rose-600"}`}>
                     {msg}
                   </p>
                 )}

@@ -33,13 +33,17 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
       if (stored) {
         const parsed = JSON.parse(stored) as WishlistItem[];
         if (Array.isArray(parsed)) {
-          queueMicrotask(() => setItems(parsed));
+          queueMicrotask(() => {
+            setItems(parsed);
+            setHydrated(true);
+          });
+          return;
         }
       }
     } catch {
       // ignore
     }
-    setHydrated(true);
+    queueMicrotask(() => setHydrated(true));
   }, []);
 
   // Persist on change (skip initial hydration write)

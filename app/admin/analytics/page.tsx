@@ -181,7 +181,7 @@ export default function AnalyticsPage() {
             size="sm"
             className="h-9 text-xs font-semibold rounded-sm border-border gap-1.5"
             onClick={exportAnalyticsCSV}
-            disabled={loading || !data || data.orderCount === 0}
+            disabled={loading || !data || (data.orderCount ?? 0) === 0}
           >
             <Download size={13} />
             Export CSV
@@ -231,7 +231,7 @@ export default function AnalyticsPage() {
               </p>
               <p className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold mt-1 flex items-center gap-1">
                 <CheckCircle2 size={11} />
-                <span>{data?.statusBreakdown.delivered ?? 0} Delivered</span>
+                <span>{data?.statusBreakdown?.delivered ?? 0} Delivered</span>
               </p>
             </div>
           </div>
@@ -264,10 +264,10 @@ export default function AnalyticsPage() {
             </div>
             <div className="mt-3">
               <p className="text-lg sm:text-2xl font-bold text-foreground">
-                {data?.statusBreakdown.pending ?? 0}
+                {data?.statusBreakdown?.pending ?? 0}
               </p>
               <p className="text-[10px] text-amber-600 dark:text-amber-400 font-semibold mt-1">
-                {data?.statusBreakdown.processing ?? 0} In processing
+                {data?.statusBreakdown?.processing ?? 0} In processing
               </p>
             </div>
           </div>

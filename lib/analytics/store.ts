@@ -1,12 +1,16 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { unstable_cache as cache } from "next/cache";
+import { loadMergedRawProducts } from "@/lib/products-storage";
 import type {
+  BrandShare,
   DailyPoint,
   OrderStatusBreakdown,
   PaymentMethodBreakdown,
   Series,
   StoreAnalyticsSummary,
+  StorePerformanceAnalytics,
+  TopProduct,
   TopSellingProduct,
   UnifiedMetric,
 } from "./types";
@@ -335,3 +339,158 @@ export const fetchStoreAnalytics = cache(
   ["analytics", "store"],
   { revalidate: REVALIDATE_SECONDS },
 );
+
+export async function queryStorePerformanceAnalytics(days = DEFAULT_WINDOW_DAYS): Promise<StorePerformanceAnalytics> {
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
+  startDate.setHours(0, 0, 0, 0);
+
+  try {
+    const [orders, rawProducts] = await Promise.all([
+      prisma.order.findMany({
+        where: {
+          createdAt: {
+            gte: startDate,
+          },
+        },
+        include: {
+          items: true,
+        },
+        orderBy: { createdAt: "desc" },
+      }),
+      loadMergedRawProducts().catch(() => []),
+    ]);
+
+    const brandMap = new Map<string, string>();
+    for (const p of rawProducts) {
+      const brand = p.brand?.trim() || "Other";
+      if (p.id) brandMap.set(String(p.id).toLowerCase(), brand);
+      if (p.sku) brandMap.set(p.sku.toLowerCase(), brand);
+    }
+
+    const statusBreakdown = {
+      pending: 0,
+      processing: 0,
+      shipped: 0,
+      delivered: 0,
+      cancelled: 0,
+    };
+
+    for (const o of orders) {
+      const s = (o.status || "").toLowerCase();
+      if (s === "pending") statusBreakdown.pending++;
+      else if (s === "processing") statusBreakdown.processing++;
+      else if (s === "shipped") statusBreakdown.shipped++;
+      else if (s === "delivered") statusBreakdown.delivered++;
+      else if (s === "cancelled") statusBreakdown.cancelled++;
+    }
+
+    const activeOrders = orders.filter((o) => (o.status || "").toUpperCase() !== "CANCELLED");
+    const totalRevenue = activeOrders.reduce((sum, o) => sum + Number(o.totalAmount || 0), 0);
+    const orderCount = activeOrders.length;
+    const avgOrderValue = orderCount > 0 ? Math.round(totalRevenue / orderCount) : 0;
+
+    const getBrandForItem = (item: { sku?: string; productId?: string; name?: string }): string => {
+      if (item.sku && brandMap.has(item.sku.toLowerCase())) {
+        return brandMap.get(item.sku.toLowerCase())!;
+      }
+      if (item.productId && brandMap.has(item.productId.toLowerCase())) {
+        return brandMap.get(item.productId.toLowerCase())!;
+      }
+      const firstWord = (item.name || "").trim().split(/\s+/)[0];
+      const knownBrands = [
+        "Apple",
+        "Asus",
+        "HP",
+        "Dell",
+        "Lenovo",
+        "Acer",
+        "MSI",
+        "Microsoft",
+        "Samsung",
+        "Gigabyte",
+        "Razer",
+        "Huawei",
+      ];
+      const matched = knownBrands.find((b) => b.toLowerCase() === firstWord?.toLowerCase());
+      if (matched) return matched;
+      return "Other";
+    };
+
+    const productAgg = new Map<string, TopProduct>();
+    const brandAgg = new Map<string, { revenue: number; units: number }>();
+
+    for (const order of activeOrders) {
+      for (const item of order.items || []) {
+        const key = item.sku || item.productId || item.name;
+        const brand = getBrandForItem(item);
+        const units = item.quantity || 1;
+        const rev = Number(item.unitPrice || 0) * units;
+
+        const existingProd = productAgg.get(key) || {
+          name: item.name,
+          sku: item.sku || "",
+          brand,
+          units: 0,
+          revenue: 0,
+        };
+        existingProd.units += units;
+        existingProd.revenue += rev;
+        productAgg.set(key, existingProd);
+
+        const stat = brandAgg.get(brand) || { revenue: 0, units: 0 };
+        stat.revenue += rev;
+        stat.units += units;
+        brandAgg.set(brand, stat);
+      }
+    }
+
+    const topProductsByUnits: TopProduct[] = Array.from(productAgg.values())
+      .sort((a, b) => b.units - a.units)
+      .slice(0, 10);
+
+    const totalBrandRevenue = Array.from(brandAgg.values()).reduce((sum, b) => sum + b.revenue, 0);
+    const revenueByBrand: BrandShare[] = Array.from(brandAgg.entries())
+      .map(([brand, stat]) => ({
+        brand,
+        revenue: stat.revenue,
+        units: stat.units,
+        share: totalBrandRevenue > 0 ? Math.round((stat.revenue / totalBrandRevenue) * 100) : 0,
+      }))
+      .sort((a, b) => b.revenue - a.revenue);
+
+    return {
+      days,
+      totalRevenue,
+      orderCount,
+      avgOrderValue,
+      statusBreakdown,
+      topProductsByUnits,
+      revenueByBrand,
+    };
+  } catch (err) {
+    console.error("[store:queryStorePerformanceAnalytics] Failed:", err);
+    return {
+      days,
+      totalRevenue: 0,
+      orderCount: 0,
+      avgOrderValue: 0,
+      statusBreakdown: {
+        pending: 0,
+        processing: 0,
+        shipped: 0,
+        delivered: 0,
+        cancelled: 0,
+      },
+      topProductsByUnits: [],
+      revenueByBrand: [],
+    };
+  }
+}
+
+export const fetchStorePerformanceAnalytics = cache(
+  async (days = DEFAULT_WINDOW_DAYS) => queryStorePerformanceAnalytics(days),
+  ["analytics", "store-performance"],
+  { revalidate: REVALIDATE_SECONDS },
+);
+

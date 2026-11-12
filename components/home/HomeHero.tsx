@@ -468,12 +468,12 @@ export default function HomeHero({ contact }: HomeHeroProps) {
                         type="button"
                         onClick={prevSlide}
                         aria-label="Previous banner"
-                        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-brand-navy opacity-0 group-hover/hero:opacity-100 focus:opacity-100"
+                        className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-brand-navy opacity-80 sm:opacity-0 sm:group-hover/hero:opacity-100 focus:opacity-100 active:scale-95"
                         style={{
-                          background: "rgba(255,255,255,0.88)",
+                          background: "rgba(255,255,255,0.92)",
                           backdropFilter: "blur(8px)",
-                          border: "1px solid rgba(0,43,96,0.1)",
-                          boxShadow: "0 2px 8px rgba(11,18,32,0.1)",
+                          border: "1px solid rgba(0,43,96,0.12)",
+                          boxShadow: "0 2px 8px rgba(11,18,32,0.12)",
                         }}
                       >
                         <ChevronLeft className="w-4 h-4 text-ink" aria-hidden="true" />
@@ -483,12 +483,12 @@ export default function HomeHero({ contact }: HomeHeroProps) {
                         type="button"
                         onClick={nextSlide}
                         aria-label="Next banner"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-brand-navy opacity-0 group-hover/hero:opacity-100 focus:opacity-100"
+                        className="absolute right-2.5 sm:right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-brand-navy opacity-80 sm:opacity-0 sm:group-hover/hero:opacity-100 focus:opacity-100 active:scale-95"
                         style={{
-                          background: "rgba(255,255,255,0.88)",
+                          background: "rgba(255,255,255,0.92)",
                           backdropFilter: "blur(8px)",
-                          border: "1px solid rgba(0,43,96,0.1)",
-                          boxShadow: "0 2px 8px rgba(11,18,32,0.1)",
+                          border: "1px solid rgba(0,43,96,0.12)",
+                          boxShadow: "0 2px 8px rgba(11,18,32,0.12)",
                         }}
                       >
                         <ChevronRight className="w-4 h-4 text-ink" aria-hidden="true" />

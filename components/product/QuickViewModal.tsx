@@ -112,8 +112,9 @@ const QuickViewContent = ({
       >
         {/* Close Button */}
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2.5 rounded-full bg-white/80 hover:bg-white text-gray-500 hover:text-gray-900 transition-all shadow-sm hover:shadow-md backdrop-blur-sm"
+          className="absolute top-4 right-4 z-20 h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-gray-600 hover:text-gray-900 active:scale-90 transition-all shadow-sm hover:shadow-md backdrop-blur-sm cursor-pointer"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
@@ -226,8 +227,9 @@ const QuickViewContent = ({
                 {/* Quantity Selector */}
                 <div className="flex items-center bg-gray-100 rounded-full p-1 w-[140px] justify-between">
                   <button
+                    type="button"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-gray-600 shadow-sm hover:shadow-md transition-all disabled:opacity-50"
+                    className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-white text-gray-600 shadow-xs hover:shadow-md active:scale-90 transition-all disabled:opacity-40 cursor-pointer"
                     disabled={quantity <= 1}
                     aria-label="Decrease quantity"
                   >
@@ -237,8 +239,9 @@ const QuickViewContent = ({
                     {quantity}
                   </span>
                   <button
+                    type="button"
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-white text-gray-900 shadow-sm hover:shadow-md transition-all"
+                    className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full bg-white text-gray-900 shadow-xs hover:shadow-md active:scale-90 transition-all cursor-pointer"
                     aria-label="Increase quantity"
                   >
                     <Plus className="w-4 h-4" />
@@ -247,7 +250,8 @@ const QuickViewContent = ({
 
                 {/* Add to Cart Button */}
                 <Button
-                  className="flex-1 h-12 rounded-full text-base font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all gap-2"
+                  type="button"
+                  className="flex-1 h-12 min-h-[48px] rounded-full text-base font-bold bg-[#dc0303] hover:bg-[#b80202] text-white shadow-lg shadow-red-500/20 hover:shadow-red-500/30 active:scale-95 transition-all gap-2 cursor-pointer"
                   onClick={handleAddToCart}
                   aria-label="Add to cart"
                 >
@@ -257,8 +261,9 @@ const QuickViewContent = ({
 
                 {/* Wishlist Button */}
                 <Button
+                  type="button"
                   variant="outline"
-                  className={`h-12 w-12 rounded-full border-gray-200 hover:border-red-200 hover:bg-red-50 p-0 transition-colors ${
+                  className={`h-12 w-12 min-h-[48px] min-w-[48px] rounded-full border-gray-200 hover:border-red-200 hover:bg-red-50 p-0 active:scale-90 transition-all cursor-pointer ${
                     isWishlisted
                       ? "bg-red-50 border-red-200 text-red-500"
                       : "bg-white text-gray-400"

@@ -187,7 +187,7 @@ export default function CategoryTiles({
               <Link
                 key={tile.title}
                 href={tile.href}
-                className="flex flex-col items-center justify-between p-3.5 sm:p-4 rounded-radius-md border border-line bg-surface dark:bg-surface-2 hover:border-brand-navy/40 dark:hover:border-sky-400/40 transition-all duration-200 shadow-soft hover:shadow-lift hover:-translate-y-1 text-center group focus:outline-none focus:ring-2 focus:ring-brand-navy focus:ring-offset-2 min-h-[175px] sm:min-h-[190px]"
+                className="flex flex-col items-center justify-between p-3.5 sm:p-4 rounded-radius-md border border-line bg-surface dark:bg-surface-2 hover:border-brand-navy/40 dark:hover:border-sky-400/40 transition-all duration-200 shadow-soft hover:shadow-lift hover:-translate-y-1 active:scale-95 text-center group focus:outline-none focus:ring-2 focus:ring-brand-navy focus:ring-offset-2 min-h-[175px] sm:min-h-[190px]"
               >
                 <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-surface-2 dark:bg-surface-3/60 border border-line/60 flex items-center justify-center p-2 mb-2 sm:mb-2.5 transition-all duration-200 group-hover:scale-105 group-hover:bg-brand-navy/5 dark:group-hover:bg-sky-500/10 group-hover:border-brand-navy/20 shrink-0">
                   <Image

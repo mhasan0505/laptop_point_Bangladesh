@@ -26,6 +26,7 @@ import {
 } from "./utils";
 
 export type {
+  BrandShare,
   ChannelBreakdown,
   DailyPoint,
   FunnelStage,
@@ -34,6 +35,8 @@ export type {
   Series,
   SourceStatus,
   StoreAnalyticsSummary,
+  StorePerformanceAnalytics,
+  TopProduct,
   TopSellingProduct,
   UnifiedDashboard,
   UnifiedMetric,

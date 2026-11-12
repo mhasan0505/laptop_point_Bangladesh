@@ -1,5 +1,59 @@
 [
   {
+    "id": "run-1794489198729",
+    "name": "Deal & Flash Offer Expiry",
+    "status": "success",
+    "startedAt": "2026-11-12T13:13:18.729Z",
+    "finishedAt": "2026-11-12T13:13:18.739Z",
+    "durationMs": 10,
+    "message": "Deactivated 0 expired deal(s) (Banners: 0, Power Deals: 0)."
+  },
+  {
+    "id": "run-1794489198697",
+    "name": "Prune Orphan Uploads (Report Only)",
+    "status": "success",
+    "startedAt": "2026-11-12T13:13:18.697Z",
+    "finishedAt": "2026-11-12T13:13:18.717Z",
+    "durationMs": 20,
+    "message": "Scan complete: All 0 uploaded files are referenced in catalog or banners. No orphans."
+  },
+  {
+    "id": "run-1794488924650",
+    "name": "Deal & Flash Offer Expiry",
+    "status": "success",
+    "startedAt": "2026-11-12T13:08:44.650Z",
+    "finishedAt": "2026-11-12T13:08:44.660Z",
+    "durationMs": 10,
+    "message": "Deactivated 0 expired deal(s) (Banners: 0, Power Deals: 0)."
+  },
+  {
+    "id": "run-1794488924629",
+    "name": "Prune Orphan Uploads (Report Only)",
+    "status": "success",
+    "startedAt": "2026-11-12T13:08:44.629Z",
+    "finishedAt": "2026-11-12T13:08:44.645Z",
+    "durationMs": 16,
+    "message": "Scan complete: All 0 uploaded files are referenced in catalog or banners. No orphans."
+  },
+  {
+    "id": "run-1794486161949",
+    "name": "Deal & Flash Offer Expiry",
+    "status": "success",
+    "startedAt": "2026-11-12T12:22:41.949Z",
+    "finishedAt": "2026-11-12T12:22:41.960Z",
+    "durationMs": 11,
+    "message": "Deactivated 0 expired deal(s) (Banners: 0, Power Deals: 0)."
+  },
+  {
+    "id": "run-1794486161929",
+    "name": "Prune Orphan Uploads (Report Only)",
+    "status": "success",
+    "startedAt": "2026-11-12T12:22:41.929Z",
+    "finishedAt": "2026-11-12T12:22:41.941Z",
+    "durationMs": 12,
+    "message": "Scan complete: All 0 uploaded files are referenced in catalog or banners. No orphans."
+  },
+  {
     "id": "run-1794415560030",
     "name": "Deal & Flash Offer Expiry",
     "status": "success",

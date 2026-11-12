@@ -48,7 +48,7 @@ const superDealMarqueeItems = [
   {
     icon: "🎁",
     tag: "FREE GIFTS",
-    text: "Laptop Bag + Wireless Mouse + Pad + Skin with Every Laptop",
+    text: "Laptop Bag + Wireless Mouse + Pad with Every Laptop",
     href: "/deals",
   },
   {
@@ -522,9 +522,8 @@ const Header = ({
                       onKeyDown={handleKeyDown}
                     />
                     <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                    <motion.button
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
+                    <button
+                      type="button"
                       onClick={() => {
                         setIsSearchExpanded(false);
                         setSearchQuery("");
@@ -532,11 +531,11 @@ const Header = ({
                           searchInputRef.current.value = "";
                         }
                       }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 active:scale-90 transition-transform cursor-pointer"
                       aria-label="Close search"
                     >
-                      <X className="h-4 w-4" />
-                    </motion.button>
+                      <X className="h-5 w-5" />
+                    </button>
                   </div>
                   <motion.div
                     initial={{ opacity: 0, y: -5 }}
@@ -721,119 +720,84 @@ const Header = ({
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="lg:hidden"
+              {/* Mobile Search Button (Direct tap, 44px touch target) */}
+              <button
+                type="button"
+                className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 active:scale-90 transition-transform cursor-pointer"
+                onClick={() => setIsSearchExpanded(true)}
+                aria-label="Open search"
               >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10 rounded-full text-neutral-700 hover:bg-neutral-100"
-                  onClick={() => setIsSearchExpanded(true)}
-                  aria-label="Open search"
-                >
-                  <Search className="h-5 w-5" />
-                </Button>
-              </motion.div>
+                <Search className="h-5 w-5" />
+              </button>
 
+              {/* Compare Link */}
               <Link
                 href="/compare"
-                className={`hidden sm:block ${isSearchExpanded ? "md:block" : ""}`}
+                className={`hidden sm:flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 active:scale-95 transition-transform ${
+                  isSearchExpanded ? "md:flex" : ""
+                }`}
+                aria-label="Compare products"
               >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="relative h-10 w-10 rounded-full text-neutral-700 hover:bg-neutral-100"
-                    aria-label="Compare products"
-                  >
-                    <ArrowLeftRight className="h-5 w-5" />
-                  </Button>
-                </motion.div>
+                <ArrowLeftRight className="h-5 w-5" />
               </Link>
 
+              {/* Wishlist Link */}
               <Link
                 href="/wishlist"
-                className={`hidden sm:block ${isSearchExpanded ? "md:block" : ""}`}
+                className={`hidden sm:flex relative h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 active:scale-95 transition-transform ${
+                  isSearchExpanded ? "md:flex" : ""
+                }`}
+                aria-label={
+                  wishlistCount > 0
+                    ? `Wishlist (${wishlistCount} items)`
+                    : "Wishlist"
+                }
               >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="relative h-10 w-10 rounded-full text-neutral-700 hover:bg-neutral-100"
-                    aria-label="Wishlist"
-                  >
-                    <Heart className="h-5 w-5" />
-                    {wishlistCount > 0 && (
-                      <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc0303] text-xs font-semibold text-white">
-                        {wishlistCount}
-                      </span>
-                    )}
-                  </Button>
-                </motion.div>
+                <Heart className="h-5 w-5" />
+                {wishlistCount > 0 && (
+                  <span className="absolute 1 top-1 flex h-4.5 min-w-[18px] px-1 items-center justify-center rounded-full bg-[#dc0303] text-[10px] font-bold text-white">
+                    {wishlistCount}
+                  </span>
+                )}
               </Link>
 
+              {/* Cart Link */}
               <Link
                 href="/cart"
-                className={isSearchExpanded ? "hidden md:block" : ""}
+                className={`relative h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 active:scale-95 transition-transform ${
+                  isSearchExpanded ? "hidden md:flex" : ""
+                }`}
+                aria-label={
+                  cartCount > 0 ? `Shopping cart (${cartCount} items)` : "Shopping cart"
+                }
               >
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="relative h-10 w-10 rounded-full text-neutral-700 hover:bg-neutral-100"
-                    aria-label="Shopping cart"
-                  >
-                    <ShoppingCart className="h-5 w-5" />
-                    {cartCount > 0 && (
-                      <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#dc0303] text-xs font-semibold text-white">
-                        {cartCount}
-                      </span>
-                    )}
-                  </Button>
-                </motion.div>
+                <ShoppingCart className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="absolute 1 top-1 flex h-4.5 min-w-[18px] px-1 items-center justify-center rounded-full bg-[#dc0303] text-[10px] font-bold text-white">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
 
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="hidden md:block"
+              {/* User Link (Desktop) */}
+              <Link
+                href="/admin/login"
+                className="hidden md:flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 active:scale-95 transition-transform"
+                aria-label="Account login"
               >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10 rounded-full text-neutral-700 hover:bg-neutral-100"
-                  aria-label="User account"
-                >
-                  <User className="h-5 w-5" />
-                </Button>
-              </motion.div>
+                <User className="h-5 w-5" />
+              </Link>
 
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="lg:hidden"
+              {/* Mobile Hamburger Menu Button (Direct tap, 44px touch target) */}
+              <button
+                type="button"
+                className="lg:hidden h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-neutral-700 hover:bg-neutral-100 active:scale-90 transition-transform cursor-pointer"
+                onClick={() => setIsMobileMenuOpen(true)}
+                aria-label="Open menu"
+                aria-expanded={isMobileMenuOpen}
               >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10 rounded-full text-neutral-700 hover:bg-neutral-100"
-                  onClick={() => setIsMobileMenuOpen(true)}
-                  aria-label="Open menu"
-                >
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </motion.div>
+                <Menu className="h-6 w-6" />
+              </button>
             </div>
           </div>
         </div>

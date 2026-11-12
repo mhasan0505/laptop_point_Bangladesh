@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import ProductsCard from "@/components/ui/ProductsCard";
 import { useCart } from "@/contexts/CartContext";
 import { useComparison } from "@/contexts/ComparisonContext";
@@ -547,9 +546,10 @@ export default function ProductDetailsClient({
               {galleryImages.length > 0 && (
                 <div className="flex items-center gap-2 justify-center">
                   <button
+                    type="button"
                     onClick={goToPrevImage}
                     disabled={galleryImages.length <= 1}
-                    className="p-1 rounded border border-gray-200 dark:border-border hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 disabled:opacity-30"
+                    className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg border border-gray-200 dark:border-border hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 active:scale-90 transition-transform disabled:opacity-30 cursor-pointer"
                     aria-label="Previous thumbnail"
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -559,9 +559,10 @@ export default function ProductDetailsClient({
                     {galleryImages.map((img, idx) => (
                       <button
                         key={idx}
+                        type="button"
                         aria-label={`View image ${idx + 1} of ${galleryImages.length}`}
                         onClick={() => setActiveImageIndex(idx)}
-                        className={`relative w-14 h-14 rounded border p-1 bg-white shrink-0 transition-all ${
+                        className={`relative w-14 h-14 min-w-[56px] min-h-[56px] rounded-lg border p-1 bg-white shrink-0 transition-all cursor-pointer active:scale-95 ${
                           idx === safeImageIndex
                             ? "border-2 border-[#dc0303] shadow-xs"
                             : "border-gray-200 dark:border-border opacity-70 hover:opacity-100"
@@ -578,9 +579,10 @@ export default function ProductDetailsClient({
                   </div>
 
                   <button
+                    type="button"
                     onClick={goToNextImage}
                     disabled={galleryImages.length <= 1}
-                    className="p-1 rounded border border-gray-200 dark:border-border hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 disabled:opacity-30"
+                    className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg border border-gray-200 dark:border-border hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 active:scale-90 transition-transform disabled:opacity-30 cursor-pointer"
                     aria-label="Next thumbnail"
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -739,80 +741,86 @@ export default function ProductDetailsClient({
               </div>
 
               {/* Actions Row (Qty + Add to Cart + Buy Now + Wishlist + Compare) */}
-              <div className="flex flex-wrap items-center gap-2 pt-2">
+              <div className="flex flex-wrap items-center gap-2.5 pt-2">
                 {/* Stepper */}
-                <div className="flex items-center border border-gray-300 dark:border-border rounded bg-white dark:bg-card">
+                <div className="flex items-center border border-gray-300 dark:border-border rounded-lg bg-white dark:bg-card h-11">
                   <button
+                    type="button"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="px-2.5 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 cursor-pointer"
-                    aria-label="Decrease"
+                    className="h-11 w-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 active:scale-90 transition-transform cursor-pointer"
+                    aria-label="Decrease quantity"
                   >
-                    <Minus className="w-3.5 h-3.5" />
+                    <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-3 py-1 text-xs font-bold font-mono">
+                  <span className="px-3 text-xs font-bold font-mono">
                     {quantity}
                   </span>
                   <button
+                    type="button"
                     onClick={() => setQuantity((q) => q + 1)}
-                    className="px-2.5 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 cursor-pointer"
-                    aria-label="Increase"
+                    className="h-11 w-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 active:scale-90 transition-transform cursor-pointer"
+                    aria-label="Increase quantity"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-4 h-4" />
                   </button>
                 </div>
 
                 {/* Add to Cart */}
                 <button
+                  type="button"
                   onClick={handleAddToCart}
-                  className="px-4 py-2 border-2 border-[#002b60] text-[#002b60] dark:text-white dark:border-primary text-xs font-bold rounded hover:bg-[#002b60] hover:text-white transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="h-11 min-h-[44px] px-5 border-2 border-[#002b60] text-[#002b60] dark:text-white dark:border-primary text-xs sm:text-sm font-bold rounded-lg hover:bg-[#002b60] hover:text-white active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-initial"
                 >
-                  <ShoppingCart className="w-3.5 h-3.5" />
-                  Add to Cart
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Add to Cart</span>
                 </button>
 
                 {/* Buy Now (Primary Brand Action) */}
                 <button
+                  type="button"
                   onClick={handleBuyNow}
-                  className="px-5 py-2 bg-[#dc0303] hover:bg-[#b80202] text-white text-xs font-bold rounded shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
+                  className="h-11 min-h-[44px] px-6 bg-[#dc0303] hover:bg-[#b80202] text-white text-xs sm:text-sm font-bold rounded-lg shadow-xs hover:shadow-md active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-initial"
                 >
-                  <Zap className="w-3.5 h-3.5 fill-current" />
-                  Buy Now
+                  <Zap className="w-4 h-4 fill-current" />
+                  <span>Buy Now</span>
                 </button>
 
                 {/* Wishlist */}
                 <button
+                  type="button"
                   onClick={() =>
                     isWishlisted
                       ? removeFromWishlist(product.id)
                       : addToWishlist(product)
                   }
-                  className={`p-2 rounded border border-gray-300 dark:border-border transition-colors cursor-pointer ${
+                  className={`h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-gray-300 dark:border-border active:scale-90 transition-all cursor-pointer ${
                     isWishlisted
                       ? "bg-red-50 text-[#dc0303] border-red-200"
                       : "hover:bg-gray-50 text-gray-600"
                   }`}
-                  aria-label="Wishlist"
+                  aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
                 >
                   <Heart
-                    className={`w-4 h-4 ${isWishlisted ? "fill-current" : ""}`}
+                    className={`w-4.5 h-4.5 ${isWishlisted ? "fill-current" : ""}`}
                   />
                 </button>
 
                 {/* Compare */}
                 <button
+                  type="button"
                   onClick={() =>
                     isCompared
                       ? removeFromComparison(product.id)
                       : canAddMore() && addToComparison(product)
                   }
-                  className={`p-2 rounded border border-gray-300 dark:border-border transition-colors cursor-pointer ${
+                  className={`h-11 w-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-gray-300 dark:border-border active:scale-90 transition-all cursor-pointer ${
                     isCompared
                       ? "bg-blue-50 text-[#002b60] border-blue-200"
                       : "hover:bg-gray-50 text-gray-600"
                   }`}
-                  aria-label="Compare"
+                  aria-label={isCompared ? "Remove from comparison" : "Add to comparison"}
                 >
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className="w-4.5 h-4.5" />
                 </button>
               </div>
 
@@ -986,8 +994,9 @@ export default function ProductDetailsClient({
           ].map((tab) => (
             <button
               key={tab.id}
+              type="button"
               onClick={() => smoothScrollTo(tab.id)}
-              className={`px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shrink-0 ${
+              className={`h-10 px-4 flex items-center justify-center rounded-md text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shrink-0 active:scale-95 ${
                 activeAnchor === tab.id
                   ? "bg-[#002b60] text-white shadow-2xs"
                   : "text-gray-600 dark:text-gray-300 hover:text-[#002b60] hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -1157,8 +1166,9 @@ export default function ProductDetailsClient({
               </p>
             </div>
             <button
+              type="button"
               onClick={() => setIsQuestionModalOpen(true)}
-              className="px-4 py-2 border-2 border-[#002b60] text-[#002b60] dark:text-white dark:border-primary text-xs font-bold rounded hover:bg-[#002b60] hover:text-white transition-colors cursor-pointer self-start sm:self-auto"
+              className="h-11 min-h-[44px] px-5 border-2 border-[#002b60] text-[#002b60] dark:text-white dark:border-primary text-xs font-bold rounded-lg hover:bg-[#002b60] hover:text-white active:scale-95 transition-all cursor-pointer self-start sm:self-auto flex items-center justify-center"
             >
               Ask Question
             </button>
@@ -1215,8 +1225,9 @@ export default function ProductDetailsClient({
               </p>
             </div>
             <button
+              type="button"
               onClick={() => setIsReviewModalOpen(true)}
-              className="px-4 py-2 border-2 border-[#dc0303] text-[#dc0303] hover:bg-[#dc0303] hover:text-white text-xs font-bold rounded transition-colors cursor-pointer self-start sm:self-auto"
+              className="min-h-[44px] px-5 py-2.5 border-2 border-[#dc0303] text-[#dc0303] hover:bg-[#dc0303] hover:text-white text-xs font-bold rounded-lg transition-all active:scale-95 cursor-pointer self-start sm:self-auto flex items-center justify-center"
             >
               Write a Review
             </button>
@@ -1300,10 +1311,12 @@ export default function ProductDetailsClient({
                 Ask a Question
               </h3>
               <button
+                type="button"
                 onClick={() => setIsQuestionModalOpen(false)}
-                className="text-gray-400 hover:text-gray-700"
+                className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+                aria-label="Close question dialog"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -1351,14 +1364,14 @@ export default function ProductDetailsClient({
                   <button
                     type="button"
                     onClick={() => setIsQuestionModalOpen(false)}
-                    className="px-3 py-1.5 border rounded hover:bg-gray-100"
+                    className="min-h-[44px] px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmittingQuestion}
-                    className="px-4 py-1.5 bg-[#002b60] text-white rounded font-bold hover:bg-[#002047] disabled:opacity-50"
+                    className="min-h-[44px] px-5 py-2 bg-[#002b60] text-white rounded-lg font-bold hover:bg-[#002047] active:scale-95 transition-all disabled:opacity-50 cursor-pointer"
                   >
                     {isSubmittingQuestion ? "Sending..." : "Submit Question"}
                   </button>
@@ -1386,9 +1399,9 @@ export default function ProductDetailsClient({
                 type="button"
                 aria-label="Close review modal"
                 onClick={() => setIsReviewModalOpen(false)}
-                className="text-gray-400 hover:text-gray-700"
+                className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -1408,12 +1421,12 @@ export default function ProductDetailsClient({
                         type="button"
                         aria-label={`Rate ${s} out of 5 stars`}
                         onClick={() => setReviewRating(s)}
-                        className="cursor-pointer"
+                        className="h-10 w-10 min-h-[40px] min-w-[40px] flex items-center justify-center rounded-lg hover:bg-amber-50 active:scale-90 transition-all cursor-pointer"
                       >
                         <Star
-                          className={`w-5 h-5 ${
+                          className={`w-6 h-6 transition-transform ${
                             reviewRating >= s
-                              ? "fill-yellow-400 text-yellow-400"
+                              ? "fill-yellow-400 text-yellow-400 scale-105"
                               : "text-gray-300"
                           }`}
                         />
@@ -1447,13 +1460,13 @@ export default function ProductDetailsClient({
                   <button
                     type="button"
                     onClick={() => setIsReviewModalOpen(false)}
-                    className="px-3 py-1.5 border rounded hover:bg-gray-100"
+                    className="min-h-[44px] px-4 py-2 border rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1.5 bg-[#dc0303] text-white rounded font-bold hover:bg-[#b80202]"
+                    className="min-h-[44px] px-5 py-2 bg-[#dc0303] text-white rounded-lg font-bold hover:bg-[#b80202] active:scale-95 transition-all cursor-pointer"
                   >
                     Post Review
                   </button>
@@ -1471,9 +1484,10 @@ export default function ProductDetailsClient({
           onClick={() => setIsViewerOpen(false)}
         >
           <button
-            className="absolute right-4 top-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+            type="button"
+            className="absolute right-4 top-4 h-12 w-12 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 active:scale-90 transition-all cursor-pointer z-10"
             onClick={() => setIsViewerOpen(false)}
-            aria-label="Close"
+            aria-label="Close image viewer"
           >
             <X className="w-6 h-6" />
           </button>
@@ -1481,24 +1495,26 @@ export default function ProductDetailsClient({
           {galleryImages.length > 1 && (
             <>
               <button
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+                type="button"
+                className="absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 active:scale-90 transition-all cursor-pointer z-10"
                 onClick={(e) => {
                   e.stopPropagation();
                   goToPrevImage();
                 }}
-                aria-label="Previous"
+                aria-label="Previous image"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-7 h-7" />
               </button>
               <button
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+                type="button"
+                className="absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/25 active:scale-90 transition-all cursor-pointer z-10"
                 onClick={(e) => {
                   e.stopPropagation();
                   goToNextImage();
                 }}
-                aria-label="Next"
+                aria-label="Next image"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-7 h-7" />
               </button>
             </>
           )}

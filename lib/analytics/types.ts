@@ -123,3 +123,34 @@ export interface UnifiedDashboard {
   channelBreakdown: ChannelBreakdown[];
   isSimulated: boolean;
 }
+
+export interface BrandShare {
+  brand: string;
+  share: number;
+  revenue: number;
+  units: number;
+}
+
+export interface TopProduct {
+  name: string;
+  sku: string;
+  brand: string;
+  units: number;
+  revenue: number;
+}
+
+export interface StorePerformanceAnalytics {
+  days: number;
+  totalRevenue: number;
+  orderCount: number;
+  avgOrderValue: number;
+  statusBreakdown: {
+    pending: number;
+    processing: number;
+    shipped: number;
+    delivered: number;
+    cancelled: number;
+  };
+  topProductsByUnits: TopProduct[];
+  revenueByBrand: BrandShare[];
+}

@@ -41,7 +41,7 @@ export default async function BottomCtaStrip({
           <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
             <a
               href={`tel:${dialable(profile.hotline)}`}
-              className="inline-flex items-center gap-2 h-12 sm:h-11 px-6 rounded-full bg-brand-red hover:bg-brand-red-hover text-white text-small font-semibold shadow-soft hover:shadow-lift transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-navy"
+              className="inline-flex items-center gap-2 h-12 sm:h-11 px-6 rounded-full bg-brand-red hover:bg-brand-red-hover active:scale-95 text-white text-small font-semibold shadow-soft hover:shadow-lift transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-navy"
             >
               <Phone className="w-4 h-4" aria-hidden="true" />
               <span>{profile.hotline}</span>
@@ -50,7 +50,7 @@ export default async function BottomCtaStrip({
               href={`https://wa.me/${wa}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 h-12 sm:h-11 px-6 rounded-full border border-white/30 hover:border-white/60 hover:bg-white/10 text-white text-small font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-navy"
+              className="inline-flex items-center gap-2 h-12 sm:h-11 px-6 rounded-full border border-white/30 hover:border-white/60 hover:bg-white/10 active:scale-95 text-white text-small font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-navy"
             >
               <MessageCircle className="w-4 h-4 text-[#25D366]" aria-hidden="true" />
               <span>WhatsApp Us</span>

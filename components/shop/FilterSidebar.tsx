@@ -643,7 +643,7 @@ export default function FilterSidebar({
             <button
               type="button"
               onClick={handleReset}
-              className="flex-1 py-2 px-3 border border-gray-300 dark:border-border text-xs font-semibold text-gray-700 dark:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-muted"
+              className="flex-1 min-h-[44px] py-2 px-3 border border-gray-300 dark:border-border text-xs font-semibold text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-muted active:scale-95 transition-all cursor-pointer"
             >
               Reset
             </button>
@@ -651,7 +651,7 @@ export default function FilterSidebar({
           <button
             type="button"
             onClick={onCloseMobile}
-            className="flex-1 py-2 px-3 bg-[#dc0303] text-white text-xs font-semibold rounded hover:bg-[#b80202] transition-colors"
+            className="flex-1 min-h-[44px] py-2 px-3 bg-[#dc0303] text-white text-xs font-semibold rounded-lg hover:bg-[#b80202] active:scale-95 transition-all cursor-pointer"
           >
             {totalMatchingCount !== undefined
               ? `Show ${totalMatchingCount} Laptops`
@@ -683,13 +683,14 @@ function FilterAccordionSection({
       <button
         type="button"
         onClick={onToggle}
-        className="flex items-center justify-between w-full text-left py-1 text-[13px] font-semibold text-[#002b60] dark:text-foreground hover:text-[#dc0303] transition-colors cursor-pointer select-none"
+        aria-expanded={isOpen}
+        className="flex items-center justify-between w-full text-left py-1.5 min-h-[40px] text-[13px] font-semibold text-[#002b60] dark:text-foreground hover:text-[#dc0303] transition-colors cursor-pointer select-none"
       >
         <span>{title}</span>
         {isOpen ? (
-          <ChevronUp className="w-3.5 h-3.5 text-gray-400" />
+          <ChevronUp className="w-4 h-4 text-gray-400" />
         ) : (
-          <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+          <ChevronDown className="w-4 h-4 text-gray-400" />
         )}
       </button>
 
@@ -709,14 +710,14 @@ function CheckboxRow({ label, isChecked, onChange }: CheckboxRowProps) {
   return (
     <label
       htmlFor={id}
-      className="flex items-center gap-2.5 cursor-pointer text-[13px] text-gray-700 dark:text-gray-300 hover:text-[#002b60] dark:hover:text-white select-none group"
+      className="flex items-center gap-2.5 cursor-pointer py-1.5 min-h-[36px] text-[13px] text-gray-700 dark:text-gray-300 hover:text-[#002b60] dark:hover:text-white select-none group touch-manipulation"
     >
       <input
         id={id}
         type="checkbox"
         checked={isChecked}
         onChange={onChange}
-        className="w-3.5 h-3.5 rounded-xs border-gray-300 text-[#dc0303] focus:ring-[#dc0303] focus:ring-offset-0 cursor-pointer accent-[#dc0303]"
+        className="w-4 h-4 rounded-xs border-gray-300 text-[#dc0303] focus:ring-[#dc0303] focus:ring-offset-0 cursor-pointer accent-[#dc0303]"
       />
       <span className="truncate group-hover:translate-x-0.5 transition-transform duration-150">
         {label}

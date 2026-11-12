@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
 import { useComparison } from "@/contexts/ComparisonContext";
 import type { Product } from "@/types/product";
 import { motion } from "framer-motion";
@@ -16,6 +17,7 @@ const getSpecValue = (
 
 const ComparisonTable = () => {
   const { comparisonItems, removeFromComparison } = useComparison();
+  const { addToCart } = useCart();
 
   const specCategories = [
     {
@@ -78,7 +80,8 @@ const ComparisonTable = () => {
             {comparisonItems.map((product) => (
               <div key={product.id} className="p-6 relative text-center group">
                 <button
-                  className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 p-2 hover:bg-red-50 rounded-full"
+                  type="button"
+                  className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-all opacity-80 sm:opacity-0 sm:group-hover:opacity-100 h-9 w-9 min-h-[36px] min-w-[36px] flex items-center justify-center hover:bg-red-50 active:scale-90 rounded-full cursor-pointer z-10"
                   aria-label="Remove item"
                   onClick={() => removeFromComparison(product.id)}
                 >
@@ -109,7 +112,30 @@ const ComparisonTable = () => {
                   ৳{product.price.toLocaleString()}
                 </div>
 
-                <Button className="w-full rounded-full bg-gray-900 text-white hover:bg-primary hover:text-gray-900 transition-all shadow-none hover:shadow-lg hover:shadow-primary/20">
+                <Button
+                  type="button"
+                  onClick={() => {
+                    addToCart(
+                      {
+                        id: product.id.toString(),
+                        name: product.name,
+                        brand: product.brand || "",
+                        price: product.price,
+                        originalPrice: product.originalPrice,
+                        image:
+                          typeof product.image === "string"
+                            ? product.image
+                            : typeof product.image === "object" &&
+                                product.image !== null &&
+                                "src" in product.image
+                              ? (product.image as { src: string }).src
+                              : "",
+                      },
+                      1,
+                    );
+                  }}
+                  className="w-full min-h-[44px] rounded-xl bg-[#dc0303] text-white hover:bg-[#b80202] active:scale-95 transition-all shadow-sm hover:shadow-md cursor-pointer font-bold text-xs"
+                >
                   Add to Cart
                 </Button>
               </div>

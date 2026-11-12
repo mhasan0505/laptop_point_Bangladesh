@@ -94,20 +94,20 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
   };
 
   return (
-    <article className="group relative flex flex-col justify-between h-full bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 p-4 sm:p-5 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/60 dark:hover:shadow-black/50 hover:border-slate-300 dark:hover:border-slate-700">
+    <article className="group relative flex flex-col justify-between h-full bg-white dark:bg-slate-900 rounded-xl border border-slate-200/90 dark:border-slate-800 p-3.5 sm:p-5 transition-all duration-200 hover:shadow-xl hover:shadow-slate-200/60 dark:hover:shadow-black/50 hover:border-slate-300 dark:hover:border-slate-700">
       {/* Top: Media Area with subtle floating buttons */}
       <div className="relative w-full aspect-4/3 max-h-48 sm:max-h-52 flex items-center justify-center p-2 mb-3 overflow-hidden">
         {/* Discount Badge */}
         {discountInfo && (
           <div className="absolute top-0 left-0 z-10 pointer-events-none">
-            <span className="inline-flex items-center text-[11px] font-bold text-white bg-[#dc0303] px-2 py-0.5 rounded shadow-xs">
+            <span className="inline-flex items-center text-[10px] sm:text-[11px] font-bold text-white bg-[#dc0303] px-1.5 sm:px-2 py-0.5 rounded shadow-xs">
               -{discountInfo.percent}%
             </span>
           </div>
         )}
 
-        {/* Floating Quick Action Buttons (Top Right) */}
-        <div className="absolute top-0 right-0 z-10 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        {/* Floating Quick Action Buttons (Top Right) - accessible on touch, revealed on desktop hover */}
+        <div className="absolute top-0 right-0 z-10 flex items-center gap-1 opacity-85 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200">
           <button
             type="button"
             onClick={(e) => {
@@ -115,7 +115,7 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
               e.stopPropagation();
               setShowQuickView(true);
             }}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-800 dark:hover:text-white bg-white/80 dark:bg-slate-800/80 shadow-xs transition-colors"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white bg-white/90 dark:bg-slate-800/90 shadow-2xs transition-colors cursor-pointer"
             title="Quick View"
             aria-label="Quick View"
           >
@@ -126,10 +126,10 @@ const ProductsCard = ({ product }: ProductsCardProps) => {
             onClick={toggleWishlist}
             aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             aria-pressed={isWishlisted}
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
               isWishlisted
                 ? "text-brand-red bg-red-50 dark:bg-red-950/40"
-                : "text-slate-400 hover:text-brand-red bg-white/80 dark:bg-slate-800/80 shadow-xs"
+                : "text-slate-400 hover:text-brand-red bg-white/90 dark:bg-slate-800/90 shadow-2xs"
             }`}
           >
             <Heart
