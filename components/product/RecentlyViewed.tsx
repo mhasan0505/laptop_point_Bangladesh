@@ -1,7 +1,7 @@
 "use client";
 
 import { Product } from "@/types/product";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -11,7 +11,7 @@ import ProductsCard from "../ui/ProductsCard";
 
 const RecentlyViewed = () => {
   // Use lazy initial state to read from localStorage only once during initialization
-  const [recentProducts] = useState<Product[]>(() => {
+  const [recentProducts, setRecentProducts] = useState<Product[]>(() => {
     if (typeof window === "undefined") return [];
 
     const saved = localStorage.getItem("recentlyViewed");
@@ -25,6 +25,27 @@ const RecentlyViewed = () => {
     }
     return [];
   });
+
+  useEffect(() => {
+    if (recentProducts.length === 0) return;
+    let cancelled = false;
+    fetch("/api/products")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((live: Product[] | null) => {
+        if (cancelled || !Array.isArray(live)) return;
+        const byId = new Map(live.map((p) => [String(p.id), p]));
+        const bySlug = new Map(live.map((p) => [p.slug, p]));
+        setRecentProducts((prev) =>
+          prev.map((item) => byId.get(String(item.id)) || bySlug.get(item.slug) || item)
+        );
+      })
+      .catch(() => {
+        // Ignore network errors; keep cached items
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [recentProducts.length]);
 
   if (recentProducts.length === 0) return null;
 

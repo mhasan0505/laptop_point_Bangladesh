@@ -1535,8 +1535,10 @@ export function ProductEditorForm({
         ? finalVariants.reduce((sum, v) => sum + (v.stockQty || 0), 0)
         : stock;
 
-      const minVariantPrice = finalVariants.length > 0 && !form.callForPrice
-        ? Math.min(...finalVariants.map((v) => v.price ?? price ?? 0))
+      const activeVariants = finalVariants.filter((v) => v.active !== false);
+      const priceSourceVariants = activeVariants.length > 0 ? activeVariants : finalVariants;
+      const minVariantPrice = priceSourceVariants.length > 0 && !form.callForPrice
+        ? Math.min(...priceSourceVariants.map((v) => v.price ?? price ?? 0))
         : price;
 
       const finalBrandId =
