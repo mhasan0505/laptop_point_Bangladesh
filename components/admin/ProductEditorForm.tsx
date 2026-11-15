@@ -708,15 +708,59 @@ export function ProductEditorForm({
   };
 
   const addVariantRow = () => {
-    const defaultOptions: Record<string, string> = {};
-    form.variantOptionGroups.forEach((g) => {
-      if (g.name.trim() && g.values.length > 0) {
-        defaultOptions[g.name.trim()] = g.values[0];
+    const validGroups = form.variantOptionGroups.filter(
+      (g) => g.name.trim() && g.values.length > 0,
+    );
+
+    let defaultOptions: Record<string, string> = {};
+    if (validGroups.length > 0) {
+      // Pick the first combination not yet present in form.variants
+      const combos: Record<string, string>[] = [{}];
+      for (const g of validGroups) {
+        const key = g.name.trim();
+        const next: Record<string, string>[] = [];
+        for (const c of combos) {
+          for (const val of g.values) {
+            next.push({ ...c, [key]: val });
+            if (next.length >= 200) break;
+          }
+          if (next.length >= 200) break;
+        }
+        combos.splice(0, combos.length, ...next);
       }
-    });
+
+      const unused = combos.find((combo) =>
+        !form.variants.some((ev) =>
+          Object.entries(combo).every(([k, val]) => ev.options[k] === val),
+        ),
+      );
+      defaultOptions = unused || { ...combos[0] };
+    } else {
+      defaultOptions = { Configuration: `Variant ${form.variants.length + 1}` };
+    }
+
+    const baseSku = form.sku.trim().toUpperCase();
+    const optionSuffix = Object.values(defaultOptions)
+      .map((val) => val.toUpperCase().replace(/[^A-Z0-9]/g, ""))
+      .filter(Boolean)
+      .join("-");
+
+    let candidateSku = baseSku
+      ? `${baseSku}-${optionSuffix || `V${form.variants.length + 1}`}`
+      : `VAR-${Date.now().toString(36).toUpperCase()}`;
+
+    const existingSkus = new Set(form.variants.map((v) => v.sku.toUpperCase()));
+    if (existingSkus.has(candidateSku.toUpperCase())) {
+      let counter = form.variants.length + 1;
+      while (existingSkus.has(`${candidateSku}-${counter}`.toUpperCase())) {
+        counter += 1;
+      }
+      candidateSku = `${candidateSku}-${counter}`;
+    }
 
     const newVariant: ProductFormVariant = {
-      sku: form.sku.trim() ? `${form.sku.trim().toUpperCase()}-V${form.variants.length + 1}` : `VAR-${Date.now()}`,
+      id: `var-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      sku: candidateSku,
       options: defaultOptions,
       price: form.price || "0",
       marketPrice: form.marketPrice || "",
@@ -729,6 +773,17 @@ export function ProductEditorForm({
     setForm((prev) => ({
       ...prev,
       variants: [...prev.variants, newVariant],
+    }));
+  };
+
+  const updateVariantOption = (index: number, optionKey: string, optionValue: string) => {
+    setForm((prev) => ({
+      ...prev,
+      variants: prev.variants.map((v, idx) =>
+        idx === index
+          ? { ...v, options: { ...v.options, [optionKey]: optionValue } }
+          : v,
+      ),
     }));
   };
 
@@ -2360,22 +2415,87 @@ export function ProductEditorForm({
                                   </div>
                                 </td>
                                 <td className="py-2 px-2.5">
-                                  <div className="flex flex-wrap gap-1.5">
-                                    {Object.entries(v.options).map(([k, val]) => (
-                                      <span
-                                        key={k}
-                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-800 border border-slate-200/80 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
-                                      >
-                                        <span className="text-slate-500 dark:text-slate-400 font-normal">
-                                          {k}:
-                                        </span>
-                                        <span>{val}</span>
-                                      </span>
-                                    ))}
-                                    {Object.keys(v.options).length === 0 && (
-                                      <span className="text-muted-foreground italic text-[11px]">
-                                        Default
-                                      </span>
+                                  <div className="flex flex-col gap-1.5 min-w-[140px]">
+                                    {form.variantOptionGroups.some((g) => g.name.trim() && g.values.length > 0) ? (
+                                      form.variantOptionGroups
+                                        .filter((g) => g.name.trim())
+                                        .map((g) => {
+                                          const gName = g.name.trim();
+                                          const currentVal = v.options[gName] ?? "";
+                                          const valueList =
+                                            currentVal && !g.values.includes(currentVal)
+                                              ? [currentVal, ...g.values]
+                                              : g.values;
+                                          return (
+                                            <label
+                                              key={g.id}
+                                              className="inline-flex items-center justify-between gap-1.5 px-2 py-1 rounded-md text-[11px] bg-slate-100/90 text-slate-800 border border-slate-200/80 dark:bg-slate-800/80 dark:text-slate-100 dark:border-slate-700"
+                                            >
+                                              <span className="text-slate-500 dark:text-slate-400 font-normal shrink-0">
+                                                {gName}:
+                                              </span>
+                                              {valueList.length > 0 ? (
+                                                <select
+                                                  value={currentVal}
+                                                  onChange={(e) =>
+                                                    updateVariantOption(idx, gName, e.target.value)
+                                                  }
+                                                  aria-label={`${gName} for variant ${idx + 1}`}
+                                                  className="bg-transparent font-medium text-slate-900 dark:text-slate-100 outline-none cursor-pointer text-[11px] max-w-[95px]"
+                                                >
+                                                  {!currentVal && <option value="">Select...</option>}
+                                                  {valueList.map((val) => (
+                                                    <option
+                                                      key={val}
+                                                      value={val}
+                                                      className="bg-background text-foreground"
+                                                    >
+                                                      {val}
+                                                    </option>
+                                                  ))}
+                                                </select>
+                                              ) : (
+                                                <input
+                                                  type="text"
+                                                  value={currentVal}
+                                                  onChange={(e) =>
+                                                    updateVariantOption(idx, gName, e.target.value)
+                                                  }
+                                                  placeholder="Value"
+                                                  className="w-20 bg-transparent font-medium text-slate-900 dark:text-slate-100 outline-none text-[11px]"
+                                                />
+                                              )}
+                                            </label>
+                                          );
+                                        })
+                                    ) : Object.keys(v.options).length > 0 ? (
+                                      Object.entries(v.options).map(([k, val]) => (
+                                        <label
+                                          key={k}
+                                          className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] bg-slate-100/90 text-slate-800 border border-slate-200/80 dark:bg-slate-800/80 dark:text-slate-100 dark:border-slate-700"
+                                        >
+                                          <span className="text-slate-500 dark:text-slate-400 font-normal shrink-0">
+                                            {k}:
+                                          </span>
+                                          <input
+                                            type="text"
+                                            value={val}
+                                            onChange={(e) => updateVariantOption(idx, k, e.target.value)}
+                                            placeholder="Label"
+                                            className="w-24 bg-transparent font-medium text-slate-900 dark:text-slate-100 outline-none text-[11px]"
+                                          />
+                                        </label>
+                                      ))
+                                    ) : (
+                                      <input
+                                        type="text"
+                                        value=""
+                                        onChange={(e) =>
+                                          updateVariantOption(idx, "Configuration", e.target.value)
+                                        }
+                                        placeholder="e.g. 16GB / 512GB"
+                                        className="w-full h-8 px-2 text-xs bg-background border border-border rounded-md outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
+                                      />
                                     )}
                                   </div>
                                 </td>
@@ -2454,6 +2574,7 @@ export function ProductEditorForm({
                                 <td className="py-2 px-2.5">
                                   <input
                                     type="text"
+                                    list="variant-product-images"
                                     value={v.imageUrl || ""}
                                     onChange={(e) => updateVariantRow(idx, "imageUrl", e.target.value)}
                                     placeholder="/uploads/..."
@@ -2482,6 +2603,13 @@ export function ProductEditorForm({
                             ))}
                           </tbody>
                         </table>
+                        {imageUrls.length > 0 && (
+                          <datalist id="variant-product-images">
+                            {imageUrls.map((url) => (
+                              <option key={url} value={url} />
+                            ))}
+                          </datalist>
+                        )}
                       </div>
                     )}
                   </div>
