@@ -2267,99 +2267,109 @@ export function ProductEditorForm({
                   {/* Step 2: Variant Matrix Table */}
                   <div className="space-y-3 pt-4 border-t border-border/60">
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Variant Matrix ({form.variants.length})
-                      </h4>
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-xs font-semibold uppercase tracking-wider text-foreground">
+                          Variant Matrix
+                        </h4>
+                        <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/70 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800/60 tabular-nums">
+                          {form.variants.length}
+                        </span>
+                      </div>
                       {form.variants.length > 0 && (
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={syncVariantSkusWithProduct}
-                            className="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1 font-medium"
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-950/40 transition-colors"
                           >
-                            <RefreshCw className="w-3 h-3" />
+                            <RefreshCw className="w-3.5 h-3.5" />
                             Sync variant SKUs
                           </button>
-                          <span className="text-border">|</span>
                           <button
                             type="button"
                             onClick={() => setForm((prev) => ({ ...prev, variants: [] }))}
-                            className="text-xs text-red-500 hover:underline"
+                            className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-950/30 transition-colors"
                           >
-                            Clear all variants
+                            Clear all
                           </button>
                         </div>
                       )}
                     </div>
 
                     {form.variants.length === 0 ? (
-                      <div className="rounded-lg border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
+                      <div className="rounded-xl border border-dashed border-border bg-muted/20 p-6 text-center text-xs text-muted-foreground">
                         No variants generated. Add attributes above and click &quot;Generate Combinations&quot;, or click &quot;Add Custom Row&quot;.
                       </div>
                     ) : (
-                      <div className="overflow-x-auto rounded-lg border border-border">
-                        <table className="w-full text-left text-xs">
-                          <thead className="bg-muted/50 border-b border-border text-[11px] font-semibold text-muted-foreground uppercase">
+                      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-xs">
+                        <table className="w-full text-left text-xs border-collapse">
+                          <thead className="bg-slate-50/90 dark:bg-slate-900/70 border-b border-border text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide whitespace-nowrap">
                             <tr>
-                              <th className="py-2.5 px-2 w-10 text-center">#</th>
-                              <th className="py-2.5 px-3 min-w-[140px]">Options</th>
-                              <th className="py-2.5 px-3 min-w-[140px]">
+                              <th className="py-2.5 px-2 w-9 text-center">#</th>
+                              <th className="py-2.5 px-2.5 min-w-[125px]">Options</th>
+                              <th className="py-2.5 px-2.5 min-w-[130px]">
                                 SKU <span className="text-red-500">*</span>
                               </th>
-                              <th className="py-2.5 px-3 min-w-[110px]">
+                              <th className="py-2.5 px-2 w-24 min-w-[92px]">
                                 Price (৳) <span className="text-red-500">*</span>
                               </th>
-                              <th className="py-2.5 px-3 min-w-[110px]">Regular Price (৳)</th>
-                              <th className="py-2.5 px-3 min-w-[90px]">
+                              <th className="py-2.5 px-2 w-24 min-w-[92px]">Regular (৳)</th>
+                              <th className="py-2.5 px-2 w-18 min-w-[70px]">
                                 Stock <span className="text-red-500">*</span>
                               </th>
-                              <th className="py-2.5 px-3 min-w-[110px]">Stock Status</th>
-                              <th className="py-2.5 px-3 min-w-[130px]">Image URL</th>
-                              <th className="py-2.5 px-2 w-14 text-center">Active</th>
-                              <th className="py-2.5 px-2 w-10 text-center"></th>
+                              <th className="py-2.5 px-2 w-26 min-w-[98px]">Status</th>
+                              <th className="py-2.5 px-2.5 min-w-[115px]">Image URL</th>
+                              <th className="py-2.5 px-2 w-12 text-center">Active</th>
+                              <th className="py-2.5 px-2 w-9 text-center sticky right-0 bg-slate-50/95 dark:bg-slate-900/95">
+                                <span className="sr-only">Actions</span>
+                              </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-border/60 bg-background">
+                          <tbody className="divide-y divide-border/70 bg-background">
                             {form.variants.map((v, idx) => (
                               <tr
                                 key={v.id || idx}
                                 className={cn(
-                                  "hover:bg-muted/20 transition-colors",
-                                  !v.active && "opacity-60 bg-muted/10"
+                                  "group hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors",
+                                  !v.active && "opacity-60 bg-muted/20"
                                 )}
                               >
                                 <td className="py-2 px-1 text-center">
-                                  <div className="flex flex-col items-center">
+                                  <div className="flex flex-col items-center gap-0.5">
                                     <button
                                       type="button"
                                       disabled={idx === 0}
                                       onClick={() => moveVariantRow(idx, idx - 1)}
-                                      className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20"
+                                      className="p-0.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-20 transition-colors"
+                                      title="Move up"
                                     >
                                       <ArrowUp className="w-3 h-3" />
                                     </button>
-                                    <span className="text-[10px] text-muted-foreground font-mono">
+                                    <span className="text-[10px] text-muted-foreground font-mono tabular-nums">
                                       {idx + 1}
                                     </span>
                                     <button
                                       type="button"
                                       disabled={idx === form.variants.length - 1}
                                       onClick={() => moveVariantRow(idx, idx + 1)}
-                                      className="p-0.5 text-muted-foreground hover:text-foreground disabled:opacity-20"
+                                      className="p-0.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-20 transition-colors"
+                                      title="Move down"
                                     >
                                       <ArrowDown className="w-3 h-3" />
                                     </button>
                                   </div>
                                 </td>
-                                <td className="py-2 px-3">
-                                  <div className="flex flex-wrap gap-1">
+                                <td className="py-2 px-2.5">
+                                  <div className="flex flex-wrap gap-1.5">
                                     {Object.entries(v.options).map(([k, val]) => (
                                       <span
                                         key={k}
-                                        className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-secondary text-secondary-foreground font-medium"
+                                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-800 border border-slate-200/80 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
                                       >
-                                        <span className="text-muted-foreground mr-1">{k}:</span>
-                                        {val}
+                                        <span className="text-slate-500 dark:text-slate-400 font-normal">
+                                          {k}:
+                                        </span>
+                                        <span>{val}</span>
                                       </span>
                                     ))}
                                     {Object.keys(v.options).length === 0 && (
@@ -2369,14 +2379,14 @@ export function ProductEditorForm({
                                     )}
                                   </div>
                                 </td>
-                                <td className="py-2 px-3">
+                                <td className="py-2 px-2.5">
                                   <input
                                     type="text"
                                     value={v.sku}
                                     onChange={(e) => updateVariantRow(idx, "sku", e.target.value)}
                                     placeholder="SKU"
                                     className={cn(
-                                      "w-full px-2 py-1 text-xs bg-background border rounded font-mono outline-none focus:ring-1 focus:ring-primary",
+                                      "w-full h-8 px-2.5 text-xs bg-background border rounded-md font-mono outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15",
                                       errors[`variant_${idx}_sku`] ? "border-red-500" : "border-border"
                                     )}
                                   />
@@ -2386,7 +2396,7 @@ export function ProductEditorForm({
                                     </p>
                                   )}
                                 </td>
-                                <td className="py-2 px-3">
+                                <td className="py-2 px-2">
                                   <input
                                     type="number"
                                     min="0"
@@ -2395,7 +2405,7 @@ export function ProductEditorForm({
                                     onChange={(e) => updateVariantRow(idx, "price", e.target.value)}
                                     placeholder={form.callForPrice ? "On request" : "0"}
                                     className={cn(
-                                      "w-full px-2 py-1 text-xs bg-background border rounded outline-none focus:ring-1 focus:ring-primary",
+                                      "w-full h-8 px-2 text-xs bg-background border rounded-md tabular-nums outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15 disabled:opacity-50",
                                       errors[`variant_${idx}_price`] ? "border-red-500" : "border-border"
                                     )}
                                   />
@@ -2405,17 +2415,17 @@ export function ProductEditorForm({
                                     </p>
                                   )}
                                 </td>
-                                <td className="py-2 px-3">
+                                <td className="py-2 px-2">
                                   <input
                                     type="number"
                                     min="0"
                                     value={v.marketPrice}
                                     onChange={(e) => updateVariantRow(idx, "marketPrice", e.target.value)}
                                     placeholder="Regular"
-                                    className="w-full px-2 py-1 text-xs bg-background border border-border rounded outline-none focus:ring-1 focus:ring-primary"
+                                    className="w-full h-8 px-2 text-xs bg-background border border-border rounded-md tabular-nums outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                                   />
                                 </td>
-                                <td className="py-2 px-3">
+                                <td className="py-2 px-2">
                                   <input
                                     type="number"
                                     min="0"
@@ -2423,16 +2433,16 @@ export function ProductEditorForm({
                                     onChange={(e) => updateVariantRow(idx, "stockQty", e.target.value)}
                                     placeholder="0"
                                     className={cn(
-                                      "w-full px-2 py-1 text-xs bg-background border rounded outline-none focus:ring-1 focus:ring-primary",
+                                      "w-full h-8 px-2 text-xs bg-background border rounded-md tabular-nums outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15",
                                       errors[`variant_${idx}_stockQty`] ? "border-red-500" : "border-border"
                                     )}
                                   />
                                 </td>
-                                <td className="py-2 px-3">
+                                <td className="py-2 px-2">
                                   <select
                                     value={v.stockStatus}
                                     onChange={(e) => updateVariantRow(idx, "stockStatus", e.target.value)}
-                                    className="w-full px-2 py-1 text-xs bg-background border border-border rounded outline-none focus:ring-1 focus:ring-primary"
+                                    className="w-full h-8 px-2 text-xs bg-background border border-border rounded-md outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                                   >
                                     {STOCK_STATUSES.map((st) => (
                                       <option key={st} value={st}>
@@ -2441,13 +2451,13 @@ export function ProductEditorForm({
                                     ))}
                                   </select>
                                 </td>
-                                <td className="py-2 px-3">
+                                <td className="py-2 px-2.5">
                                   <input
                                     type="text"
                                     value={v.imageUrl || ""}
                                     onChange={(e) => updateVariantRow(idx, "imageUrl", e.target.value)}
                                     placeholder="/uploads/..."
-                                    className="w-full px-2 py-1 text-xs bg-background border border-border rounded outline-none focus:ring-1 focus:ring-primary text-[11px]"
+                                    className="w-full h-8 px-2 text-[11px] bg-background border border-border rounded-md outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/15"
                                   />
                                 </td>
                                 <td className="py-2 px-2 text-center">
@@ -2455,14 +2465,14 @@ export function ProductEditorForm({
                                     type="checkbox"
                                     checked={v.active}
                                     onChange={(e) => updateVariantRow(idx, "active", e.target.checked)}
-                                    className="rounded border-border text-primary focus:ring-primary h-4 w-4"
+                                    className="rounded border-border accent-blue-600 h-4 w-4 cursor-pointer"
                                   />
                                 </td>
-                                <td className="py-2 px-2 text-center">
+                                <td className="py-2 px-2 text-center sticky right-0 bg-background/95 group-hover:bg-slate-50/95 dark:group-hover:bg-slate-800/95 backdrop-blur-xs">
                                   <button
                                     type="button"
                                     onClick={() => removeVariantRow(idx)}
-                                    className="p-1 text-muted-foreground hover:text-red-500 transition-colors"
+                                    className="p-1.5 rounded-md text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:text-red-400 dark:hover:bg-red-950/30 transition-colors"
                                     title="Delete variant"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
