@@ -222,7 +222,7 @@ export function OrderCreateDialog({
         totalAmount: grandTotal,
       };
 
-      const response = await fetch("/api/admin/orders", {
+      const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -501,7 +501,7 @@ export function OrderCreateDialog({
                     <SelectItem value="bkash">bKash (Mobile Banking)</SelectItem>
                     <SelectItem value="nagad">Nagad</SelectItem>
                     <SelectItem value="card">Credit / Debit Card</SelectItem>
-                    <SelectItem value="bank_transfer">Direct Bank Transfer</SelectItem>
+                    <SelectItem value="emi">EMI (Installment)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

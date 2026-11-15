@@ -24,7 +24,7 @@ interface StockUpdateDialogProps {
     variantLabel?: string;
     currentStock: number;
   } | null;
-  onSuccess: (newStock: number, variantId?: string) => void;
+  onSuccess: (newStock: number, variantId?: string) => void | Promise<void>;
 }
 
 export function StockUpdateDialog({
@@ -37,20 +37,23 @@ export function StockUpdateDialog({
   const [isUpdating, setIsUpdating] = useState(false);
   const { error } = useToast();
 
-  const handleUpdate = () => {
-    if (!product || !newStock) return;
+  const handleUpdate = async () => {
+    if (!product || newStock.trim() === "") return;
 
-    const stockValue = parseInt(newStock);
+    const stockValue = parseInt(newStock, 10);
     if (isNaN(stockValue) || stockValue < 0) {
       error("Please enter a valid stock quantity (0 or greater)");
       return;
     }
 
     setIsUpdating(true);
-    onSuccess(stockValue, product.variantId);
-    onClose();
-    setNewStock("");
-    setIsUpdating(false);
+    try {
+      await onSuccess(stockValue, product.variantId);
+      onClose();
+      setNewStock("");
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (

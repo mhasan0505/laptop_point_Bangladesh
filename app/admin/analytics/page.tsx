@@ -65,7 +65,7 @@ export default function AnalyticsPage() {
       };
       const days = daysMap[range] ?? 30;
 
-      const res = await fetch(`/api/admin/analytics?days=${days}`, {
+      const res = await fetch(`/api/admin/analytics?days=${days}${isManual ? "&refresh=true" : ""}`, {
         cache: "no-store",
       });
 
@@ -111,18 +111,17 @@ export default function AnalyticsPage() {
       p.revenue,
     ]);
 
-    const csvContent =
-      "data:text/csv;charset=utf-8," +
-      [
-        brandHeaders.join(","),
-        ...brandRows.map((e) => e.join(",")),
-        productHeaders.join(","),
-        ...productRows.map((e) => e.join(",")),
-      ].join("\n");
+    const csvText = [
+      brandHeaders.join(","),
+      ...brandRows.map((e) => e.join(",")),
+      productHeaders.join(","),
+      ...productRows.map((e) => e.join(",")),
+    ].join("\n");
 
-    const encodedUri = encodeURI(csvContent);
+    const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute(
       "download",
       `blg-analytics-${timeRange}-${new Date().toISOString().slice(0, 10)}.csv`
@@ -130,6 +129,7 @@ export default function AnalyticsPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     showToast("Analytics report exported as CSV.");
   };
 

@@ -80,7 +80,9 @@ export default function InventoryPage() {
     ])
       .then(([productData, accessoryData]) => {
         const mappedProducts: InventoryProduct[] = Array.isArray(productData)
-          ? productData.map((item: any) => {
+          ? productData
+              .filter((item: any) => !String(item.id || "").startsWith("acc-"))
+              .map((item: any) => {
               const rawVariants = Array.isArray(item.variants) ? item.variants : [];
               const variants: InventoryVariant[] = rawVariants.map((v: any) => {
                 const opts = typeof v.options === "object" && v.options !== null ? v.options : {};

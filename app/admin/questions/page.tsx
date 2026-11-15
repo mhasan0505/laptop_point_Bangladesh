@@ -119,10 +119,11 @@ export default function AdminQuestionsPage() {
 
   const filteredQuestions = useMemo(() => {
     return questions.filter((q) => {
+      const query = searchTerm.toLowerCase();
       const matchesSearch =
-        q.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        q.productSlug.toLowerCase().includes(searchTerm.toLowerCase());
+        (q.userName ?? "").toLowerCase().includes(query) ||
+        (q.question ?? "").toLowerCase().includes(query) ||
+        (q.productSlug ?? "").toLowerCase().includes(query);
 
       const matchesStatus =
         filterStatus === "all"

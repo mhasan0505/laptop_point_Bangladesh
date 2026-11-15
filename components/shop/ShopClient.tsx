@@ -176,16 +176,18 @@ const ShopContent = ({
   };
 
   useEffect(() => {
-    if (!initialProducts || initialProducts.length === 0) {
-      fetch("/api/products")
-        .then((res) => res.json())
-        .then((data) => {
-          if (Array.isArray(data) && data.length > 0) {
-            setAllProducts(data);
-          }
-        })
-        .catch((err) => console.error("Failed to load products:", err));
+    if (initialProducts && initialProducts.length > 0) {
+      setAllProducts(initialProducts);
+      return;
     }
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setAllProducts(data);
+        }
+      })
+      .catch((err) => console.error("Failed to load products:", err));
   }, [initialProducts]);
 
   // Compute live faceted counts for all available options

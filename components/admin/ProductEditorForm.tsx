@@ -357,14 +357,16 @@ function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
     price: initialProduct && initialProduct.price !== null && initialProduct.price !== undefined
       ? String(initialProduct.price)
       : "",
-    marketPrice:
-      initialProduct?.marketPrice !== undefined && initialProduct?.marketPrice !== null
-        ? String(initialProduct.marketPrice)
-        : initialProduct?.regularPrice !== undefined && initialProduct?.regularPrice !== null
-          ? String(initialProduct.regularPrice)
-          : initialProduct?.salePrice !== undefined && initialProduct?.salePrice !== null
-            ? String(initialProduct.salePrice)
-            : "",
+    marketPrice: (() => {
+      const rawMarket =
+        initialProduct?.marketPrice ??
+        initialProduct?.regularPrice ??
+        initialProduct?.salePrice;
+      const rawPrice = Number(initialProduct?.price ?? 0);
+      return rawMarket !== undefined && rawMarket !== null && Number(rawMarket) > rawPrice
+        ? String(rawMarket)
+        : "";
+    })(),
     currency: initialProduct?.currency || "BDT",
     taxIncluded: initialProduct?.taxIncluded ?? true,
     stock: initialProduct ? String(initialProduct.stock) : "",
@@ -437,11 +439,13 @@ function buildInitialState(initialProduct?: AdminProduct): ProductFormState {
         sku: v.sku || "",
         options: opts,
         price: v.price !== undefined && v.price !== null ? String(v.price) : "",
-        marketPrice:
-          (v.marketPrice ?? v.regularPrice ?? v.originalPrice) !== undefined &&
-          (v.marketPrice ?? v.regularPrice ?? v.originalPrice) !== null
-            ? String(v.marketPrice ?? v.regularPrice ?? v.originalPrice)
-            : "",
+        marketPrice: (() => {
+          const rawVMarket = v.marketPrice ?? v.regularPrice ?? v.originalPrice;
+          const rawVPrice = Number(v.price ?? 0);
+          return rawVMarket !== undefined && rawVMarket !== null && Number(rawVMarket) > rawVPrice
+            ? String(rawVMarket)
+            : "";
+        })(),
         stockQty:
           v.stockQty !== undefined
             ? String(v.stockQty)
@@ -1557,9 +1561,9 @@ export function ProductEditorForm({
         description,
         fullDescription: form.fullDescription.trim() || undefined,
         price: form.callForPrice ? 0 : ((finalVariants.length > 0 ? minVariantPrice : price) || 0),
-        marketPrice: marketPrice ?? undefined,
-        regularPrice: marketPrice ?? undefined,
-        salePrice: marketPrice ?? undefined,
+        marketPrice: marketPrice ?? null,
+        regularPrice: marketPrice ?? null,
+        salePrice: marketPrice ?? null,
         currency: form.currency.trim() || "BDT",
         taxIncluded: form.taxIncluded,
         stock: totalStock,

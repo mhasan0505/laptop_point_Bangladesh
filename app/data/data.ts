@@ -15,17 +15,22 @@ const normalizeImagePath = (path: string): string => {
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 };
 
-const resolveProductImages = (product: RawProduct): string[] => {
-  const fromManifest = productImageManifest[product.sku] ?? [];
-  if (fromManifest.length > 0) {
-    return fromManifest.map(normalizeImagePath).filter(Boolean);
-  }
+const isPlaceholderImage = (img: string): boolean =>
+  img === "/placeholder.png" || img.startsWith("/images/placeholder-");
 
+const resolveProductImages = (product: RawProduct): string[] => {
   const fromProductData = (product.images ?? [])
     .map(normalizeImagePath)
-    .filter(Boolean);
+    .filter((p) => Boolean(p) && !isPlaceholderImage(p));
   if (fromProductData.length > 0) {
     return fromProductData;
+  }
+
+  const fromManifest = (productImageManifest[product.sku] ?? [])
+    .map(normalizeImagePath)
+    .filter(Boolean);
+  if (fromManifest.length > 0) {
+    return fromManifest;
   }
 
   return ["/placeholder.png"];

@@ -196,14 +196,16 @@ function OrdersPageContent() {
         fetchAdminProducts(),
       ]);
 
-      if (ordersRes.ok) {
-        const data = (await ordersRes.json()) as ApiOrder[];
-        setOrders(data.map(mapApiOrder));
+      if (!ordersRes.ok) {
+        const errData = await ordersRes.json().catch(() => ({}));
+        throw new Error(errData.error || `Failed to load orders (${ordersRes.status})`);
       }
+      const data = (await ordersRes.json()) as ApiOrder[];
+      setOrders(data.map(mapApiOrder));
       setProducts(productsData);
     } catch (err) {
       console.error("Failed to load orders:", err);
-      showErrorToast("Could not load latest orders data.");
+      showErrorToast(err instanceof Error ? err.message : "Could not load latest orders data.");
     } finally {
       setIsLoading(false);
     }
@@ -217,16 +219,20 @@ function OrdersPageContent() {
           fetch("/api/orders", { cache: "no-store" }),
           fetchAdminProducts(),
         ]);
-        if (ordersRes.ok && !ignore) {
-          const data = (await ordersRes.json()) as ApiOrder[];
-          setOrders(data.map(mapApiOrder));
+        if (!ordersRes.ok) {
+          const errData = await ordersRes.json().catch(() => ({}));
+          throw new Error(errData.error || `Failed to load orders (${ordersRes.status})`);
         }
         if (!ignore) {
+          const data = (await ordersRes.json()) as ApiOrder[];
+          setOrders(data.map(mapApiOrder));
           setProducts(productsData);
         }
       } catch (err) {
         console.error("Failed to load orders:", err);
-        showErrorToast("Could not load latest orders data.");
+        if (!ignore) {
+          showErrorToast(err instanceof Error ? err.message : "Could not load latest orders data.");
+        }
       } finally {
         if (!ignore) {
           setIsLoading(false);
@@ -251,11 +257,29 @@ function OrdersPageContent() {
         throw new Error("Failed to update status");
       }
 
+      const historyEntry = {
+        id: `local-${Date.now()}`,
+        status: newStatus,
+        note: null,
+        createdAt: new Date().toISOString(),
+      };
       setOrders((prev) =>
-        prev.map((o) => (o.dbId === order.dbId ? { ...o, status: newStatus } : o))
+        prev.map((o) =>
+          o.dbId === order.dbId
+            ? { ...o, status: newStatus, statusHistory: [...(o.statusHistory || []), historyEntry] }
+            : o,
+        )
       );
       if (selectedOrder?.dbId === order.dbId) {
-        setSelectedOrder((prev) => (prev ? { ...prev, status: newStatus } : null));
+        setSelectedOrder((prev) =>
+          prev
+            ? {
+                ...prev,
+                status: newStatus,
+                statusHistory: [...(prev.statusHistory || []), historyEntry],
+              }
+            : null,
+        );
       }
       showToast(`Order #${order.id} updated to ${newStatus}`);
     } catch {
@@ -353,14 +377,16 @@ function OrdersPageContent() {
       o.items.length,
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
-    const encodedUri = encodeURI(csvContent);
+    const csvText = [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute("download", `blg-orders-${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     showToast("Orders manifest exported successfully!");
   };
 
@@ -404,12 +430,12 @@ function OrdersPageContent() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              loadData();
+            onClick={async () => {
+              await loadData();
               showToast("Orders refreshed");
             }}
             className="h-9 text-xs font-semibold rounded-sm border-border gap-1.5"

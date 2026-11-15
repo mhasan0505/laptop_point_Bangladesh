@@ -102,14 +102,11 @@ const TECH_BADGE_PRESETS = [
 ];
 
 function toDatetimeLocal(isoString?: string | null): string {
-  if (!isoString) {
-    return new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16);
-  }
-  try {
-    return new Date(isoString).toISOString().slice(0, 16);
-  } catch {
-    return new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16);
-  }
+  const fallback = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+  const d = isoString ? new Date(isoString) : fallback;
+  const target = Number.isNaN(d.getTime()) ? fallback : d;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}T${pad(target.getHours())}:${pad(target.getMinutes())}`;
 }
 
 export default function AdminPowerDealPage() {
@@ -262,7 +259,9 @@ export default function AdminPowerDealPage() {
   };
 
   // Move deal up/down in list
-  const handleMove = async (index: number, direction: "up" | "down") => {
+  const handleMove = async (dealId: string, direction: "up" | "down") => {
+    const index = deals.findIndex((d) => d.id === dealId);
+    if (index === -1) return;
     const targetIndex = direction === "up" ? index - 1 : index + 1;
     if (targetIndex < 0 || targetIndex >= deals.length) return;
 
@@ -272,15 +271,18 @@ export default function AdminPowerDealPage() {
 
     // Update sortOrder
     const reordered = newDeals.map((d, idx) => ({ ...d, sortOrder: idx }));
+    const previous = deals;
     setDeals(reordered);
 
     try {
-      await fetch("/api/admin/power-deal", {
+      const res = await fetch("/api/admin/power-deal", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ deals: reordered }),
       });
+      if (!res.ok) throw new Error("Failed");
     } catch {
+      setDeals(previous);
       showToast("error", "Failed to persist new ordering");
     }
   };
@@ -468,7 +470,7 @@ export default function AdminPowerDealPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5">
           <Link
             href="/power-deal"
             target="_blank"
@@ -601,7 +603,7 @@ export default function AdminPowerDealPage() {
                           <div className="flex flex-col items-center justify-center gap-0.5">
                             <button
                               type="button"
-                              onClick={() => handleMove(idx, "up")}
+                              onClick={() => handleMove(deal.id, "up")}
                               disabled={idx === 0}
                               className="text-neutral-400 hover:text-neutral-900 disabled:opacity-20 cursor-pointer"
                               title="Move Up"
@@ -613,8 +615,8 @@ export default function AdminPowerDealPage() {
                             </span>
                             <button
                               type="button"
-                              onClick={() => handleMove(idx, "down")}
-                              disabled={idx === deals.length - 1}
+                              onClick={() => handleMove(deal.id, "down")}
+                              disabled={idx === filteredDeals.length - 1}
                               className="text-neutral-400 hover:text-neutral-900 disabled:opacity-20 cursor-pointer"
                               title="Move Down"
                             >

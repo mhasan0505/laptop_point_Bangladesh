@@ -192,7 +192,22 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { entity, action, data } = body;
+    const { entity, action, data } = body ?? {};
+    if (entity !== "brand" && entity !== "category") {
+      return NextResponse.json({ error: "Invalid entity type" }, { status: 400 });
+    }
+    if (action !== "create" && action !== "update" && action !== "delete") {
+      return NextResponse.json({ error: "Invalid action" }, { status: 400 });
+    }
+    if (!data || typeof data !== "object") {
+      return NextResponse.json({ error: "Invalid payload data" }, { status: 400 });
+    }
+    if (action === "create" && (typeof data.name !== "string" || !data.name.trim())) {
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    }
+    if ((action === "update" || action === "delete") && (typeof data.id !== "string" || !data.id.trim())) {
+      return NextResponse.json({ error: "Record ID is required" }, { status: 400 });
+    }
 
     const masters = await readMasters();
 

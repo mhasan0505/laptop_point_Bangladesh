@@ -61,7 +61,7 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-400">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
             <ShieldCheck size={12} />
             Secure Admin Console
           </div>

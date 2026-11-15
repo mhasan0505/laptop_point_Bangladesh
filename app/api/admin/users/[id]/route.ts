@@ -33,6 +33,12 @@ export async function DELETE(request: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
+    if (auth.user.id === id) {
+      return NextResponse.json(
+        { error: "You cannot delete your own active admin account" },
+        { status: 400 },
+      );
+    }
     const removed = await deleteAdminUser(id);
 
     if (!removed) {

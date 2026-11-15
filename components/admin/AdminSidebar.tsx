@@ -188,7 +188,6 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
             { href: "/admin/setup/policies", label: "Policy Pages" },
             { href: "/admin/setup/seo", label: "SEO Defaults" },
             { href: "/admin/setup/integrations", label: "Tracking & Integrations" },
-            { href: "/admin/users", label: "Users & Roles" },
           ],
         },
         {
@@ -282,11 +281,7 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
                       {isSubMenuOpen && (
                         <div className="pl-6 pr-1 py-1 space-y-0.5 border-l-2 border-border/70 ml-5 my-0.5 animate-in fade-in-50 duration-200">
                           {item.subItems.map((sub) => {
-                            const isSubActive =
-                              pathname === sub.href ||
-                              (pathname === "/admin/setup" &&
-                                ((currentTab && sub.href.includes(currentTab)) ||
-                                  (!currentTab && sub.href === "/admin/setup/profile")));
+                            const isSubActive = pathname === sub.href;
 
                             return (
                               <Link
@@ -359,6 +354,7 @@ export function AdminSidebar({ className, onNavigate }: AdminSidebarProps) {
         <Link
           href="/"
           target="_blank"
+          rel="noopener noreferrer"
           className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-all"
         >
           <span className="flex items-center gap-2">

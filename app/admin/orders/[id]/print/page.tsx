@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { Suspense, use, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { A4Invoice } from "@/components/invoice/a4-invoice";
 import { A4Challan } from "@/components/challan/a4-challan";
@@ -62,12 +62,7 @@ const CHALLAN_TERMS = [
   "Acknowledgment of delivery signifies receipt in complete and good working condition.",
 ];
 
-export default function OrderPrintPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+function OrderPrintContent({ id }: { id: string }) {
   const searchParams = useSearchParams();
   const initialType = searchParams.get("type") === "challan" ? "challan" : "invoice";
 
@@ -293,5 +288,18 @@ export default function OrderPrintPage({
         </div>
       </div>
     </div>
+  );
+}
+
+export default function OrderPrintPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-sm text-muted-foreground">Loading document...</div>}>
+      <OrderPrintContent id={id} />
+    </Suspense>
   );
 }

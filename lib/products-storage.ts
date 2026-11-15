@@ -262,6 +262,8 @@ export async function saveRawProduct(raw: RawProduct): Promise<void> {
     revalidatePath("/");
     revalidatePath("/shop");
     revalidatePath("/deals");
+    revalidatePath("/accessories");
+    revalidatePath("/product/[slug]", "page");
     revalidatePath("/api/products");
   } catch {
     // Ignore in non-request contexts
@@ -330,6 +332,8 @@ export async function deleteRawProduct(idOrSku: string): Promise<boolean> {
     revalidatePath("/");
     revalidatePath("/shop");
     revalidatePath("/deals");
+    revalidatePath("/accessories");
+    revalidatePath("/product/[slug]", "page");
     revalidatePath("/api/products");
   } catch {
     // Ignore in non-request contexts
@@ -363,7 +367,11 @@ export async function safeSyncManifest(sku: string, images: string[]): Promise<v
  */
 export function resolveProductImages(raw: RawProduct): string[] {
   const validRaw = (raw.images || []).filter(
-    (img) => img && typeof img === "string" && !img.startsWith("/images/"),
+    (img) =>
+      img &&
+      typeof img === "string" &&
+      img !== "/placeholder.png" &&
+      !img.startsWith("/images/placeholder-"),
   );
   if (validRaw.length > 0) {
     return validRaw;

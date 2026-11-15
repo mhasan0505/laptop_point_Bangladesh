@@ -374,7 +374,7 @@ export default function AdminMessagesPage() {
     if (selectedIds.size === 0) return;
     const ids = Array.from(selectedIds);
     try {
-      await Promise.all(
+      const responses = await Promise.all(
         ids.map((id) =>
           fetch(`/api/admin/messages/${id}`, {
             method: "PATCH",
@@ -383,6 +383,10 @@ export default function AdminMessagesPage() {
           })
         )
       );
+      const failed = responses.filter((r) => !r.ok);
+      if (failed.length > 0) {
+        throw new Error(`Failed to update ${failed.length} message(s)`);
+      }
       setMessages((prev) =>
         prev.map((m) => (selectedIds.has(m.id) ? { ...m, status: newStatus } : m))
       );

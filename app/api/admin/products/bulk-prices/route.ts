@@ -258,10 +258,17 @@ export async function POST(request: NextRequest) {
             console.error(`[bulk-prices] failed to update accessory ${existingAcc!.id}:`, err);
           });
         } else {
+          const nextSalePrice = item.newPrice ?? curPrice;
+          const nextMarketPrice = item.newRegularPrice ?? curRegPrice;
+          const nextDiscount =
+            nextMarketPrice > nextSalePrice && nextMarketPrice > 0
+              ? Math.round(((nextMarketPrice - nextSalePrice) / nextMarketPrice) * 100)
+              : 0;
           existingProd!.pricing = {
             ...existingProd!.pricing,
-            sale_price: item.newPrice ?? curPrice,
-            market_price: item.newRegularPrice ?? curRegPrice,
+            sale_price: nextSalePrice,
+            market_price: nextMarketPrice,
+            discount_percentage: nextDiscount,
           };
           existingProd!.stock = {
             quantity: item.newStock,

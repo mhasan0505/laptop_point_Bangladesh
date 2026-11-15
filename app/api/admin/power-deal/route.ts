@@ -78,9 +78,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    if (!body.name || !body.salePrice) {
+    const salePrice = Number(body?.salePrice);
+    if (typeof body?.name !== "string" || !body.name.trim() || !Number.isFinite(salePrice) || salePrice < 0) {
       return NextResponse.json(
-        { error: "Product name and sale price are required" },
+        { error: "Product name and a valid non-negative sale price are required" },
         { status: 400 }
       );
     }

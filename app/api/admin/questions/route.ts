@@ -21,11 +21,17 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    if (!body.question) {
-      return NextResponse.json({ error: "Question text is required" }, { status: 400 });
+    const question = typeof body?.question === "string" ? body.question.trim() : "";
+    const productSlug = typeof body?.productSlug === "string" ? body.productSlug.trim() : "";
+    const userName = typeof body?.userName === "string" ? body.userName.trim() : "";
+    if (!question || !productSlug || !userName) {
+      return NextResponse.json(
+        { error: "Product slug, user name, and question text are required" },
+        { status: 400 },
+      );
     }
 
-    const created = await addQuestion(body);
+    const created = await addQuestion({ ...body, question, productSlug, userName });
     return NextResponse.json({ ok: true, question: created });
   } catch (err) {
     return NextResponse.json(

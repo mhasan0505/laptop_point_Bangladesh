@@ -43,6 +43,7 @@ interface MediaAssetReference {
 interface MediaAssetPickerItem {
   id: string;
   storageKey: string;
+  url?: string;
   alt?: string;
   originalFilename?: string;
   preset?: string | null;
@@ -354,8 +355,16 @@ function BannerManagerContent() {
     }
   };
 
+  const toLocalInputString = (iso: string | null | undefined) => {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
   const handleSelectMediaAsset = (asset: MediaAssetPickerItem) => {
-    const assetUrl = `/uploads/${asset.storageKey}`;
+    const assetUrl = asset.url || `/uploads/${asset.storageKey}`;
     if (mediaPickerTarget === "desktop") {
       setEditingBanner((prev) => ({
         ...prev,
@@ -728,7 +737,7 @@ function BannerManagerContent() {
                   value={editingBanner.desktopImageUrl || ""}
                   onChange={(e) => {
                     const url = e.target.value;
-                    setEditingBanner({ ...editingBanner, desktopImageUrl: url });
+                    setEditingBanner({ ...editingBanner, desktopImageUrl: url, desktopAssetId: null });
                     checkAspectRatio(url);
                   }}
                   placeholder="https://... or /uploads/..."
@@ -753,7 +762,7 @@ function BannerManagerContent() {
                 </div>
                 <Input
                   value={editingBanner.mobileImageUrl || ""}
-                  onChange={(e) => setEditingBanner({ ...editingBanner, mobileImageUrl: e.target.value })}
+                  onChange={(e) => setEditingBanner({ ...editingBanner, mobileImageUrl: e.target.value, mobileAssetId: null })}
                   placeholder="Optional separate mobile banner image..."
                   className="h-9 text-xs font-mono"
                 />
@@ -801,7 +810,7 @@ function BannerManagerContent() {
                   </label>
                   <Input
                     type="datetime-local"
-                    value={editingBanner.startsAt ? editingBanner.startsAt.slice(0, 16) : ""}
+                    value={toLocalInputString(editingBanner.startsAt)}
                     onChange={(e) =>
                       setEditingBanner({
                         ...editingBanner,
@@ -819,7 +828,7 @@ function BannerManagerContent() {
                   </label>
                   <Input
                     type="datetime-local"
-                    value={editingBanner.endsAt ? editingBanner.endsAt.slice(0, 16) : ""}
+                    value={toLocalInputString(editingBanner.endsAt)}
                     onChange={(e) =>
                       setEditingBanner({
                         ...editingBanner,
@@ -866,12 +875,14 @@ function BannerManagerContent() {
                       previewDevice === "desktop" ? "w-full aspect-[16/5]" : "w-[320px] aspect-[16/9]"
                     }`}
                   >
-                    {editingBanner.desktopImageUrl ? (
+                    {(previewDevice === "mobile"
+                      ? editingBanner.mobileImageUrl || editingBanner.desktopImageUrl
+                      : editingBanner.desktopImageUrl || editingBanner.mobileImageUrl) ? (
                       <Image
                         src={
-                          previewDevice === "mobile" && editingBanner.mobileImageUrl
-                            ? editingBanner.mobileImageUrl
-                            : editingBanner.desktopImageUrl
+                          (previewDevice === "mobile"
+                            ? editingBanner.mobileImageUrl || editingBanner.desktopImageUrl
+                            : editingBanner.desktopImageUrl || editingBanner.mobileImageUrl) || ""
                         }
                         alt="Preview"
                         fill
@@ -953,7 +964,7 @@ function BannerManagerContent() {
                       className="group relative aspect-square rounded-lg border border-border overflow-hidden cursor-pointer hover:border-primary transition-all"
                     >
                       <Image
-                        src={`/uploads/${asset.storageKey}`}
+                        src={asset.url || `/uploads/${asset.storageKey}`}
                         alt={asset.alt || asset.originalFilename || "Media asset"}
                         fill
                         className="object-cover"

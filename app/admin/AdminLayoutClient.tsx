@@ -77,8 +77,8 @@ function AdminShell({ children }: { children: ReactNode }) {
     );
   }
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.replace("/admin/login");
   };
 
@@ -136,13 +136,15 @@ function AdminShell({ children }: { children: ReactNode }) {
                     ? "Sales Analytics"
                     : pathname.startsWith("/admin/power-deal")
                     ? "Power Deals CMS"
+                    : pathname.startsWith("/admin/banners")
+                    ? "Banners & Placements"
                     : pathname.startsWith("/admin/hero-banners")
                     ? "Hero Banners"
                     : pathname.startsWith("/admin/hot-deal")
                     ? "Flash Deals"
                     : pathname.startsWith("/admin/special-offers")
                     ? "Special Offers"
-                    : pathname.replace("/admin/", "").replace("-", " ")}
+                    : pathname.replace("/admin/", "").replaceAll("-", " ")}
                 </span>
               </div>
             </div>
@@ -167,7 +169,7 @@ function AdminShell({ children }: { children: ReactNode }) {
               </Link>
 
               {/* View Website */}
-              <Link href="/" target="_blank">
+              <Link href="/" target="_blank" rel="noopener noreferrer">
                 <Button
                   variant="outline"
                   size="sm"

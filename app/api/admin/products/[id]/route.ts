@@ -1,4 +1,4 @@
-import { AdminProduct } from "@/lib/admin-data";
+import type { AdminProduct } from "@/lib/admin-data";
 import {
   AccessoryConflictError,
   createAccessory,
@@ -167,9 +167,64 @@ export async function PUT(request: NextRequest, { params }: Ctx) {
 
     // Grouped specs from the form replace the stored ones wholesale; the old
     // merge kept stale flat values and ignored the edit.
+    const hasMarketPriceField =
+      "marketPrice" in body || "regularPrice" in body || "salePrice" in body;
+    const resolvedMarketPrice = hasMarketPriceField
+      ? body.marketPrice !== undefined
+        ? body.marketPrice
+        : body.regularPrice !== undefined
+          ? body.regularPrice
+          : body.salePrice
+      : body.price !== undefined &&
+          (existingAdmin.marketPrice === undefined ||
+            existingAdmin.marketPrice === null ||
+            existingAdmin.marketPrice <= existingAdmin.price)
+        ? null
+        : undefined;
+
+    const variantStockUpdate = (
+      body as { variantStockUpdate?: { variantId?: string; stock?: number } }
+    ).variantStockUpdate;
+
+    let nextVariants = body.variants ?? existingAdmin.variants;
+    let nextStock = body.stock;
+    let nextStockStatus = body.stockStatus;
+
+    if (
+      variantStockUpdate?.variantId &&
+      typeof variantStockUpdate.stock === "number" &&
+      Number.isFinite(variantStockUpdate.stock) &&
+      variantStockUpdate.stock >= 0 &&
+      Array.isArray(nextVariants)
+    ) {
+      const qty = Math.floor(variantStockUpdate.stock);
+      nextVariants = nextVariants.map((v) =>
+        String(v.id) === String(variantStockUpdate.variantId)
+          ? {
+              ...v,
+              stockQty: qty,
+              stock: qty,
+              stockStatus: qty > 0 ? "In Stock" : "Out of Stock",
+            }
+          : v,
+      );
+      nextStock = nextVariants.reduce((sum, v) => sum + (v.stockQty ?? v.stock ?? 0), 0);
+      nextStockStatus = nextStock > 0 ? "In Stock" : "Out of Stock";
+    }
+
     const mergedAdmin: AdminProduct = {
       ...existingAdmin,
       ...body,
+      ...(nextVariants !== undefined ? { variants: nextVariants } : {}),
+      ...(nextStock !== undefined ? { stock: nextStock } : {}),
+      ...(nextStockStatus !== undefined ? { stockStatus: nextStockStatus } : {}),
+      ...(resolvedMarketPrice !== undefined
+        ? {
+            marketPrice: resolvedMarketPrice,
+            regularPrice: resolvedMarketPrice,
+            salePrice: resolvedMarketPrice,
+          }
+        : {}),
       id: String(numericId),
       specs: body.specs
         ? body.specs

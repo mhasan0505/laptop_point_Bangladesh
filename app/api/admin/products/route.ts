@@ -1,4 +1,4 @@
-import { AdminProduct } from "@/lib/admin-data";
+import type { AdminProduct } from "@/lib/admin-data";
 import {
   AccessoryConflictError,
   createAccessory,
@@ -70,7 +70,12 @@ export function rawToAdminProduct(raw: RawProduct, currentStock?: number): Admin
 
   const legacyRaw = raw as RawProduct & { price?: number; salePrice?: number };
   const salePrice = raw.pricing?.sale_price ?? legacyRaw.price ?? 0;
-  const marketPrice = raw.pricing?.market_price ?? legacyRaw.salePrice ?? salePrice;
+  const rawMarketPrice = raw.pricing?.market_price ?? legacyRaw.salePrice;
+  const hasActiveDiscount =
+    rawMarketPrice !== undefined &&
+    rawMarketPrice !== null &&
+    rawMarketPrice > salePrice;
+  const marketPrice = hasActiveDiscount ? rawMarketPrice : salePrice;
 
   // Always hand the form grouped specs, derived from legacy flat data when needed,
   // so editing an old product shows its real values instead of blank fields.
@@ -88,9 +93,9 @@ export function rawToAdminProduct(raw: RawProduct, currentStock?: number): Admin
     condition: raw.condition || "Used",
     grade: raw.grade || "A",
     price: salePrice,
-    salePrice: marketPrice,
-    marketPrice,
-    regularPrice: marketPrice,
+    salePrice: hasActiveDiscount ? marketPrice : undefined,
+    marketPrice: hasActiveDiscount ? marketPrice : undefined,
+    regularPrice: hasActiveDiscount ? marketPrice : undefined,
     pricing: {
       currency: raw.pricing?.currency || "BDT",
       sale_price: salePrice,
@@ -178,12 +183,17 @@ export function adminToRawProduct(
     };
   }
 
+  const explicitMarket =
+    admin.marketPrice !== undefined
+      ? admin.marketPrice
+      : admin.regularPrice !== undefined
+        ? admin.regularPrice
+        : admin.salePrice;
+
   const marketPrice =
-    admin.salePrice !== undefined && admin.salePrice > 0
-      ? admin.salePrice
-      : admin.marketPrice !== undefined && admin.marketPrice > 0
-        ? admin.marketPrice
-        : admin.price;
+    explicitMarket !== undefined && explicitMarket !== null && Number(explicitMarket) > 0
+      ? Number(explicitMarket)
+      : Number(admin.price);
 
   const discount =
     marketPrice > admin.price
@@ -240,7 +250,7 @@ export function adminToRawProduct(
 export function validateAdminProductPayload(body: Partial<AdminProduct>): string | null {
   const price = Number(body.price);
   const stock = Number(body.stock ?? 0);
-  if (!Number.isFinite(price) || price <= 0) return "Price must be a number greater than 0";
+  if (!Number.isFinite(price) || price < 0) return "Price must be a valid non-negative number";
   if (!Number.isFinite(stock) || stock < 0 || !Number.isInteger(stock)) {
     return "Stock must be a whole number of 0 or more";
   }

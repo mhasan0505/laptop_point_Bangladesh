@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  getAdminDashboardData,
-  getFallbackAdminDashboardData,
-} from "@/lib/admin-dashboard";
+import { getAdminDashboardData } from "@/lib/admin-dashboard";
 import { requireAdmin } from "@/lib/auth-guard";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +17,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
   } catch (error) {
     console.error("[GET /api/admin/dashboard] Error:", error);
-    const fallback = getFallbackAdminDashboardData(7);
-    return NextResponse.json(fallback);
+    return NextResponse.json(
+      { error: "Failed to load dashboard performance data" },
+      { status: 500 },
+    );
   }
 }

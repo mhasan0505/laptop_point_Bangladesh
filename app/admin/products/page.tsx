@@ -88,7 +88,7 @@ function renderProductPrice(product: AdminProduct) {
 
     if (validPrices.length === 0) {
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-200">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
           Call For Price
         </span>
       );
@@ -120,7 +120,7 @@ function renderProductPrice(product: AdminProduct) {
   }
 
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-200">
+    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
       Call For Price
     </span>
   );
@@ -162,6 +162,7 @@ const AdminProductsContent = () => {
       })
       .catch((err) => {
         console.error("Failed to load products:", err);
+        showErrorToast(err instanceof Error ? err.message : "Failed to load products catalog.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -452,7 +453,7 @@ const AdminProductsContent = () => {
                   return (
                     <tr
                       key={product.id}
-                      className="hover:bg-zinc-100 dark:hover:bg-zinc-850/60 transition-colors"
+                      className="hover:bg-muted/50 transition-colors"
                     >
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">

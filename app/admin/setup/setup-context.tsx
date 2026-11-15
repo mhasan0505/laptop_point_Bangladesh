@@ -31,7 +31,7 @@ const SetupContext = createContext<SetupContextType | undefined>(undefined);
 
 export function SetupProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [userRole, setUserRole] = useState<string>("owner");
+  const [userRole, setUserRole] = useState<string>("staff");
   const [warnings, setWarnings] = useState<FieldRecoveryWarningItem[]>([]);
   const [settingsData, setSettingsData] = useState<Record<string, unknown> | null>(null);
   const [isDirty, setIsDirty] = useState(false);

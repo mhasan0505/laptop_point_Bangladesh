@@ -86,6 +86,7 @@ export default function AdminDashboardPage() {
     let cancelled = false;
 
     const executeFetch = async () => {
+      setDataLoading(true);
       try {
         const res = await fetch(`/api/admin/dashboard?range=${selectedRange}`, {
           cache: "no-store",

@@ -11,9 +11,9 @@ export interface AdminProduct {
   condition?: string;
   grade?: string;
   price: number;
-  salePrice?: number;
-  marketPrice?: number;
-  regularPrice?: number;
+  salePrice?: number | null;
+  marketPrice?: number | null;
+  regularPrice?: number | null;
   pricing?: {
     currency?: string;
     sale_price: number;

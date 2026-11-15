@@ -314,7 +314,7 @@ export default function AdminAccessoriesPage() {
             Chargers, batteries, bags and more. Changes appear on the storefront immediately.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={exportCSV} disabled={items.length === 0}>
             <Download className="mr-1.5 h-4 w-4" /> Export CSV
           </Button>
@@ -430,7 +430,7 @@ export default function AdminAccessoriesPage() {
                   <td className="px-4 py-3 text-muted-foreground">{categoryName(a.category)}</td>
                   <td className="px-4 py-3 tabular-nums">
                     <span className="font-semibold">{formatBDT(a.price)}</span>
-                    {a.originalPrice && (
+                    {Boolean(a.originalPrice && a.originalPrice > 0) && (
                       <span className="ml-1.5 text-xs text-muted-foreground line-through">
                         {formatBDT(a.originalPrice)}
                       </span>

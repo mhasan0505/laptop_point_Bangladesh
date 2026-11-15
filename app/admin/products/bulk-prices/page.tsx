@@ -180,10 +180,10 @@ export default function BulkPricesPage() {
                 Download CSV
               </Button>
             </a>
-            <a href="/api/admin/products/bulk-prices?format=xlsx" download="product-prices.xlsx">
+            <a href="/api/admin/products/bulk-prices?format=csv" download="product-prices.csv">
               <Button size="sm" className="h-8 text-xs gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white">
                 <FileSpreadsheet className="w-3.5 h-3.5" />
-                Download Excel (XLSX)
+                Download CSV (Excel Compatible)
               </Button>
             </a>
           </div>
@@ -447,6 +447,7 @@ export default function BulkPricesPage() {
         description={`This action will update ${previewSummary?.changed} product/variant price and stock record(s) in a single database transaction. This change will be immediately live on the storefront.`}
         confirmText="Confirm & Apply All Changes"
         variant="default"
+        loading={isApplying}
         onConfirm={handleApplyChanges}
       />
     </div>

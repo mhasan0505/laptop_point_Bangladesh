@@ -47,6 +47,7 @@ export default function AdminJobsPage() {
   const [runError, setRunError] = React.useState<string | null>(null);
 
   const fetchJobs = React.useCallback(async () => {
+    setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/admin/jobs");
@@ -116,7 +117,7 @@ export default function AdminJobsPage() {
   const failedRuns = recentRuns.filter((r) => r.status === "failed").length;
 
   return (
-    <div className="space-y-6 p-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto">
       <PageHeader
         title="Background Jobs & Worker"
         description="Monitor automated schedules, system maintenance tasks, and manual trigger executions."
@@ -193,7 +194,20 @@ export default function AdminJobsPage() {
         description="All registered background worker routines"
       >
         <div className="divide-y divide-border/60">
-          {jobs.map((job) => {
+          {loading && jobs.length === 0 ? (
+            <div className="py-8 text-center text-xs text-muted-foreground">
+              Loading scheduled tasks...
+            </div>
+          ) : error && jobs.length === 0 ? (
+            <div className="py-8 text-center text-xs text-destructive">
+              {error}
+            </div>
+          ) : jobs.length === 0 ? (
+            <div className="py-8 text-center text-xs text-muted-foreground">
+              No scheduled background tasks registered.
+            </div>
+          ) : (
+            jobs.map((job) => {
             const isExecuting = runningJobId === job.id;
             const lastRun = job.lastRun;
 
@@ -257,7 +271,8 @@ export default function AdminJobsPage() {
                 </div>
               </div>
             );
-          })}
+          })
+          )}
         </div>
       </SectionCard>
 

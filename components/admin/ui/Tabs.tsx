@@ -33,7 +33,7 @@ export function Tabs({
     return (
       <div
         className={cn(
-          "inline-flex items-center gap-1 rounded-xl bg-muted p-1 text-muted-foreground",
+          "inline-flex max-w-full overflow-x-auto items-center gap-1 rounded-xl bg-muted p-1 text-muted-foreground",
           className
         )}
       >
@@ -74,8 +74,8 @@ export function Tabs({
   }
 
   return (
-    <div className={cn("border-b border-border", className)}>
-      <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+    <div className={cn("border-b border-border overflow-x-auto", className)}>
+      <nav className="-mb-px flex space-x-6 min-w-max" aria-label="Tabs">
         {tabs.map((tab) => {
           const isActive = tab.id === currentTab;
           const displayBadge = tab.badge !== undefined ? tab.badge : tab.count;

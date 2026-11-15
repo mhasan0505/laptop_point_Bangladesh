@@ -35,7 +35,7 @@ export default function EditProductPage({
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-black" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
   }
@@ -49,11 +49,11 @@ export default function EditProductPage({
               <ChevronLeft className="w-4 h-4" />
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-black">Product Not Found</h1>
+          <h1 className="text-2xl font-bold text-foreground">Product Not Found</h1>
         </div>
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-gray-500 mb-4">
+            <p className="text-muted-foreground mb-4">
               Product with ID {id} was not found.
             </p>
             <Link href="/admin/products">

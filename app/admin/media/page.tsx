@@ -255,9 +255,23 @@ export default function MediaLibraryPage() {
       </div>
 
       {/* Upload Dropzone */}
-      <div className="rounded-xl border border-dashed border-border bg-card/60 p-6 transition-all hover:border-primary/50">
+      <div
+        className="rounded-xl border border-dashed border-border bg-card/60 p-6 transition-all hover:border-primary/50"
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            handleBulkUpload(e.dataTransfer.files);
+          }
+        }}
+      >
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+          <div
+            className="flex items-center gap-4 cursor-pointer"
+            onClick={() => fileInputRef.current?.click()}
+          >
             <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <UploadCloud className="h-6 w-6" />
             </div>
@@ -271,7 +285,7 @@ export default function MediaLibraryPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
                 Optimization Preset:
@@ -321,7 +335,7 @@ export default function MediaLibraryPage() {
         {failedUploads.length > 0 && (
           <div className="mt-4 pt-4 border-t border-border space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-danger flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-destructive flex items-center gap-1.5">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 {failedUploads.length} File(s) Failed to Upload
               </span>
@@ -337,13 +351,13 @@ export default function MediaLibraryPage() {
               {failedUploads.map((f, idx) => (
                 <div
                   key={idx}
-                  className="p-2.5 rounded-lg border border-danger/30 bg-danger-soft text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-1"
+                  className="p-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-1"
                 >
                   <span className="font-medium text-foreground truncate max-w-sm">
                     {f.filename}
                   </span>
                   <div className="flex items-center gap-2 text-muted-foreground text-[11px]">
-                    <span className="px-1.5 py-0.5 rounded font-mono font-bold bg-danger/10 text-danger uppercase tracking-wider">
+                    <span className="px-1.5 py-0.5 rounded font-mono font-bold bg-destructive/10 text-destructive uppercase tracking-wider">
                       stage: {f.stage}
                     </span>
                     <span className="text-foreground/80">{f.detail}</span>
