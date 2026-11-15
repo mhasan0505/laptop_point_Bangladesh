@@ -130,13 +130,21 @@ export default function ProductDetailsClient({
     return [];
   }, [product.variantOptions, product.variants]);
 
+  const isVariantAvailable = (v: NonNullable<Product["variants"]>[number]) =>
+    v.active !== false &&
+    (v.stockQty === undefined || v.stockQty > 0) &&
+    v.stockStatus !== "Out of Stock";
+
   // Initial selected options derived from real variants
   const initialSelectedOptions = useMemo(() => {
     const initial: Record<string, string> = {};
     if (product.variants && product.variants.length > 0) {
-      const firstActive = product.variants.find((v) => v.active !== false) || product.variants[0];
-      if (firstActive?.options) {
-        Object.assign(initial, firstActive.options);
+      const firstAvailable =
+        product.variants.find(isVariantAvailable) ||
+        product.variants.find((v) => v.active !== false) ||
+        product.variants[0];
+      if (firstAvailable?.options) {
+        Object.assign(initial, firstAvailable.options);
       }
     }
     for (const group of variantOptionGroups) {
@@ -149,8 +157,8 @@ export default function ProductDetailsClient({
 
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(initialSelectedOptions);
 
-  // Active matched variant from uploaded variants
-  const activeVariant = useMemo(() => {
+  // Exact matched variant for current selectedOptions (null if combination doesn't exist)
+  const matchedVariant = useMemo(() => {
     if (!product.variants || product.variants.length === 0) return null;
     return (
       product.variants.find((v) => {
@@ -158,9 +166,70 @@ export default function ProductDetailsClient({
         return Object.entries(selectedOptions).every(
           ([k, val]) => v.options[k] === val
         );
-      }) || product.variants[0]
+      }) || null
     );
   }, [product.variants, selectedOptions]);
+
+  // Active matched variant (falls back to first variant for price/image display)
+  const activeVariant = matchedVariant || (product.variants && product.variants[0]) || null;
+
+  const isSelectedVariantAvailable = useMemo(() => {
+    if (hasVariants && product.variants && product.variants.length > 0) {
+      return Boolean(matchedVariant && isVariantAvailable(matchedVariant));
+    }
+    return product.inStock !== false && (product.stockQty === undefined || product.stockQty > 0);
+  }, [hasVariants, product.variants, product.inStock, product.stockQty, matchedVariant]);
+
+  const isOptionValueAvailable = (groupIndex: number, groupName: string, val: string) => {
+    if (!product.variants || product.variants.length === 0) return true;
+    if (groupIndex === 0) {
+      return product.variants.some(
+        (v) => isVariantAvailable(v) && v.options?.[groupName] === val
+      );
+    }
+    const priorGroups = variantOptionGroups.slice(0, groupIndex);
+    return product.variants.some(
+      (v) =>
+        isVariantAvailable(v) &&
+        v.options?.[groupName] === val &&
+        priorGroups.every((pg) => !selectedOptions[pg.name] || v.options?.[pg.name] === selectedOptions[pg.name])
+    );
+  };
+
+  const handleSelectOption = (groupIndex: number, groupName: string, val: string) => {
+    if (!product.variants || product.variants.length === 0) {
+      setSelectedOptions((prev) => ({ ...prev, [groupName]: val }));
+      return;
+    }
+
+    const candidate = { ...selectedOptions, [groupName]: val };
+    const exactAvailable = product.variants.some(
+      (v) =>
+        isVariantAvailable(v) &&
+        Object.entries(candidate).every(([k, optVal]) => v.options?.[k] === optVal)
+    );
+
+    if (exactAvailable) {
+      setSelectedOptions(candidate);
+      return;
+    }
+
+    // Snap dependent options to the first available variant matching this selection
+    const priorGroups = variantOptionGroups.slice(0, groupIndex);
+    const fallbackVariant =
+      product.variants.find(
+        (v) =>
+          isVariantAvailable(v) &&
+          v.options?.[groupName] === val &&
+          priorGroups.every((pg) => !selectedOptions[pg.name] || v.options?.[pg.name] === selectedOptions[pg.name])
+      ) || product.variants.find((v) => isVariantAvailable(v) && v.options?.[groupName] === val);
+
+    if (fallbackVariant?.options) {
+      setSelectedOptions({ ...candidate, ...fallbackVariant.options });
+    } else {
+      setSelectedOptions(candidate);
+    }
+  };
 
   const currentPrice = activeVariant ? activeVariant.price : product.price;
   const regularPrice = activeVariant?.marketPrice || product.originalPrice || currentPrice;
@@ -295,6 +364,7 @@ export default function ProductDetailsClient({
 
   // Add to cart
   const handleAddToCart = () => {
+    if (!isSelectedVariantAvailable) return;
     const variantSuffix =
       hasVariants && Object.keys(selectedOptions).length > 0
         ? ` (${Object.values(selectedOptions).join(", ")})`
@@ -331,6 +401,7 @@ export default function ProductDetailsClient({
 
   // Buy now: adds to cart and immediately navigates to checkout
   const handleBuyNow = () => {
+    if (!isSelectedVariantAvailable) return;
     const variantSuffix =
       hasVariants && Object.keys(selectedOptions).length > 0
         ? ` (${Object.values(selectedOptions).join(", ")})`
@@ -697,31 +768,34 @@ export default function ProductDetailsClient({
               {/* Variant Selectors (Only shown if product was uploaded with real variants) */}
               {hasVariants && variantOptionGroups.length > 0 && (
                 <div className="space-y-2 pt-1 text-xs">
-                  {variantOptionGroups.map((group) => (
+                  {variantOptionGroups.map((group, groupIndex) => (
                     <div key={group.name} className="flex items-center gap-2">
                       <span className="w-16 font-bold text-gray-700 dark:text-gray-300">
                         {group.name}:
                       </span>
                       <div className="flex flex-wrap gap-2">
-                        {group.values.map((val) => (
-                          <button
-                            key={val}
-                            type="button"
-                            onClick={() =>
-                              setSelectedOptions((prev) => ({
-                                ...prev,
-                                [group.name]: val,
-                              }))
-                            }
-                            className={`px-3 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
-                              selectedOptions[group.name] === val
-                                ? "bg-[#002b60] text-white border-[#002b60] shadow-xs"
-                                : "bg-white dark:bg-card border-gray-300 dark:border-border text-gray-700 dark:text-gray-300 hover:border-[#002b60]"
-                            }`}
-                          >
-                            {val}
-                          </button>
-                        ))}
+                        {group.values.map((val) => {
+                          const available = isOptionValueAvailable(groupIndex, group.name, val);
+                          const isSelected = selectedOptions[group.name] === val;
+                          return (
+                            <button
+                              key={val}
+                              type="button"
+                              disabled={!available}
+                              title={!available ? `${val} is not available` : undefined}
+                              onClick={() => handleSelectOption(groupIndex, group.name, val)}
+                              className={`px-3 py-1 rounded text-xs font-semibold border transition-all ${
+                                !available
+                                  ? "bg-gray-100 dark:bg-muted text-gray-400 dark:text-gray-500 border-gray-200 dark:border-border opacity-50 line-through cursor-not-allowed"
+                                  : isSelected
+                                  ? "bg-[#002b60] text-white border-[#002b60] shadow-xs cursor-pointer"
+                                  : "bg-white dark:bg-card border-gray-300 dark:border-border text-gray-700 dark:text-gray-300 hover:border-[#002b60] cursor-pointer"
+                              }`}
+                            >
+                              {val}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   ))}
@@ -746,8 +820,9 @@ export default function ProductDetailsClient({
                 <div className="flex items-center border border-gray-300 dark:border-border rounded-lg bg-white dark:bg-card h-11">
                   <button
                     type="button"
+                    disabled={!isSelectedVariantAvailable}
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="h-11 w-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 active:scale-90 transition-transform cursor-pointer"
+                    className="h-11 w-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 active:scale-90 transition-transform cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                     aria-label="Decrease quantity"
                   >
                     <Minus className="w-4 h-4" />
@@ -757,8 +832,9 @@ export default function ProductDetailsClient({
                   </span>
                   <button
                     type="button"
+                    disabled={!isSelectedVariantAvailable}
                     onClick={() => setQuantity((q) => q + 1)}
-                    className="h-11 w-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 active:scale-90 transition-transform cursor-pointer"
+                    className="h-11 w-10 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 active:scale-90 transition-transform cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                     aria-label="Increase quantity"
                   >
                     <Plus className="w-4 h-4" />
@@ -768,8 +844,9 @@ export default function ProductDetailsClient({
                 {/* Add to Cart */}
                 <button
                   type="button"
+                  disabled={!isSelectedVariantAvailable}
                   onClick={handleAddToCart}
-                  className="h-11 min-h-[44px] px-5 border-2 border-[#002b60] text-[#002b60] dark:text-white dark:border-primary text-xs sm:text-sm font-bold rounded-lg hover:bg-[#002b60] hover:text-white active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-initial"
+                  className="h-11 min-h-[44px] px-5 border-2 border-[#002b60] text-[#002b60] dark:text-white dark:border-primary text-xs sm:text-sm font-bold rounded-lg hover:bg-[#002b60] hover:text-white active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-initial disabled:opacity-45 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#002b60] dark:disabled:hover:text-white disabled:active:scale-100"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   <span>Add to Cart</span>
@@ -778,11 +855,18 @@ export default function ProductDetailsClient({
                 {/* Buy Now (Primary Brand Action) */}
                 <button
                   type="button"
+                  disabled={!isSelectedVariantAvailable}
                   onClick={handleBuyNow}
-                  className="h-11 min-h-[44px] px-6 bg-[#dc0303] hover:bg-[#b80202] text-white text-xs sm:text-sm font-bold rounded-lg shadow-xs hover:shadow-md active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-initial"
+                  className="h-11 min-h-[44px] px-6 bg-[#dc0303] hover:bg-[#b80202] text-white text-xs sm:text-sm font-bold rounded-lg shadow-xs hover:shadow-md active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 flex-1 sm:flex-initial disabled:bg-gray-400 disabled:hover:bg-gray-400 disabled:shadow-none disabled:cursor-not-allowed disabled:active:scale-100"
                 >
                   <Zap className="w-4 h-4 fill-current" />
-                  <span>Buy Now</span>
+                  <span>
+                    {!isSelectedVariantAvailable
+                      ? hasVariants && !matchedVariant
+                        ? "Unavailable"
+                        : "Out of Stock"
+                      : "Buy Now"}
+                  </span>
                 </button>
 
                 {/* Wishlist */}
