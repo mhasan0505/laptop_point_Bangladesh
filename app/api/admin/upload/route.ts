@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
       }
 
       if (r2Upload) {
-        let variantUrls: Array<{ label: string; url: string; width: number; height: number }> = [];
+        const variantUrls: Array<{ width: number; height: number; format: "webp" | "avif"; url: string; bytes: number }> = [];
         if (processed.variants && processed.variants.length > 0) {
           const vResults = await Promise.allSettled(
             processed.variants.map(async (v) => {
@@ -174,12 +174,14 @@ export async function POST(request: NextRequest) {
                 contentType: v.format === "avif" ? "image/avif" : "image/webp",
                 fileName: path.basename(v.key),
               });
-              return { label: v.label, url: uploaded.url, width: v.width, height: v.height };
+              return { width: v.width, height: v.height, format: v.format, url: uploaded.url, bytes: v.bytes };
             })
           );
-          variantUrls = vResults
-            .filter((r): r is PromiseFulfilledResult<{ label: string; url: string; width: number; height: number }> => r.status === "fulfilled")
-            .map((r) => r.value);
+          for (const r of vResults) {
+            if (r.status === "fulfilled") {
+              variantUrls.push(r.value);
+            }
+          }
         }
 
         try {
