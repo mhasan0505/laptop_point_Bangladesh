@@ -1,5 +1,209 @@
 [
   {
+    "id": 31,
+    "sku": "DELL-XPS13-9370-I7-031",
+    "name": "Dell XPS 13 9370 i7 8th Gen 16/256",
+    "brand": "Dell",
+    "model": "XPS 13 9370",
+    "category": "Ultrabook",
+    "condition": "Used",
+    "grade": "A",
+    "pricing": {
+      "currency": "BDT",
+      "sale_price": 41500,
+      "market_price": 48000,
+      "discount_percentage": 14,
+      "tax_included": true
+    },
+    "stock": {
+      "status": "In Stock",
+      "quantity": 72
+    },
+    "specs": {
+      "processor": "N/A Intel Core i7-8550U (8th Gen)",
+      "ram": "16GB LPDDR3",
+      "storage": "256GB NVMe SSD N/A",
+      "display": {
+        "size": "13.3 inch",
+        "resolution": "1920 x 1080 (FHD)",
+        "type": "InfinityEdge IPS",
+        "touchscreen": false
+      },
+      "graphics": "Intel UHD Graphics 620",
+      "ports": [
+        "2x Thunderbolt 3 (USB-C), MicroSD, 3.5mm Audio"
+      ],
+      "weight": "1.21 kg",
+      "os": "Windows 10/11 Pro"
+    },
+    "description": {
+      "short": "Premium ultra-compact XPS with 8th Gen i7 and 16GB RAM.",
+      "full": "**Who should buy this laptop?**\nThe Dell XPS 13 9370 is ideal for users who want a lightweight premium ultrabook for office productivity, coding, presentations, and frequent travel.\n\n**How does this configuration perform?**\nWith an 8th Gen Core i7, 16GB RAM, and 256GB NVMe SSD, it delivers smooth multitasking and fast everyday performance.\n\n**What is the standout feature?**\nIts compact InfinityEdge design gives you a 13.3-inch display in a very small footprint while maintaining premium build quality."
+    },
+    "features": [
+      "8th Gen Core i7",
+      "16GB RAM",
+      "256GB NVMe SSD",
+      "InfinityEdge Display",
+      "Lightweight Premium Design"
+    ],
+    "images": [
+      "https://ik.imagekit.io/creativeartix/laptop-point/product/1794738960475-p1010513_ZuEZWG-1th.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/product/1794738957057-csm_p1010514_06629d40c9_YzM38HYkq.webp",
+      "https://ik.imagekit.io/creativeartix/laptop-point/product/1794738955147-csm_p101052657_4b0b51ab58_WrZAMeyJJ.webp"
+    ],
+    "specGroups": {
+      "Processor": {
+        "Processor Brand": "N/A",
+        "Processor Model": "Intel Core i7-8550U (8th Gen)",
+        "Processor Frequency": "N/A",
+        "Processor Core": "N/A",
+        "CPU Cache": "N/A",
+        "NPU": "N/A"
+      },
+      "Display": {
+        "Display Size": "13.3 inch",
+        "Display Type": "InfinityEdge IPS",
+        "Display Resolution": "1920 x 1080 (FHD)",
+        "Touch Screen": "N/A",
+        "Refresh Rate": "N/A",
+        "Display Features": "N/A"
+      },
+      "Memory": {
+        "RAM": "16GB LPDDR3",
+        "Removable": "N/A",
+        "Total RAM Slot": "N/A"
+      },
+      "Storage": {
+        "Storage Type": "N/A",
+        "Storage Capacity": "256GB NVMe SSD"
+      },
+      "Graphics": {
+        "Graphics Model": "Intel UHD Graphics 620"
+      },
+      "Ports & Slots": {
+        "USB 3.0 Port": "2x Thunderbolt 3 (USB-C), MicroSD, 3.5mm Audio"
+      },
+      "Software": {
+        "Operating System": "Windows 10/11 Pro"
+      },
+      "Power": {
+        "Battery Type": "N/A",
+        "Battery Capacity": "N/A",
+        "Backup Time (Approx)": "N/A",
+        "Adapter Type": "N/A"
+      },
+      "Physical Specification": {
+        "Weight": "1.21 kg"
+      },
+      "portsList": {
+        "0": "2x Thunderbolt 3 (USB-C)",
+        "1": "MicroSD",
+        "2": "3.5mm Audio"
+      }
+    },
+    "youtubeUrl": "https://youtu.be/yldiJiz5xKw?si=IaV-WLK0hOuOANj9",
+    "tags": [],
+    "featured": false,
+    "statusValue": "active",
+    "variantOptions": [
+      {
+        "name": "RAM",
+        "values": [
+          "4 GB",
+          "8 GB",
+          "16 GB"
+        ]
+      },
+      {
+        "name": "Storage",
+        "values": [
+          "128 GB",
+          "256 GB",
+          "512 GB."
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-1794741494300-2a0w",
+        "name": "4 GB / 128 GB",
+        "sku": "DELL-XPS13-9370-I7-031-4GB-128GB",
+        "options": {
+          "RAM": "4 GB",
+          "Storage": "128 GB"
+        },
+        "price": 41500,
+        "originalPrice": 48000,
+        "marketPrice": 48000,
+        "regularPrice": 48000,
+        "stockQty": 27,
+        "stock": 27,
+        "stockStatus": "In Stock",
+        "imageUrl": "https://ik.imagekit.io/creativeartix/laptop-point/product/1794738960475-p1010513_ZuEZWG-1th.webp",
+        "sortOrder": 0,
+        "active": true
+      },
+      {
+        "id": "var-1794741562317-3q00",
+        "name": "8 GB / 256 GB",
+        "sku": "DELL-XPS13-9370-I7-031-4GB-256GB",
+        "options": {
+          "RAM": "8 GB",
+          "Storage": "256 GB"
+        },
+        "price": 43500,
+        "originalPrice": 50000,
+        "marketPrice": 50000,
+        "regularPrice": 50000,
+        "stockQty": 7,
+        "stock": 7,
+        "stockStatus": "In Stock",
+        "imageUrl": "https://ik.imagekit.io/creativeartix/laptop-point/product/1794738960475-p1010513_ZuEZWG-1th.webp",
+        "sortOrder": 1,
+        "active": true
+      },
+      {
+        "id": "var-1794741971549-3sa3",
+        "name": "16 GB / 512 GB.",
+        "sku": "DELL-XPS13-9370-I7-031-4GB-256GB-3",
+        "options": {
+          "RAM": "16 GB",
+          "Storage": "512 GB."
+        },
+        "price": 45000,
+        "originalPrice": 48000,
+        "marketPrice": 48000,
+        "regularPrice": 48000,
+        "stockQty": 34,
+        "stock": 34,
+        "stockStatus": "In Stock",
+        "imageUrl": "https://ik.imagekit.io/creativeartix/laptop-point/product/1794738960475-p1010513_ZuEZWG-1th.webp",
+        "sortOrder": 2,
+        "active": true
+      },
+      {
+        "id": "var-1794742048777-5uku",
+        "name": "16 GB / 256 GB",
+        "sku": "DELL-XPS13-9370-I7-031-4GB-256GB-4",
+        "options": {
+          "RAM": "16 GB",
+          "Storage": "256 GB"
+        },
+        "price": 44000,
+        "originalPrice": 48000,
+        "marketPrice": 48000,
+        "regularPrice": 48000,
+        "stockQty": 4,
+        "stock": 4,
+        "stockStatus": "In Stock",
+        "imageUrl": "https://ik.imagekit.io/creativeartix/laptop-point/product/1794738960475-p1010513_ZuEZWG-1th.webp",
+        "sortOrder": 3,
+        "active": true
+      }
+    ]
+  },
+  {
     "id": 1,
     "sku": "HP-440G3-001",
     "name": "HP ProBook 440 G3 Business Laptop",
@@ -1675,62 +1879,6 @@
       "full": "**Who should buy this laptop?**\nThe HP EliteBook 845 G9 is perfect for professionals, developers, and power users who need modern Ryzen Pro performance with excellent multitasking capabilities.\n\n**What's special about Ryzen 5 Pro?**\nRyzen 5 Pro processors offer professional-grade features with enhanced security and improved thermal efficiency compared to earlier generations.\n\n**How does the 16/512 configuration perform?**\nWith 16GB DDR4 RAM and 512GB NVMe SSD, this laptop handles heavy workloads, coding, design work, and heavy multitasking with ease.",
       "short": "Next-gen AMD Ryzen 5 Pro ultrabook with 16GB RAM and 512GB SSD."
     }
-  },
-  {
-    "id": 31,
-    "sku": "DELL-XPS13-9370-I7-031",
-    "name": "Dell XPS 13 9370 i7 8th Gen 16/256",
-    "brand": "Dell",
-    "model": "XPS 13 9370",
-    "category": "Ultrabook",
-    "condition": "Used",
-    "grade": "A",
-    "pricing": {
-      "currency": "BDT",
-      "sale_price": 40900,
-      "market_price": 48000,
-      "discount_percentage": 15,
-      "tax_included": true
-    },
-    "stock": {
-      "status": "In Stock",
-      "quantity": 3
-    },
-    "specs": {
-      "processor": "Intel Core i7-8550U (8th Gen)",
-      "ram": "16GB LPDDR3",
-      "storage": "256GB NVMe SSD",
-      "display": {
-        "size": "13.3 inch",
-        "resolution": "1920 x 1080 (FHD)",
-        "type": "InfinityEdge IPS",
-        "touchscreen": false
-      },
-      "graphics": "Intel UHD Graphics 620",
-      "ports": [
-        "2x Thunderbolt 3 (USB-C)",
-        "MicroSD",
-        "3.5mm Audio"
-      ],
-      "weight": "1.21 kg",
-      "os": "Windows 10/11 Pro"
-    },
-    "description": {
-      "short": "Premium ultra-compact XPS with 8th Gen i7 and 16GB RAM.",
-      "full": "**Who should buy this laptop?**\nThe Dell XPS 13 9370 is ideal for users who want a lightweight premium ultrabook for office productivity, coding, presentations, and frequent travel.\n\n**How does this configuration perform?**\nWith an 8th Gen Core i7, 16GB RAM, and 256GB NVMe SSD, it delivers smooth multitasking and fast everyday performance.\n\n**What is the standout feature?**\nIts compact InfinityEdge design gives you a 13.3-inch display in a very small footprint while maintaining premium build quality."
-    },
-    "features": [
-      "8th Gen Core i7",
-      "16GB RAM",
-      "256GB NVMe SSD",
-      "InfinityEdge Display",
-      "Lightweight Premium Design"
-    ],
-    "images": [
-      "/products/dell/Dell-XPS-13-9370code-i7-8th-Gen-16-256/main.png",
-      "/products/dell/Dell-XPS-13-9370code-i7-8th-Gen-16-256/side.png",
-      "/products/dell/Dell-XPS-13-9370code-i7-8th-Gen-16-256/side2.png"
-    ]
   },
   {
     "id": 32,
