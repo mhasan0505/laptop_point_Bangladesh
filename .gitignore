@@ -35,6 +35,14 @@ google-credential.json
 # vercel
 .vercel
 
+# OpenNext
+.open-next
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   transpilePackages: ["@tailwindcss/postcss"],
   images: {
     formats: ["image/avif", "image/webp"],
@@ -316,4 +317,7 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+import("@opennextjs/cloudflare").then((m) => m.initOpenNextCloudflareForDev());
+
 
