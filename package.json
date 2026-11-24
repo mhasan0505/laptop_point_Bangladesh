@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build:next": "pnpm validate:images && prisma generate && cross-env NODE_OPTIONS=--max-old-space-size=4096 next build --webpack",
+    "build:next": "pnpm validate:images && node scripts/patch-next.mjs && prisma generate && cross-env NODE_OPTIONS=--max-old-space-size=4096 next build --webpack",
     "build": "pnpm run build:next && opennextjs-cloudflare build --skipNextBuild",
     "preview": "pnpm run build && opennextjs-cloudflare preview",
     "deploy": "pnpm run build && opennextjs-cloudflare deploy",

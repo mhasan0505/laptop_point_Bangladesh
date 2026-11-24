@@ -56,5 +56,39 @@ for (const relPath of targetFiles) {
   }
 }
 
+// Patch @opennextjs/aws cookie default-import interop bug with cookie@1.x
+// (cookie@1.1.1 sets __esModule=true with named exports only, causing
+// `import cookieParser from "cookie"` to resolve to `undefined` in esbuild/workerd).
+const openNextAwsRoots = [];
+const directAws = path.resolve(process.cwd(), "node_modules/@opennextjs/aws");
+if (fs.existsSync(directAws)) openNextAwsRoots.push(directAws);
+
+const pnpmStoreDir = path.resolve(process.cwd(), "node_modules/.pnpm");
+if (fs.existsSync(pnpmStoreDir)) {
+  for (const entry of fs.readdirSync(pnpmStoreDir)) {
+    if (entry.startsWith("@opennextjs+aws@")) {
+      const candidate = path.join(pnpmStoreDir, entry, "node_modules", "@opennextjs", "aws");
+      if (fs.existsSync(candidate)) openNextAwsRoots.push(candidate);
+    }
+  }
+}
+
+for (const awsRoot of new Set(openNextAwsRoots)) {
+  for (const converter of ["edge.js", "node.js"]) {
+    const file = path.join(awsRoot, "dist", "overrides", "converters", converter);
+    if (!fs.existsSync(file)) continue;
+    const content = fs.readFileSync(file, "utf-8");
+    if (content.includes('import cookieParser from "cookie";')) {
+      const patched = content.replace(
+        'import cookieParser from "cookie";',
+        'import * as cookieParser from "cookie";'
+      );
+      fs.writeFileSync(file, patched, "utf-8");
+      totalPatched++;
+      console.log(`[patch-next] Patched OpenNext cookie import: ${path.relative(process.cwd(), file)}`);
+    }
+  }
+}
+
 console.log(`[patch-next] Done. Patched ${totalPatched} file(s).`);
 
