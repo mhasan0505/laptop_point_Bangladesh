@@ -6,6 +6,16 @@ import manifest from "../app/data/product-image-manifest.json" with { type: "jso
 
 const projectRoot = process.cwd();
 const publicDir = path.join(projectRoot, "public");
+const r2ManifestPath = path.join(projectRoot, "app", "data", "r2-migration-manifest.json");
+
+let r2Manifest = null;
+if (fs.existsSync(r2ManifestPath)) {
+  try {
+    r2Manifest = JSON.parse(fs.readFileSync(r2ManifestPath, "utf-8"));
+  } catch {
+    r2Manifest = null;
+  }
+}
 
 const normalize = (p) => {
   if (typeof p !== "string") return "";
@@ -22,7 +32,11 @@ const isLocalPath = (p) => p.startsWith("/") && !p.startsWith("//");
 const fileExistsForPublicPath = (publicPath) => {
   const relative = publicPath.replace(/^\//, "");
   const absolute = path.join(publicDir, relative);
-  return fs.existsSync(absolute);
+  // Check local disk first
+  if (fs.existsSync(absolute)) return true;
+  // If not on local disk, check if it was migrated to Cloudflare R2
+  if (r2Manifest && r2Manifest[publicPath]) return true;
+  return false;
 };
 
 const missing = [];

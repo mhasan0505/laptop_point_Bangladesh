@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ik.imagekit.io",
       },
+      {
+        protocol: "https",
+        hostname: "**.r2.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "**.r2.cloudflarestorage.com",
+      },
     ],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -154,6 +162,28 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    const r2PublicUrl = (
+      process.env.R2_PUBLIC_URL ||
+      process.env.NEXT_PUBLIC_R2_PUBLIC_URL ||
+      ""
+    )
+      .trim()
+      .replace(/\/+$/, "");
+
+    if (!r2PublicUrl) return [];
+
+    return [
+      {
+        source: "/products/:path*",
+        destination: `${r2PublicUrl}/products/:path*`,
+      },
+      {
+        source: "/uploads/:path*",
+        destination: `${r2PublicUrl}/uploads/:path*`,
+      },
+    ];
+  },
   async headers() {
     return [
       {
@@ -179,7 +209,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value: "public, max-age=31536000, s-maxage=31536000, immutable",
           },
         ],
       },
@@ -188,7 +218,16 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value: "public, max-age=31536000, s-maxage=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/uploads/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, s-maxage=31536000, immutable",
           },
         ],
       },
@@ -197,7 +236,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value: "public, max-age=31536000, s-maxage=31536000, immutable",
           },
         ],
       },
@@ -206,7 +245,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value: "public, max-age=31536000, s-maxage=31536000, immutable",
           },
         ],
       },
@@ -237,9 +276,9 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://unpkg.com",
               "style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com",
-              "img-src 'self' blob: data: https://ik.imagekit.io https://images.unsplash.com https://cdn.sanity.io https://*.tile.openstreetmap.org https://www.facebook.com https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://i.ytimg.com",
+              "img-src 'self' blob: data: https://ik.imagekit.io https://images.unsplash.com https://cdn.sanity.io https://*.tile.openstreetmap.org https://www.facebook.com https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://i.ytimg.com https://*.r2.dev https://*.r2.cloudflarestorage.com",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self' https://ik.imagekit.io https://upload.imagekit.io https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.tile.openstreetmap.org",
+              "connect-src 'self' https://ik.imagekit.io https://upload.imagekit.io https://*.r2.cloudflarestorage.com https://*.r2.dev https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.tile.openstreetmap.org",
               "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://www.facebook.com",
               "frame-ancestors 'self'",
               "base-uri 'self'",

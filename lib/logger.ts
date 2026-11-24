@@ -152,7 +152,7 @@ export const logger = {
    */
   logUploadSuccess(params: {
     fileId?: string;
-    storage: "imagekit" | "local";
+    storage: "r2" | "imagekit" | "local";
     fileName: string;
     sizeBytes: number;
     url: string;

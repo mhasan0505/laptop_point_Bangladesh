@@ -36,6 +36,14 @@ export const serverEnvSchema = z.object({
   IMAGEKIT_URL_ENDPOINT: z.string().optional(),
   ALLOW_LOCAL_UPLOADS: z.enum(["0", "1"]).default("0"),
 
+  // Cloudflare R2 Asset Storage (Free Tier Compatible)
+  STORAGE_PROVIDER: z.enum(["r2", "imagekit", "local"]).default("r2"),
+  R2_ACCOUNT_ID: z.string().optional(),
+  R2_ACCESS_KEY_ID: z.string().optional(),
+  R2_SECRET_ACCESS_KEY: z.string().optional(),
+  R2_BUCKET_NAME: z.string().optional(),
+  R2_PUBLIC_URL: z.string().url().optional(),
+
   // Cron & Background jobs
   CRON_SECRET: z.string().optional(),
 
@@ -84,6 +92,7 @@ export const clientEnvSchema = z.object({
   NEXT_PUBLIC_ENABLE_VARIANTS: z.enum(["true", "false"]).optional(),
   NEXT_PUBLIC_MAX_UPLOAD_MB: z.coerce.number().positive().default(16),
   NEXT_PUBLIC_BING_SITE_VERIFICATION: z.string().optional(),
+  NEXT_PUBLIC_R2_PUBLIC_URL: z.string().url().optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

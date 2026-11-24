@@ -11,6 +11,11 @@ import {
   findAssetUsages,
   deleteFromImageKit,
 } from "@/lib/media/storage";
+import {
+  isR2Configured,
+  uploadBufferToR2,
+  deleteFromR2,
+} from "@/lib/media/r2";
 import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
@@ -20,7 +25,7 @@ export const runtime = "nodejs";
 const MAX_UPLOAD_BYTES = 16 * 1024 * 1024;
 const IMAGEKIT_TIMEOUT_MS = 20_000;
 
-type Storage = "imagekit" | "local";
+type Storage = "r2" | "imagekit" | "local";
 
 function fail(status: number, stage: string, error: string, extra?: Record<string, unknown>) {
   logger.logUploadError({
@@ -137,8 +142,85 @@ export async function POST(request: NextRequest) {
 
     const privateKey = process.env.IMAGEKIT_PRIVATE_KEY;
     const warnings: string[] = [];
+    const storageProvider = (process.env.STORAGE_PROVIDER || "r2").toLowerCase();
 
-    // 1. ImageKit (persistent, CDN-backed) when configured.
+    // 1. Cloudflare R2 (Primary, Zero-Egress, Free Tier CDN)
+    if ((storageProvider === "r2" || !privateKey) && isR2Configured()) {
+      let r2Upload: { url: string; key: string } | null = null;
+      const s3Key = `uploads/${uniqueBase}.webp`;
+      try {
+        const res = await uploadBufferToR2({
+          buffer: processed.mainBuffer,
+          key: s3Key,
+          contentType: "image/webp",
+          fileName: `${uniqueBase}.webp`,
+        });
+        r2Upload = res;
+      } catch (r2Err) {
+        const msg = r2Err instanceof Error ? r2Err.message : "R2 upload failed";
+        console.error("[api/admin/upload] R2 failed:", msg);
+        warnings.push(`Cloudflare R2 failed (${msg}); trying fallback storage.`);
+      }
+
+      if (r2Upload) {
+        let variantUrls: Array<{ label: string; url: string; width: number; height: number }> = [];
+        if (processed.variants && processed.variants.length > 0) {
+          const vResults = await Promise.allSettled(
+            processed.variants.map(async (v) => {
+              const vKey = `uploads/${path.basename(v.key)}`;
+              const uploaded = await uploadBufferToR2({
+                buffer: v.buffer,
+                key: vKey,
+                contentType: v.format === "avif" ? "image/avif" : "image/webp",
+                fileName: path.basename(v.key),
+              });
+              return { label: v.label, url: uploaded.url, width: v.width, height: v.height };
+            })
+          );
+          variantUrls = vResults
+            .filter((r): r is PromiseFulfilledResult<{ label: string; url: string; width: number; height: number }> => r.status === "fulfilled")
+            .map((r) => r.value);
+        }
+
+        try {
+          await storeMediaMeta(r2Upload.url, {
+            fileId: s3Key,
+            url: r2Upload.url,
+            name: `${uniqueBase}.webp`,
+            preset,
+            width: processed.mainWidth,
+            height: processed.mainHeight,
+            bytes: processed.mainBytes,
+            createdAt: new Date().toISOString(),
+          });
+        } catch (metaErr) {
+          console.warn("[api/admin/upload] storeMediaMeta warning (R2 succeeded):", metaErr);
+        }
+
+        logger.logUploadSuccess({
+          fileId: s3Key,
+          storage: "r2",
+          fileName: `${uniqueBase}.webp`,
+          sizeBytes: processed.mainBytes,
+          url: r2Upload.url,
+        });
+
+        return NextResponse.json({
+          url: r2Upload.url,
+          fileId: s3Key,
+          name: `${uniqueBase}.webp`,
+          originalFilename: file.name,
+          width: processed.mainWidth,
+          height: processed.mainHeight,
+          bytes: processed.mainBytes,
+          storage: "r2" satisfies Storage,
+          variants: variantUrls,
+          warnings,
+        });
+      }
+    }
+
+    // 2. ImageKit (persistent, CDN-backed fallback) when configured.
     if (privateKey) {
       let ik: { url: string; fileId: string; name: string } | null = null;
       try {
@@ -189,11 +271,12 @@ export async function POST(request: NextRequest) {
           bytes: processed.mainBytes,
           storage: "imagekit" satisfies Storage,
           variants: [],
+          warnings,
         });
       }
     }
 
-    // 2. Local disk. Files written at runtime into /public are not served by
+    // 3. Local disk. Files written at runtime into /public are not served by
     //    `next start`, so refuse (instead of returning a dead URL) in production
     //    unless the host serves /uploads itself.
     const isProd = process.env.NODE_ENV === "production";
@@ -201,9 +284,9 @@ export async function POST(request: NextRequest) {
       return fail(
         503,
         "storage",
-        privateKey
-          ? `Image storage (ImageKit) failed: ${warnings.join(" ")}`
-          : "No image storage is configured. Set IMAGEKIT_PRIVATE_KEY (or ALLOW_LOCAL_UPLOADS=1 if your host serves /public/uploads).",
+        isR2Configured() || privateKey
+          ? `Image storage failed: ${warnings.join(" ")}`
+          : "No image storage is configured. Configure Cloudflare R2 credentials (R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME) or set ALLOW_LOCAL_UPLOADS=1 in dev.",
       );
     }
 
@@ -284,8 +367,27 @@ export async function DELETE(request: NextRequest) {
       }
     }
 
-    // Check if it's an ImageKit upload with a stored fileId
+    // Check if it's an R2 upload
     const meta = await getMediaMeta(targetUrl);
+    const r2PublicBase = (process.env.R2_PUBLIC_URL || "").trim().replace(/\/+$/, "");
+    const isR2Url =
+      (r2PublicBase && targetUrl.startsWith(r2PublicBase)) ||
+      targetUrl.includes(".r2.cloudflarestorage.com") ||
+      (meta?.fileId && meta.fileId.startsWith("uploads/"));
+
+    if (isR2Url && isR2Configured()) {
+      const s3Key =
+        meta?.fileId ||
+        (r2PublicBase
+          ? targetUrl.replace(`${r2PublicBase}/`, "").split("?")[0]
+          : targetUrl.split("/").slice(-2).join("/").split("?")[0]);
+
+      await deleteFromR2(s3Key);
+      await deleteMediaMeta(targetUrl);
+      return NextResponse.json({ ok: true, deleted: true, storage: "r2", fileId: s3Key });
+    }
+
+    // Check if it's an ImageKit upload with a stored fileId
     const privateKey = process.env.IMAGEKIT_PRIVATE_KEY;
 
     if (meta?.fileId && privateKey) {
