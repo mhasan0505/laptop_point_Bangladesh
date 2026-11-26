@@ -9,6 +9,7 @@ import { Pool } from "pg";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
+  pool: Pool | undefined;
 };
 
 // Cache one PrismaClient per Cloudflare Worker request (keyed by ExecutionContext)
@@ -91,9 +92,9 @@ function createHyperdriveClient(connectionString: string): PrismaClient {
     const pool = new Pool({
       connectionString: normalizedUrl,
       ssl: { rejectUnauthorized: false },
-      max: 5,
-      idleTimeoutMillis: 10000,
-      connectionTimeoutMillis: 5000,
+      max: 2,
+      idleTimeoutMillis: 3000,
+      connectionTimeoutMillis: 8000,
       allowExitOnIdle: true,
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -108,7 +109,7 @@ function createHyperdriveClient(connectionString: string): PrismaClient {
   const adapter = new PrismaPg({
     connectionString: normalizedUrl,
     ssl: false,
-    max: 5,
+    max: 2,
   });
   return new PrismaClient({
     adapter,
@@ -138,14 +139,17 @@ function createLocalClient(): PrismaClient {
   } catch {
     // Keep original connectionString if not a standard URL
   }
-  const pool = new Pool({
-    connectionString,
-    ssl: isLocalHost ? false : { rejectUnauthorized: false },
-    max: 5,
-    idleTimeoutMillis: 10000,
-    connectionTimeoutMillis: 5000,
-    allowExitOnIdle: true,
-  });
+  const pool =
+    globalForPrisma.pool ??
+    new Pool({
+      connectionString,
+      ssl: isLocalHost ? false : { rejectUnauthorized: false },
+      max: 2,
+      idleTimeoutMillis: 3000,
+      connectionTimeoutMillis: 8000,
+      allowExitOnIdle: true,
+    });
+  globalForPrisma.pool = pool;
   // Pool type cast resolves a @types/pg version conflict between
   // @prisma/adapter-pg's bundled types and the project's @types/pg.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
