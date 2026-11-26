@@ -3,7 +3,10 @@
 	"main": ".open-next/worker.js",
 	"name": "laptop-point-bangladesh",
 	"compatibility_date": "2026-11-19",
-	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"compatibility_flags": [
+		"nodejs_compat",
+		"global_fetch_strictly_public"
+	],
 	"assets": {
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"
@@ -18,5 +21,11 @@
 	],
 	"observability": {
 		"enabled": true
-	}
+	},
+	"hyperdrive": [
+		{
+			"binding": "HYPERDRIVE",
+			"id": "f9e7267a87c04e00a41f67bc179b85ba"
+		}
+	]
 }
