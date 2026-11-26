@@ -1,3 +1,4 @@
+import accessoriesRaw from "@/app/data/accessories.json";
 import { promises as fs } from "fs";
 import path from "path";
 import { prisma } from "@/lib/prisma";
@@ -27,7 +28,9 @@ async function readBase(): Promise<AccessoryRecord[]> {
     const parsed = JSON.parse(await fs.readFile(FILE_PATH, "utf-8"));
     return Array.isArray(parsed) ? (parsed as AccessoryRecord[]) : [];
   } catch {
-    return [];
+    return Array.isArray(accessoriesRaw)
+      ? (accessoriesRaw as AccessoryRecord[]).map((a) => ({ ...a }))
+      : [];
   }
 }
 
@@ -58,7 +61,7 @@ export function accessoryIdFromSku(sku: string): string {
 /** All accessories (including inactive) with live stock applied. */
 export async function listAccessories(): Promise<AccessoryRecord[]> {
   const map = new Map<string, AccessoryRecord>();
-  for (const a of await readBase()) map.set(a.sku.toLowerCase(), a);
+  for (const a of await readBase()) map.set(a.sku.toLowerCase(), { ...a });
 
   try {
     const overrides = await prisma.productOverride.findMany({
@@ -67,7 +70,7 @@ export async function listAccessories(): Promise<AccessoryRecord[]> {
     for (const o of overrides) {
       const sku = o.sku.slice(KEY_PREFIX.length).toLowerCase();
       if (o.isDeleted) map.delete(sku);
-      else if (o.data) map.set(sku, o.data as unknown as AccessoryRecord);
+      else if (o.data) map.set(sku, { ...(o.data as unknown as AccessoryRecord) });
     }
   } catch (err) {
     console.warn("[accessories] override fetch failed:", err);
