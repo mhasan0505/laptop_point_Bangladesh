@@ -140,6 +140,8 @@ export async function POST(request: NextRequest) {
       return fail(422, "sharp_decode", "Image could not be processed");
     }
 
+    const mainExt = processed.mainFormat === "jpeg" ? "jpg" : processed.mainFormat;
+    const mainFileName = `${uniqueBase}.${mainExt}`;
     const privateKey = process.env.IMAGEKIT_PRIVATE_KEY;
     const warnings: string[] = [];
     const storageProvider = (process.env.STORAGE_PROVIDER || "r2").toLowerCase();
@@ -147,13 +149,13 @@ export async function POST(request: NextRequest) {
     // 1. Cloudflare R2 (Primary, Zero-Egress, Free Tier CDN)
     if ((storageProvider === "r2" || !privateKey) && isR2Configured()) {
       let r2Upload: { url: string; key: string } | null = null;
-      const s3Key = `uploads/${uniqueBase}.webp`;
+      const s3Key = `uploads/${mainFileName}`;
       try {
         const res = await uploadBufferToR2({
           buffer: processed.mainBuffer,
           key: s3Key,
-          contentType: "image/webp",
-          fileName: `${uniqueBase}.webp`,
+          contentType: processed.mainContentType,
+          fileName: mainFileName,
         });
         r2Upload = res;
       } catch (r2Err) {
@@ -188,7 +190,7 @@ export async function POST(request: NextRequest) {
           await storeMediaMeta(r2Upload.url, {
             fileId: s3Key,
             url: r2Upload.url,
-            name: `${uniqueBase}.webp`,
+            name: mainFileName,
             preset,
             width: processed.mainWidth,
             height: processed.mainHeight,
@@ -202,7 +204,7 @@ export async function POST(request: NextRequest) {
         logger.logUploadSuccess({
           fileId: s3Key,
           storage: "r2",
-          fileName: `${uniqueBase}.webp`,
+          fileName: mainFileName,
           sizeBytes: processed.mainBytes,
           url: r2Upload.url,
         });
@@ -210,7 +212,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           url: r2Upload.url,
           fileId: s3Key,
-          name: `${uniqueBase}.webp`,
+          name: mainFileName,
           originalFilename: file.name,
           width: processed.mainWidth,
           height: processed.mainHeight,
@@ -229,7 +231,7 @@ export async function POST(request: NextRequest) {
         ik = await uploadToImageKit(
           privateKey,
           processed.mainBuffer,
-          `${uniqueBase}.webp`,
+          mainFileName,
           `/laptop-point/${preset}`,
         );
       } catch (err) {
@@ -295,7 +297,7 @@ export async function POST(request: NextRequest) {
     const uploadDir = path.join(process.cwd(), "public", "uploads");
     try {
       await fs.mkdir(uploadDir, { recursive: true });
-      const mainFilename = `${uniqueBase}.webp`;
+      const mainFilename = mainFileName;
       await fs.writeFile(path.join(uploadDir, mainFilename), processed.mainBuffer);
 
       const variantResults = await Promise.allSettled(
