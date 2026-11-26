@@ -4,6 +4,7 @@ import {
   EMPTY_FILTERS,
   FilterFacets,
   hasActiveFilters,
+  normalizeToken,
   ProductFilters,
 } from "@/lib/product-filter";
 import { ChevronDown, ChevronUp, RotateCcw, X } from "lucide-react";
@@ -72,6 +73,11 @@ export default function FilterSidebar({
     updateFilters({ ...activeFilters, [key]: value });
   };
 
+  const isOptionSelected = (values: string[] | undefined, target: string) => {
+    const normalizedTarget = normalizeToken(target);
+    return (values || []).some((item) => normalizeToken(item) === normalizedTarget);
+  };
+
   const toggleArrayFilter = (
     key:
       | "availability"
@@ -91,8 +97,10 @@ export default function FilterSidebar({
     value: string,
   ) => {
     const current = (activeFilters[key] as string[]) || [];
-    const updated = current.includes(value)
-      ? current.filter((item) => item !== value)
+    const normalizedValue = normalizeToken(value);
+    const exists = current.some((item) => normalizeToken(item) === normalizedValue);
+    const updated = exists
+      ? current.filter((item) => normalizeToken(item) !== normalizedValue)
       : [...current, value];
     setFilterField(key, updated as any);
   };
@@ -427,7 +435,7 @@ export default function FilterSidebar({
             <CheckboxRow
               key={opt.value}
               label={opt.label}
-              isChecked={(activeFilters.brands || []).includes(opt.value)}
+              isChecked={isOptionSelected(activeFilters.brands, opt.value)}
               onChange={() => toggleArrayFilter("brands", opt.value)}
             />
           ))}

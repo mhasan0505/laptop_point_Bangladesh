@@ -107,18 +107,24 @@ const Header = ({
   const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
   const [searchIndex, setSearchIndex] = useState<SearchItem[] | null>(null);
 
-  const categorySubmenu =
-    navigationLinks.find((link) => link.name === "Categories")?.submenu ?? [];
+  const laptopDepartmentItems =
+    departmentMenuItems
+      .find((item) => item.name === "Laptop")
+      ?.sub?.find((sec) => sec.title === "LAPTOPS")
+      ?.items ?? [];
 
   const searchCategoryOptions = [
     { label: "All Categories", value: "all" },
-    ...categorySubmenu.map((item) => {
-      const match = item.href.match(/[?&]category=([^&]+)/);
-      return {
-        label: item.name,
-        value: match?.[1] ? decodeURIComponent(match[1]) : item.name,
-      };
-    }),
+    ...laptopDepartmentItems
+      .filter((item) => item.name !== "All")
+      .map((item) => {
+        const match = item.href.match(/[?&]category=([^&]+)/);
+        return {
+          label: item.name,
+          value: match?.[1] ? decodeURIComponent(match[1]) : item.name,
+        };
+      }),
+    { label: "Gaming Laptops", value: "Gaming" },
   ];
 
   const selectedCategoryLabel =
@@ -594,7 +600,11 @@ const Header = ({
                               );
                             })}
                             <Link
-                              href={`/shop?search=${searchQuery}`}
+                              href={
+                                selectedSearchCategory !== "all"
+                                  ? `/shop?search=${encodeURIComponent(searchQuery.trim())}&category=${encodeURIComponent(selectedSearchCategory)}`
+                                  : `/shop?search=${encodeURIComponent(searchQuery.trim())}`
+                              }
                               onClick={() => setIsSearchExpanded(false)}
                               className="mt-2 block w-full border-t border-gray-100 py-2 text-center text-sm font-medium text-primary hover:text-primary/80"
                             >
@@ -861,7 +871,12 @@ const Header = ({
                           }}
                         >
                           {item.sub ? (
-                            <div
+                            <Link
+                              href={item.href}
+                              onClick={() => {
+                                setIsDepartmentMenuOpen(false);
+                                setActiveDepartmentSub(null);
+                              }}
                               className={`flex cursor-pointer items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition-colors ${
                                 activeDepartmentSub === item.name
                                   ? "bg-[#002b60]/8 text-[#002b60]"
@@ -877,7 +892,7 @@ const Header = ({
                                 )}
                               </span>
                               <ChevronRight className="h-3.5 w-3.5 text-neutral-400" />
-                            </div>
+                            </Link>
                           ) : (
                             <Link
                               href={item.href}
@@ -1074,6 +1089,14 @@ const NavItem = ({
     }, 250);
   };
 
+  const closeMenu = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setIsHovered(false);
+  };
+
   const isBrandsMenu = link.name === "Brands";
 
   return (
@@ -1084,6 +1107,7 @@ const NavItem = ({
     >
       <Link
         href={link.href}
+        onClick={closeMenu}
         className={`relative flex items-center rounded-lg px-3 py-2 text-[13.5px] font-semibold tracking-[-0.01em] transition-all ${
           isHovered
             ? "text-[#002b60] bg-neutral-100/80"
@@ -1147,6 +1171,7 @@ const NavItem = ({
                     <Link
                       key={subItem.name}
                       href={subItem.href}
+                      onClick={closeMenu}
                       className="group/brand flex items-center gap-2.5 p-2 rounded-xl hover:bg-neutral-50/90 border border-transparent hover:border-neutral-200/70 transition-all"
                     >
                       <div className="relative w-8 h-8 rounded-lg bg-neutral-50 group-hover/brand:bg-white border border-neutral-200/60 flex items-center justify-center p-1 shrink-0 transition-all group-hover/brand:shadow-2xs">
@@ -1192,6 +1217,7 @@ const NavItem = ({
               <div className="mt-3 pt-2.5 border-t border-neutral-100">
                 <Link
                   href="/shop"
+                  onClick={closeMenu}
                   className="flex items-center justify-between px-3 py-2 rounded-xl bg-neutral-50/80 hover:bg-[#002b60]/5 text-xs font-bold text-[#002b60] border border-neutral-200/70 hover:border-[#002b60]/30 transition-all group/all"
                 >
                   <span className="flex items-center gap-2">
@@ -1212,6 +1238,7 @@ const NavItem = ({
                 <Link
                   key={subItem.name}
                   href={subItem.href}
+                  onClick={closeMenu}
                   className="group/item flex items-center justify-between px-3.5 py-2.5 text-xs font-semibold text-neutral-700 rounded-xl hover:bg-[#002b60]/8 hover:text-[#002b60] transition-all"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">

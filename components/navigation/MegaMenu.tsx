@@ -77,6 +77,7 @@ const MegaMenu = ({
                   >
                     <Link
                       href={`/shop?category=${encodeURIComponent(category.cat)}`}
+                      onClick={onClose}
                       className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all group ${
                         hoveredCategory === category.cat
                           ? "bg-[#002b60]/10 text-[#002b60] font-semibold"

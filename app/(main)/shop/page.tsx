@@ -1,6 +1,6 @@
 import { getLiveLaptops } from "@/app/data/data";
 import ShopClient from "@/components/shop/ShopClient";
-import { normalizeToken } from "@/lib/product-filter";
+import { matchesCategory, normalizeToken } from "@/lib/product-filter";
 import type { Metadata } from "next";
 import { permanentRedirect } from "next/navigation";
 
@@ -82,8 +82,7 @@ export async function generateMetadata({
     title = `${brand} Laptops Price in Bangladesh | Laptop Point BD`;
     description = `Browse certified pre-owned and refurbished ${brand} laptops at best prices in Bangladesh. Tested hardware with official warranty.`;
   } else if (category && !brand) {
-    const normTarget = normalizeToken(category);
-    const matchingCount = laptops.filter((p) => normalizeToken(p.category) === normTarget).length;
+    const matchingCount = laptops.filter((p) => matchesCategory(p, category)).length;
     isEmptyCategory = matchingCount === 0;
 
     canonical = `https://laptoppointbd.com/shop?category=${encodeURIComponent(category)}`;

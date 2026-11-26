@@ -117,6 +117,7 @@ export function getActiveFilterCount(filters: ProductFilters): number {
   count += filters.availability?.length ?? 0;
   count += filters.series?.length ?? 0;
   count += filters.brands?.length ?? 0;
+  count += filters.categories?.length ?? 0;
   count += filters.processorTypes?.length ?? 0;
   count += filters.processorModels?.length ?? 0;
   count += filters.generations?.length ?? 0;
@@ -142,6 +143,147 @@ export function normalizeToken(value?: string): string {
       .replace(/[^a-z0-9]+/g, "")
       .trim() ?? ""
   );
+}
+
+export const CANONICAL_BRANDS = [
+  "Apple",
+  "Microsoft",
+  "HP",
+  "Dell",
+  "Lenovo",
+  "ASUS",
+  "Acer",
+  "MSI",
+  "Gigabyte",
+  "Razer",
+  "Toshiba",
+] as const;
+
+/** Map any brand token (e.g. "Asus", "hp", "dell") to its canonical sidebar label. */
+export function canonicalizeBrand(brand: string): string {
+  const trimmed = brand.trim();
+  if (!trimmed) return "";
+  const norm = normalizeToken(trimmed);
+  const match = CANONICAL_BRANDS.find((b) => normalizeToken(b) === norm);
+  return match ?? trimmed;
+}
+
+/** Normalize URL sort aliases (e.g. "new" -> "newest") to supported sort keys. */
+export function normalizeSortBy(sort?: string | null): string {
+  const raw = (sort ?? "").trim().toLowerCase();
+  switch (raw) {
+    case "new":
+    case "newest":
+    case "latest":
+      return "newest";
+    case "best-selling":
+    case "bestselling":
+    case "popular":
+      return "best-selling";
+    case "price-asc":
+    case "price_asc":
+    case "low-to-high":
+      return "price-asc";
+    case "price-desc":
+    case "price_desc":
+    case "high-to-low":
+      return "price-desc";
+    case "discount":
+    case "discounts":
+    case "deals":
+      return "discount";
+    case "rating":
+      return "rating";
+    case "name-asc":
+      return "name-asc";
+    case "featured":
+    case "":
+    default:
+      return "featured";
+  }
+}
+
+export function matchesCategory(product: Product, filter: string): boolean {
+  const target = normalizeToken(filter);
+  if (!target) return true;
+
+  const productCat = normalizeToken(product.category);
+  const name = (product.name || "").toLowerCase();
+
+  // "Laptop" / "Laptops" links from nav & footer represent all laptops in the shop catalog
+  if (
+    target === "laptop" ||
+    target === "laptops" ||
+    target === "alllaptop" ||
+    target === "alllaptops"
+  ) {
+    return true;
+  }
+
+  if (
+    target === "gaming" ||
+    target === "gaminglaptop" ||
+    target === "gaminglaptops"
+  ) {
+    return matchesSeries(product, "Gaming Laptops");
+  }
+
+  if (target === "ultrabook" || target === "ultrabooks") {
+    return (
+      productCat === "ultrabook" ||
+      matchesSeries(product, "Premium & Ultrabook Laptops")
+    );
+  }
+
+  if (
+    target === "workstation" ||
+    target === "workstations" ||
+    target === "businessworkstations"
+  ) {
+    return (
+      productCat === "workstation" ||
+      name.includes("zbook") ||
+      name.includes("precision") ||
+      /\bthinkpad\s+p\d/i.test(product.name || "")
+    );
+  }
+
+  if (
+    target === "convertible2in1" ||
+    target === "convertible" ||
+    target === "2in1" ||
+    target === "2in1touch" ||
+    target === "360"
+  ) {
+    return (
+      productCat === "convertible2in1" ||
+      productCat.includes("convertible") ||
+      name.includes("x360") ||
+      name.includes("yoga") ||
+      name.includes("2-in-1") ||
+      name.includes("2 in 1") ||
+      name.includes("surface pro")
+    );
+  }
+
+  if (
+    target === "business" ||
+    target === "businesslaptop" ||
+    target === "businesslaptops"
+  ) {
+    return matchesSeries(product, "Business Laptops");
+  }
+
+  if (
+    target === "budget" ||
+    target === "student" ||
+    target === "under30000" ||
+    target === "under35000"
+  ) {
+    return product.price <= 35000;
+  }
+
+  return Boolean(productCat && (productCat === target || productCat.includes(target)));
 }
 
 // ─── Matching Helpers ────────────────────────────────────────────────────────
@@ -291,6 +433,7 @@ export function matchesGeneration(processor: string, filter: string): boolean {
 }
 
 export function matchesDisplaySize(display: string, filter: string): boolean {
+  if (typeof display !== "string" || !display) return false;
   const match = display.match(/(\d+(\.\d+)?)/);
   if (!match) return false;
   const size = parseFloat(match[1]);
@@ -504,10 +647,7 @@ function matchItem(
     }
     case "categories": {
       if (!filters.categories || filters.categories.length === 0) return true;
-      const normalizedCategories = filters.categories.map(normalizeToken).filter(Boolean);
-      if (normalizedCategories.length === 0) return true;
-      const productCategory = normalizeToken(product.category);
-      return Boolean(productCategory && normalizedCategories.includes(productCategory));
+      return filters.categories.some((category) => matchesCategory(product, category));
     }
     case "inStockOnly": {
       if (!filters.inStockOnly) return true;
@@ -603,7 +743,7 @@ export function filterProducts(
   });
 
   // 3. Sorting
-  switch (filters.sortBy) {
+  switch (normalizeSortBy(filters.sortBy)) {
     case "price-asc":
       result.sort((a, b) => a.price - b.price);
       break;
@@ -615,6 +755,15 @@ export function filterProducts(
       break;
     case "rating":
       result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      break;
+    case "best-selling":
+      result.sort(
+        (a, b) =>
+          (b.reviews || 0) - (a.reviews || 0) ||
+          (b.rating || 0) - (a.rating || 0) ||
+          (b.discount || 0) - (a.discount || 0) ||
+          Number(b.id) - Number(a.id),
+      );
       break;
     case "name-asc":
       result.sort((a, b) => a.name.localeCompare(b.name));
@@ -649,6 +798,7 @@ export function computeFilterFacets(
         "availability",
         "series",
         "brands",
+        "categories",
         "processorTypes",
         "processorModels",
         "generations",
@@ -660,6 +810,8 @@ export function computeFilterFacets(
         "graphics",
         "operatingSystems",
         "specialFeatures",
+        "inStockOnly",
+        "touchscreenOnly",
       ];
       for (const k of keys) {
         if (k === dim) continue;

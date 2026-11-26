@@ -1,6 +1,6 @@
 import AccessoryCard from "@/components/accessories/AccessoryCard";
 import { listPublicAccessories } from "@/lib/accessories-storage";
-import { ACCESSORY_CATEGORIES } from "@/lib/accessory-types";
+import { ACCESSORY_CATEGORIES, resolveAccessoryCategorySlug } from "@/lib/accessory-types";
 import { normalizeToken } from "@/lib/product-filter";
 import { getStorefrontContact } from "@/lib/public-content";
 import { MessageCircle, Phone, Search } from "lucide-react";
@@ -28,8 +28,9 @@ const SORTS = [
 export async function generateMetadata({ searchParams }: AccessoriesPageProps): Promise<Metadata> {
   const params = await searchParams;
   const rawCategory = typeof params.category === "string" ? params.category.trim() : undefined;
-  const cat = rawCategory
-    ? ACCESSORY_CATEGORIES.find((c) => c.slug.toLowerCase() === rawCategory.toLowerCase())
+  const resolvedSlug = rawCategory ? resolveAccessoryCategorySlug(rawCategory) : null;
+  const cat = resolvedSlug
+    ? ACCESSORY_CATEGORIES.find((c) => c.slug === resolvedSlug)
     : undefined;
 
   let canonical = "https://laptoppointbd.com/accessories";
@@ -80,9 +81,10 @@ export default async function AccessoriesPage({ searchParams }: AccessoriesPageP
   const { category, brand, q, sort = "new", stock } = await searchParams;
   const [all, contact] = await Promise.all([listPublicAccessories(), getStorefrontContact()]);
 
-  const rawCat = (category ?? "").trim().toLowerCase();
-  const activeCategory = rawCat
-    ? ACCESSORY_CATEGORIES.find((c) => c.slug.toLowerCase() === rawCat)
+  const rawCat = (category ?? "").trim();
+  const resolvedCatSlug = rawCat ? resolveAccessoryCategorySlug(rawCat) : null;
+  const activeCategory = resolvedCatSlug
+    ? ACCESSORY_CATEGORIES.find((c) => c.slug === resolvedCatSlug)
     : undefined;
   const query = (q ?? "").trim().toLowerCase();
   const inStockOnly = stock === "1";
@@ -113,7 +115,7 @@ export default async function AccessoriesPage({ searchParams }: AccessoriesPageP
 
   const href = (next: Record<string, string | undefined>) => {
     const params = new URLSearchParams();
-    const merged = { category, brand, q, sort: sort === "new" ? undefined : sort, stock: inStockOnly ? "1" : undefined, ...next };
+    const merged = { category: activeCategory?.slug ?? category, brand, q, sort: sort === "new" ? undefined : sort, stock: inStockOnly ? "1" : undefined, ...next };
     for (const [k, v] of Object.entries(merged)) if (v) params.set(k, v);
     const s = params.toString();
     return s ? `/accessories?${s}` : "/accessories";

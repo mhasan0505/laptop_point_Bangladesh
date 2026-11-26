@@ -1,5 +1,41 @@
 [
   {
+    "id": "run-1795699196856",
+    "name": "Deal & Flash Offer Expiry",
+    "status": "success",
+    "startedAt": "2026-11-26T13:19:56.856Z",
+    "finishedAt": "2026-11-26T13:19:56.868Z",
+    "durationMs": 12,
+    "message": "Deactivated 0 expired deal(s) (Banners: 0, Power Deals: 0)."
+  },
+  {
+    "id": "run-1795699196837",
+    "name": "Prune Orphan Uploads (Report Only)",
+    "status": "success",
+    "startedAt": "2026-11-26T13:19:56.837Z",
+    "finishedAt": "2026-11-26T13:19:56.853Z",
+    "durationMs": 16,
+    "message": "Scan complete: All 0 uploaded files are referenced in catalog or banners. No orphans."
+  },
+  {
+    "id": "run-1795699111897",
+    "name": "Deal & Flash Offer Expiry",
+    "status": "success",
+    "startedAt": "2026-11-26T13:18:31.897Z",
+    "finishedAt": "2026-11-26T13:18:31.902Z",
+    "durationMs": 5,
+    "message": "Deactivated 0 expired deal(s) (Banners: 0, Power Deals: 0)."
+  },
+  {
+    "id": "run-1795699111879",
+    "name": "Prune Orphan Uploads (Report Only)",
+    "status": "success",
+    "startedAt": "2026-11-26T13:18:31.879Z",
+    "finishedAt": "2026-11-26T13:18:31.894Z",
+    "durationMs": 15,
+    "message": "Scan complete: All 0 uploaded files are referenced in catalog or banners. No orphans."
+  },
+  {
     "id": "run-1794489198729",
     "name": "Deal & Flash Offer Expiry",
     "status": "success",

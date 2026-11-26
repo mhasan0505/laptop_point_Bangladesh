@@ -1,29 +1,15 @@
 import productsRaw from "@/app/data/products.json";
 import accessoriesRaw from "@/app/data/accessories.json";
-import { normalizeToken } from "./product-filter";
-
-interface RawProductItem {
-  category?: string;
-  inStock?: boolean;
-  stock?: number | { quantity?: number; status?: string };
-}
+import type { Product } from "@/types/product";
+import { resolveAccessoryCategorySlug } from "./accessory-types";
+import { matchesCategory, normalizeToken } from "./product-filter";
 
 interface RawAccessoryItem {
   category?: string;
   active?: boolean;
 }
 
-// Compute live counts from data files
-function getProductCounts(): Map<string, number> {
-  const map = new Map<string, number>();
-  for (const p of productsRaw as RawProductItem[]) {
-    if (p.category) {
-      const norm = normalizeToken(p.category);
-      map.set(norm, (map.get(norm) ?? 0) + 1);
-    }
-  }
-  return map;
-}
+const allLaptops = productsRaw as unknown as Product[];
 
 function getAccessoryCounts(): Map<string, number> {
   const map = new Map<string, number>();
@@ -36,7 +22,6 @@ function getAccessoryCounts(): Map<string, number> {
   return map;
 }
 
-const laptopCategoryCounts = getProductCounts();
 const accessoryCategoryCounts = getAccessoryCounts();
 
 /**
@@ -52,13 +37,13 @@ export function isCategoryHrefAvailable(href?: string): boolean {
     const categoryParam = url.searchParams.get("category");
     if (!categoryParam) return true;
 
-    const norm = normalizeToken(categoryParam);
-
     if (url.pathname.startsWith("/accessories")) {
+      const resolvedSlug = resolveAccessoryCategorySlug(categoryParam);
+      const norm = normalizeToken(resolvedSlug ?? categoryParam);
       return (accessoryCategoryCounts.get(norm) ?? 0) > 0;
     }
     if (url.pathname.startsWith("/shop")) {
-      return (laptopCategoryCounts.get(norm) ?? 0) > 0;
+      return allLaptops.some((product) => matchesCategory(product, categoryParam));
     }
     return true;
   } catch {

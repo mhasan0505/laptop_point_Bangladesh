@@ -375,7 +375,7 @@ const MobileMenu = ({ isOpen, onClose, navigation }: MobileMenuProps) => {
                           );
                         })}
                         <Link
-                          href={`/shop?search=${searchQuery}`}
+                          href={`/shop?search=${encodeURIComponent(searchQuery.trim())}`}
                           onClick={onClose}
                           className="block border-t border-slate-100 py-2 text-center text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50"
                         >
