@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { hasDatabaseConfig, prisma } from "@/lib/prisma";
 import { validateEnvConfig } from "@/lib/env";
 import packageJson from "@/package.json";
 
@@ -15,7 +15,7 @@ export async function GET() {
   let dbOk = false;
 
   try {
-    if (process.env.DATABASE_URL) {
+    if (hasDatabaseConfig()) {
       // 3-second timeout guard to prevent hung health checks
       await Promise.race([
         prisma.$queryRaw`SELECT 1`,

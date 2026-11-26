@@ -39,40 +39,66 @@ function getHyperdriveContext(): HyperdriveContext | null {
 }
 
 function createHyperdriveClient(connectionString: string): PrismaClient {
-  // In local `next dev` (initOpenNextCloudflareForDev), Wrangler may pass through
-  // the raw Aiven URL with `?sslmode=require`, which pg v8.20+ treats as `verify-full`
-  // and rejects Aiven's self-signed CA. For real Hyperdrive (*.hyperdrive.local),
-  // Hyperdrive terminates TLS at the edge so we pass connectionString directly.
+  // Strip SSL query params before handing the URL to `pg`, because pg-connection-string
+  // overrides `config.ssl` whenever `sslmode` / `ssl` is present in the URL.
+  // - In production Cloudflare Workers, `env.HYPERDRIVE.connectionString` connects to
+  //   Cloudflare's local edge Hyperdrive proxy, which terminates TLS upstream to Aiven
+  //   and rejects client SSL handshakes with `'N'` ("The server does not support SSL connections").
+  //   We MUST explicitly pass `ssl: false` so `pg` never sends an SSLRequest to Hyperdrive.
+  // - In local `next dev` (initOpenNextCloudflareForDev), Wrangler may pass through the
+  //   raw remote Aiven URL (`CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE`),
+  //   which requires `ssl: { rejectUnauthorized: false }` for Aiven's self-signed CA.
+  let normalizedUrl = connectionString;
+  let useRemoteDevSsl = false;
+
   try {
     const parsed = new URL(connectionString);
-    const isHyperdriveProxy =
-      parsed.hostname.endsWith(".hyperdrive.local") ||
-      parsed.hostname === "localhost" ||
-      parsed.hostname === "127.0.0.1";
+    const host = parsed.hostname.toLowerCase();
+    const isHyperdriveOrLocalProxy =
+      host === "hyperdrive.local" ||
+      host.endsWith(".hyperdrive.local") ||
+      host === "localhost" ||
+      host === "127.0.0.1" ||
+      host === "::1";
 
-    if (!isHyperdriveProxy && parsed.searchParams.has("sslmode")) {
-      parsed.searchParams.delete("sslmode");
-      const pool = new Pool({
-        connectionString: parsed.toString(),
-        ssl: { rejectUnauthorized: false },
-        max: 5,
-        idleTimeoutMillis: 10000,
-        connectionTimeoutMillis: 5000,
-        allowExitOnIdle: true,
-      });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const adapter = new PrismaPg(pool as any);
-      return new PrismaClient({
-        adapter,
-        log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
-      });
+    parsed.searchParams.delete("sslmode");
+    parsed.searchParams.delete("ssl");
+    parsed.searchParams.delete("sslcert");
+    parsed.searchParams.delete("sslkey");
+    parsed.searchParams.delete("sslrootcert");
+    parsed.searchParams.delete("uselibpqcompat");
+    normalizedUrl = parsed.toString();
+
+    if (process.env.NODE_ENV !== "production" && !isHyperdriveOrLocalProxy) {
+      useRemoteDevSsl = true;
     }
   } catch {
-    // Fall through to standard PrismaPg initialization
+    // Keep original connectionString if not a standard URL
+  }
+
+  if (useRemoteDevSsl) {
+    const pool = new Pool({
+      connectionString: normalizedUrl,
+      ssl: { rejectUnauthorized: false },
+      max: 5,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 5000,
+      allowExitOnIdle: true,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const adapter = new PrismaPg(pool as any);
+    return new PrismaClient({
+      adapter,
+      log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+    });
   }
 
   // Production Cloudflare Hyperdrive manages connection pooling and upstream TLS at the edge.
-  const adapter = new PrismaPg({ connectionString });
+  const adapter = new PrismaPg({
+    connectionString: normalizedUrl,
+    ssl: false,
+    max: 5,
+  });
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
@@ -116,6 +142,10 @@ function createLocalClient(): PrismaClient {
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
+}
+
+export function hasDatabaseConfig(): boolean {
+  return getHyperdriveContext() !== null || Boolean(process.env.DATABASE_URL);
 }
 
 /**
