@@ -118,11 +118,11 @@ export async function verifyAdminSession(
   const [payload, signature] = token.split(".");
   if (!payload || !signature) return false;
 
-  const expected = await sign(payload, "session");
-  const provided = fromBase64Url(signature);
-  if (!timingSafeEqualBytes(expected, provided)) return false;
-
   try {
+    const expected = await sign(payload, "session");
+    const provided = fromBase64Url(signature);
+    if (!timingSafeEqualBytes(expected, provided)) return false;
+
     const data = JSON.parse(
       new TextDecoder().decode(fromBase64Url(payload)),
     );
@@ -166,11 +166,11 @@ export async function getAdminSession(
   const [payload, signature] = token.split(".");
   if (!payload || !signature) return null;
 
-  const expected = await sign(payload, "session");
-  const provided = fromBase64Url(signature);
-  if (!timingSafeEqualBytes(expected, provided)) return null;
-
   try {
+    const expected = await sign(payload, "session");
+    const provided = fromBase64Url(signature);
+    if (!timingSafeEqualBytes(expected, provided)) return null;
+
     const data = JSON.parse(
       new TextDecoder().decode(fromBase64Url(payload)),
     );
