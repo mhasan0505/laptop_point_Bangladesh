@@ -27,6 +27,8 @@ import { RawProduct } from "@/types/raw-product";
 import { NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 
+export const dynamic = "force-dynamic";
+
 export { resolveProductImages, safeSyncManifest as syncSkuToManifest };
 
 const isPlainObject = (v: unknown): v is Record<string, unknown> =>

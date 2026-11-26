@@ -20,7 +20,9 @@ import {
   Maximize2,
   MessageCircle,
   Minus,
+  Pause,
   Phone,
+  Play,
   Plus,
   RotateCcw,
   Send,
@@ -92,6 +94,9 @@ export default function ProductDetailsClient({
   // Active gallery image
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const [isGalleryHovered, setIsGalleryHovered] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [activeAnchor, setActiveAnchor] = useState("description");
   const hasVideo = Boolean(parseYoutubeId(product.youtubeUrl));
@@ -319,6 +324,43 @@ export default function ProductDetailsClient({
       ignore = true;
     };
   }, [product.slug]);
+
+  // Respect prefers-reduced-motion for gallery autoplay
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
+
+  // Autoplay product gallery (pauses on hover, lightbox open, or reduced motion)
+  useEffect(() => {
+    if (
+      galleryImages.length < 2 ||
+      !isAutoPlay ||
+      isGalleryHovered ||
+      isHovering ||
+      isViewerOpen ||
+      prefersReducedMotion
+    ) {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "hidden") return;
+      setActiveImageIndex((i) => (i + 1) % galleryImages.length);
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, [
+    galleryImages.length,
+    isAutoPlay,
+    isGalleryHovered,
+    isHovering,
+    isViewerOpen,
+    prefersReducedMotion,
+    activeImageIndex,
+  ]);
 
   // Keyboard navigation for image lightbox
   useEffect(() => {
@@ -563,7 +605,14 @@ export default function ProductDetailsClient({
         <div className="bg-white dark:bg-card rounded-xl border border-gray-200 dark:border-border p-4 sm:p-6 shadow-2xs mb-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
             {/* 1. Left Gallery Column (lg:col-span-4) */}
-            <div className="lg:col-span-4 flex flex-col gap-3">
+            <div
+              className="lg:col-span-4 flex flex-col gap-3"
+              onMouseEnter={() => setIsGalleryHovered(true)}
+              onMouseLeave={() => {
+                setIsGalleryHovered(false);
+                setIsHovering(false);
+              }}
+            >
               <div
                 ref={mainImgRef}
                 className="relative aspect-square w-full rounded-lg border border-gray-200 dark:border-border bg-white dark:bg-card p-4 overflow-hidden group cursor-zoom-in flex items-center justify-center"
@@ -577,18 +626,34 @@ export default function ProductDetailsClient({
                   {product.grade ? `${product.grade} GRADE` : "PRE-OWNED"}
                 </span>
 
-                {/* Top Right Zoom Icon */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsViewerOpen(true);
-                  }}
-                  className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-white/90 dark:bg-gray-800 shadow-xs hover:bg-[#002b60] hover:text-white transition-colors"
-                  aria-label="Expand image"
-                >
-                  <Maximize2 className="w-4 h-4" />
-                </button>
+                {/* Top Right Controls: Play/Pause + Zoom Icon */}
+                <div className="absolute top-3 right-3 z-30 flex items-center gap-1.5">
+                  {galleryImages.length > 1 && !prefersReducedMotion && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsAutoPlay((prev) => !prev);
+                      }}
+                      className="p-1.5 rounded-full bg-white/90 dark:bg-gray-800 shadow-xs hover:bg-[#002b60] hover:text-white transition-colors cursor-pointer"
+                      aria-label={isAutoPlay ? "Pause slideshow" : "Play slideshow"}
+                      title={isAutoPlay ? "Pause slideshow" : "Play slideshow"}
+                    >
+                      {isAutoPlay ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsViewerOpen(true);
+                    }}
+                    className="p-1.5 rounded-full bg-white/90 dark:bg-gray-800 shadow-xs hover:bg-[#002b60] hover:text-white transition-colors cursor-pointer"
+                    aria-label="Expand image"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                  </button>
+                </div>
 
                 {/* Magnifier Hover */}
                 {isHovering && (

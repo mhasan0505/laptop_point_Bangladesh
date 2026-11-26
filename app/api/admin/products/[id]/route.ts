@@ -26,6 +26,8 @@ import {
 } from "../route";
 import { logger } from "@/lib/logger";
 
+export const dynamic = "force-dynamic";
+
 type Ctx = { params: Promise<{ id: string }> };
 
 // ─── GET /api/admin/products/[id] ─────────────────────────────────────────────

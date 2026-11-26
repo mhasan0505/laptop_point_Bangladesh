@@ -1,4 +1,5 @@
 import AccessoryCard from "@/components/accessories/AccessoryCard";
+import AccessoryGallery from "@/components/accessories/AccessoryGallery";
 import AddToCartPanel from "@/components/accessories/AddToCartPanel";
 import YouTubeEmbed from "@/components/product/YouTubeEmbed";
 import ProductSchemaMeta from "@/components/seo/ProductSchemaMeta";
@@ -9,7 +10,6 @@ import { formatBDT } from "@/lib/format";
 import { getValidDiscount } from "@/lib/pricing-display";
 import { ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { ACCESSORY_CATEGORIES } from "@/lib/accessory-types";
@@ -85,30 +85,7 @@ export default async function AccessoryDetailPage({ params }: Props) {
 
         <div className="mt-6 grid gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Gallery */}
-          <div className="space-y-3">
-            <div className="relative aspect-square overflow-hidden rounded-[var(--radius-lg)] border border-line bg-surface-2">
-              <Image
-                src={images[0]}
-                alt={accessory.name}
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-contain p-8 mix-blend-multiply"
-              />
-            </div>
-            {images.length > 1 && (
-              <ul className="grid grid-cols-5 gap-2">
-                {images.slice(0, 5).map((src, i) => (
-                  <li
-                    key={`${src}-${i}`}
-                    className="relative aspect-square overflow-hidden rounded-[var(--radius-sm)] border border-line bg-surface-2"
-                  >
-                    <Image src={src} alt="" fill sizes="96px" className="object-contain p-1.5" />
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <AccessoryGallery images={images} name={accessory.name} />
 
           {/* Details */}
           <div>

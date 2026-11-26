@@ -20,12 +20,23 @@ interface HyperdriveContext {
   ctx: object | null;
 }
 
+function isCloudflareWorkersRuntime(): boolean {
+  return typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers";
+}
+
 function getHyperdriveContext(): HyperdriveContext | null {
   try {
     const cf = getCloudflareContext();
     const env = cf?.env as { HYPERDRIVE?: { connectionString?: string } } | undefined;
     const connectionString = env?.HYPERDRIVE?.connectionString;
     if (connectionString) {
+      // In local `next dev` (Node.js), `initOpenNextCloudflareForDev()` populates
+      // `env.HYPERDRIVE.connectionString` with `wrangler.jsonc`'s placeholder
+      // `localConnectionString` (`localhost:5432`) because `getPlatformProxy`
+      // does not load `.env.local`. Prefer `process.env.DATABASE_URL` in local Node.js.
+      if (!isCloudflareWorkersRuntime() && process.env.DATABASE_URL) {
+        return null;
+      }
       return {
         connectionString,
         ctx: (cf?.ctx as object | undefined) ?? null,
@@ -115,22 +126,23 @@ function createLocalClient(): PrismaClient {
   // pg v8.20+ treats ?sslmode=require as verify-full and overrides pool.ssl,
   // which rejects Aiven's self-signed CA. Strip sslmode so ssl.rejectUnauthorized: false applies.
   let connectionString = process.env.DATABASE_URL;
+  let isLocalHost = false;
   try {
     const parsed = new URL(connectionString);
-    if (parsed.searchParams.has("sslmode")) {
-      parsed.searchParams.delete("sslmode");
-      connectionString = parsed.toString();
-    }
+    const host = parsed.hostname.toLowerCase();
+    isLocalHost = host === "localhost" || host === "127.0.0.1" || host === "::1";
+    parsed.searchParams.delete("sslmode");
+    parsed.searchParams.delete("ssl");
+    parsed.searchParams.delete("uselibpqcompat");
+    connectionString = parsed.toString();
   } catch {
     // Keep original connectionString if not a standard URL
   }
   const pool = new Pool({
     connectionString,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    max: 1,
-    idleTimeoutMillis: 1000,
+    ssl: isLocalHost ? false : { rejectUnauthorized: false },
+    max: 5,
+    idleTimeoutMillis: 10000,
     connectionTimeoutMillis: 5000,
     allowExitOnIdle: true,
   });
