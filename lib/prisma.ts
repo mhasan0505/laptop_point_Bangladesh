@@ -39,7 +39,39 @@ function getHyperdriveContext(): HyperdriveContext | null {
 }
 
 function createHyperdriveClient(connectionString: string): PrismaClient {
-  // Hyperdrive manages connection pooling and upstream TLS at the edge.
+  // In local `next dev` (initOpenNextCloudflareForDev), Wrangler may pass through
+  // the raw Aiven URL with `?sslmode=require`, which pg v8.20+ treats as `verify-full`
+  // and rejects Aiven's self-signed CA. For real Hyperdrive (*.hyperdrive.local),
+  // Hyperdrive terminates TLS at the edge so we pass connectionString directly.
+  try {
+    const parsed = new URL(connectionString);
+    const isHyperdriveProxy =
+      parsed.hostname.endsWith(".hyperdrive.local") ||
+      parsed.hostname === "localhost" ||
+      parsed.hostname === "127.0.0.1";
+
+    if (!isHyperdriveProxy && parsed.searchParams.has("sslmode")) {
+      parsed.searchParams.delete("sslmode");
+      const pool = new Pool({
+        connectionString: parsed.toString(),
+        ssl: { rejectUnauthorized: false },
+        max: 5,
+        idleTimeoutMillis: 10000,
+        connectionTimeoutMillis: 5000,
+        allowExitOnIdle: true,
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const adapter = new PrismaPg(pool as any);
+      return new PrismaClient({
+        adapter,
+        log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+      });
+    }
+  } catch {
+    // Fall through to standard PrismaPg initialization
+  }
+
+  // Production Cloudflare Hyperdrive manages connection pooling and upstream TLS at the edge.
   const adapter = new PrismaPg({ connectionString });
   return new PrismaClient({
     adapter,
